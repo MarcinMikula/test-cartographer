@@ -1,0 +1,515 @@
+{
+  "schema_version": "0.1",
+  "id": "ctx_public_catalog_search",
+  "title": "Public catalog search reference flow",
+  "created_at": "2026-08-01T09:00:00+02:00",
+  "updated_at": "2026-08-01T09:00:00+02:00",
+  "application": {
+    "id": "app_public_catalog",
+    "name": {
+      "value": "Public catalog reference application",
+      "status": "provided",
+      "evidence_ids": [
+        "ev_spec_search"
+      ],
+      "confidence": null,
+      "sensitivity": "public",
+      "notes": null
+    },
+    "environment": {
+      "value": "Controlled local reference environment",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "base_url": {
+      "value": "https://catalog.example.test/",
+      "status": "provided",
+      "evidence_ids": [
+        "ev_spec_search"
+      ],
+      "confidence": null,
+      "sensitivity": "public",
+      "notes": null
+    }
+  },
+  "process": {
+    "id": "proc_search_catalog",
+    "name": {
+      "value": "Search the public catalog",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "purpose": {
+      "value": "Allow a visitor to find catalog items matching a text query.",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope",
+        "ev_spec_search"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "risk": {
+      "value": "A visitor cannot discover relevant catalog items through search.",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "role": {
+      "value": "Unauthenticated visitor",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "preconditions": [
+      {
+        "value": "The catalog application is available and contains indexed items.",
+        "status": "confirmed",
+        "evidence_ids": [
+          "ev_human_scope",
+          "ev_spec_search"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      }
+    ],
+    "steps": [
+      {
+        "id": "step_open_catalog",
+        "order": 1,
+        "page_id": "page_catalog",
+        "intent": {
+          "value": "Open the catalog search page.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        },
+        "action": {
+          "kind": "navigate",
+          "target_element_id": null,
+          "test_data_id": null
+        },
+        "expected_state": {
+          "value": "The catalog search form is visible.",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        }
+      },
+      {
+        "id": "step_fill_query",
+        "order": 2,
+        "page_id": "page_catalog",
+        "intent": {
+          "value": "Enter the selected search query.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        },
+        "action": {
+          "kind": "fill",
+          "target_element_id": "el_search_input",
+          "test_data_id": "data_search_query"
+        },
+        "expected_state": {
+          "value": "The search input contains the supplied query.",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        }
+      },
+      {
+        "id": "step_submit_search",
+        "order": 3,
+        "page_id": "page_catalog",
+        "intent": {
+          "value": "Submit the catalog search.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        },
+        "action": {
+          "kind": "click",
+          "target_element_id": "el_search_submit",
+          "test_data_id": null
+        },
+        "expected_state": {
+          "value": "The results region is refreshed for the submitted query.",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        }
+      },
+      {
+        "id": "step_read_results",
+        "order": 4,
+        "page_id": "page_catalog",
+        "intent": {
+          "value": "Read the visible search results.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        },
+        "action": {
+          "kind": "read",
+          "target_element_id": "el_results_list",
+          "test_data_id": null
+        },
+        "expected_state": {
+          "value": "The results list and query heading are visible.",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        }
+      }
+    ],
+    "expected_outcomes": [
+      {
+        "id": "outcome_matching_results",
+        "statement": {
+          "value": "The results heading contains the submitted query and the list contains only matching catalog items.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope",
+            "ev_spec_search"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        },
+        "related_element_ids": [
+          "el_results_heading",
+          "el_results_list"
+        ]
+      }
+    ]
+  },
+  "pages": [
+    {
+      "id": "page_catalog",
+      "name": {
+        "value": "Catalog search page",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "route": {
+        "value": "/catalog",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "public",
+        "notes": null
+      },
+      "component_ids": [
+        "cmp_search_form"
+      ],
+      "element_ids": [
+        "el_results_heading",
+        "el_results_list"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "cmp_search_form",
+      "name": {
+        "value": "Catalog search form",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "element_ids": [
+        "el_search_input",
+        "el_search_submit"
+      ]
+    }
+  ],
+  "elements": [
+    {
+      "id": "el_search_input",
+      "owner_id": "cmp_search_form",
+      "name": {
+        "value": "Search input",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "semantic_role": {
+        "value": "Text input labelled Search catalog",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "locator_candidates": [
+        {
+          "id": "loc_search_input_label",
+          "strategy": "label",
+          "value": {
+            "value": "Search catalog",
+            "status": "observed",
+            "evidence_ids": [
+              "ev_app_catalog"
+            ],
+            "confidence": null,
+            "sensitivity": "internal",
+            "notes": null
+          },
+          "primary": true
+        }
+      ]
+    },
+    {
+      "id": "el_search_submit",
+      "owner_id": "cmp_search_form",
+      "name": {
+        "value": "Search submit button",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "semantic_role": {
+        "value": "Button named Search",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "locator_candidates": [
+        {
+          "id": "loc_search_submit_role",
+          "strategy": "role",
+          "value": {
+            "value": "button:Search",
+            "status": "observed",
+            "evidence_ids": [
+              "ev_app_catalog"
+            ],
+            "confidence": null,
+            "sensitivity": "internal",
+            "notes": null
+          },
+          "primary": true
+        }
+      ]
+    },
+    {
+      "id": "el_results_heading",
+      "owner_id": "page_catalog",
+      "name": {
+        "value": "Results heading",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "semantic_role": {
+        "value": "Heading identifying the active query",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "locator_candidates": [
+        {
+          "id": "loc_results_heading_role",
+          "strategy": "role",
+          "value": {
+            "value": "heading:Search results",
+            "status": "observed",
+            "evidence_ids": [
+              "ev_app_catalog"
+            ],
+            "confidence": null,
+            "sensitivity": "internal",
+            "notes": null
+          },
+          "primary": true
+        }
+      ]
+    },
+    {
+      "id": "el_results_list",
+      "owner_id": "page_catalog",
+      "name": {
+        "value": "Results list",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "semantic_role": {
+        "value": "List containing matching catalog items",
+        "status": "observed",
+        "evidence_ids": [
+          "ev_app_catalog"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "locator_candidates": [
+        {
+          "id": "loc_results_list_test_id",
+          "strategy": "test_id",
+          "value": {
+            "value": "catalog-results",
+            "status": "observed",
+            "evidence_ids": [
+              "ev_app_catalog"
+            ],
+            "confidence": null,
+            "sensitivity": "internal",
+            "notes": null
+          },
+          "primary": true
+        }
+      ]
+    }
+  ],
+  "test_data": [
+    {
+      "id": "data_search_query",
+      "name": {
+        "value": "Valid catalog search query",
+        "status": "confirmed",
+        "evidence_ids": [
+          "ev_human_scope"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "description": {
+        "value": "A non-empty query with at least one known matching catalog item.",
+        "status": "confirmed",
+        "evidence_ids": [
+          "ev_human_scope",
+          "ev_spec_search"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "symbolic_ref": "valid_search_query",
+      "sensitivity": "public"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "ev_human_scope",
+      "source_type": "human",
+      "source_ref": "tester:sprint_1_reference_definition",
+      "summary": "Tester-confirmed process purpose, risk, role, preconditions, and expected result.",
+      "captured_at": "2026-08-01T08:30:00+02:00",
+      "sensitivity": "internal",
+      "content_sha256": null
+    },
+    {
+      "id": "ev_spec_search",
+      "source_type": "document",
+      "source_ref": "fixture:public_catalog_search_spec_v1",
+      "summary": "Controlled reference specification for the public catalog search flow.",
+      "captured_at": "2026-08-01T08:35:00+02:00",
+      "sensitivity": "public",
+      "content_sha256": null
+    },
+    {
+      "id": "ev_app_catalog",
+      "source_type": "application",
+      "source_ref": "fixture:guided_catalog_observation_v1",
+      "summary": "Controlled observation of the page, component, elements, states, and locator candidates.",
+      "captured_at": "2026-08-01T08:45:00+02:00",
+      "sensitivity": "public",
+      "content_sha256": null
+    }
+  ],
+  "open_questions": [],
+  "conflicts": []
+}

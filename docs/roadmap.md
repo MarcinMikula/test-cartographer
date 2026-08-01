@@ -2,8 +2,7 @@
 
 ## Roadmap rule
 
-TestCartographer is intentionally developed through evidence-producing vertical
-slices.
+TestCartographer is developed through evidence-producing vertical slices.
 
 A sprint is complete only when it produces one or more of:
 
@@ -22,7 +21,7 @@ are provisional and must be reshaped using findings from earlier work.
 ## Delivery stages
 
 ```text
-Product framing
+product framing
 → context contract
 → human intake
 → guided observation
@@ -39,8 +38,8 @@ Product framing
 | Sprint | Focus | Status |
 |---|---|---|
 | Sprint 0 | Product framing and project boundaries | Done |
-| Sprint 1 | Minimum context contract and local evidence model | Planned |
-| Sprint 2 | Human-guided process intake | Provisional |
+| Sprint 1 | Minimum context contract and local evidence model | Done |
+| Sprint 2 | Human-guided process intake | Planned |
 | Sprint 3 | Guided browser observation | Provisional |
 | Sprint 4 | Bounded LLM synthesis and POM proposal | Provisional |
 | Sprint 5 | Framework handoff and first runnable test | Provisional |
@@ -61,7 +60,7 @@ creating source-code architecture.
 
 ### Delivered
 
-- product name and public repository framing,
+- product name and repository framing,
 - problem statement,
 - relationship with `qa-automation-framework`,
 - intended user,
@@ -74,24 +73,6 @@ creating source-code architecture.
 - first vertical-slice direction,
 - explicit non-goals and parked ideas,
 - chronological project journal.
-
-### Exit criteria
-
-- [x] The project is described as context acquisition and framework adaptation,
-      not merely locator or test generation.
-- [x] TestCartographer and `qa-automation-framework` have separate
-      responsibilities.
-- [x] Human input, project artefacts, running application, and repository
-      evidence are recognized as complementary sources.
-- [x] Observed, provided, inferred, and confirmed knowledge are conceptually
-      distinct.
-- [x] External LLM use is bounded by a local security and minimization
-      requirement.
-- [x] Ease of use and operation time are part of product success.
-- [x] The first slice is limited to one human-guided process.
-- [x] Jira, autonomous crawling, Salesforce, SOM, and healing are not Sprint 1
-      requirements.
-- [x] No premature code architecture has been committed.
 
 ### What Sprint 0 proves
 
@@ -115,7 +96,7 @@ and validation direction.
 
 ## Sprint 1 — Minimum context contract
 
-**Status:** Planned
+**Status:** Done
 
 ### Goal
 
@@ -123,92 +104,150 @@ Define and validate the smallest local, provider-neutral context contract that
 can describe one useful UI automation flow without pretending unknown
 information is known.
 
-### Candidate scope
+### Delivered
 
-- select one small reference flow,
-- define the minimum entities and fields required to describe it,
-- represent process purpose, risk, preconditions, steps, expected result, page,
-  component, element, locator candidate, and automation mapping,
-- define evidence and provenance,
-- define knowledge status and explicit unknowns,
-- define basic sensitivity classification,
-- serialize the model locally in a human-reviewable form,
-- validate the contract against hand-created good, incomplete, conflicting, and
-  invalid examples,
-- add deterministic tests before any live LLM integration.
+- Python package with `src` layout,
+- strict Pydantic context contract version `0.1`,
+- explicit knowledge statuses including `UNKNOWN`,
+- basic sensitivity classification,
+- evidence and provenance references,
+- one-process model with purpose, risk, role, preconditions, steps, and
+  expected outcomes,
+- pages, reusable components, elements, and locator candidates,
+- symbolic test-data requirements without real values,
+- open-question and conflict representation,
+- deterministic cross-reference and ownership validation,
+- readiness report separate from structural validation,
+- deterministic JSON load/save,
+- committed generated JSON Schema,
+- complete, incomplete, conflicting, and invalid fixtures,
+- 23 deterministic tests,
+- context-contract, architecture-decision, testing-strategy, gap, limitation,
+  and learning documentation.
 
-### Required decisions
+### Exit criteria
 
-- reference flow,
-- schema technology,
-- file versus database boundary,
-- stable identifiers,
-- required versus optional fields,
-- status transitions,
-- conflict representation,
-- minimum provenance,
-- minimum sensitivity metadata,
-- contract versioning.
+- [x] One complete reference process can be represented.
+- [x] Missing information remains explicit.
+- [x] Inference is structurally distinguishable from confirmed fact.
+- [x] Conflicting evidence can be stored without silent resolution.
+- [x] Invalid context is rejected deterministically.
+- [x] The representation is human-reviewable JSON.
+- [x] No provider-specific or browser-specific dependency is required.
+- [x] Tests exercise complete, incomplete, conflicting, and invalid fixtures.
+- [x] The contract exposes concrete gaps that Sprint 2 can ask about.
+- [x] The JSON Schema is generated and protected against drift.
 
-### Candidate exit criteria
+### What Sprint 1 proves
 
-- [ ] One complete reference process can be represented.
-- [ ] Missing information remains explicit.
-- [ ] LLM inference is structurally distinguishable from confirmed fact.
-- [ ] Conflicting evidence can be stored without silent resolution.
-- [ ] Invalid context is rejected deterministically.
-- [ ] The representation is readable enough for human review.
-- [ ] No provider-specific or browser-specific dependency is required.
-- [ ] Tests demonstrate valid, incomplete, conflicting, and invalid fixtures.
-- [ ] The contract identifies exactly what Sprint 2 must ask the user.
+- one bounded UI process can be expressed as a strict typed graph,
+- explicit unknown and conflicting context does not need to be discarded,
+- structural validity and automation readiness can be assessed separately,
+- evidence and basic sensitivity metadata can travel with individual claims,
+- deterministic fixtures can test the context boundary without a browser or
+  LLM.
 
-### Deliberate exclusions
+### What Sprint 1 does not prove
 
-- live LLM calls,
-- browser automation,
-- Jira,
-- framework file generation,
-- autonomous decisions,
-- selector healing.
+- that the contract is sufficient for a real application,
+- that a tester can fill it efficiently,
+- that readiness rules match real adaptation needs,
+- that browser observations can populate it safely,
+- that an LLM can use it to propose a good POM,
+- that framework adaptation will work,
+- that the tool saves time or is easy to operate.
 
-### Gate to Sprint 2
+### Main finding
 
-Do not build the interview workflow until the context contract demonstrates
-which information is actually needed and how unknown answers are represented.
+A useful intake workflow cannot be designed as a generic questionnaire first.
+It should consume a valid-but-incomplete context and ask questions that resolve
+specific readiness blockers or required unknown fields.
 
 ---
 
 ## Sprint 2 — Human-guided process intake
 
-**Status:** Provisional
+**Status:** Planned
 
 ### Goal
 
-Collect the minimum process, testing, and business context from a human and
-produce a valid Sprint 1 context model.
+Allow a tester to create, review, save, and resume one valid process context
+without editing JSON or understanding internal model classes.
 
-### Candidate capability
+### Proposed vertical slice
 
 ```text
-select process
-→ answer adaptive questions
-→ preserve unknowns
-→ review collected context
-→ save validated local model
+start from a minimal context shell
+→ ask one concrete question at a time
+→ map each answer to a typed field
+→ allow explicit "unknown"
+→ surface conflicts instead of overwriting
+→ show current blockers and warnings
+→ review proposed confirmations
+→ save and resume the local bundle
 ```
 
-### Questions to answer
+### Scope boundary
 
-- Can the tool avoid an exhaustive questionnaire?
-- Which questions can be skipped based on previous answers?
-- Can users distinguish facts from assumptions?
-- How much active time does intake require?
-- Which required fields still cannot be obtained from a human-friendly flow?
+Sprint 2 should use deterministic, rule-based question selection first.
+
+A free-form LLM interviewer is not required to prove the intake workflow.
+The product should learn which questions and transitions are necessary before
+adding probabilistic conversation.
+
+### Candidate implementation
+
+- a small local command-line workflow,
+- intake-session model separate from the durable context bundle,
+- question catalogue keyed to missing context and readiness codes,
+- answer types such as text, confirmation, selection, and explicit unknown,
+- conflict creation when a new answer disagrees with retained evidence,
+- review step before changing knowledge to `CONFIRMED`,
+- local save/resume,
+- interaction metrics.
+
+### Required decisions
+
+- which minimal shell fields exist before intake,
+- question ordering,
+- how provided answers become evidence,
+- how corrections and replacements work,
+- when a new answer creates a conflict,
+- how confirmation is represented,
+- which readiness blockers belong to human intake and which require browser
+  evidence,
+- what timing data is collected without invading privacy.
+
+### Candidate exit criteria
+
+- [ ] A user can start one reference process without hand-editing JSON.
+- [ ] The intake asks only questions relevant to current missing context.
+- [ ] The user can answer `unknown` without inventing data.
+- [ ] A contradictory answer is preserved as a conflict or explicitly replaces
+      prior evidence through a reviewed action.
+- [ ] The resulting bundle passes structural validation.
+- [ ] Readiness changes are visible after each answer.
+- [ ] The session can be saved and resumed.
+- [ ] A final review is required before business-critical values become
+      confirmed.
+- [ ] Question count and active elapsed time are recorded.
+- [ ] Deterministic replay tests cover complete, incomplete, correction, and
+      conflict paths.
+
+### Deliberate exclusions
+
+- browser automation,
+- live LLM calls,
+- Jira,
+- framework file generation,
+- autonomous decision-making,
+- selector healing.
 
 ### Gate to Sprint 3
 
-The intake must create a useful model without forcing the user to understand
-the internal schema.
+The intake must create useful business and testing context without requiring the
+user to understand the JSON schema. Remaining blockers should identify exactly
+what application evidence the guided browser slice must collect.
 
 ---
 
@@ -238,8 +277,8 @@ credentials, environment safety, and process intent.
 
 ### Gate to Sprint 4
 
-The captured information must be smaller and more useful than a raw DOM dump
-and must preserve source, sensitivity, and process linkage.
+Captured information must be smaller and more useful than a raw DOM dump and
+must preserve source, sensitivity, and process linkage.
 
 ---
 
@@ -266,8 +305,8 @@ model into a structured POM proposal.
 
 ### Gate to Sprint 5
 
-The protocol must be deterministic around request construction and parsing.
-A fluent LLM response is not enough.
+The protocol must be deterministic around request construction and parsing. A
+fluent LLM response is not enough.
 
 ---
 

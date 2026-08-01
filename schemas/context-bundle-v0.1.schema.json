@@ -1,0 +1,733 @@
+{
+  "$defs": {
+    "ActionKind": {
+      "description": "Small UI-action vocabulary for one guided process.",
+      "enum": [
+        "navigate",
+        "fill",
+        "click",
+        "select",
+        "check",
+        "uncheck",
+        "read"
+      ],
+      "title": "ActionKind",
+      "type": "string"
+    },
+    "ApplicationContext": {
+      "additionalProperties": false,
+      "properties": {
+        "base_url": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "environment": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/KnowledgeText"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "environment",
+        "base_url"
+      ],
+      "title": "ApplicationContext",
+      "type": "object"
+    },
+    "ComponentContext": {
+      "additionalProperties": false,
+      "properties": {
+        "element_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Element Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/KnowledgeText"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "ComponentContext",
+      "type": "object"
+    },
+    "Conflict": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "resolution": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "subject_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Subject Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "subject_id",
+        "description",
+        "evidence_ids",
+        "resolution"
+      ],
+      "title": "Conflict",
+      "type": "object"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "description": "A local provenance record; raw source content is intentionally excluded.",
+      "properties": {
+        "captured_at": {
+          "format": "date-time",
+          "title": "Captured At",
+          "type": "string"
+        },
+        "content_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Sha256"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/SensitivityLevel"
+        },
+        "source_ref": {
+          "minLength": 1,
+          "title": "Source Ref",
+          "type": "string"
+        },
+        "source_type": {
+          "$ref": "#/$defs/EvidenceSourceType"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source_type",
+        "source_ref",
+        "summary",
+        "captured_at",
+        "sensitivity"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "EvidenceSourceType": {
+      "description": "Origin of evidence retained by the local context model.",
+      "enum": [
+        "human",
+        "document",
+        "application",
+        "repository",
+        "execution",
+        "system"
+      ],
+      "title": "EvidenceSourceType",
+      "type": "string"
+    },
+    "ExpectedOutcome": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "related_element_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Related Element Ids",
+          "type": "array"
+        },
+        "statement": {
+          "$ref": "#/$defs/KnowledgeText"
+        }
+      },
+      "required": [
+        "id",
+        "statement"
+      ],
+      "title": "ExpectedOutcome",
+      "type": "object"
+    },
+    "KnowledgeStatus": {
+      "description": "How a knowledge value is currently supported.",
+      "enum": [
+        "observed",
+        "provided",
+        "inferred",
+        "confirmed",
+        "unknown",
+        "stale",
+        "conflicting"
+      ],
+      "title": "KnowledgeStatus",
+      "type": "string"
+    },
+    "KnowledgeText": {
+      "additionalProperties": false,
+      "description": "A text value together with its authority, evidence, and sensitivity.",
+      "properties": {
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1.0,
+              "minimum": 0.0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "evidence_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/SensitivityLevel",
+          "default": "internal"
+        },
+        "status": {
+          "$ref": "#/$defs/KnowledgeStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "status"
+      ],
+      "title": "KnowledgeText",
+      "type": "object"
+    },
+    "LocatorCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "primary": {
+          "default": false,
+          "title": "Primary",
+          "type": "boolean"
+        },
+        "strategy": {
+          "$ref": "#/$defs/LocatorStrategy"
+        },
+        "value": {
+          "$ref": "#/$defs/KnowledgeText"
+        }
+      },
+      "required": [
+        "id",
+        "strategy",
+        "value"
+      ],
+      "title": "LocatorCandidate",
+      "type": "object"
+    },
+    "LocatorStrategy": {
+      "description": "Supported locator candidate types in the first contract.",
+      "enum": [
+        "role",
+        "label",
+        "test_id",
+        "placeholder",
+        "text",
+        "css",
+        "xpath"
+      ],
+      "title": "LocatorStrategy",
+      "type": "string"
+    },
+    "OpenQuestion": {
+      "additionalProperties": false,
+      "properties": {
+        "blocking": {
+          "default": true,
+          "title": "Blocking",
+          "type": "boolean"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "question": {
+          "minLength": 1,
+          "title": "Question",
+          "type": "string"
+        },
+        "related_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Related Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "question",
+        "related_ids"
+      ],
+      "title": "OpenQuestion",
+      "type": "object"
+    },
+    "PageContext": {
+      "additionalProperties": false,
+      "properties": {
+        "component_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Component Ids",
+          "type": "array"
+        },
+        "element_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Element Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "route": {
+          "$ref": "#/$defs/KnowledgeText"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "route"
+      ],
+      "title": "PageContext",
+      "type": "object"
+    },
+    "ProcessContext": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_outcomes": {
+          "items": {
+            "$ref": "#/$defs/ExpectedOutcome"
+          },
+          "minItems": 1,
+          "title": "Expected Outcomes",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "preconditions": {
+          "items": {
+            "$ref": "#/$defs/KnowledgeText"
+          },
+          "minItems": 1,
+          "title": "Preconditions",
+          "type": "array"
+        },
+        "purpose": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "risk": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "role": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/ProcessStep"
+          },
+          "minItems": 1,
+          "title": "Steps",
+          "type": "array"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "purpose",
+        "risk",
+        "role",
+        "preconditions",
+        "steps",
+        "expected_outcomes"
+      ],
+      "title": "ProcessContext",
+      "type": "object"
+    },
+    "ProcessStep": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/UIAction"
+        },
+        "expected_state": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intent": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "order": {
+          "minimum": 1,
+          "title": "Order",
+          "type": "integer"
+        },
+        "page_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Page Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "page_id",
+        "intent",
+        "action",
+        "expected_state"
+      ],
+      "title": "ProcessStep",
+      "type": "object"
+    },
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    },
+    "TestDataRequirement": {
+      "additionalProperties": false,
+      "description": "Symbolic data need; no credential or business value is stored here.",
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/SensitivityLevel"
+        },
+        "symbolic_ref": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Symbolic Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "symbolic_ref",
+        "sensitivity"
+      ],
+      "title": "TestDataRequirement",
+      "type": "object"
+    },
+    "UIAction": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/ActionKind"
+        },
+        "target_element_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Element Id"
+        },
+        "test_data_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Test Data Id"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "UIAction",
+      "type": "object"
+    },
+    "UIElement": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "locator_candidates": {
+          "items": {
+            "$ref": "#/$defs/LocatorCandidate"
+          },
+          "minItems": 1,
+          "title": "Locator Candidates",
+          "type": "array"
+        },
+        "name": {
+          "$ref": "#/$defs/KnowledgeText"
+        },
+        "owner_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Owner Id",
+          "type": "string"
+        },
+        "semantic_role": {
+          "$ref": "#/$defs/KnowledgeText"
+        }
+      },
+      "required": [
+        "id",
+        "owner_id",
+        "name",
+        "semantic_role",
+        "locator_candidates"
+      ],
+      "title": "UIElement",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One versioned application context bundle for one UI process.",
+  "properties": {
+    "application": {
+      "$ref": "#/$defs/ApplicationContext"
+    },
+    "components": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ComponentContext"
+      },
+      "title": "Components",
+      "type": "array"
+    },
+    "conflicts": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/Conflict"
+      },
+      "title": "Conflicts",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "elements": {
+      "items": {
+        "$ref": "#/$defs/UIElement"
+      },
+      "minItems": 1,
+      "title": "Elements",
+      "type": "array"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/Evidence"
+      },
+      "minItems": 1,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "open_questions": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/OpenQuestion"
+      },
+      "title": "Open Questions",
+      "type": "array"
+    },
+    "pages": {
+      "items": {
+        "$ref": "#/$defs/PageContext"
+      },
+      "minItems": 1,
+      "title": "Pages",
+      "type": "array"
+    },
+    "process": {
+      "$ref": "#/$defs/ProcessContext"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "test_data": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/TestDataRequirement"
+      },
+      "title": "Test Data",
+      "type": "array"
+    },
+    "title": {
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "title",
+    "created_at",
+    "updated_at",
+    "application",
+    "process",
+    "pages",
+    "elements",
+    "evidence"
+  ],
+  "title": "ContextBundle",
+  "type": "object"
+}

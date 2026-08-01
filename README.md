@@ -11,11 +11,30 @@ The project is intended to complement
 
 ## Status
 
-**Sprint 0 — product framing: complete**
+**Sprint 1 — minimum context contract: complete**
 
-The repository currently contains product documentation only. No executable
-tool, browser integration, LLM workflow, persistence layer, or framework
-adapter has been implemented yet.
+The repository now contains a strict, provider-neutral local model for one UI
+process.
+
+Current evidence:
+
+```text
+23 deterministic tests passing
+```
+
+The implemented slice can:
+
+- load and save one versioned process context as JSON,
+- distinguish observed, provided, inferred, confirmed, unknown, stale, and
+  conflicting knowledge,
+- retain evidence references and basic sensitivity classification,
+- reject malformed structures and dangling references,
+- keep incomplete and conflicting contexts structurally valid,
+- assess whether a valid context is ready for framework adaptation,
+- export a committed JSON Schema for contract version `0.1`.
+
+It cannot yet interview a user, observe a browser, call an LLM, generate a Page
+Object, or modify `qa-automation-framework`.
 
 ## The problem
 
@@ -66,54 +85,171 @@ The first useful product should understand one small, human-guided process well
 enough to propose a maintainable Page Object representation and help create one
 reviewed, runnable test in a copy of `qa-automation-framework`.
 
-## What TestCartographer should eventually do
+## Sprint 1 contract
 
-### Acquire context
+The current contract models one process and a bounded set of related context:
 
-Collect relevant information through several complementary paths:
+```text
+ContextBundle
+├── application
+├── process
+│   ├── purpose, risk, role, and preconditions
+│   ├── ordered UI steps
+│   └── observable expected outcomes
+├── pages and reusable components
+├── UI elements and locator candidates
+├── symbolic test-data requirements
+├── evidence and provenance references
+├── open questions
+└── conflicts and resolutions
+```
 
-- adaptive questions answered by a tester or domain expert,
-- project artefacts such as issues, test cases, requirements, and API
-  documentation,
-- human-guided observation of a running application,
-- existing automation code, execution reports, traces, and screenshots.
+The contract deliberately stores **symbolic test-data requirements**, not real
+credentials or business values.
 
-### Model context
+See [`docs/context-contract.md`](docs/context-contract.md).
 
-Organize knowledge about:
+## Structural validity is not readiness
 
-- applications and environments,
-- roles and authentication,
-- business processes and test conditions,
-- pages, components, elements, and states,
-- locator candidates and technical constraints,
-- expected outcomes, risks, and test data,
-- evidence, provenance, confidence, and unresolved questions.
+Sprint 1 separates two questions.
 
-### Adapt the framework
+### Is the context structurally valid?
 
-Use confirmed context to propose or prepare:
+Pydantic validation checks, among other things:
 
-- Page Objects and reusable components,
-- workflow helpers and fixtures,
-- test-data models,
-- selectors and locator placement,
-- test skeletons and assertions requiring human review,
-- documentation explaining assumptions and source evidence.
+- strict fields and schema version,
+- globally unique entity identifiers,
+- contiguous process-step order,
+- valid action shape,
+- page, component, element, test-data, and evidence references,
+- element ownership,
+- action-target availability on the declared page,
+- locator-selection invariants,
+- knowledge-status rules,
+- timezone-aware timestamps.
 
-### Support maintenance
+Invalid input is rejected.
 
-Later versions may detect and analyse changes such as:
+### Is the context ready for adaptation?
 
-- locator drift,
-- DOM restructuring,
-- changed required fields,
-- moved or removed actions,
-- changed workflows or business rules,
-- automation artefacts affected by an application change.
+A valid bundle may still contain:
 
-The tool should explain impact and propose updates. Silent, unreviewed rewriting
-is not the target.
+- explicit unknowns,
+- unresolved conflicts,
+- inferred business facts,
+- unconfirmed expected outcomes,
+- an unobserved primary locator,
+- blocking open questions.
+
+`assess_readiness()` reports deterministic blockers and warnings without
+silently completing or rewriting the context.
+
+```python
+from test_cartographer.context import assess_readiness, load_context
+
+context = load_context("testdata/context/valid/public_search_flow.json")
+report = assess_readiness(context)
+
+assert report.ready is True
+```
+
+## Reference fixtures
+
+Sprint 1 includes four controlled JSON fixtures:
+
+| Fixture | Structural result | Readiness result | Purpose |
+|---|---:|---:|---|
+| `valid/public_search_flow.json` | valid | ready | complete reference process |
+| `incomplete/public_search_flow.json` | valid | blocked | explicit unknowns and open question |
+| `conflicting/public_search_flow.json` | valid | blocked | conflicting locator evidence |
+| `invalid/missing_evidence_reference.json` | rejected | not assessed | dangling provenance reference |
+
+The fictional `.test` application is only a contract fixture. It is not yet a
+browser target or evidence of an executable automation flow.
+
+## Quick start
+
+### Requirements
+
+- Python 3.11 or newer
+- PowerShell commands below assume Windows
+
+### Create and activate a virtual environment
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
+
+### Install the project
+
+```powershell
+python -m pip install --upgrade pip
+python -m pip install -e ".[dev]"
+```
+
+### Run tests
+
+```powershell
+python -m pytest
+```
+
+Expected Sprint 1 result:
+
+```text
+23 passed
+```
+
+### Re-export the JSON Schema
+
+```powershell
+python scripts/export_context_schema.py
+python -m pytest tests/unit/context/test_schema.py
+```
+
+The schema snapshot test prevents the Python contract and committed JSON Schema
+from drifting silently.
+
+## Current project structure
+
+```text
+test-cartographer/
+├── docs/
+│   ├── architecture-decisions.md
+│   ├── context-contract.md
+│   ├── future-ideas.md
+│   ├── gaps.md
+│   ├── known-limitations.md
+│   ├── product-scope.md
+│   ├── roadmap.md
+│   └── testing-strategy.md
+├── schemas/
+│   └── context-bundle-v0.1.schema.json
+├── scripts/
+│   └── export_context_schema.py
+├── src/
+│   └── test_cartographer/
+│       ├── __init__.py
+│       └── context/
+│           ├── __init__.py
+│           ├── enums.py
+│           ├── io.py
+│           ├── models.py
+│           └── readiness.py
+├── testdata/
+│   └── context/
+│       ├── conflicting/
+│       ├── incomplete/
+│       ├── invalid/
+│       └── valid/
+├── tests/
+│   └── unit/
+│       └── context/
+├── LEARNINGS.md
+├── LICENSE
+├── README.md
+└── pyproject.toml
+```
 
 ## Relationship with qa-automation-framework
 
@@ -127,19 +263,6 @@ The projects have separate responsibilities.
 The resulting automation must remain normal Python, Playwright, and pytest
 code. It should be understandable, reviewable, version-controlled, and usable
 without TestCartographer during ordinary test execution.
-
-## Intended user
-
-The initial user is a software tester or test automation engineer who:
-
-- understands the tested process or can consult someone who does,
-- can guide the tool through a selected application flow,
-- can validate business assumptions and expected results,
-- wants maintainable Playwright and pytest automation,
-- accepts responsibility for final review and correctness.
-
-The first versions are not intended to remove the need for testing knowledge,
-application knowledge, or code review.
 
 ## Guiding principles
 
@@ -192,29 +315,9 @@ The first implementation will not attempt to:
 - silently repair or rewrite automation without review,
 - reuse PhoenixQA as a hidden dependency.
 
-## First vertical-slice hypothesis
-
-A small end-to-end slice should eventually prove this flow:
-
-```text
-select one process
-→ collect minimum human context
-→ observe the guided browser flow
-→ store a small structured context model
-→ identify missing or inferred information
-→ propose Page Object and test artefacts
-→ place them in qa-automation-framework
-→ execute one test
-→ review assumptions, evidence, and result
-```
-
-Jira ingestion, autonomous navigation, broad application modelling, and
-self-healing are deferred until this narrower workflow provides evidence that a
-dedicated tool adds value.
-
 ## Validation direction
 
-The product must be compared against realistic alternatives:
+The product must eventually be compared against realistic alternatives:
 
 ```text
 manual framework adaptation
@@ -238,25 +341,18 @@ Evaluation must include more than test execution success:
 - LLM usage and cost,
 - perceived difficulty and user confidence.
 
-Potential validation targets progress from simple public pages, through modern
-dynamic frontends and a controlled reference application, to a safe
-Salesforce-style enterprise flow.
-
 ## Roadmap
 
 | Sprint | Focus | Status |
 |---|---|---|
-| 0 | Product framing, boundaries, success criteria, and first vertical-slice direction | Done |
-| 1 | Minimum context contract and local evidence model | Planned |
-| 2 | Human-guided process intake | Provisional |
+| 0 | Product framing, boundaries, and validation direction | Done |
+| 1 | Minimum context contract and local evidence model | Done |
+| 2 | Human-guided process intake | Planned |
 | 3 | Guided browser observation | Provisional |
 | 4 | Bounded LLM context synthesis and POM proposal | Provisional |
 | 5 | Framework handoff and first runnable test | Provisional |
 | 6 | Review, traceability, and first end-to-end evaluation | Provisional |
 | 7+ | Maintenance, external sources, comparative validation, and hardening | Parked until evidence |
-
-The detailed roadmap is intentionally provisional beyond Sprint 1. Each sprint
-must be refined using evidence from the previous slice.
 
 See [`docs/roadmap.md`](docs/roadmap.md).
 
@@ -265,9 +361,13 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | Document | Purpose |
 |---|---|
 | [`LEARNINGS.md`](LEARNINGS.md) | Chronological problem, reasoning, decisions, experiments, and conclusions |
+| [`docs/context-contract.md`](docs/context-contract.md) | Contract concepts, invariants, fixtures, and readiness boundary |
+| [`docs/architecture-decisions.md`](docs/architecture-decisions.md) | Accepted implementation decisions and consequences |
+| [`docs/testing-strategy.md`](docs/testing-strategy.md) | Current deterministic test layers and future evidence gates |
+| [`docs/gaps.md`](docs/gaps.md) | Concrete missing capabilities and their dependencies |
 | [`docs/product-scope.md`](docs/product-scope.md) | Product responsibility, users, inputs, outputs, boundaries, and success criteria |
 | [`docs/roadmap.md`](docs/roadmap.md) | Sprint sequence, gates, and current delivery status |
-| [`docs/known-limitations.md`](docs/known-limitations.md) | Current boundaries and missing evidence |
+| [`docs/known-limitations.md`](docs/known-limitations.md) | Current boundaries and unsupported claims |
 | [`docs/future-ideas.md`](docs/future-ideas.md) | Useful ideas intentionally parked outside current scope |
 
 ## Related projects

@@ -14,6 +14,32 @@ The product should help answer:
 > What does the framework need to know about this application, process, risk,
 > and environment before maintainable automation can be created?
 
+## Current implemented boundary
+
+Sprint 1 implements only the local context boundary for one UI process.
+
+The current package can:
+
+- validate one versioned `ContextBundle`,
+- preserve evidence, knowledge status, and basic sensitivity metadata,
+- represent explicit unknowns and unresolved conflicts,
+- validate page, component, element, locator, test-data, and evidence references,
+- distinguish structural validity from adaptation readiness,
+- persist deterministic human-readable JSON,
+- export JSON Schema version `0.1`.
+
+The current package cannot:
+
+- collect answers through a user workflow,
+- observe a browser,
+- call an LLM,
+- propose a POM,
+- modify `qa-automation-framework`,
+- execute a generated test.
+
+Current implementation details are documented in
+[`context-contract.md`](context-contract.md).
+
 ## Problem statement
 
 A reusable framework can define:
@@ -476,7 +502,7 @@ TestCartographer can:
 11. analyse a later application change,
 12. demonstrate usable operation time and comparative value.
 
-This is a product-level direction, not the scope of Sprint 1.
+This is a product-level direction, not the current implemented capability.
 
 ## Out of scope until separately justified
 
