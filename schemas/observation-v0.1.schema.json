@@ -1,0 +1,290 @@
+{
+  "$defs": {
+    "ElementSnapshot": {
+      "additionalProperties": false,
+      "description": "Minimized target snapshot; values, HTML, and page text are excluded.",
+      "properties": {
+        "attributes": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ObservedAttribute"
+          },
+          "title": "Attributes",
+          "type": "array"
+        },
+        "editable": {
+          "title": "Editable",
+          "type": "boolean"
+        },
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "html_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Html Persisted",
+          "type": "boolean"
+        },
+        "input_value_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Input Value Persisted",
+          "type": "boolean"
+        },
+        "tag_name": {
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "title": "Tag Name",
+          "type": "string"
+        },
+        "text_content_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Text Content Persisted",
+          "type": "boolean"
+        },
+        "visible": {
+          "title": "Visible",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "tag_name",
+        "visible",
+        "enabled",
+        "editable"
+      ],
+      "title": "ElementSnapshot",
+      "type": "object"
+    },
+    "LocatorStrategy": {
+      "description": "Supported locator candidate types in the first contract.",
+      "enum": [
+        "role",
+        "label",
+        "test_id",
+        "placeholder",
+        "text",
+        "css",
+        "xpath"
+      ],
+      "title": "LocatorStrategy",
+      "type": "string"
+    },
+    "LocatorVerification": {
+      "additionalProperties": false,
+      "description": "Proof that one existing context locator selected one visible target.",
+      "properties": {
+        "locator_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Locator Id",
+          "type": "string"
+        },
+        "match_count": {
+          "const": 1,
+          "default": 1,
+          "title": "Match Count",
+          "type": "integer"
+        },
+        "strategy": {
+          "$ref": "#/$defs/LocatorStrategy"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        },
+        "visible": {
+          "const": true,
+          "default": true,
+          "title": "Visible",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "locator_id",
+        "strategy",
+        "value"
+      ],
+      "title": "LocatorVerification",
+      "type": "object"
+    },
+    "ObservationDecision": {
+      "description": "Human review state for one captured browser observation.",
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "title": "ObservationDecision",
+      "type": "string"
+    },
+    "ObservedAttribute": {
+      "additionalProperties": false,
+      "description": "One allowlisted attribute from the selected element only.",
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/ObservedAttributeName"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "ObservedAttribute",
+      "type": "object"
+    },
+    "ObservedAttributeName": {
+      "description": "Allowlisted DOM attributes that may be persisted for a selected target.",
+      "enum": [
+        "id",
+        "role",
+        "aria-label",
+        "name",
+        "placeholder",
+        "type",
+        "data-testid"
+      ],
+      "title": "ObservedAttributeName",
+      "type": "string"
+    },
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "One local, bounded browser observation and its human review state.",
+  "properties": {
+    "capture_seconds": {
+      "minimum": 0.0,
+      "title": "Capture Seconds",
+      "type": "number"
+    },
+    "capture_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Capture Sha256",
+      "type": "string"
+    },
+    "captured_at": {
+      "format": "date-time",
+      "title": "Captured At",
+      "type": "string"
+    },
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/ObservationDecision",
+      "default": "pending"
+    },
+    "element": {
+      "$ref": "#/$defs/ElementSnapshot"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "locator": {
+      "$ref": "#/$defs/LocatorVerification"
+    },
+    "raw_page_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Page Persisted",
+      "type": "boolean"
+    },
+    "review_reason": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Review Reason"
+    },
+    "review_seconds": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Review Seconds",
+      "type": "number"
+    },
+    "reviewed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewed At"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "screenshot_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Screenshot Persisted",
+      "type": "boolean"
+    },
+    "sensitivity": {
+      "$ref": "#/$defs/SensitivityLevel"
+    },
+    "source_url": {
+      "minLength": 1,
+      "title": "Source Url",
+      "type": "string"
+    },
+    "target_element_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Target Element Id",
+      "type": "string"
+    },
+    "target_locator_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Target Locator Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "context_id",
+    "target_element_id",
+    "target_locator_id",
+    "source_url",
+    "captured_at",
+    "sensitivity",
+    "capture_seconds",
+    "locator",
+    "element",
+    "capture_sha256"
+  ],
+  "title": "BrowserObservation",
+  "type": "object"
+}

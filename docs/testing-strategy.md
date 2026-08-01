@@ -16,14 +16,19 @@ external interpretation and observation
 → controlled evidence and realistic evaluation later
 ```
 
-Sprint 2 tests the strict context boundary and deterministic human-intake
-workflow only.
+Sprint 3 adds a bounded application-observation layer while preserving the
+separation between deterministic contracts, browser execution, and human
+authority.
 
 ## Current evidence
 
 ```text
-47 deterministic tests passing
+64 deterministic and replay tests passing
+1 controlled Chromium integration test included
 ```
+
+With Chromium installed in a normal development environment, the expected full
+result is `65 passed`.
 
 The test suite covers:
 
@@ -37,10 +42,17 @@ The test suite covers:
 - session lifecycle and metrics,
 - session persistence,
 - intake JSON Schema drift,
-- command-line start, run, status, export, pause, and resume paths.
+- command-line start, run, status, export, pause, and resume paths,
+- browser-observation contract and schema drift,
+- URL minimization and selected-target attribute allowlisting,
+- locator strategy mapping, uniqueness, and visibility rules,
+- pending, accepted, and rejected review states,
+- evidence-backed context update and readiness transition,
+- controlled Chromium execution against a loopback reference page.
 
 Passing tests prove the implemented rules for controlled fixtures. They do not
-prove semantic correctness, usability, browser feasibility, or product value.
+prove semantic correctness, usability, safety against arbitrary applications,
+or product value.
 
 ## Test layers
 
@@ -286,6 +298,41 @@ Expected:
 rejected during structural validation
 ```
 
+
+### Observation-ready
+
+```text
+testdata/context/observation_ready/public_search_flow.json
+```
+
+Expected before capture:
+
+```text
+human intake complete
++ exactly one full-readiness blocker
++ inferred Search button locator
+```
+
+Expected after accepted observation:
+
+```text
+locator status = OBSERVED
++ APPLICATION evidence appended
++ full adaptation ready
+```
+
+### Browser and observation replay
+
+```text
+testdata/browser/public_catalog.html
+testdata/observation/pending/search_submit.json
+testdata/observation/accepted/search_submit.json
+```
+
+The HTML contains a deliberate input value that tests assert is absent from
+serialized observation data. Replay fixtures exercise persistence and review
+without requiring a browser.
+
 ## State-transition testing principles
 
 ### Test immutable input and returned output
@@ -333,6 +380,7 @@ The repository commits:
 ```text
 schemas/context-bundle-v0.1.schema.json
 schemas/intake-session-v0.1.schema.json
+schemas/observation-v0.1.schema.json
 ```
 
 Any intentional contract change must:
@@ -357,8 +405,10 @@ Schema regeneration and focused verification:
 ```powershell
 python scripts/export_context_schema.py
 python scripts/export_intake_schema.py
+python scripts/export_observation_schema.py
 python -m pytest tests/unit/context/test_schema.py `
-    tests/unit/intake/test_intake_schema.py
+    tests/unit/intake/test_intake_schema.py `
+    tests/unit/observation/test_schema.py
 ```
 
 Compilation check:
@@ -375,26 +425,36 @@ python -m compileall -q src tests
 - concurrent session editing,
 - session corruption recovery,
 - authorization of who may confirm facts,
-- real application or DOM observation,
-- Playwright installation or browser execution,
+- arbitrary external, dynamic, credentialed, iframe, or Shadow DOM applications,
+- cross-browser execution beyond Chromium,
 - redaction and secret handling,
 - LLM requests, parsing, latency, cost, or semantic quality,
 - POM proposal or generated source code,
 - `qa-automation-framework` adaptation,
 - comparative usability or time savings.
 
-## Next test boundary
+## Sprint 3 browser test layers
 
-Sprint 3 should add controlled browser-observation tests while preserving the
-same separation:
+- unit tests verify URL minimization, locator mapping, selected-target
+  allowlisting, review transitions, and narrow context updates,
+- replay fixtures verify deterministic observation persistence,
+- CLI integration tests verify capture/status/review behaviour without browser
+  nondeterminism,
+- one Chromium integration test opens the controlled local page,
+- `scripts/verify_browser_observation.py` verifies the full local browser path
+  and readiness transition.
 
-```text
-browser evidence acquisition
-!=
-human business confirmation
-!=
-full adaptation readiness
-```
+The first real Windows Chromium run also exposed a gap that fake-based tests did
+not catch: `locator.is_editable()` throws for a button instead of returning
+`False`. The regression suite now verifies both sides of the boundary:
 
-The first browser tests should use a controlled local target and deterministic
-capture fixtures before public or enterprise applications are attempted.
+- non-editable element types such as `button` do not call `is_editable()`,
+- supported targets such as native `input` elements still use Playwright's
+  editability check.
+
+This is why the standalone real-browser verifier remains a required commit gate
+rather than an optional demonstration.
+
+The next test boundary is the provider-neutral LLM request and strict proposal
+parser. Live provider quality must remain separate from deterministic protocol
+correctness.

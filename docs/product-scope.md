@@ -16,7 +16,7 @@ The product should help answer:
 
 ## Current implemented boundary
 
-Sprint 2 implements:
+Sprint 3 implements:
 
 - a strict local context contract for one UI process,
 - deterministic adaptation-readiness assessment,
@@ -28,13 +28,16 @@ Sprint 2 implements:
 - active, paused, complete, and blocked states,
 - CLI start, run, status, and export commands,
 - basic interaction and active-time metrics,
-- committed and tested JSON Schemas for context and intake session.
+- committed and tested JSON Schemas for context and intake session,
+- a separate bounded browser-observation contract and schema,
+- Playwright verification of one existing locator against one authorized page,
+- minimized selected-target capture and explicit human accept/reject review,
+- evidence-backed locator promotion from `INFERRED` to `OBSERVED`.
 
 The current package cannot:
 
 - create the context shell from an empty project,
-- observe a browser,
-- validate a locator against a real page,
+- discover an unknown page, element, or locator,
 - call an LLM,
 - propose a POM,
 - inspect or modify `qa-automation-framework`,
@@ -43,7 +46,8 @@ The current package cannot:
 Implementation details are documented in:
 
 - [`context-contract.md`](context-contract.md),
-- [`intake-workflow.md`](intake-workflow.md).
+- [`intake-workflow.md`](intake-workflow.md),
+- [`browser-observation.md`](browser-observation.md).
 
 ## Problem statement
 
@@ -413,20 +417,15 @@ Current implementation:
 - pytest,
 - deterministic JSON,
 - standard-library CLI,
-- no browser dependency,
+- Playwright with Python as an optional browser dependency,
+- human-authorized bounded observation of one selected target,
 - no LLM dependency.
-
-Planned first browser stack:
-
-- Playwright with Python,
-- human-controlled navigation,
-- bounded local observation,
-- no cloud inference in the browser sprint.
 
 Still-open decisions include:
 
-- browser-observation contract,
-- raw evidence storage,
+- safe credentialed browser sessions,
+- greenfield discovery and element selection,
+- raw evidence storage beyond the current no-raw-capture rule,
 - external LLM provider,
 - prompt and response protocol,
 - repository-writing mechanism,
@@ -547,8 +546,9 @@ A future usable version should demonstrate:
 - LLM usage and cost are measured,
 - update time after an application change is measured.
 
-Sprint 2 currently measures only interaction count, answer actions, and active
-prompt-response time.
+Sprint 3 measures intake interactions and active answer time, plus browser
+capture duration, review duration, and capture/review action count. It still
+does not measure complete setup or end-to-end operator time.
 
 ### Comparative value
 

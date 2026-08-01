@@ -40,8 +40,8 @@ product framing
 | Sprint 0 | Product framing and project boundaries | Done |
 | Sprint 1 | Minimum context contract and local evidence model | Done |
 | Sprint 2 | Deterministic human-guided process intake | Done |
-| Sprint 3 | Guided browser observation | Planned |
-| Sprint 4 | Bounded LLM synthesis and POM proposal | Provisional |
+| Sprint 3 | Bounded guided browser observation | Done |
+| Sprint 4 | Bounded LLM synthesis and POM proposal | Planned |
 | Sprint 5 | Framework handoff and first runnable test | Provisional |
 | Sprint 6 | Review, traceability, and first end-to-end evaluation | Provisional |
 | Sprint 7 | Change awareness and maintenance proposal | Parked |
@@ -208,87 +208,91 @@ measurable human-intake workflow.
 - framework adaptation,
 - time savings or easier operation than alternatives.
 
-## Sprint 3 — Guided browser observation
+## Sprint 3 — Bounded guided browser observation
 
-**Status:** Planned
+**Status:** Done
 
 ### Goal
 
-Add bounded application evidence to one existing human-reviewed process during
-a user-controlled Playwright session.
+Add one small, reviewable application-evidence boundary to an existing
+human-reviewed process without whole-page capture, autonomous navigation, or an
+LLM.
 
-### Working vertical slice
+### Delivered
+
+- Playwright as an optional browser dependency,
+- controlled local catalog reference page,
+- strict `BrowserObservation` schema version `0.1`,
+- one user-authorized URL, element ID, and existing primary locator per capture,
+- deterministic mapping for role, label, test ID, placeholder, text, CSS, and
+  XPath locator strategies,
+- exact-one-match and visibility requirements,
+- minimized source URL without credentials, query, or fragment,
+- selected-target snapshot with an explicit DOM attribute allowlist,
+- explicit exclusion of input values, text content, HTML, screenshots, and raw
+  page capture,
+- pending, accepted, and rejected review states,
+- rejection reason and review/capture effort metrics,
+- narrow context update that appends application evidence and promotes only the
+  accepted locator to `OBSERVED`,
+- replay fixtures and generated observation JSON Schema,
+- CLI capture, status, and review commands,
+- controlled end-to-end verification script,
+- 65 total tests when Chromium is available.
+
+### Reference flow
 
 ```text
-completed human intake
-→ open one controlled application page
-→ user performs or authorizes one process action at a time
-→ capture a minimized observation
-→ propose page/component/element/locator mapping
-→ user accepts or rejects the observation
-→ update evidence and context
-→ reassess full adaptation readiness
+human-reviewed context with one inferred locator
+→ serve controlled page on loopback
+→ Playwright verifies button:Search selects exactly one visible button
+→ persist a minimized pending observation
+→ human accepts the mapping
+→ append APPLICATION evidence
+→ promote the primary locator from INFERRED to OBSERVED
+→ full adaptation readiness changes from one blocker to ready
 ```
 
-### Candidate scope
+### Exit criteria
 
-- choose a controlled local reference application,
-- add Playwright as an optional browser dependency,
-- define a browser-observation contract separate from raw Playwright objects,
-- capture current URL, bounded DOM/accessibility details, visible state, and
-  locator candidates for selected targets,
-- link observations to existing process steps and element IDs,
-- classify captured data before persistence,
-- keep credentials and test-data values outside observations,
-- support user acceptance or rejection of proposed mappings,
-- preserve raw capture only if a safe local evidence boundary is defined,
-- update the intentionally inferred locator in the reference context through
-  actual observation,
-- add deterministic replay fixtures for browser-derived observations,
-- record observation time and user actions.
-
-### Required design questions
-
-- What is the smallest safe observation needed for one target element?
-- Should the first interaction use Playwright locator inspection, accessibility
-  snapshots, selected DOM fragments, or a combination?
-- How does a user indicate the element corresponding to a process step?
-- What data must be removed before persistence?
-- What makes a locator candidate `OBSERVED` rather than merely generated?
-- How are page and component ownership proposals reviewed?
-- How does browser evidence avoid overwriting confirmed business context?
-- What can be tested deterministically without launching a real external site?
-
-### Candidate exit criteria
-
-- [ ] One controlled local page can be opened through Playwright.
-- [ ] The user remains in control of navigation and actions.
-- [ ] One selected element observation is captured without raw whole-page
-      dumping.
-- [ ] Observation evidence is linked to the correct context entity.
-- [ ] At least one primary locator moves from `INFERRED` to `OBSERVED` through
-      real browser evidence.
-- [ ] Secrets and entered test-data values are not persisted.
-- [ ] Capture and context update can be replayed deterministically in tests.
-- [ ] The reference context reaches full readiness only through evidence, not a
+- [x] One controlled local page can be opened through Playwright.
+- [x] The user authorizes the URL and target element ID.
+- [x] One selected element is captured without whole-page dumping.
+- [x] Observation evidence is linked to the correct context and locator.
+- [x] One primary locator moves from `INFERRED` to `OBSERVED` only after
+      acceptance.
+- [x] Input values, text content, HTML, screenshots, and raw page data are not
+      persisted.
+- [x] Capture and context update are replayable in deterministic tests.
+- [x] Rejection leaves context unchanged.
+- [x] The reference context reaches readiness through evidence rather than a
       manual status rewrite.
-- [ ] No LLM is needed to prove the browser boundary.
+- [x] No LLM is used.
 
-### Deliberate exclusions
+### What Sprint 3 proves
 
-- autonomous crawling,
-- Jira or documentation ingestion,
-- cloud LLM requests,
-- POM generation,
-- framework file changes,
-- Salesforce,
-- self-healing,
-- unrestricted screenshots or full DOM archives.
+One existing locator can be verified against a real controlled page, represented
+by a minimized provider-neutral observation, reviewed by a human, and applied
+without changing business context or unrelated application structure.
+
+### What Sprint 3 does not prove
+
+- safe capture from arbitrary public or enterprise applications,
+- greenfield element, page, component, or process discovery,
+- free-form browser element selection,
+- locator generation or ranking,
+- credentialed workflows, iframe or Shadow DOM support,
+- accessibility-tree, network, screenshot, or trace capture,
+- POM proposal quality,
+- external LLM safety or value,
+- framework adaptation,
+- usability or time savings.
 
 ### Gate to Sprint 4
 
-Do not send application context to an LLM until browser acquisition produces a
-small, reviewable, sensitivity-aware observation contract.
+Any LLM request must consume an explicitly selected and minimized projection of
+confirmed context and accepted browser evidence. Raw pages, arbitrary session
+state, credentials, and unrelated context remain outside the request.
 
 ## Sprint 4 — Bounded LLM synthesis and POM proposal
 

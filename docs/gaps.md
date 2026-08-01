@@ -64,22 +64,22 @@ structure that Sprint 3 is intended to observe.
 
 ## Gap 4 — Guided browser observation
 
-**Status:** OPEN
+**Status:** CLOSED for the bounded Sprint 3 boundary
 
-**Target:** Sprint 3
+Sprint 3 introduced:
 
-The project cannot currently:
+- Playwright browser capture for one authorized page and existing element ID,
+- strict observation contract and schema version `0.1`,
+- exact-one-match locator verification,
+- selected-target attribute allowlist,
+- explicit non-persistence of input values, page text, HTML, screenshots, and
+  raw page data,
+- human accept/reject review,
+- narrow evidence-backed promotion from `INFERRED` to `OBSERVED`,
+- deterministic replay and a real controlled-browser verifier.
 
-- launch Playwright,
-- observe a real page,
-- identify a selected element,
-- capture accessibility or bounded DOM evidence,
-- validate a locator candidate,
-- link browser evidence to a process step,
-- move an inferred locator to observed status,
-- distinguish safe capture from sensitive raw data.
-
-This is the next active gap.
+This closure does not include greenfield discovery, arbitrary element picking,
+locator generation, or enterprise-browser safety. Those remain separate gaps.
 
 ## Gap 5 — Rich resolution of arbitrary open questions
 
@@ -126,7 +126,7 @@ The first workflow is intentionally single-user and local.
 
 **Status:** OPEN
 
-**Target:** Begin in Sprint 3; mandatory before external LLM or enterprise data
+**Target:** Continue in Sprint 4; mandatory before external LLM or enterprise data
 
 Current sensitivity labels are descriptive only.
 
@@ -227,3 +227,32 @@ It lacks:
 
 CI is intentionally deferred until the core local workflow stabilizes enough to
 justify maintaining it.
+
+## Gap 12 — Greenfield application and element discovery
+
+**Status:** OPEN
+
+**Target:** Revisit after Sprint 4–6 evidence
+
+Sprint 3 verifies an existing context locator. It cannot create pages,
+components, elements, or candidate locators from an unknown application.
+
+This remains distinct from bounded verification and should not be hidden inside
+the LLM synthesis sprint.
+
+## Gap 13 — Credentialed and complex browser contexts
+
+**Status:** OPEN
+
+**Target:** Before Salesforce or enterprise validation
+
+Current browser evidence covers one public local page and one top-level DOM
+target. Missing capabilities include:
+
+- login and approved secret-store integration,
+- storage state and session lifecycle,
+- iframes,
+- Shadow DOM,
+- multiple tabs,
+- asynchronous application states,
+- safe handling of sensitive URLs and attributes.

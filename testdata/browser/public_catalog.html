@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Public catalog reference</title>
+</head>
+<body>
+  <main>
+    <h1>Catalog</h1>
+    <form id="catalog-search" aria-label="Catalog search form">
+      <label for="catalog-query">Search catalog</label>
+      <input
+        id="catalog-query"
+        name="query"
+        type="search"
+        placeholder="Enter a catalog query"
+        value="do-not-persist-this-input-value"
+      >
+      <button type="submit" data-testid="search-submit">Search</button>
+    </form>
+    <h2>Search results</h2>
+    <ul data-testid="catalog-results">
+      <li>Example item</li>
+    </ul>
+  </main>
+  <script>
+    document.querySelector('#catalog-search').addEventListener('submit', event => {
+      event.preventDefault();
+    });
+  </script>
+</body>
+</html>

@@ -1779,3 +1779,414 @@ it.
 Sprint 3 should add one bounded, human-controlled browser observation and use
 real evidence to resolve the remaining locator blocker without introducing an
 LLM.
+
+---
+
+## Sprint 3 — bounded guided browser observation
+
+**Date:** 2026-08-01
+**Status:** Complete
+**Nature of work:** Application-evidence boundary; no LLM or framework generation
+
+### Starting point
+
+Sprint 2 could complete all human-answerable context for the controlled public
+catalog process.
+
+The resulting `ContextBundle` still had exactly one full-readiness blocker:
+
+```text
+primary_locator_not_observed
+```
+
+The Search button locator existed as:
+
+```text
+strategy: role
+value: button:Search
+status: INFERRED
+```
+
+This was an intentional boundary. Human intake must not convert a technical
+locator hypothesis into application evidence.
+
+### Sprint question
+
+The smallest useful browser question was:
+
+> Can TestCartographer verify one existing locator against one real controlled
+> page, persist only minimized evidence, require human acceptance, and remove
+> the blocker without changing unrelated business context?
+
+The sprint deliberately did not ask:
+
+- how to explore an unknown application,
+- how to generate locators,
+- how to model every element,
+- how to authenticate,
+- how to infer page/component ownership,
+- how to generate a POM.
+
+### Separate observation contract
+
+Adding browser fields directly to `ContextBundle` would mix three different
+states:
+
+1. temporary capture,
+2. human review,
+3. accepted application context.
+
+Sprint 3 therefore introduced `BrowserObservation` version `0.1` as a separate
+provider-neutral artefact.
+
+The observation can be:
+
+```text
+PENDING
+ACCEPTED
+REJECTED
+```
+
+A pending or rejected observation cannot update context.
+
+### User control
+
+The first CLI does not click through an application or offer autonomous
+navigation.
+
+The user explicitly supplies:
+
+- context file,
+- page URL,
+- existing context element ID,
+- output observation file,
+- sensitivity classification,
+- optional browser mode and timeout.
+
+The tool then uses the selected element's existing primary locator.
+
+This is intentionally narrower than an in-browser picker. It proves the
+capture and authority boundary before adding a richer interaction model.
+
+### Locator verification
+
+The existing locator vocabulary is translated deterministically into
+Playwright operations.
+
+For the reference target:
+
+```text
+button:Search
+→ page.get_by_role("button", name="Search", exact=True)
+```
+
+Capture requires:
+
+- exactly one match,
+- a visible target,
+- a valid selected-target snapshot.
+
+Zero matches, multiple matches, and invisible matches are failures. A browser
+command that returns any element is not sufficient evidence.
+
+### Minimized selected-target snapshot
+
+The original roadmap mentioned bounded DOM and accessibility information.
+During implementation, this was narrowed further.
+
+The persisted target snapshot contains only:
+
+- tag name,
+- visible state,
+- enabled state,
+- editable state,
+- allowlisted attributes when present.
+
+Allowlisted attributes:
+
+```text
+id
+role
+aria-label
+name
+placeholder
+type
+data-testid
+```
+
+The observation explicitly records that it did not persist:
+
+```text
+input value
+text content
+HTML
+screenshot
+raw page
+```
+
+A controlled HTML fixture deliberately contains the input value:
+
+```text
+do-not-persist-this-input-value
+```
+
+Tests prove that the value, `innerHTML`, and `textContent` do not appear in the
+serialized observation.
+
+### URL minimization
+
+The browser may navigate to a URL containing a query or fragment, but the
+persisted source URL removes both.
+
+Credentials embedded in URLs are rejected.
+
+This reduces accidental leakage, but it is not a complete privacy policy. URL
+paths and allowlisted attributes can still be sensitive.
+
+### Review before authority
+
+A successful browser capture creates only `PENDING` evidence.
+
+The user must choose:
+
+```text
+ACCEPTED
+or
+REJECTED with a reason
+```
+
+Acceptance verifies again that:
+
+- context ID matches,
+- element ID exists,
+- locator ID exists,
+- locator remains primary,
+- strategy and value still match the captured observation.
+
+Only then does the tool:
+
+1. append one `APPLICATION` evidence record,
+2. store the capture digest,
+3. change the selected locator value to `OBSERVED`,
+4. update the context timestamp,
+5. rerun adaptation readiness.
+
+It does not modify:
+
+- process purpose,
+- risk,
+- role,
+- preconditions,
+- process steps,
+- expected outcomes,
+- page/component ownership,
+- unrelated elements or locators.
+
+### Controlled reference application
+
+The fictional `.test` URL from earlier fixtures was not suitable as browser
+evidence.
+
+Sprint 3 adds a dependency-free local HTML page and serves it through a
+standard-library HTTP server on an ephemeral loopback port.
+
+The page includes:
+
+- search input,
+- Search submit button,
+- results heading,
+- results list.
+
+The search input contains a deliberate value that must never enter observation
+persistence.
+
+### Replay versus live browser evidence
+
+The sprint has two validation paths.
+
+#### Deterministic path
+
+Fakes and committed observation fixtures verify:
+
+- locator mapping,
+- exact-one-match rules,
+- visibility rules,
+- URL minimization,
+- attribute allowlisting,
+- JSON persistence,
+- schema stability,
+- review transitions,
+- context application,
+- CLI behaviour.
+
+#### Real browser path
+
+A Chromium integration test and
+`scripts/verify_browser_observation.py` verify:
+
+```text
+serve controlled local page
+→ open through Playwright
+→ match one visible Search button
+→ create minimized observation
+→ accept it
+→ apply it
+→ readiness changes from one blocker to ready
+```
+
+The container used to prepare the sprint could launch Chromium but its
+administrator policy blocked navigation even to `127.0.0.1`, producing
+`ERR_BLOCKED_BY_ADMINISTRATOR`.
+
+The deterministic suite therefore completed with:
+
+```text
+64 passed
+1 browser integration test skipped by environment policy
+```
+
+The sprint package installs Chromium and runs the separate browser verifier in
+the user's normal Windows environment before commit. The browser claim is not
+treated as proven until that verifier succeeds there.
+
+### Real Chromium validation exposed an editability assumption
+
+The first normal Windows run opened the controlled page and resolved the Search
+button correctly, but capture failed while calling:
+
+```text
+locator.is_editable()
+```
+
+Playwright does not define `is_editable()` for every visible element. It throws
+for a button because the API is limited to native editable controls,
+`[contenteditable]`, and ARIA roles that support `aria-readonly`.
+
+The deterministic fake used during package preparation returned `False` for the
+button instead of reproducing Playwright's exception. The mock therefore proved
+the local code path but concealed an invalid assumption about the real API.
+
+The capture boundary was corrected to:
+
+1. inspect only tag name, explicit role, and `contentEditable` locally,
+2. call Playwright's `is_editable()` only when the selected element supports
+   that state,
+3. persist `editable = false` for elements such as buttons,
+4. add regression tests proving that a button skips the API call and a native
+   input still uses it.
+
+This is a useful Sprint 3 learning: real browser verification must remain a
+commit gate even when deterministic replay and fake-based tests are extensive.
+
+### Effort metrics
+
+`BrowserObservation` records:
+
+- capture duration,
+- review duration,
+- capture timestamp,
+- review timestamp,
+- one capture authorization action,
+- one later review action when reviewed.
+
+These are instrumentation only. They do not yet measure complete setup time or
+compare TestCartographer with manual work.
+
+### Pytest import collision
+
+Adding another test folder with files named `test_models.py`, `test_io.py`, and
+`test_schema.py` exposed pytest's default module-name collision in the current
+directory structure.
+
+The project now uses:
+
+```text
+--import-mode=importlib
+```
+
+This is a repository-level test-collection fix, not a browser feature.
+
+### Sprint 3 decisions
+
+1. Keep browser observation separate from `ContextBundle`.
+2. Verify one existing target instead of scanning the page.
+3. Require the user to authorize URL and element ID.
+4. Use the existing primary locator; do not generate one.
+5. Require exactly one visible match.
+6. Persist an allowlisted selected-target snapshot only.
+7. Exclude input values, text, HTML, screenshots, and raw page data.
+8. Minimize persisted URLs and reject embedded credentials.
+9. Require human acceptance before `OBSERVED` status.
+10. Make rejection explicit and context-preserving.
+11. Apply only a narrow locator-and-evidence update.
+12. Use direct Playwright sync API as an optional dependency.
+13. Use a controlled local HTML page before public websites.
+14. Commit and test observation schema version `0.1`.
+15. Preserve deterministic replay separately from live browser execution.
+16. Record capture/review effort without storing duplicated page content.
+17. Add `--import-mode=importlib` to prevent test module-name collisions.
+18. Guard Playwright editability checks by element semantics instead of calling
+    `is_editable()` for every selected target.
+19. Keep LLM, discovery, authentication, POM generation, and framework mutation
+    outside the sprint.
+
+### What Sprint 3 proves
+
+Subject to successful browser verification in the normal development
+environment, the slice proves that one existing locator can be:
+
+- verified against one real controlled page,
+- represented by minimized evidence,
+- reviewed explicitly,
+- promoted from `INFERRED` to `OBSERVED`,
+- used to remove the final reference readiness blocker.
+
+### What Sprint 3 does not prove
+
+- safe capture from arbitrary pages,
+- correct redaction of all sensitive data,
+- greenfield discovery,
+- locator quality beyond one current exact match,
+- locator resilience after application changes,
+- multi-step browser guidance,
+- authentication or credential handling,
+- iframe or Shadow DOM support,
+- POM proposal quality,
+- LLM usefulness,
+- framework adaptation,
+- generated test correctness,
+- usability or time savings.
+
+### Open questions carried into Sprint 4
+
+- What exact subset of confirmed context and accepted observation evidence may
+  enter an external LLM request?
+- Should URL paths and allowlisted attributes be included by default or require
+  explicit field authorization?
+- What POM proposal structures are needed before code generation?
+- How should a proposal represent pages, components, methods, locator choices,
+  fixtures, tests, assumptions, and open questions?
+- Which proposal claims must cite specific context or observation IDs?
+- How should malformed provider output remain separate from semantically poor
+  proposals?
+- Should raw provider output be retained locally, and under which sensitivity
+  and retention rules?
+- Can deterministic replay prove protocol behaviour before any live provider
+  call?
+- What human review states are required before Sprint 5 may modify a framework
+  copy?
+- Does the first LLM slice need a live provider, or should it stop at strict
+  request rendering, parser, and replay?
+
+### Sprint 3 conclusion
+
+TestCartographer now has its first application-evidence boundary.
+
+The tool still does not understand an unknown application. It can, however,
+take one human-reviewed context hypothesis, verify one selected locator through
+Playwright, minimize the evidence, require acceptance, and update readiness
+without silently rewriting business meaning.
+
+Sprint 4 should use this bounded context as input to a provider-neutral POM
+proposal protocol. It must not bypass the safety boundary by sending raw pages
+or entire session files to an LLM.

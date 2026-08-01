@@ -438,3 +438,80 @@ needed from this slice.
 
 These decisions should be introduced by the vertical slice that first needs
 them.
+
+## ADR-016 — Keep browser observation separate from ContextBundle
+
+**Status:** Accepted in Sprint 3
+
+### Decision
+
+Persist browser capture and review in a separate `BrowserObservation` contract.
+Apply only an accepted, minimal evidence projection to `ContextBundle`.
+
+### Consequences
+
+- pending and rejected captures do not pollute accepted context,
+- raw Playwright objects never enter the provider-neutral model,
+- observation replay and context evolution can be tested separately.
+
+## ADR-017 — Verify one existing target instead of scanning a page
+
+**Status:** Accepted in Sprint 3
+
+### Decision
+
+The first browser command requires one user-authorized URL and one existing
+context element ID. It verifies that element's existing primary locator.
+
+### Consequences
+
+- the slice proves acquisition without pretending to solve discovery,
+- page/component ownership remains unchanged,
+- locator generation and arbitrary target selection remain future work.
+
+## ADR-018 — Persist an allowlisted target snapshot only
+
+**Status:** Accepted in Sprint 3
+
+### Decision
+
+Persist tag name, visibility, enabled/editable state, and only `id`, `role`,
+`aria-label`, `name`, `placeholder`, `type`, and `data-testid` when present.
+Explicitly exclude values, text, HTML, screenshots, and whole-page data.
+
+### Consequences
+
+- capture is reviewable and materially smaller than DOM dumping,
+- the contract cannot reconstruct the page,
+- allowlisted values still require sensitivity handling.
+
+## ADR-019 — Human acceptance is required before OBSERVED
+
+**Status:** Accepted in Sprint 3
+
+### Decision
+
+A successful locator match creates a pending observation. Only a later explicit
+acceptance may append evidence and change the locator status to `OBSERVED`.
+
+### Consequences
+
+- browser execution and accepted meaning remain separate,
+- rejection is auditable and leaves context unchanged,
+- automated capture cannot silently claim authority.
+
+## ADR-020 — Use direct Playwright library integration
+
+**Status:** Accepted in Sprint 3
+
+### Decision
+
+Use the Playwright Python sync API directly as an optional dependency. Do not
+introduce pytest-playwright into product code.
+
+### Consequences
+
+- CLI and verification scripts own browser lifecycle explicitly,
+- unit tests can use protocol-compatible fakes,
+- one integration test and verifier exercise Chromium,
+- other browsers remain unsupported.

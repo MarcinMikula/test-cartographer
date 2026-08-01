@@ -725,3 +725,22 @@ schemas/intake-session-v0.1.schema.json
 
 It does not replace the context schema. It represents workflow state around an
 embedded context.
+
+## Sprint 3 browser-evidence boundary
+
+`ContextBundle` remains version `0.1`. Browser runtime objects and raw captures
+are not added to it.
+
+Sprint 3 introduces a separate `BrowserObservation` version `0.1`. After human
+acceptance, only a narrow projection enters the context:
+
+- one new `APPLICATION` evidence item,
+- the existing target locator value changes to `OBSERVED`,
+- its evidence references include the new observation evidence,
+- `updated_at` changes to the review timestamp.
+
+Process purpose, risk, role, preconditions, steps, expected outcomes, ownership,
+and unrelated elements remain unchanged.
+
+This preserves the distinction between an observation artefact and the current
+accepted context state.

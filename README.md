@@ -11,19 +11,21 @@ The project is intended to complement
 
 ## Status
 
-**Sprint 2 — deterministic human-guided intake: complete**
+**Sprint 3 — bounded guided browser observation: complete**
 
 Current evidence:
 
 ```text
-47 deterministic tests passing
+64 deterministic and replay tests passing
+1 real Chromium integration test included
 ```
 
-The repository now provides two executable boundaries:
+The repository now provides three executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
-2. a resumable command-line intake that fills and reviews the human-answerable
-   part of that bundle without an LLM.
+2. a resumable deterministic intake for human-answerable context,
+3. a bounded Playwright observation that verifies one selected locator and
+   requires human acceptance before context changes.
 
 The current workflow can:
 
@@ -36,10 +38,14 @@ The current workflow can:
 - save after every interaction and resume later,
 - export the current `ContextBundle`,
 - measure question count, answer actions, and active response time,
-- distinguish human-intake completion from full adaptation readiness.
+- distinguish human-intake completion from full adaptation readiness,
+- open one user-authorized page through Playwright,
+- verify one existing primary locator against exactly one visible target,
+- persist a minimized observation and require explicit accept/reject review,
+- promote only an accepted locator to `OBSERVED`.
 
-It still cannot observe a browser, call an LLM, propose a Page Object, generate
-a test, or modify `qa-automation-framework`.
+It still cannot autonomously explore an application, call an LLM, propose a
+Page Object, generate a test, or modify `qa-automation-framework`.
 
 ## The problem
 
@@ -146,6 +152,25 @@ adaptation blockers but do not become questions for the human intake.
 
 See [`docs/intake-workflow.md`](docs/intake-workflow.md).
 
+### Bounded browser observation
+
+Sprint 3 adds a separate `BrowserObservation` contract and CLI workflow:
+
+```text
+human-reviewed context
+→ authorize one URL and one existing element ID
+→ resolve one existing primary locator through Playwright
+→ require exactly one visible target
+→ persist only allowlisted target attributes
+→ accept or reject the mapping
+→ promote only an accepted locator to OBSERVED
+```
+
+The observation excludes input values, text content, HTML, screenshots, and
+whole-page capture. It does not discover a workflow or generate selectors.
+
+See [`docs/browser-observation.md`](docs/browser-observation.md).
+
 ## Structural validity, intake completion, and adaptation readiness
 
 The project deliberately separates three questions.
@@ -174,8 +199,8 @@ A session may be:
 
 `assess_readiness()` also checks application and automation evidence.
 
-A completed human intake can still be blocked because, for example, a primary
-locator has not been observed. That is expected before Sprint 3.
+A completed human intake can still be blocked because a primary locator has not
+been observed. Sprint 3 resolves this only through accepted browser evidence.
 
 ## Quick start
 
@@ -190,7 +215,8 @@ locator has not been observed. That is expected before Sprint 3.
 py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
+python -m pip install -e ".[dev,browser]"
+python -m playwright install chromium
 ```
 
 ### Run tests
@@ -199,10 +225,10 @@ python -m pip install -e ".[dev]"
 python -m pytest
 ```
 
-Expected Sprint 2 result:
+Expected Sprint 3 result after Chromium installation:
 
 ```text
-47 passed
+65 passed
 ```
 
 ### Start a reference intake
@@ -268,13 +294,57 @@ test-cartographer intake export `
     --context .test-cartographer/public-search-context.json
 ```
 
+
+### Verify the controlled browser boundary
+
+```powershell
+python scripts/verify_browser_observation.py
+```
+
+The verifier serves the local reference page on loopback, opens it with
+Chromium, validates the inferred Search button locator, accepts the observation,
+and confirms that full readiness changes from one blocker to ready.
+
+### Capture and review one observation
+
+Start a local server in one terminal:
+
+```powershell
+python -m http.server 8765 --directory testdata/browser
+```
+
+Capture in another terminal:
+
+```powershell
+test-cartographer observe capture `
+    --context testdata/context/observation_ready/public_search_flow.json `
+    --url http://127.0.0.1:8765/public_catalog.html `
+    --element-id el_search_submit `
+    --observation .test-cartographer/search-submit-observation.json `
+    --observation-id obs_search_submit `
+    --sensitivity public
+```
+
+Accept and write an updated context copy:
+
+```powershell
+test-cartographer observe review `
+    --observation .test-cartographer/search-submit-observation.json `
+    --decision accepted `
+    --reason "The target and locator mapping are correct." `
+    --context testdata/context/observation_ready/public_search_flow.json `
+    --output-context .test-cartographer/public-search-observed.json
+```
+
 ### Re-export contract schemas
 
 ```powershell
 python scripts/export_context_schema.py
 python scripts/export_intake_schema.py
+python scripts/export_observation_schema.py
 python -m pytest tests/unit/context/test_schema.py `
-    tests/unit/intake/test_intake_schema.py
+    tests/unit/intake/test_intake_schema.py `
+    tests/unit/observation/test_schema.py
 ```
 
 ## Current project structure
@@ -285,19 +355,27 @@ test-cartographer/
 │   ├── architecture-decisions.md
 │   ├── context-contract.md
 │   ├── intake-workflow.md
+│   ├── browser-observation.md
 │   ├── testing-strategy.md
 │   └── ...
 ├── schemas/
 │   ├── context-bundle-v0.1.schema.json
-│   └── intake-session-v0.1.schema.json
+│   ├── intake-session-v0.1.schema.json
+│   └── observation-v0.1.schema.json
 ├── scripts/
 │   ├── export_context_schema.py
-│   └── export_intake_schema.py
+│   ├── export_intake_schema.py
+│   ├── export_observation_schema.py
+│   └── verify_browser_observation.py
 ├── src/test_cartographer/
 │   ├── cli.py
 │   ├── context/
-│   └── intake/
-├── testdata/context/
+│   ├── intake/
+│   └── observation/
+├── testdata/
+│   ├── browser/
+│   ├── context/
+│   └── observation/
 ├── tests/
 │   ├── integration/
 │   └── unit/
@@ -307,28 +385,31 @@ test-cartographer/
 └── pyproject.toml
 ```
 
-## What Sprint 2 proves
+## What Sprint 3 proves
 
-- a strict context can drive a deterministic question queue,
-- human answers can become evidence-linked knowledge without an LLM,
-- required collection and explicit confirmation can remain separate phases,
-- `UNKNOWN` and deferred answers do not create infinite question loops,
-- a session can be saved after every interaction and resumed,
-- operator effort can be measured without storing duplicate answer text in the
-  interaction log,
-- human-intake completion can remain separate from browser and adaptation
-  readiness.
+- one existing locator can be resolved through Playwright against a controlled
+  real page,
+- exact uniqueness and visibility can be required before evidence is created,
+- the selected target can be represented without values, page text, HTML,
+  screenshots, or whole-page capture,
+- capture and human acceptance can remain separate authority stages,
+- rejection can leave context unchanged,
+- accepted application evidence can promote one locator from `INFERRED` to
+  `OBSERVED`,
+- the final reference readiness blocker can be removed without changing
+  business context or unrelated application structure.
 
-## What Sprint 2 does not prove
+## What Sprint 3 does not prove
 
-- that the context shell can be created from scratch without JSON,
-- that the questions are sufficient or pleasant for a real tester,
-- that open-question answers are mapped into a rich domain model,
-- that browser evidence can be collected safely,
-- that locator candidates are correct,
-- that an LLM can synthesize a maintainable POM,
-- that `qa-automation-framework` can be adapted automatically,
-- that the tool saves time or effort compared with realistic alternatives.
+- greenfield application, page, element, or locator discovery,
+- safety against arbitrary public or enterprise applications,
+- authentication, iframes, Shadow DOM, multiple tabs, or complex waits,
+- long-term locator stability or semantic quality,
+- complete redaction and privacy protection,
+- LLM synthesis or POM proposal quality,
+- `qa-automation-framework` adaptation,
+- generated test correctness,
+- easier operation or time savings compared with realistic alternatives.
 
 ## Relationship with qa-automation-framework
 
@@ -348,8 +429,8 @@ without TestCartographer during ordinary test execution.
 | 0 | Product framing and project boundaries | Done |
 | 1 | Minimum context contract and local evidence model | Done |
 | 2 | Deterministic human-guided process intake | Done |
-| 3 | Guided browser observation | Planned |
-| 4 | Bounded LLM synthesis and POM proposal | Provisional |
+| 3 | Bounded guided browser observation | Done |
+| 4 | Bounded LLM synthesis and POM proposal | Planned |
 | 5 | Framework handoff and first runnable test | Provisional |
 | 6 | First end-to-end evaluation | Provisional |
 | 7+ | Maintenance, integrations, comparative validation, and hardening | Parked |
@@ -383,6 +464,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/product-scope.md`](docs/product-scope.md) | Product responsibility, boundaries, and success criteria |
 | [`docs/context-contract.md`](docs/context-contract.md) | Semantic contract version `0.1` |
 | [`docs/intake-workflow.md`](docs/intake-workflow.md) | Sprint 2 question, answer, review, session, and CLI behaviour |
+| [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/architecture-decisions.md`](docs/architecture-decisions.md) | Accepted implementation decisions |
 | [`docs/testing-strategy.md`](docs/testing-strategy.md) | Current test layers and evidence limits |
 | [`docs/gaps.md`](docs/gaps.md) | Open implementation gaps and closed slices |

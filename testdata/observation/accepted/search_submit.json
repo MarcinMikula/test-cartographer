@@ -1,0 +1,44 @@
+{
+  "schema_version": "0.1",
+  "id": "obs_search_submit_replay",
+  "context_id": "ctx_public_catalog_search_observation_ready",
+  "target_element_id": "el_search_submit",
+  "target_locator_id": "loc_search_submit_role",
+  "source_url": "http://127.0.0.1:8765/public_catalog.html",
+  "captured_at": "2026-08-01T17:15:00Z",
+  "sensitivity": "public",
+  "capture_seconds": 0.321,
+  "locator": {
+    "locator_id": "loc_search_submit_role",
+    "strategy": "role",
+    "value": "button:Search",
+    "match_count": 1,
+    "visible": true
+  },
+  "element": {
+    "tag_name": "button",
+    "visible": true,
+    "enabled": true,
+    "editable": false,
+    "attributes": [
+      {
+        "name": "type",
+        "value": "submit"
+      },
+      {
+        "name": "data-testid",
+        "value": "search-submit"
+      }
+    ],
+    "input_value_persisted": false,
+    "text_content_persisted": false,
+    "html_persisted": false
+  },
+  "capture_sha256": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "raw_page_persisted": false,
+  "screenshot_persisted": false,
+  "decision": "accepted",
+  "reviewed_at": "2026-08-01T17:15:04Z",
+  "review_reason": "Reference target and locator accepted.",
+  "review_seconds": 1.25
+}

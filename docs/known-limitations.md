@@ -8,11 +8,12 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Current implementation state
 
-- **The repository implements context and deterministic human intake only.**
-  There is no browser integration, LLM protocol, Page Object proposal,
-  framework adapter, or runnable generated test.
-- **The current evidence is 47 deterministic tests around controlled
-  fixtures.** No real-user or real-application evaluation has occurred.
+- **The repository implements context, deterministic human intake, and one
+  bounded browser-observation path.** There is no LLM protocol, Page Object
+  proposal, framework adapter, or runnable generated test.
+- **The current suite contains 64 deterministic/replay tests and one controlled
+  Chromium integration test.** No real-user or external-application evaluation
+  has occurred.
 - **The CLI is local and single-user.** It has no authentication, authorization,
   remote service, or team workflow.
 - **No CI workflow is configured.** Verification is currently local.
@@ -117,18 +118,28 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Application observation
 
-- **No Playwright dependency or browser runtime is included.** The tool cannot
-  open or inspect an application.
-- **No locator has been validated against a real page.** Locator values remain
-  contract fixture data.
-- **No page, component, or element discovery exists.** Ownership is authored in
-  the input shell.
-- **No screenshot, DOM, accessibility, network, iframe, or Shadow DOM capture
-  exists.**
-- **No credential or session handling exists.** Future browser work must keep
-  secrets outside prompts, context, logs, and source control.
-- **Autonomous exploration is out of current scope.** Sprint 3 remains
-  human-controlled.
+- **Observation verifies an existing locator only.** It does not discover an
+  unknown page, component, element, process, or locator.
+- **The user selects the URL and existing context element ID through CLI
+  arguments.** There is no in-browser picker or guided multi-step navigation.
+- **Only one top-level selected target is captured.** Iframes, Shadow DOM,
+  multiple tabs, dynamic waits, and credentialed sessions are unsupported.
+- **The snapshot is deliberately narrow.** It stores tag, visibility,
+  enabled/editable state, and allowlisted attributes; it does not store page
+  text, element text, input values, HTML, screenshot, trace, or network data.
+- **Editability is queried only for element semantics supported by Playwright.**
+  Native input controls, contenteditable elements, and supported ARIA roles use
+  Playwright's check; elements such as buttons are recorded as non-editable
+  instead of invoking an unsupported API state.
+- **Minimization is not proof of privacy.** Allowlisted attributes and URL paths
+  can still contain confidential information.
+- **Only exact uniqueness and visibility are verified.** Locator stability,
+  semantic quality, future resilience, and business correctness are not proven.
+- **Acceptance is single-user and local.** Identity and authority are not
+  verified.
+- **The local reference page is not a realistic modern application.** It proves
+  the browser boundary, not production readiness.
+- **Autonomous exploration remains out of scope.**
 
 ## Security and privacy
 
@@ -167,8 +178,8 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 - **Initial scope is UI/POM only.** API and Service Object Model adaptation are
   parked.
-- **Playwright, Python, and pytest are the intended first stack.** Browser
-  support is not implemented yet.
+- **Playwright, Python, and pytest are the only implemented browser stack.**
+  Other languages and automation frameworks are unsupported.
 - **One process at a time is the current unit.** Whole-application modelling is
   unsupported.
 - **The tool does not own business correctness.** Human confirmation can still
@@ -188,8 +199,8 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Validation and claims
 
-- **No real reference web application has been exercised.** The `.test` target
-  is fictional fixture data.
+- **Only a controlled local HTML reference page has been exercised.** No public,
+  dynamic, credentialed, or enterprise application has been validated.
 - **No controlled baseline has been run.**
 - **No claim of time savings, easier operation, or higher code quality is
   justified.**
@@ -209,9 +220,9 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Next boundary to resolve
 
-Sprint 3 should add a bounded, human-controlled browser observation that moves
-one locator from inferred to observed through real application evidence.
+Sprint 4 should define a bounded, provider-neutral LLM request and structured
+POM proposal protocol using only explicitly authorized confirmed context and
+accepted observations.
 
-Do not begin live LLM calls, Jira integration, framework generation, Salesforce,
-or autonomous crawling before that browser boundary is safe, minimal, and
-replayable.
+Do not send raw pages, credentials, arbitrary context files, or unrestricted
+browser evidence to a provider.
