@@ -1,0 +1,68 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.python-version
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Test and quality tools
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.pyright/
+.ruff_cache/
+.hypothesis/
+
+# Playwright and test artefacts
+playwright-report/
+test-results/
+blob-report/
+traces/
+screenshots/
+videos/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and local databases
+*.log
+*.sqlite
+*.sqlite3
+*.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.code-workspace
+*.swp
+*.swo
+
+# Operating systems
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+tmp/
+temp/
+*.tmp
