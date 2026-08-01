@@ -16,29 +16,34 @@ The product should help answer:
 
 ## Current implemented boundary
 
-Sprint 1 implements only the local context boundary for one UI process.
+Sprint 2 implements:
 
-The current package can:
-
-- validate one versioned `ContextBundle`,
-- preserve evidence, knowledge status, and basic sensitivity metadata,
-- represent explicit unknowns and unresolved conflicts,
-- validate page, component, element, locator, test-data, and evidence references,
-- distinguish structural validity from adaptation readiness,
-- persist deterministic human-readable JSON,
-- export JSON Schema version `0.1`.
+- a strict local context contract for one UI process,
+- deterministic adaptation-readiness assessment,
+- a stage-specific human-intake assessment,
+- rule-based collection and review questions,
+- evidence-linked provide and confirm actions,
+- explicit unknown and skip behaviour,
+- self-contained save/resume sessions,
+- active, paused, complete, and blocked states,
+- CLI start, run, status, and export commands,
+- basic interaction and active-time metrics,
+- committed and tested JSON Schemas for context and intake session.
 
 The current package cannot:
 
-- collect answers through a user workflow,
+- create the context shell from an empty project,
 - observe a browser,
+- validate a locator against a real page,
 - call an LLM,
 - propose a POM,
-- modify `qa-automation-framework`,
+- inspect or modify `qa-automation-framework`,
 - execute a generated test.
 
-Current implementation details are documented in
-[`context-contract.md`](context-contract.md).
+Implementation details are documented in:
+
+- [`context-contract.md`](context-contract.md),
+- [`intake-workflow.md`](intake-workflow.md).
 
 ## Problem statement
 
@@ -73,7 +78,7 @@ collecting enough reliable context to decide:
 - what should be represented by pages, components, workflows, fixtures, and
   tests,
 - what remains unknown,
-- which claims come from evidence and which are model inferences,
+- which claims come from evidence and which are inferences,
 - how the automation should change when the application changes.
 
 ## Product vision
@@ -122,6 +127,9 @@ Potential stakeholders include:
 Not every stakeholder must directly operate the tool. Some provide or validate
 specific parts of the context.
 
+The current implementation does not yet model stakeholder identity or approval
+authority.
+
 ## Core responsibilities
 
 ### 1. Context acquisition
@@ -141,8 +149,12 @@ For information that cannot be safely or reliably inferred:
 - environment restrictions,
 - acceptance or rejection of inferred information.
 
-The interaction should be adaptive. The tool should ask for missing information
-when needed instead of presenting one fixed exhaustive questionnaire.
+Sprint 2 implements a deterministic first form of this path.
+
+The tool asks from explicit gaps rather than presenting one fixed exhaustive
+questionnaire. It separates providing a value from confirming it.
+
+It does not yet interpret one free-form answer into multiple structured facts.
 
 #### Project artefacts
 
@@ -161,6 +173,8 @@ Possible sources include:
 Imported content is evidence, not automatic truth. It may be incomplete,
 conflicting, or stale.
 
+No project-artefact integration is currently implemented.
+
 #### Running application
 
 During a human-guided browser session, the tool may observe:
@@ -175,7 +189,7 @@ During a human-guided browser session, the tool may observe:
 - relevant network activity,
 - visible outcomes.
 
-The first scope is guided exploration, not autonomous crawling.
+The next planned scope is guided observation, not autonomous crawling.
 
 #### Repository and execution evidence
 
@@ -192,66 +206,104 @@ The tool should eventually inspect:
 
 This prevents duplication and supports maintenance over multiple iterations.
 
+No repository or execution connector is currently implemented.
+
 ### 2. Context modelling
 
-The product should organize information into a structured application model.
+The current contract models:
 
-Expected concepts include:
+- application and environment,
+- one process,
+- purpose, risk, role, and preconditions,
+- ordered UI steps,
+- pages and components,
+- elements and locator candidates,
+- expected outcomes,
+- symbolic test-data requirements,
+- evidence and provenance,
+- open questions,
+- conflicts.
 
-- application,
-- environment,
-- role,
-- authentication,
+Potential future concepts include:
+
+- authentication policy,
 - business area,
-- process,
-- precondition,
+- structured business rule,
 - test condition,
-- step,
-- page,
-- component,
-- element,
-- application state,
-- locator candidate,
-- business rule,
-- expected outcome,
-- risk,
-- test data,
+- application state graph,
+- assertion operator,
 - automation artefact,
-- evidence,
-- unresolved question,
-- conflict.
+- resolved-question object,
+- cross-process relationship.
 
-The final schema is not decided in Sprint 0.
+Those concepts should be added only when a vertical slice requires them.
 
 ### 3. Knowledge status and provenance
 
-The system must distinguish at least conceptually between:
+Important knowledge must distinguish:
 
 ```text
 OBSERVED
 PROVIDED
 INFERRED
 CONFIRMED
+UNKNOWN
 STALE
 CONFLICTING
 ```
 
-Important information may need:
+Current knowledge metadata includes:
 
-- source type and source identifier,
+- value,
+- status,
+- evidence references,
+- optional confidence,
+- sensitivity,
+- notes.
+
+Current evidence metadata includes:
+
+- source type and reference,
+- summary,
 - acquisition timestamp,
-- reviewer,
-- confidence,
-- sensitivity classification,
-- related process or application area,
-- related automation artefact,
-- superseded or conflicting evidence.
+- sensitivity,
+- optional digest.
 
-An LLM inference must never be silently presented as a confirmed business fact.
+An inference must never be silently presented as a confirmed business fact.
 
-### 4. Framework adaptation
+A human answer becomes `PROVIDED`; an explicit review action is required for
+`CONFIRMED`.
 
-Using sufficiently confirmed context, the product may propose or prepare:
+### 4. Stage-specific readiness
+
+The product should not use one undifferentiated notion of completeness.
+
+Current stages are:
+
+```text
+structural validity
+→ human-intake completion
+→ full adaptation readiness
+```
+
+Structural validation rejects malformed data.
+
+Human-intake assessment includes only questions a person can answer in the
+current workflow.
+
+Full adaptation readiness also requires application evidence such as an
+observed primary locator.
+
+Future stages may add:
+
+- browser-observation readiness,
+- LLM-request readiness,
+- POM-proposal readiness,
+- framework-handoff readiness.
+
+### 5. Framework adaptation
+
+Using sufficiently confirmed context, the product may later propose or prepare:
 
 - Page Objects,
 - reusable component objects,
@@ -279,21 +331,26 @@ verification intent and business assertions
 → tests
 ```
 
-Generated output is a draft until reviewed and executed.
+Generated output remains a draft until reviewed and executed.
 
-### 5. Review and traceability
+No framework adaptation is currently implemented.
 
-A proposed change should make it possible to answer:
+### 6. Review and traceability
+
+A future proposed change should make it possible to answer:
 
 - What source evidence supported this proposal?
-- Which details were observed, supplied, or inferred?
-- Which assumptions remain unconfirmed?
+- Which details were observed, supplied, inferred, or confirmed?
+- Which assumptions remain unresolved?
 - Which files will change?
 - Which process and risk does the automation represent?
 - What result must be verified?
 - What requires human acceptance?
 
-### 6. Maintenance support
+Sprint 2 proves the first local provide/confirm distinction and interaction
+history. It does not yet review code or repository diffs.
+
+### 7. Maintenance support
 
 Later versions may:
 
@@ -303,7 +360,7 @@ Later versions may:
 - detect changed required fields or process steps,
 - mark context as stale or conflicting,
 - propose bounded updates,
-- retain a review history.
+- retain accepted-change history.
 
 Autonomous repair is not part of the first vertical slice.
 
@@ -347,49 +404,64 @@ tested and why.
 
 The framework remains usable without TestCartographer after adaptation.
 
-## Initial technical boundary
+## Technical boundary
 
-The first implementation direction is:
+Current implementation:
 
-- Python,
-- Playwright,
+- Python 3.11+,
+- Pydantic v2,
 - pytest,
-- Page Object Model,
-- a local context representation,
-- a capable external LLM behind a bounded input contract,
-- local data minimization and preprocessing,
-- human review before accepting changes.
+- deterministic JSON,
+- standard-library CLI,
+- no browser dependency,
+- no LLM dependency.
 
-The following remain open decisions:
+Planned first browser stack:
 
-- package architecture,
-- persistence technology,
-- LLM provider,
+- Playwright with Python,
+- human-controlled navigation,
+- bounded local observation,
+- no cloud inference in the browser sprint.
+
+Still-open decisions include:
+
+- browser-observation contract,
+- raw evidence storage,
+- external LLM provider,
 - prompt and response protocol,
-- browser-observation mechanism,
 - repository-writing mechanism,
-- review interface.
+- POM proposal schema,
+- richer review interface,
+- database or cross-process storage.
 
-## First vertical-slice boundary
+## First end-to-end vertical-slice boundary
 
-The first end-to-end slice should cover one small process.
-
-Expected flow:
+The first product-level slice should cover one small process.
 
 ```text
-1. Select one process and one target application.
-2. Collect minimum business and testing context from a human.
-3. Guide the browser through the selected flow.
-4. Record a bounded set of observations.
-5. Build a small structured context model.
-6. expose missing, conflicting, and inferred information.
-7. Propose Page Object and test artefacts.
-8. Map the proposal into a copy of qa-automation-framework.
-9. Execute one test.
-10. Review assumptions, evidence, code, and outcome.
+1. Select one process and one controlled target application.
+2. Build or acquire a structurally valid context shell.
+3. Collect and confirm human business and testing context.
+4. Guide the browser through the selected flow.
+5. Record bounded, reviewed application observations.
+6. Expose remaining missing, conflicting, and inferred information.
+7. Build a bounded LLM request from authorized context.
+8. Propose Page Object and test artefacts.
+9. Map the accepted proposal into qa-automation-framework.
+10. Execute one test.
+11. Review assumptions, evidence, code, and outcome.
+12. Measure operator time and corrections.
 ```
 
-Not required for the first slice:
+Current progress:
+
+```text
+Step 2 — controlled fixture only
+Step 3 — implemented for the deterministic reference flow
+Steps 4–12 — not implemented
+```
+
+Not required for the first product slice:
 
 - Jira integration,
 - autonomous application exploration,
@@ -423,6 +495,7 @@ The intended processing sequence is:
 local acquisition
 → filtering and redaction
 → sensitivity classification
+→ explicit external-processing authorization
 → minimum necessary context
 → bounded external LLM request
 ```
@@ -433,10 +506,10 @@ Requirements:
 - raw application capture must not automatically be sent to a provider,
 - data minimization must happen before external inference,
 - source and sensitivity metadata must be retained where relevant,
-- enterprise-system validation requires an explicit safe environment and data
-  policy.
+- enterprise validation requires a safe environment and data policy.
 
-No implementation currently enforces these requirements.
+The current implementation records sensitivity but does not enforce redaction,
+authorization, retention, or external-processing policy.
 
 ## Product success criteria
 
@@ -444,7 +517,7 @@ A future usable version should demonstrate:
 
 ### Context quality
 
-- required information is present or explicitly marked unknown,
+- required information is present or explicitly unknown,
 - source and status are traceable,
 - unsupported assumptions are visible,
 - conflicting information is not silently resolved.
@@ -463,7 +536,8 @@ A future usable version should demonstrate:
 - the process is understandable to the intended user,
 - questions are relevant and not excessive,
 - manual corrections are measurable,
-- the result can be reviewed through ordinary repository changes.
+- review states are visible,
+- the result can be inspected through ordinary files and repository changes.
 
 ### Efficiency
 
@@ -472,6 +546,9 @@ A future usable version should demonstrate:
 - time to first runnable test is measured,
 - LLM usage and cost are measured,
 - update time after an application change is measured.
+
+Sprint 2 currently measures only interaction count, answer actions, and active
+prompt-response time.
 
 ### Comparative value
 
@@ -510,7 +587,7 @@ This is a product-level direction, not the current implemented capability.
 - a universal no-code automation platform,
 - a closed proprietary test representation,
 - autonomous production-system exploration,
-- fully autonomous business correctness decisions,
+- fully autonomous business-correctness decisions,
 - broad multi-language and multi-framework support,
 - automatic Jira ingestion before a data-safety policy exists,
 - merging TestCartographer and PhoenixQA,

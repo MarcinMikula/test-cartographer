@@ -1,163 +1,178 @@
 # Known limitations — thematic index
 
-Things that are known to be incomplete, unimplemented, unverified, or outside
-the current scope.
+Things known to be incomplete, unverified, fragile, or outside the current
+scope.
 
-These are boundaries of the current project state, not hidden bugs. Full
-reasoning lives in `LEARNINGS.md`; this file is a quick map, not a copy.
+These are current project boundaries, not hidden bugs. Full reasoning lives in
+`LEARNINGS.md`; this file is a quick map, not a copy.
 
 ## Current implementation state
 
-- **The repository implements only the local context boundary.** There is no
-  user intake, browser integration, LLM protocol, Page Object proposal,
-  framework adapter, or end-to-end test-generation workflow.
-- **The working product flow remains incomplete.** Sprint 1 validates one
-  contract, not application discovery or framework adaptation.
-- **The package has no public CLI or UI.** Current use requires Python imports
-  or direct fixture files.
-- **No CI workflow is configured.** The current evidence is local deterministic
-  test execution.
+- **The repository implements context and deterministic human intake only.**
+  There is no browser integration, LLM protocol, Page Object proposal,
+  framework adapter, or runnable generated test.
+- **The current evidence is 47 deterministic tests around controlled
+  fixtures.** No real-user or real-application evaluation has occurred.
+- **The CLI is local and single-user.** It has no authentication, authorization,
+  remote service, or team workflow.
+- **No CI workflow is configured.** Verification is currently local.
+
+## Context-shell boundary
+
+- **Intake does not start from an empty project.** It requires a structurally
+  valid `ContextBundle` containing an application, process, pages, elements,
+  steps, and evidence shell.
+- **The shell is currently authored as controlled fixture data.** The product
+  cannot derive it from a browser, repository, requirement, or questionnaire.
+- **Version `0.1` models one process.** Cross-process reuse and shared
+  application graphs are unsupported.
+- **No schema migration exists.** Only context version `0.1` and session version
+  `0.1` are accepted.
+
+## Human intake
+
+- **Question selection is deterministic but narrow.** Only process purpose,
+  risk, role, preconditions, expected outcomes, open questions, and conflict
+  resolutions are supported.
+- **The question catalogue is not configurable.** Rules and wording are coded
+  in Python.
+- **A free-form LLM interviewer is not implemented.** Long answers are stored as
+  supplied text rather than semantically decomposed.
+- **Question quality is unvalidated.** The prompts work for controlled fixtures
+  but have not been evaluated with real testers or domain experts.
+- **`UNKNOWN` and `SKIP` are session-local deferrals.** They prevent immediate
+  loops but do not create assignments, reminders, owners, or deadlines.
+- **A blocked session requires explicit retry.** There is no guided explanation
+  of who should provide the missing information.
+- **Review is field-level and single-user.** There is no separation between
+  collector, domain reviewer, automation reviewer, and approver.
+- **Confirmation records an action, not authority.** The tool does not verify
+  identity or permission to confirm a business fact.
+- **No undo command exists.** Corrections are made by answering a review
+  question with replacement text or by editing/restarting outside the current
+  CLI.
+
+## Open-question resolution
+
+- **`OpenQuestion` has no structured answer field.** Sprint 2 stores a supplied
+  answer in human evidence, removes the active question, and preserves the
+  prompt/action in session history.
+- **The answer is not automatically mapped to a business rule or domain
+  object.** A future contract version may be needed after real examples.
+- **Open-question evidence summaries may contain supplied text.** They remain
+  local but can still be sensitive and must not be assumed safe for external
+  processing.
+
+## Session persistence
+
+- **Sessions embed a full context copy.** This is convenient and self-contained
+  but duplicates data across sessions.
+- **Concurrent editing is unsupported.** There is no locking, merge, or conflict
+  detection between two session files.
+- **Crash recovery is limited to the last successful save.** There is no journal
+  or transactional file replacement strategy.
+- **No session retention policy exists.** `.test-cartographer/` is ignored by
+  Git, but deletion and archival remain user responsibilities.
+- **Metrics are derived from recorded interactions.** They are not persisted as
+  independent authoritative fields.
+
+## Metrics and usability
+
+- **Active seconds measure prompt-response time only.** They do not include
+  setup, documentation reading, external research, JSON inspection, or later
+  code review.
+- **Piped or automated input may report near-zero active time.** The metric is
+  meaningful only for real interactive use.
+- **No subjective usability data is collected.** Difficulty, confidence, trust,
+  and willingness to reuse remain unmeasured.
+- **No baseline exists.** There is no comparison with manual adaptation,
+  Playwright Codegen, DevTools, or a general LLM.
+- **Question count is not automatically a quality metric.** Fewer questions may
+  mean efficient intake or missing context.
 
 ## Context model
 
-- **Version `0.1` models exactly one process.** Shared pages, components,
-  evidence, and application context may be duplicated across bundles.
-- **The contract has been tested only against controlled fixtures.** It has not
-  yet been exercised against a real project, real requirements, or real DOM.
-- **Readiness rules are provisional.** They are deterministic but not yet
-  validated as sufficient or appropriately strict for real POM adaptation.
-- **Only text knowledge is authority-aware.** More complex typed business
-  rules, assertion operators, state machines, and structured expected values
-  are not modelled.
-- **`UNKNOWN` does not represent not-applicable.** The first schema has no
-  separate `NOT_APPLICABLE` state.
-- **Confidence is a stored number, not a calibrated probability.** No
-  calibration or interpretation policy exists.
-- **The conflict model is simple.** It records one subject, evidence, and one
-  resolution value; it does not model multi-claim argumentation or partial
-  reconciliation.
-- **No schema migration exists.** Only version `0.1` is accepted.
-- **JSON is the only persistence format.** There is no database, concurrent
-  update support, query layer, or merge strategy.
+- **Only text knowledge is authority-aware.** Typed business rules, assertion
+  operators, state machines, and structured expected values are not modelled.
+- **`UNKNOWN` does not mean not applicable.** There is no separate
+  `NOT_APPLICABLE` state.
+- **Confidence is not calibrated.** It is stored metadata only.
+- **Conflict handling is simple.** One subject, evidence set, and one resolution
+  value are supported.
+- **Validation checks structure, not truth.** A confirmed false or vague
+  statement can still pass.
+- **Readiness rules are provisional.** They are not proven sufficient for real
+  POM adaptation.
 
 ## Evidence and provenance
 
-- **Evidence stores metadata and summary only.** Raw documents, DOM snapshots,
-  screenshots, traces, and attachments are not captured or replayable.
-- **Evidence authenticity is not verified.** `source_ref` is descriptive, and
-  the optional SHA-256 digest is not automatically generated or checked.
-- **Confirmation authority is not modelled.** The schema records status and
-  evidence but not roles, approval policy, or who is permitted to confirm a
-  business fact.
-- **Source freshness is not calculated.** A value can be marked stale, but no
-  automatic aging or supersession mechanism exists.
-- **Conflicts are not discovered automatically.** They must currently be
-  authored in JSON or constructed through Python.
-
-## Human interaction
-
-- **No guided intake exists.** A user must edit JSON or create models in Python.
-- **No adaptive question selection exists.** Readiness issue codes are not yet
-  mapped to user-facing questions.
-- **No review workflow exists.** There is no accept, reject, correct, replace,
-  or confirm interface.
-- **No save/resume session exists beyond saving the final JSON bundle.**
-- **No interaction metrics are collected.** Setup time, active user time,
-  question count, correction rate, and perceived difficulty remain unmeasured.
-- **The initial user is assumed to understand testing and automation.** No-code
-  or non-technical use remains outside current scope.
+- **Evidence stores metadata and summaries, not replayable raw sources.** No DOM
+  snapshot, screenshot, trace, document, or attachment store exists.
+- **Evidence authenticity is unverified.** A SHA-256 digest records content
+  consistency but not source trust.
+- **Source freshness is not calculated.** Values can be marked stale only by an
+  external decision.
+- **Conflicts are not discovered automatically.** They must be present in the
+  input context or introduced by future acquisition logic.
 
 ## Application observation
 
-- **No browser capture exists.** The tool cannot observe DOM, accessibility
-  information, application state, network activity, screenshots, iframes, or
-  Shadow DOM.
-- **The reference `.test` application is fictional.** It is a data fixture, not
-  a running target.
-- **No locator is validated against a real browser.** Locator strategies and
-  values are stored contract data only.
-- **No page or component discovery exists.** Ownership relationships in the
-  fixtures are manually authored.
-- **Autonomous exploration is explicitly out of scope.** The first planned
-  browser workflow remains human-guided.
-- **Credentials and session handling are undefined.** Future browser work must
-  keep secrets outside prompts, context files, logs, and source control.
-
-## Test-data handling
-
-- **Only symbolic requirements are stored.** The project cannot resolve,
-  generate, provision, reset, or clean up actual test data.
-- **No fixture mapping exists.** `symbolic_ref` is not connected to
-  `qa-automation-framework` test data or fixtures.
-- **Sensitivity classification is descriptive.** It does not enforce access or
-  storage rules.
-- **Credentials and real business values must remain outside the bundle.** No
-  approved secret-store integration exists.
-
-## LLM use
-
-- **No LLM provider is integrated.** The project has no prompt, request schema,
-  result schema, parser, replay adapter, timeout, retry, or budget controls.
-- **No field is authorized for external processing.** Sensitivity does not equal
-  permission.
-- **No redaction or minimization engine exists.** The security processing
-  sequence remains a documented requirement.
-- **No LLM claim has been validated.** There is no evidence that a model can
-  identify gaps, resolve mappings, propose POM boundaries, or generate useful
-  code from the contract.
-- **Local-model support is not promised.** It may be explored later, but Sprint
-  1 has no provider abstraction.
-- **Cost and latency are unmeasured.**
+- **No Playwright dependency or browser runtime is included.** The tool cannot
+  open or inspect an application.
+- **No locator has been validated against a real page.** Locator values remain
+  contract fixture data.
+- **No page, component, or element discovery exists.** Ownership is authored in
+  the input shell.
+- **No screenshot, DOM, accessibility, network, iframe, or Shadow DOM capture
+  exists.**
+- **No credential or session handling exists.** Future browser work must keep
+  secrets outside prompts, context, logs, and source control.
+- **Autonomous exploration is out of current scope.** Sprint 3 remains
+  human-controlled.
 
 ## Security and privacy
 
-- **Security requirements are unenforced.** There is no access control,
-  encryption, redaction, retention, deletion, audit log, or external-request
-  allowlist.
-- **Context JSON may still contain sensitive descriptions or URLs.** Excluding
-  raw evidence reduces risk but does not make a bundle safe by default.
-- **No threat model exists.** Prompt injection, malicious DOM content,
-  untrusted attachments, and poisoned project artefacts remain future topics.
-- **Jira and enterprise integrations are not implemented.**
-- **Real enterprise systems must not be used yet.** Salesforce and other
-  realistic targets are deferred until safe environments and handling rules
-  exist.
+- **Sensitivity labels do not enforce policy.** They are descriptive metadata.
+- **No redaction or minimization engine exists.** Context and evidence may still
+  contain confidential descriptions or URLs.
+- **No field is authorized for cloud processing.** There is no external LLM
+  request boundary.
+- **No threat model exists.** Prompt injection, malicious DOM content, poisoned
+  artefacts, and unsafe attachments remain future concerns.
+- **No encryption, access control, retention, or deletion workflow exists.**
+- **Real enterprise systems must not be used yet.** Salesforce and Jira remain
+  deferred until safe handling rules exist.
 
-## Structural validation
+## LLM use
 
-- **Validation checks structure, not truth.** A confirmed false statement can
-  still pass the contract.
-- **Semantic quality is not proven.** A syntactically valid purpose, risk, or
-  outcome may still be vague or useless.
-- **Locator quality preference is not enforced.** CSS and XPath remain allowed;
-  there is no semantic-locator ranking or stability score.
-- **Readiness is not stage-specific.** The current report answers one general
-  adaptation-readiness question. Later stages may require separate readiness
-  profiles for intake, observation, proposal, and code handoff.
-- **No rule engine or configurable policy exists.** Readiness rules are coded in
-  Python.
+- **No LLM provider is integrated.** There is no request schema, response
+  schema, parser, replay adapter, timeout, retry, or budget control.
+- **No LLM claim has been validated.** The project has no evidence that a model
+  can interpret captured context or propose maintainable POM boundaries.
+- **Local-model support is not promised.** Provider strategy remains open.
+- **Cost and latency are unmeasured.**
 
 ## Framework adaptation
 
-- **TestCartographer cannot read or modify `qa-automation-framework`.**
-- **No POM proposal schema exists.** There is no representation of candidate
-  pages, component classes, methods, fixtures, or tests.
-- **No architecture validator checks generated code.**
-- **No generated test exists.**
-- **Repository coexistence is untested.** The project does not yet know how to
-  avoid duplicates, preserve human edits, or produce reviewable patches.
-- **Ordinary test-execution independence remains a requirement, not evidence.**
+- **TestCartographer cannot inspect or modify `qa-automation-framework`.**
+- **No POM proposal contract exists.** Pages, components, methods, fixtures, and
+  tests are not represented as generated proposals.
+- **No generated code or reviewable repository diff exists.**
+- **No architecture validator checks proposed automation.**
+- **No test has been generated or executed.**
+- **Independence from a live LLM remains a requirement, not demonstrated
+  evidence.**
 
 ## Scope boundaries
 
-- **Initial scope is UI/POM only.** API discovery and Service Object Model
-  adaptation remain parked.
-- **Playwright, Python, and pytest are the intended first stack.** No browser
-  runtime dependency is installed yet.
+- **Initial scope is UI/POM only.** API and Service Object Model adaptation are
+  parked.
+- **Playwright, Python, and pytest are the intended first stack.** Browser
+  support is not implemented yet.
 - **One process at a time is the current unit.** Whole-application modelling is
-  not supported.
-- **The tool does not own business correctness.** A reliable test basis and
-  human confirmation remain necessary.
+  unsupported.
+- **The tool does not own business correctness.** Human confirmation can still
+  confirm a wrong assumption.
 - **The tool is not a test-management system.**
 - **The tool is not a full model-based automation platform.**
 - **The tool is not a PhoenixQA replacement.** Runtime healing and initial
@@ -169,44 +184,34 @@ reasoning lives in `LEARNINGS.md`; this file is a quick map, not a copy.
 - **No context-staleness automation exists.**
 - **No impact analysis exists.**
 - **No selector or workflow repair exists.**
-- **No accepted-change history exists.**
+- **No accepted-change history beyond current intake evidence exists.**
 
-All maintenance capabilities remain future work after the first creation flow
-is proven.
+## Validation and claims
 
-## Validation and evidence
-
-- **Current evidence is 23 deterministic tests around controlled fixtures.**
-  This proves the implemented contract behaviours only.
-- **No reference web application has been selected or built.**
+- **No real reference web application has been exercised.** The `.test` target
+  is fictional fixture data.
 - **No controlled baseline has been run.**
-- **No comparison exists against manual adaptation or ordinary LLM-assisted
-  work.**
-- **No claim of time savings, quality improvement, or easier operation is
+- **No claim of time savings, easier operation, or higher code quality is
   justified.**
-- **A ready context does not prove a correct automated test.** It means only
-  that current deterministic blockers are absent.
-- **A passing generated test would not by itself prove correctness.** Quality
-  also requires meaningful assertions, source traceability, appropriate
-  architecture, and maintenance evidence.
+- **Human-intake completion is not adaptation readiness.** Sprint 2 explicitly
+  leaves one browser locator blocker in the reference flow.
+- **Adaptation readiness would not prove a correct test.** Meaningful assertions,
+  architecture quality, execution, and maintenance still require evidence.
 
 ## Packaging and production readiness
 
 - **The project is experimental.**
-- **The package is not published.** Editable local installation is the only
-  documented setup.
-- **Dependency locking is not implemented.** `pyproject.toml` declares version
-  ranges, not a reproducible lock file.
-- **There is no release, compatibility matrix, support policy, installation
-  installer, telemetry policy, or production-readiness claim.**
-- **The MIT license permits use but does not imply fitness for any particular
-  purpose.**
+- **The package is not published.** Editable local installation is documented.
+- **Dependencies are version-ranged, not locked.**
+- **There is no release, installer, compatibility matrix, support policy,
+  telemetry policy, or production-readiness claim.**
+- **The MIT license does not imply fitness for a particular purpose.**
 
 ## Next boundary to resolve
 
-Sprint 2 should create a deterministic human-guided intake that fills the
-contract without requiring manual JSON editing.
+Sprint 3 should add a bounded, human-controlled browser observation that moves
+one locator from inferred to observed through real application evidence.
 
-Do not begin browser capture, live LLM calls, Jira integration, or framework
-generation before the intake demonstrates how gaps, corrections, conflicts,
-and confirmations are handled.
+Do not begin live LLM calls, Jira integration, framework generation, Salesforce,
+or autonomous crawling before that browser boundary is safe, minimal, and
+replayable.

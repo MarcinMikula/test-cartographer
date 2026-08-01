@@ -11,30 +11,35 @@ The project is intended to complement
 
 ## Status
 
-**Sprint 1 — minimum context contract: complete**
-
-The repository now contains a strict, provider-neutral local model for one UI
-process.
+**Sprint 2 — deterministic human-guided intake: complete**
 
 Current evidence:
 
 ```text
-23 deterministic tests passing
+47 deterministic tests passing
 ```
 
-The implemented slice can:
+The repository now provides two executable boundaries:
 
-- load and save one versioned process context as JSON,
-- distinguish observed, provided, inferred, confirmed, unknown, stale, and
-  conflicting knowledge,
-- retain evidence references and basic sensitivity classification,
-- reject malformed structures and dangling references,
-- keep incomplete and conflicting contexts structurally valid,
-- assess whether a valid context is ready for framework adaptation,
-- export a committed JSON Schema for contract version `0.1`.
+1. a strict, provider-neutral `ContextBundle` for one UI process,
+2. a resumable command-line intake that fills and reviews the human-answerable
+   part of that bundle without an LLM.
 
-It cannot yet interview a user, observe a browser, call an LLM, generate a Page
-Object, or modify `qa-automation-framework`.
+The current workflow can:
+
+- load a structurally valid but incomplete process context,
+- derive an ordered question queue from explicit context gaps,
+- collect free-text answers as `PROVIDED` human evidence,
+- preserve explicit `UNKNOWN` and deferred questions,
+- review and confirm supplied business values,
+- keep browser-only blockers outside the human questionnaire,
+- save after every interaction and resume later,
+- export the current `ContextBundle`,
+- measure question count, answer actions, and active response time,
+- distinguish human-intake completion from full adaptation readiness.
+
+It still cannot observe a browser, call an LLM, propose a Page Object, generate
+a test, or modify `qa-automation-framework`.
 
 ## The problem
 
@@ -85,9 +90,11 @@ The first useful product should understand one small, human-guided process well
 enough to propose a maintainable Page Object representation and help create one
 reviewed, runnable test in a copy of `qa-automation-framework`.
 
-## Sprint 1 contract
+## Implemented architecture
 
-The current contract models one process and a bounded set of related context:
+### Context contract
+
+`ContextBundle` version `0.1` models one UI process:
 
 ```text
 ContextBundle
@@ -109,63 +116,66 @@ credentials or business values.
 
 See [`docs/context-contract.md`](docs/context-contract.md).
 
-## Structural validity is not readiness
+### Deterministic intake
 
-Sprint 1 separates two questions.
+Sprint 2 adds a stage-specific workflow:
 
-### Is the context structurally valid?
-
-Pydantic validation checks, among other things:
-
-- strict fields and schema version,
-- globally unique entity identifiers,
-- contiguous process-step order,
-- valid action shape,
-- page, component, element, test-data, and evidence references,
-- element ownership,
-- action-target availability on the declared page,
-- locator-selection invariants,
-- knowledge-status rules,
-- timezone-aware timestamps.
-
-Invalid input is rejected.
-
-### Is the context ready for adaptation?
-
-A valid bundle may still contain:
-
-- explicit unknowns,
-- unresolved conflicts,
-- inferred business facts,
-- unconfirmed expected outcomes,
-- an unobserved primary locator,
-- blocking open questions.
-
-`assess_readiness()` reports deterministic blockers and warnings without
-silently completing or rewriting the context.
-
-```python
-from test_cartographer.context import assess_readiness, load_context
-
-context = load_context("testdata/context/valid/public_search_flow.json")
-report = assess_readiness(context)
-
-assert report.ready is True
+```text
+structurally valid incomplete ContextBundle
+→ deterministic required questions
+→ PROVIDED human evidence
+→ explicit review questions
+→ CONFIRMED business context
+→ saved session and exported ContextBundle
 ```
 
-## Reference fixtures
+Question selection is rule-based. It does not use a free-form LLM interviewer.
 
-Sprint 1 includes four controlled JSON fixtures:
+The current human-answerable targets are:
 
-| Fixture | Structural result | Readiness result | Purpose |
-|---|---:|---:|---|
-| `valid/public_search_flow.json` | valid | ready | complete reference process |
-| `incomplete/public_search_flow.json` | valid | blocked | explicit unknowns and open question |
-| `conflicting/public_search_flow.json` | valid | blocked | conflicting locator evidence |
-| `invalid/missing_evidence_reference.json` | rejected | not assessed | dangling provenance reference |
+- process purpose,
+- business risk,
+- user role,
+- preconditions,
+- expected outcomes,
+- explicit open questions,
+- conflict resolutions.
 
-The fictional `.test` application is only a contract fixture. It is not yet a
-browser target or evidence of an executable automation flow.
+Browser-only issues such as an inferred or missing primary locator remain full
+adaptation blockers but do not become questions for the human intake.
+
+See [`docs/intake-workflow.md`](docs/intake-workflow.md).
+
+## Structural validity, intake completion, and adaptation readiness
+
+The project deliberately separates three questions.
+
+### 1. Is the bundle structurally valid?
+
+Pydantic validation rejects malformed structures, impossible actions, duplicate
+identifiers, invalid ownership, dangling references, and invalid knowledge
+states.
+
+### 2. Is the human intake complete?
+
+`assess_intake()` considers only issues that a tester or domain expert can
+answer in the current workflow.
+
+A session may be:
+
+- `active` — another deterministic question is available,
+- `paused` — the user stopped and can resume,
+- `complete` — no non-deferred collection or review question remains and no
+  human-intake blocker remains,
+- `blocked` — required information remains unresolved but every current
+  question was deferred or marked unknown.
+
+### 3. Is the context ready for framework adaptation?
+
+`assess_readiness()` also checks application and automation evidence.
+
+A completed human intake can still be blocked because, for example, a primary
+locator has not been observed. That is expected before Sprint 3.
 
 ## Quick start
 
@@ -174,16 +184,11 @@ browser target or evidence of an executable automation flow.
 - Python 3.11 or newer
 - PowerShell commands below assume Windows
 
-### Create and activate a virtual environment
+### Install
 
 ```powershell
 py -3.11 -m venv .venv
 .\.venv\Scripts\Activate.ps1
-```
-
-### Install the project
-
-```powershell
 python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 ```
@@ -194,21 +199,83 @@ python -m pip install -e ".[dev]"
 python -m pytest
 ```
 
-Expected Sprint 1 result:
+Expected Sprint 2 result:
 
 ```text
-23 passed
+47 passed
 ```
 
-### Re-export the JSON Schema
+### Start a reference intake
+
+The controlled Sprint 1 incomplete fixture is used as the input shell:
+
+```powershell
+test-cartographer intake start `
+    --context testdata/context/incomplete/public_search_flow.json `
+    --session .test-cartographer/public-search-session.json `
+    --session-id intake_public_search
+```
+
+### Run or resume the intake
+
+```powershell
+test-cartographer intake run `
+    --session .test-cartographer/public-search-session.json
+```
+
+Supported commands inside the session:
+
+```text
+:confirm  accept the displayed current value
+:unknown  explicitly state that the answer is not known
+:skip     defer the current question
+:quit     save and pause the session
+```
+
+Answers entered as normal text become `PROVIDED`. When all required collection
+questions are resolved, the tool enters a review phase and asks the user to
+confirm or correct supplied business values.
+
+### Inspect status
+
+```powershell
+test-cartographer intake status `
+    --session .test-cartographer/public-search-session.json
+```
+
+The status includes:
+
+- session state,
+- human-intake blockers and warnings,
+- full adaptation blockers,
+- next deterministic question,
+- interaction counts,
+- active answer time.
+
+### Retry deferred questions
+
+```powershell
+test-cartographer intake run `
+    --session .test-cartographer/public-search-session.json `
+    --retry-deferred
+```
+
+### Export the current context
+
+```powershell
+test-cartographer intake export `
+    --session .test-cartographer/public-search-session.json `
+    --context .test-cartographer/public-search-context.json
+```
+
+### Re-export contract schemas
 
 ```powershell
 python scripts/export_context_schema.py
-python -m pytest tests/unit/context/test_schema.py
+python scripts/export_intake_schema.py
+python -m pytest tests/unit/context/test_schema.py `
+    tests/unit/intake/test_intake_schema.py
 ```
-
-The schema snapshot test prevents the Python contract and committed JSON Schema
-from drifting silently.
 
 ## Current project structure
 
@@ -217,43 +284,53 @@ test-cartographer/
 ├── docs/
 │   ├── architecture-decisions.md
 │   ├── context-contract.md
-│   ├── future-ideas.md
-│   ├── gaps.md
-│   ├── known-limitations.md
-│   ├── product-scope.md
-│   ├── roadmap.md
-│   └── testing-strategy.md
+│   ├── intake-workflow.md
+│   ├── testing-strategy.md
+│   └── ...
 ├── schemas/
-│   └── context-bundle-v0.1.schema.json
+│   ├── context-bundle-v0.1.schema.json
+│   └── intake-session-v0.1.schema.json
 ├── scripts/
-│   └── export_context_schema.py
-├── src/
-│   └── test_cartographer/
-│       ├── __init__.py
-│       └── context/
-│           ├── __init__.py
-│           ├── enums.py
-│           ├── io.py
-│           ├── models.py
-│           └── readiness.py
-├── testdata/
-│   └── context/
-│       ├── conflicting/
-│       ├── incomplete/
-│       ├── invalid/
-│       └── valid/
+│   ├── export_context_schema.py
+│   └── export_intake_schema.py
+├── src/test_cartographer/
+│   ├── cli.py
+│   ├── context/
+│   └── intake/
+├── testdata/context/
 ├── tests/
+│   ├── integration/
 │   └── unit/
-│       └── context/
 ├── LEARNINGS.md
 ├── LICENSE
 ├── README.md
 └── pyproject.toml
 ```
 
-## Relationship with qa-automation-framework
+## What Sprint 2 proves
 
-The projects have separate responsibilities.
+- a strict context can drive a deterministic question queue,
+- human answers can become evidence-linked knowledge without an LLM,
+- required collection and explicit confirmation can remain separate phases,
+- `UNKNOWN` and deferred answers do not create infinite question loops,
+- a session can be saved after every interaction and resumed,
+- operator effort can be measured without storing duplicate answer text in the
+  interaction log,
+- human-intake completion can remain separate from browser and adaptation
+  readiness.
+
+## What Sprint 2 does not prove
+
+- that the context shell can be created from scratch without JSON,
+- that the questions are sufficient or pleasant for a real tester,
+- that open-question answers are mapped into a rich domain model,
+- that browser evidence can be collected safely,
+- that locator candidates are correct,
+- that an LLM can synthesize a maintainable POM,
+- that `qa-automation-framework` can be adapted automatically,
+- that the tool saves time or effort compared with realistic alternatives.
+
+## Relationship with qa-automation-framework
 
 | Project | Responsibility |
 |---|---|
@@ -264,123 +341,64 @@ The resulting automation must remain normal Python, Playwright, and pytest
 code. It should be understandable, reviewable, version-controlled, and usable
 without TestCartographer during ordinary test execution.
 
-## Guiding principles
-
-1. **Context before code.** A generated interaction is not yet a meaningful
-   automated test.
-2. **Evidence before certainty.** Observations, supplied facts, and LLM
-   inferences must remain distinguishable.
-3. **Human ownership of correctness.** The tool may propose; evidence and human
-   review decide.
-4. **Architecture-aware generation.** Elements and actions must be mapped to
-   appropriate Page Objects, components, workflows, fixtures, or tests.
-5. **Small vertical slices.** Prove one complete process before adding broad
-   integrations or autonomous behaviour.
-6. **Security before cloud inference.** Browser-visible or Jira-accessible data
-   is not automatically safe to send to an external model.
-7. **Usability is part of quality.** A correct tool still fails if operating it
-   takes more effort than a realistic alternative.
-8. **Generated code must survive without the generator.** No hidden LLM runtime
-   dependency is required for normal execution.
-
-## Initial scope
-
-The initial product direction is deliberately narrow:
-
-- UI automation,
-- Playwright with Python,
-- pytest,
-- Page Object Model,
-- one selected process at a time,
-- human-guided exploration,
-- local collection and preprocessing,
-- external LLM use only after a safe input boundary is defined,
-- explicit human review before framework changes are accepted.
-
-Service Object Model and API context may be added later, but they are not part
-of the first vertical slice.
-
-## Explicit non-goals for the first vertical slice
-
-The first implementation will not attempt to:
-
-- autonomously explore an entire application,
-- generate a complete test suite from one prompt,
-- replace a tester or domain expert,
-- infer business correctness without a reliable test basis,
-- integrate with every issue tracker or test-management system,
-- support every browser framework or programming language,
-- become a general test-management platform,
-- reproduce a full enterprise model-based automation suite,
-- silently repair or rewrite automation without review,
-- reuse PhoenixQA as a hidden dependency.
-
-## Validation direction
-
-The product must eventually be compared against realistic alternatives:
-
-```text
-manual framework adaptation
-vs.
-human-led adaptation with DevTools, Playwright Codegen, and a general LLM
-vs.
-adaptation with TestCartographer
-```
-
-Evaluation must include more than test execution success:
-
-- functional correctness,
-- POM quality and code readability,
-- reusability and maintainability,
-- traceability to source information,
-- unsupported assumptions and human corrections,
-- setup and operation time,
-- time to the first runnable test,
-- number and quality of user interactions,
-- time required to update automation after a change,
-- LLM usage and cost,
-- perceived difficulty and user confidence.
-
 ## Roadmap
 
 | Sprint | Focus | Status |
 |---|---|---|
-| 0 | Product framing, boundaries, and validation direction | Done |
+| 0 | Product framing and project boundaries | Done |
 | 1 | Minimum context contract and local evidence model | Done |
-| 2 | Human-guided process intake | Planned |
-| 3 | Guided browser observation | Provisional |
-| 4 | Bounded LLM context synthesis and POM proposal | Provisional |
+| 2 | Deterministic human-guided process intake | Done |
+| 3 | Guided browser observation | Planned |
+| 4 | Bounded LLM synthesis and POM proposal | Provisional |
 | 5 | Framework handoff and first runnable test | Provisional |
-| 6 | Review, traceability, and first end-to-end evaluation | Provisional |
-| 7+ | Maintenance, external sources, comparative validation, and hardening | Parked until evidence |
+| 6 | First end-to-end evaluation | Provisional |
+| 7+ | Maintenance, integrations, comparative validation, and hardening | Parked |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
+
+## Guiding principles
+
+1. **Context before code.** A generated interaction is not yet a meaningful
+   automated test.
+2. **Evidence before certainty.** Observations, supplied facts, and inferences
+   remain distinguishable.
+3. **Human ownership of correctness.** Collection, review, and confirmation are
+   explicit transitions.
+4. **Architecture-aware generation.** Future output must fit Page Objects,
+   components, workflows, fixtures, and tests deliberately.
+5. **Small vertical slices.** Each sprint proves one boundary before the next
+   uncertain layer is added.
+6. **Security before cloud inference.** Browser-visible or Jira-accessible data
+   is not automatically safe for an external model.
+7. **Usability is part of quality.** Active user effort and operation time are
+   measured from the first workflow.
+8. **Generated code must survive without the generator.** Normal test execution
+   must not require a live LLM.
 
 ## Documentation
 
 | Document | Purpose |
 |---|---|
-| [`LEARNINGS.md`](LEARNINGS.md) | Chronological problem, reasoning, decisions, experiments, and conclusions |
-| [`docs/context-contract.md`](docs/context-contract.md) | Contract concepts, invariants, fixtures, and readiness boundary |
-| [`docs/architecture-decisions.md`](docs/architecture-decisions.md) | Accepted implementation decisions and consequences |
-| [`docs/testing-strategy.md`](docs/testing-strategy.md) | Current deterministic test layers and future evidence gates |
-| [`docs/gaps.md`](docs/gaps.md) | Concrete missing capabilities and their dependencies |
-| [`docs/product-scope.md`](docs/product-scope.md) | Product responsibility, users, inputs, outputs, boundaries, and success criteria |
-| [`docs/roadmap.md`](docs/roadmap.md) | Sprint sequence, gates, and current delivery status |
+| [`LEARNINGS.md`](LEARNINGS.md) | Chronological reasoning, experiments, decisions, and conclusions |
+| [`docs/product-scope.md`](docs/product-scope.md) | Product responsibility, boundaries, and success criteria |
+| [`docs/context-contract.md`](docs/context-contract.md) | Semantic contract version `0.1` |
+| [`docs/intake-workflow.md`](docs/intake-workflow.md) | Sprint 2 question, answer, review, session, and CLI behaviour |
+| [`docs/architecture-decisions.md`](docs/architecture-decisions.md) | Accepted implementation decisions |
+| [`docs/testing-strategy.md`](docs/testing-strategy.md) | Current test layers and evidence limits |
+| [`docs/gaps.md`](docs/gaps.md) | Open implementation gaps and closed slices |
 | [`docs/known-limitations.md`](docs/known-limitations.md) | Current boundaries and unsupported claims |
-| [`docs/future-ideas.md`](docs/future-ideas.md) | Useful ideas intentionally parked outside current scope |
+| [`docs/future-ideas.md`](docs/future-ideas.md) | Parked ideas without delivery commitment |
 
 ## Related projects
 
 - [`qa-automation-framework`](https://github.com/MarcinMikula/qa-automation-framework)
-  — the reusable framework skeleton TestCartographer is intended to adapt.
+  — reusable framework skeleton to be adapted.
 - [`PhoenixQA`](https://github.com/MarcinMikula/PhoenixQA)
-  — a separate experiment in runtime recovery and selector healing.
+  — separate runtime recovery and selector-healing experiment.
 - [`llm-qa-toolkit`](https://github.com/MarcinMikula/llm-qa-toolkit)
-  — a separate evaluation harness that may later inform validation of
-  LLM-produced decisions.
+  — separate LLM evaluation harness.
 - [`defect-pilot`](https://github.com/MarcinMikula/defect-pilot)
-  — a separate defect-driven retest workflow.
+  — separate defect-driven retest workflow.
 
 ## License
 

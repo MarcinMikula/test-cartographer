@@ -279,19 +279,162 @@ A committed schema makes the boundary visible outside Python.
 - the schema is a technical representation, while this document remains the
   semantic explanation.
 
+## ADR-011 — Use deterministic question selection before an LLM interviewer
+
+**Status:** Accepted in Sprint 2
+
+### Decision
+
+Generate human-intake questions from explicit context state and ordered Python
+rules.
+
+Do not use an LLM to select the next question in the first workflow.
+
+### Rationale
+
+The project first needs to prove:
+
+- which gaps are human-answerable,
+- which question follows which context state,
+- how answers change the contract,
+- how unknown and skipped answers avoid loops,
+- when intake is complete or blocked.
+
+An LLM would make those transitions harder to attribute and test.
+
+### Consequences
+
+- the same context produces the same question order,
+- question wording and target paths are version-controlled,
+- browser-only blockers are filtered from human intake,
+- an LLM may later assist wording or interpretation without owning durable
+  state transitions.
+
+## ADR-012 — Separate collection from explicit confirmation
+
+**Status:** Accepted in Sprint 2
+
+### Decision
+
+A normal human answer becomes `PROVIDED`.
+
+After required collection is complete, the workflow creates review questions
+for business values still marked `PROVIDED` or `OBSERVED`.
+
+Only an explicit confirmation changes the value to `CONFIRMED`.
+
+### Rationale
+
+Supplying a statement and accepting it as the current project basis are
+different actions.
+
+Collapsing them would make the review requirement cosmetic and would remove a
+useful boundary for later human or domain-expert approval.
+
+### Consequences
+
+- the reference intake has collection and review phases,
+- corrections made during review return to `PROVIDED`,
+- skipped review may leave warnings,
+- future role-based approval can replace the current single-user confirmation
+  without changing the core distinction.
+
+## ADR-013 — Persist a self-contained intake session
+
+**Status:** Accepted in Sprint 2
+
+### Decision
+
+Persist `IntakeSession` version `0.1` as deterministic JSON containing:
+
+- the current `ContextBundle`,
+- session state,
+- interaction history,
+- deferred question IDs,
+- timestamps.
+
+### Rationale
+
+A resumable workflow must not depend on the original context file remaining
+unchanged while the session is active.
+
+Embedding the context also makes one file sufficient for status, resume, and
+export operations.
+
+### Consequences
+
+- session files are larger than storing only a pointer,
+- concurrent edits and merge semantics are not supported,
+- sessions can be reviewed and archived independently,
+- the generated session JSON Schema is committed and tested.
+
+## ADR-014 — Record effort metrics without duplicating answer text
+
+**Status:** Accepted in Sprint 2
+
+### Decision
+
+Store interaction metadata and active response duration, but do not copy normal
+field answers into the interaction log.
+
+The answer remains in `ContextBundle`; the interaction stores:
+
+- question and target,
+- answer action,
+- asked and answered timestamps,
+- active seconds.
+
+### Rationale
+
+The project needs early evidence about operator effort without multiplying
+potentially sensitive content across session structures.
+
+### Consequences
+
+- question, action, and duration metrics are available,
+- field values remain centralized in the context,
+- generic open-question answers are retained in evidence summaries because
+  contract version `0.1` has no separate answer field,
+- subjective usability still requires a later evaluation instrument.
+
+## ADR-015 — Use the Python standard library for the first CLI
+
+**Status:** Accepted in Sprint 2
+
+### Decision
+
+Implement the first command-line interface with `argparse`, standard input, and
+standard output.
+
+### Rationale
+
+The Sprint 2 hypothesis concerns intake state and question transitions, not a
+terminal UI framework.
+
+A third-party CLI or rich rendering dependency would not improve the evidence
+needed from this slice.
+
+### Consequences
+
+- the CLI is intentionally plain,
+- commands remain scriptable and integration-testable,
+- a richer local UI may be introduced only after the workflow proves useful.
+
 ## Decisions deliberately deferred
 
-- CLI framework,
 - browser-capture library design,
 - external LLM provider,
-- prompt protocol,
+- prompt and response protocol,
 - database,
 - raw evidence store,
 - cross-process graph,
 - repository patching,
 - POM proposal schema,
 - CI workflow,
-- logging framework.
+- logging framework,
+- rich terminal or web review interface,
+- multi-user approval and identity model,
+- context-shell creation from scratch.
 
 These decisions should be introduced by the vertical slice that first needs
 them.

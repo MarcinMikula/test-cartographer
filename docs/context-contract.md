@@ -639,3 +639,89 @@ Version `0.1` does not decide:
 
 These remain future vertical slices rather than fields added speculatively to
 the first contract.
+
+## Sprint 2 intake use
+
+Sprint 2 does not change context schema version `0.1`.
+
+It adds a separate `IntakeSession` contract that embeds and updates one valid
+`ContextBundle`.
+
+### Human-answerable fields
+
+The deterministic intake currently maps questions to:
+
+- `process.purpose`,
+- `process.risk`,
+- `process.role`,
+- `process.preconditions`,
+- `process.expected_outcomes[].statement`,
+- `conflicts[].resolution`,
+- `open_questions[]`.
+
+Normal text answers to `KnowledgeText` targets become:
+
+```text
+status = PROVIDED
+value = supplied text
+evidence_ids = new human evidence
+```
+
+An explicit review confirmation changes the same field to:
+
+```text
+status = CONFIRMED
+value = unchanged
+evidence_ids = previous evidence + confirmation evidence
+```
+
+`UNKNOWN` remains a valid value state and therefore does not make the bundle
+structurally invalid.
+
+### Intake completion is not contract validity
+
+A bundle can be:
+
+```text
+structurally valid
++ human intake incomplete
+```
+
+or:
+
+```text
+structurally valid
++ human intake complete
++ adaptation readiness blocked
+```
+
+The second state is expected after Sprint 2 when business context is confirmed
+but application evidence, such as an observed primary locator, is still
+missing.
+
+### Open-question limitation
+
+`OpenQuestion` version `0.1` has no generic answer field.
+
+When the Sprint 2 intake receives a supplied answer, it:
+
+- creates human evidence retaining the prompt and response,
+- removes the question from the active open-question tuple,
+- preserves the interaction in `IntakeSession` history.
+
+This is a bounded compatibility approach, not a final domain-modelling
+solution.
+
+If real project questions need structured answers, the context schema should be
+versioned rather than adding arbitrary unvalidated dictionaries.
+
+### Session schema
+
+The separate intake-session JSON Schema is committed at:
+
+```text
+schemas/intake-session-v0.1.schema.json
+```
+
+It does not replace the context schema. It represents workflow state around an
+embedded context.

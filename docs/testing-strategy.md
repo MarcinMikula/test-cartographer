@@ -2,25 +2,49 @@
 
 ## Purpose
 
-TestCartographer will combine deterministic software with uncertain external
-inputs such as human answers, browser observations, project documents, and LLM
+TestCartographer combines deterministic software with uncertain external inputs
+such as human answers, browser observations, project documents, and future LLM
 outputs.
 
-The testing strategy must keep those concerns separate.
+The testing strategy keeps those concerns separate.
 
 ```text
-deterministic contracts and validators
-→ tested with exact fixtures and assertions
+deterministic contracts, state transitions, and persistence
+→ exact fixtures and assertions
 
 external interpretation and observation
-→ tested later with controlled evidence and realistic cases
+→ controlled evidence and realistic evaluation later
 ```
 
-Sprint 1 tests only the deterministic local context contract.
+Sprint 2 tests the strict context boundary and deterministic human-intake
+workflow only.
 
-## Current test layers
+## Current evidence
 
-### Contract unit tests
+```text
+47 deterministic tests passing
+```
+
+The test suite covers:
+
+- context contract validation,
+- adaptation readiness,
+- deterministic JSON persistence,
+- context JSON Schema drift,
+- intake question selection,
+- answer application,
+- collection and review transitions,
+- session lifecycle and metrics,
+- session persistence,
+- intake JSON Schema drift,
+- command-line start, run, status, export, pause, and resume paths.
+
+Passing tests prove the implemented rules for controlled fixtures. They do not
+prove semantic correctness, usability, browser feasibility, or product value.
+
+## Test layers
+
+### Context contract unit tests
 
 Location:
 
@@ -45,7 +69,7 @@ They verify:
 - primary-locator uniqueness,
 - symbolic test-data uniqueness.
 
-### Readiness unit tests
+### Adaptation-readiness unit tests
 
 Location:
 
@@ -60,7 +84,7 @@ They prove:
 - a conflicting fixture remains valid but blocked,
 - readiness reports are serializable.
 
-### Persistence unit tests
+### Context persistence tests
 
 Location:
 
@@ -74,7 +98,7 @@ They verify:
 - deterministic output,
 - UTF-8 newline-terminated files.
 
-### Schema snapshot tests
+### Context schema tests
 
 Location:
 
@@ -88,9 +112,108 @@ They verify:
 - the contract root rejects additional properties,
 - schema version `0.1` is fixed.
 
-## Current fixture strategy
+### Intake question-rule tests
 
-Fixtures represent distinct semantic states rather than many arbitrary JSON
+Location:
+
+```text
+tests/unit/intake/test_rules.py
+```
+
+They verify:
+
+- stable collection order,
+- browser-only blockers do not become human questions,
+- stage-specific intake assessment,
+- conflict priority,
+- valid contexts produce no questions,
+- unconfirmed supported values enter review,
+- review begins only after required collection is resolved.
+
+### Intake answer tests
+
+Location:
+
+```text
+tests/unit/intake/test_answers.py
+```
+
+They verify:
+
+- a supplied risk becomes `PROVIDED`,
+- human evidence is appended,
+- expected-outcome replacement targets the correct object,
+- `UNKNOWN` remains explicit and unsupported,
+- `SKIP` does not mutate context,
+- open-question answers remain traceable,
+- disallowed actions are rejected,
+- conflict resolution becomes evidence-linked knowledge.
+
+### Intake session tests
+
+Location:
+
+```text
+tests/unit/intake/test_session.py
+```
+
+They verify:
+
+- initial session classification,
+- deterministic next-question selection,
+- transition from collection to review,
+- explicit confirmation,
+- completion of human intake while full adaptation remains blocked,
+- blocked state after deferred required knowledge,
+- retry of deferred questions,
+- pause and resume without history loss,
+- interaction and active-time metrics.
+
+### Intake persistence tests
+
+Location:
+
+```text
+tests/unit/intake/test_intake_io.py
+```
+
+They verify deterministic session JSON round trips.
+
+### Intake schema tests
+
+Location:
+
+```text
+tests/unit/intake/test_intake_schema.py
+```
+
+They verify that the committed session schema equals the current Python model
+and fixes session contract version `0.1`.
+
+### CLI integration tests
+
+Location:
+
+```text
+tests/integration/test_intake_cli.py
+```
+
+They exercise:
+
+- session creation,
+- status reporting,
+- context export,
+- a complete collection and review flow,
+- active-time recording,
+- pause through `:quit`,
+- persistence after interactive actions.
+
+The tests inject input, time, and output functions. They do not depend on a real
+terminal or sleep delays.
+
+## Fixture strategy
+
+The context fixtures represent semantic states rather than many arbitrary JSON
 examples.
 
 ### Complete
@@ -103,7 +226,8 @@ Expected:
 
 ```text
 structurally valid
-+ ready
++ adaptation ready
++ no human-intake questions
 ```
 
 ### Incomplete
@@ -112,12 +236,28 @@ structurally valid
 testdata/context/incomplete/public_search_flow.json
 ```
 
-Expected:
+Contains:
+
+- unknown risk,
+- unknown expected outcome,
+- inferred primary locator,
+- blocking open question.
+
+Expected at session start:
 
 ```text
 structurally valid
-+ explicit unknowns
-+ readiness blockers
++ three human-intake blockers
++ one browser/adaptation blocker beyond intake
+```
+
+Expected after deterministic collection and review:
+
+```text
+human intake complete
++ zero human-intake blockers
++ zero human-intake warnings
++ one remaining full-adaptation blocker
 ```
 
 ### Conflicting
@@ -130,8 +270,8 @@ Expected:
 
 ```text
 structurally valid
-+ preserved disagreement
-+ readiness blockers
++ conflict-resolution question first
++ adaptation blocked
 ```
 
 ### Invalid
@@ -146,151 +286,115 @@ Expected:
 rejected during structural validation
 ```
 
-This matrix prevents a common false equivalence:
+## State-transition testing principles
+
+### Test immutable input and returned output
+
+Answer application returns a new validated `ContextBundle`.
+
+Tests assert that the original object remains unchanged where relevant.
+
+### Test negative and deferred states
+
+The workflow must not be tested only through the successful path.
+
+Required states include:
+
+- explicit unknown,
+- skipped question,
+- paused session,
+- blocked session,
+- retry of deferred questions,
+- unsupported answer action.
+
+### Test stage separation
+
+A completed human intake must not automatically imply full adaptation
+readiness.
+
+The reference test explicitly requires:
 
 ```text
-not ready != malformed
+human intake complete = true
+full adaptation ready = false
 ```
 
-## Test command
+until browser evidence resolves the inferred locator.
+
+### Test persistence after transitions
+
+A session is intended to save after every accepted action. Integration tests
+reload the persisted file and compare it with returned state.
+
+## Schema snapshot policy
+
+The repository commits:
+
+```text
+schemas/context-bundle-v0.1.schema.json
+schemas/intake-session-v0.1.schema.json
+```
+
+Any intentional contract change must:
+
+1. update the Python model,
+2. regenerate the corresponding schema,
+3. update fixtures and tests,
+4. document compatibility and versioning consequences.
+
+Silent schema drift is a test failure.
+
+## Current execution commands
+
+Full suite:
 
 ```powershell
 python -m pytest
 ```
 
-Sprint 1 expected result:
+Schema regeneration and focused verification:
 
-```text
-23 passed
+```powershell
+python scripts/export_context_schema.py
+python scripts/export_intake_schema.py
+python -m pytest tests/unit/context/test_schema.py `
+    tests/unit/intake/test_intake_schema.py
 ```
 
-## Test quality rules
+Compilation check:
 
-- Tests use public package functions where possible.
-- Fixture paths are explicit.
-- Tests do not call a network, browser, database, or LLM.
-- A test asserts one contract behaviour or closely related invariant.
-- Invalid examples fail for a deliberate reason.
-- Tests do not mock Pydantic internals.
-- Generated JSON Schema is compared structurally, not as formatting text.
-- A passing suite does not justify claims outside the deterministic contract.
-
-## What current tests prove
-
-The suite proves that:
-
-- supported JSON is parsed into a strict typed model,
-- malformed relationships are rejected,
-- unknown and conflicting knowledge can be represented honestly,
-- readiness assessment is deterministic for current rules,
-- local serialization is stable,
-- the committed JSON Schema matches the implementation.
-
-## What current tests do not prove
-
-The suite does not prove:
-
-- the contract contains all information needed for a real POM,
-- users can answer the required questions efficiently,
-- browser evidence can populate the model correctly,
-- locator candidates are stable in real applications,
-- an LLM can map context into good architecture,
-- business facts are correct,
-- sensitive information is safe,
-- TestCartographer saves time,
-- the framework adapter will produce runnable tests.
-
-## Sprint 2 testing direction
-
-Human-guided intake should add tests for:
-
-- question selection from readiness gaps,
-- deterministic answer-to-context mapping,
-- preserving unknown answers,
-- rejecting contradictory user updates unless recorded as conflicts,
-- resuming an incomplete intake,
-- final review before confirmation,
-- interaction metrics such as question count and active duration.
-
-The first intake implementation should use scripted answers and replayable
-sessions before any free-form LLM interviewer is added.
-
-## Later browser-observation testing
-
-A guided browser slice should separate:
-
-```text
-browser capture correctness
-from
-semantic mapping quality
+```powershell
+python -m compileall -q src tests
 ```
 
-Potential deterministic checks:
+## What current tests do not cover
 
-- captured page URL and timestamp,
-- selected DOM/accessibility attributes,
-- redaction before persistence,
-- action/element/page reference mapping,
-- reproducible capture fixtures,
-- destructive-action restrictions.
+- a real terminal operated by a real tester,
+- subjective clarity of question wording,
+- actual setup time outside the measured prompt window,
+- concurrent session editing,
+- session corruption recovery,
+- authorization of who may confirm facts,
+- real application or DOM observation,
+- Playwright installation or browser execution,
+- redaction and secret handling,
+- LLM requests, parsing, latency, cost, or semantic quality,
+- POM proposal or generated source code,
+- `qa-automation-framework` adaptation,
+- comparative usability or time savings.
 
-Realistic application tests should be added only after a controlled local
-fixture proves the capture boundary.
+## Next test boundary
 
-## Later LLM testing
-
-A live LLM should not be the first test double for the protocol.
-
-Expected progression:
-
-1. deterministic request construction,
-2. strict structured-result parsing,
-3. replay adapter using stored raw outputs,
-4. hand-labelled good, bad, incomplete, and overconfident outputs,
-5. bounded live-provider smoke tests,
-6. comparative evaluation against realistic alternatives.
-
-LLM fluency must not be treated as evidence of architecture or domain
-correctness.
-
-## End-to-end validation
-
-A future end-to-end evaluation should use the same:
-
-- target application,
-- selected process,
-- starting `qa-automation-framework`,
-- acceptance criteria,
-- reviewer,
-- quality rubric.
-
-Compare:
+Sprint 3 should add controlled browser-observation tests while preserving the
+same separation:
 
 ```text
-manual adaptation
-vs.
-DevTools + Playwright Codegen + general LLM
-vs.
-TestCartographer
+browser evidence acquisition
+!=
+human business confirmation
+!=
+full adaptation readiness
 ```
 
-Measure:
-
-- correctness,
-- POM quality,
-- unsupported assumptions,
-- human corrections,
-- setup time,
-- active user time,
-- time to first runnable test,
-- maintenance time after a controlled change,
-- LLM cost and latency,
-- perceived difficulty and trust.
-
-## CI boundary
-
-Sprint 1 does not add GitHub Actions.
-
-CI becomes useful after the repository establishes its first stable local
-installation workflow. Until then, local deterministic tests are the current
-evidence gate.
+The first browser tests should use a controlled local target and deterministic
+capture fixtures before public or enterprise applications are attempted.

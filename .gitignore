@@ -66,3 +66,14 @@ desktop.ini
 tmp/
 temp/
 *.tmp
+
+# Local TestCartographer working state
+.test-cartographer/
+
+# Local sprint delivery helpers
+TestCartographer-sprint-*-setup.ps1
+TestCartographer-sprint-*-commit.ps1
+TestCartographer-sprint-*-manifest.md
+test-cartographer-sprint-*-setup.ps1
+test-cartographer-sprint-*-commit.ps1
+test-cartographer-sprint-*-manifest.md

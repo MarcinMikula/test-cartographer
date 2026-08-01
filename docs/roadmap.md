@@ -24,7 +24,7 @@ are provisional and must be reshaped using findings from earlier work.
 product framing
 → context contract
 → human intake
-→ guided observation
+→ guided browser observation
 → bounded LLM synthesis
 → framework handoff
 → end-to-end review
@@ -39,8 +39,8 @@ product framing
 |---|---|---|
 | Sprint 0 | Product framing and project boundaries | Done |
 | Sprint 1 | Minimum context contract and local evidence model | Done |
-| Sprint 2 | Human-guided process intake | Planned |
-| Sprint 3 | Guided browser observation | Provisional |
+| Sprint 2 | Deterministic human-guided process intake | Done |
+| Sprint 3 | Guided browser observation | Planned |
 | Sprint 4 | Bounded LLM synthesis and POM proposal | Provisional |
 | Sprint 5 | Framework handoff and first runnable test | Provisional |
 | Sprint 6 | Review, traceability, and first end-to-end evaluation | Provisional |
@@ -64,15 +64,13 @@ creating source-code architecture.
 - problem statement,
 - relationship with `qa-automation-framework`,
 - intended user,
-- core responsibilities,
 - initial UI/POM boundary,
-- knowledge-source model,
+- multi-source context model,
 - evidence and provenance requirement,
 - security and privacy boundary,
 - usability and operation-time validation requirement,
 - first vertical-slice direction,
-- explicit non-goals and parked ideas,
-- chronological project journal.
+- explicit non-goals and parked ideas.
 
 ### What Sprint 0 proves
 
@@ -81,18 +79,8 @@ and validation direction.
 
 ### What Sprint 0 does not prove
 
-- technical feasibility,
-- context-schema quality,
-- LLM accuracy,
-- browser-capture feasibility,
-- data safety,
-- framework-generation quality,
-- time savings,
-- usability,
-- maintainability,
-- product value.
-
----
+Technical feasibility, context quality, LLM value, browser feasibility,
+security, usability, or product value.
 
 ## Sprint 1 — Minimum context contract
 
@@ -100,368 +88,272 @@ and validation direction.
 
 ### Goal
 
-Define and validate the smallest local, provider-neutral context contract that
-can describe one useful UI automation flow without pretending unknown
-information is known.
+Define and validate the smallest local, provider-neutral contract that can
+represent one useful UI process without pretending unknown information is
+known.
 
 ### Delivered
 
-- Python package with `src` layout,
-- strict Pydantic context contract version `0.1`,
-- explicit knowledge statuses including `UNKNOWN`,
-- basic sensitivity classification,
-- evidence and provenance references,
-- one-process model with purpose, risk, role, preconditions, steps, and
-  expected outcomes,
-- pages, reusable components, elements, and locator candidates,
-- symbolic test-data requirements without real values,
-- open-question and conflict representation,
-- deterministic cross-reference and ownership validation,
-- readiness report separate from structural validation,
+- Python `src` package layout,
+- strict Pydantic `ContextBundle` version `0.1`,
+- one process with application, pages, components, elements, locators, steps,
+  outcomes, symbolic data, evidence, questions, and conflicts,
+- knowledge authority and sensitivity metadata,
+- graph-integrity validation,
 - deterministic JSON load/save,
-- committed generated JSON Schema,
-- complete, incomplete, conflicting, and invalid fixtures,
-- 23 deterministic tests,
-- context-contract, architecture-decision, testing-strategy, gap, limitation,
-  and learning documentation.
+- adaptation-readiness report,
+- generated and tested context JSON Schema,
+- valid, incomplete, conflicting, and invalid fixtures,
+- 23 deterministic tests at Sprint 1 completion.
 
 ### Exit criteria
 
 - [x] One complete reference process can be represented.
 - [x] Missing information remains explicit.
 - [x] Inference is structurally distinguishable from confirmed fact.
-- [x] Conflicting evidence can be stored without silent resolution.
-- [x] Invalid context is rejected deterministically.
+- [x] Conflicting evidence can remain valid without silent resolution.
+- [x] Invalid references and structures are rejected.
 - [x] The representation is human-reviewable JSON.
-- [x] No provider-specific or browser-specific dependency is required.
-- [x] Tests exercise complete, incomplete, conflicting, and invalid fixtures.
-- [x] The contract exposes concrete gaps that Sprint 2 can ask about.
-- [x] The JSON Schema is generated and protected against drift.
+- [x] No browser or provider dependency is required.
+- [x] Readiness identifies what human and later browser stages must resolve.
 
 ### What Sprint 1 proves
 
-- one bounded UI process can be expressed as a strict typed graph,
-- explicit unknown and conflicting context does not need to be discarded,
-- structural validity and automation readiness can be assessed separately,
-- evidence and basic sensitivity metadata can travel with individual claims,
-- deterministic fixtures can test the context boundary without a browser or
-  LLM.
+One bounded UI process can be stored, validated, and assessed without
+collapsing uncertainty into parser failure or invented certainty.
 
 ### What Sprint 1 does not prove
 
-- that the contract is sufficient for a real application,
-- that a tester can fill it efficiently,
-- that readiness rules match real adaptation needs,
-- that browser observations can populate it safely,
-- that an LLM can use it to propose a good POM,
-- that framework adaptation will work,
-- that the tool saves time or is easy to operate.
+That a user can fill the model efficiently, that browser evidence can populate
+it, or that it is sufficient for POM generation.
 
-### Main finding
+## Sprint 2 — Deterministic human-guided intake
 
-A useful intake workflow cannot be designed as a generic questionnaire first.
-It should consume a valid-but-incomplete context and ask questions that resolve
-specific readiness blockers or required unknown fields.
+**Status:** Done
 
----
+### Goal
 
-## Sprint 2 — Human-guided process intake
+Collect and review the human-answerable process context from a structurally
+valid incomplete bundle without requiring manual JSON editing or a free-form
+LLM interviewer.
+
+### Delivered
+
+- stage-specific `assess_intake()` report,
+- deterministic collection question queue,
+- review queue for `PROVIDED` and `OBSERVED` business values,
+- answer actions for provide, confirm, unknown, and skip,
+- explicit collection-to-review transition,
+- human evidence creation with source, timestamp, sensitivity, and digest,
+- self-contained `IntakeSession` version `0.1`,
+- active, paused, complete, and blocked session states,
+- save after every accepted interaction,
+- deferred-question retry,
+- interaction count and active-answer-time metrics,
+- standard-library CLI for start, run, status, and export,
+- generated and tested intake-session JSON Schema,
+- `.gitattributes` line-ending policy,
+- 47 deterministic tests across context, intake, persistence, schema, and CLI.
+
+### Reference flow
+
+```text
+load incomplete public-search context
+→ ask business risk
+→ ask observable outcome
+→ ask stored matching-rule question
+→ review risk
+→ review outcome
+→ human intake complete
+```
+
+Expected final state:
+
+```text
+human-intake blockers = 0
+human-intake warnings = 0
+full adaptation blockers = 1
+```
+
+The remaining blocker is an intentionally inferred primary locator.
+
+### Exit criteria
+
+- [x] Questions are derived from current context state.
+- [x] Browser-only issues are excluded from human intake.
+- [x] Normal answers become `PROVIDED` evidence.
+- [x] Explicit review changes values to `CONFIRMED`.
+- [x] Unknown and skipped answers do not create infinite loops.
+- [x] A required deferred answer can produce a visible `BLOCKED` state.
+- [x] Sessions can be paused, saved, resumed, and retried.
+- [x] Interaction count and active answer time are measured.
+- [x] Current context can be exported independently.
+- [x] No live LLM or browser is required.
+- [x] Full adaptation readiness remains separate from intake completion.
+
+### What Sprint 2 proves
+
+A strict context model can drive a deterministic, resumable, reviewable, and
+measurable human-intake workflow.
+
+### What Sprint 2 does not prove
+
+- greenfield creation of the context shell,
+- usability with a real tester and real application,
+- automatic semantic interpretation of long answers,
+- rich mapping of arbitrary open-question answers,
+- browser capture,
+- locator correctness,
+- LLM synthesis,
+- framework adaptation,
+- time savings or easier operation than alternatives.
+
+## Sprint 3 — Guided browser observation
 
 **Status:** Planned
 
 ### Goal
 
-Allow a tester to create, review, save, and resume one valid process context
-without editing JSON or understanding internal model classes.
+Add bounded application evidence to one existing human-reviewed process during
+a user-controlled Playwright session.
 
-### Proposed vertical slice
+### Working vertical slice
 
 ```text
-start from a minimal context shell
-→ ask one concrete question at a time
-→ map each answer to a typed field
-→ allow explicit "unknown"
-→ surface conflicts instead of overwriting
-→ show current blockers and warnings
-→ review proposed confirmations
-→ save and resume the local bundle
+completed human intake
+→ open one controlled application page
+→ user performs or authorizes one process action at a time
+→ capture a minimized observation
+→ propose page/component/element/locator mapping
+→ user accepts or rejects the observation
+→ update evidence and context
+→ reassess full adaptation readiness
 ```
 
-### Scope boundary
+### Candidate scope
 
-Sprint 2 should use deterministic, rule-based question selection first.
+- choose a controlled local reference application,
+- add Playwright as an optional browser dependency,
+- define a browser-observation contract separate from raw Playwright objects,
+- capture current URL, bounded DOM/accessibility details, visible state, and
+  locator candidates for selected targets,
+- link observations to existing process steps and element IDs,
+- classify captured data before persistence,
+- keep credentials and test-data values outside observations,
+- support user acceptance or rejection of proposed mappings,
+- preserve raw capture only if a safe local evidence boundary is defined,
+- update the intentionally inferred locator in the reference context through
+  actual observation,
+- add deterministic replay fixtures for browser-derived observations,
+- record observation time and user actions.
 
-A free-form LLM interviewer is not required to prove the intake workflow.
-The product should learn which questions and transitions are necessary before
-adding probabilistic conversation.
+### Required design questions
 
-### Candidate implementation
-
-- a small local command-line workflow,
-- intake-session model separate from the durable context bundle,
-- question catalogue keyed to missing context and readiness codes,
-- answer types such as text, confirmation, selection, and explicit unknown,
-- conflict creation when a new answer disagrees with retained evidence,
-- review step before changing knowledge to `CONFIRMED`,
-- local save/resume,
-- interaction metrics.
-
-### Required decisions
-
-- which minimal shell fields exist before intake,
-- question ordering,
-- how provided answers become evidence,
-- how corrections and replacements work,
-- when a new answer creates a conflict,
-- how confirmation is represented,
-- which readiness blockers belong to human intake and which require browser
-  evidence,
-- what timing data is collected without invading privacy.
+- What is the smallest safe observation needed for one target element?
+- Should the first interaction use Playwright locator inspection, accessibility
+  snapshots, selected DOM fragments, or a combination?
+- How does a user indicate the element corresponding to a process step?
+- What data must be removed before persistence?
+- What makes a locator candidate `OBSERVED` rather than merely generated?
+- How are page and component ownership proposals reviewed?
+- How does browser evidence avoid overwriting confirmed business context?
+- What can be tested deterministically without launching a real external site?
 
 ### Candidate exit criteria
 
-- [ ] A user can start one reference process without hand-editing JSON.
-- [ ] The intake asks only questions relevant to current missing context.
-- [ ] The user can answer `unknown` without inventing data.
-- [ ] A contradictory answer is preserved as a conflict or explicitly replaces
-      prior evidence through a reviewed action.
-- [ ] The resulting bundle passes structural validation.
-- [ ] Readiness changes are visible after each answer.
-- [ ] The session can be saved and resumed.
-- [ ] A final review is required before business-critical values become
-      confirmed.
-- [ ] Question count and active elapsed time are recorded.
-- [ ] Deterministic replay tests cover complete, incomplete, correction, and
-      conflict paths.
+- [ ] One controlled local page can be opened through Playwright.
+- [ ] The user remains in control of navigation and actions.
+- [ ] One selected element observation is captured without raw whole-page
+      dumping.
+- [ ] Observation evidence is linked to the correct context entity.
+- [ ] At least one primary locator moves from `INFERRED` to `OBSERVED` through
+      real browser evidence.
+- [ ] Secrets and entered test-data values are not persisted.
+- [ ] Capture and context update can be replayed deterministically in tests.
+- [ ] The reference context reaches full readiness only through evidence, not a
+      manual status rewrite.
+- [ ] No LLM is needed to prove the browser boundary.
 
 ### Deliberate exclusions
 
-- browser automation,
-- live LLM calls,
-- Jira,
-- framework file generation,
-- autonomous decision-making,
-- selector healing.
-
-### Gate to Sprint 3
-
-The intake must create useful business and testing context without requiring the
-user to understand the JSON schema. Remaining blockers should identify exactly
-what application evidence the guided browser slice must collect.
-
----
-
-## Sprint 3 — Guided browser observation
-
-**Status:** Provisional
-
-### Goal
-
-Add application evidence to one existing process model during a
-human-controlled Playwright session.
-
-### Candidate capability
-
-- user opens or identifies a page,
-- user performs or directs the next action,
-- the tool captures a bounded observation,
-- relevant pages, components, elements, states, and locator candidates are
-  proposed,
-- the user confirms or rejects mappings,
-- observations are linked to process steps and evidence.
-
-### Deliberate boundary
-
-This is not autonomous crawling. The user remains responsible for navigation,
-credentials, environment safety, and process intent.
+- autonomous crawling,
+- Jira or documentation ingestion,
+- cloud LLM requests,
+- POM generation,
+- framework file changes,
+- Salesforce,
+- self-healing,
+- unrestricted screenshots or full DOM archives.
 
 ### Gate to Sprint 4
 
-Captured information must be smaller and more useful than a raw DOM dump and
-must preserve source, sensitivity, and process linkage.
-
----
+Do not send application context to an LLM until browser acquisition produces a
+small, reviewable, sensitivity-aware observation contract.
 
 ## Sprint 4 — Bounded LLM synthesis and POM proposal
 
 **Status:** Provisional
 
-### Goal
+Possible scope:
 
-Use a capable LLM to transform a sanitized, authorized subset of the context
-model into a structured POM proposal.
-
-### Candidate capability
-
-- build a provider-neutral bounded request,
-- exclude secrets and unauthorized raw capture,
-- ask for structured Page Object, component, method, locator, and open-question
-  proposals,
-- parse the response strictly,
-- preserve raw output,
-- reject malformed responses,
-- keep model proposals separate from confirmed context,
-- support replay without a live provider.
-
-### Gate to Sprint 5
-
-The protocol must be deterministic around request construction and parsing. A
-fluent LLM response is not enough.
-
----
+- provider-neutral bounded request,
+- explicit authorization and minimization,
+- structured POM proposal result,
+- strict parser and raw-output preservation,
+- malformed-output separation,
+- replay adapter before live provider claims,
+- human review of Page Object and component boundaries.
 
 ## Sprint 5 — Framework handoff and first runnable test
 
 **Status:** Provisional
 
-### Goal
+Possible scope:
 
-Map one accepted proposal into a clean copy of
-`qa-automation-framework` and produce one runnable test.
-
-### Candidate capability
-
-- inspect the target repository structure,
-- avoid duplicating existing Page Objects or components,
+- inspect a clean `qa-automation-framework` copy,
 - prepare a reviewable file-level change set,
-- create or update Page Objects, test data, fixtures, and one test,
-- keep assertions in the appropriate layer,
-- execute the test,
-- retain generated-to-source traceability.
+- create or update Page Objects, components, fixtures, data, and one test,
+- execute the test without a live LLM dependency,
+- retain source-to-generated traceability.
 
-### Gate to Sprint 6
-
-The generated project must run as ordinary Python, Playwright, and pytest code
-without a live LLM dependency.
-
----
-
-## Sprint 6 — Review, traceability, and first end-to-end evaluation
+## Sprint 6 — First end-to-end evaluation
 
 **Status:** Provisional
 
-### Goal
+Measure:
 
-Exercise the complete first workflow and measure whether it produces useful,
-reviewable automation.
-
-### Candidate evaluation
-
-- correctness of the flow and expected result,
-- POM and component boundaries,
-- locator quality,
-- readability,
+- correctness,
+- architecture quality,
 - unsupported assumptions,
 - human corrections,
 - setup time,
 - active user time,
 - time to first runnable test,
-- LLM requests, latency, and cost,
+- LLM usage and cost,
 - user confidence and perceived difficulty.
 
-### First milestone
-
-Sprint 6 is the earliest point at which TestCartographer may claim a working
+Sprint 6 is the earliest point at which the project may claim a working
 end-to-end prototype.
 
-It still cannot claim superiority over alternative workflows without a
-controlled comparison.
+## Sprints 7–10 — Parked directions
 
----
+Potential later work includes:
 
-## Sprint 7 — Change awareness and maintenance proposal
+- change awareness and maintenance proposals,
+- Jira and documentation ingestion,
+- comparative manual/Codegen/general-LLM/TestCartographer evaluation,
+- Salesforce validation,
+- security and retention hardening,
+- release and v1.0 decision.
 
-**Status:** Parked
-
-Possible scope:
-
-- repeat selected observation,
-- compare current and stored context,
-- mark stale or conflicting knowledge,
-- identify affected automation artefacts,
-- propose bounded changes,
-- measure maintenance time.
-
-No autonomous healing commitment is made.
-
----
-
-## Sprint 8 — External artefact ingestion and security expansion
-
-**Status:** Parked
-
-Possible sources:
-
-- Jira,
-- test-management tools,
-- requirements,
-- OpenAPI,
-- documentation repositories.
-
-This sprint requires explicit access, minimization, provenance, retention, and
-redaction policies. An integration should not be built merely because an API
-exists.
-
----
-
-## Sprint 9 — Comparative validation
-
-**Status:** Parked
-
-Compare:
-
-```text
-manual framework adaptation
-vs.
-DevTools + Playwright Codegen + general LLM
-vs.
-TestCartographer
-```
-
-Use the same:
-
-- target application,
-- process,
-- framework starting point,
-- acceptance criteria,
-- quality gates.
-
-Potential validation ladder:
-
-1. simple public page,
-2. modern dynamic frontend,
-3. controlled reference application,
-4. safe Salesforce environment.
-
-Measure both output quality and operator effort.
-
----
-
-## Sprint 10 — v1.0 hardening and release decision
-
-**Status:** Parked
-
-Possible scope:
-
-- stable public contracts,
-- security review,
-- retention and deletion rules,
-- CI and packaging,
-- installation and onboarding,
-- failure reporting,
-- documentation,
-- benchmark report,
-- explicit supported and unsupported boundaries.
-
-v1.0 should be declared only if the tool demonstrates value relative to its
-operational cost. A completed feature list alone is not sufficient.
+These are not commitments until earlier evidence justifies them.
 
 ## Roadmap change policy
 
 When evidence invalidates a planned sprint:
 
 1. record the finding in `LEARNINGS.md`,
-2. update the current limitation or gap,
+2. update the relevant gap or limitation,
 3. redirect the roadmap rather than preserving the original plan for
    appearance,
 4. state what the evidence proves and what it does not prove.

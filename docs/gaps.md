@@ -1,195 +1,229 @@
 # Gaps — thematic index
 
-Concrete missing capabilities that block the intended product flow.
+Implementation gaps that prevent the current project from satisfying the
+product-level direction.
 
-A gap describes something that must be designed, implemented, or tested. It is
-not proof that the product idea is wrong. Full reasoning remains in
-`LEARNINGS.md`.
+This file tracks what is missing or insufficient. Chronological reasoning lives
+in `LEARNINGS.md`, and accepted decisions live in
+`docs/architecture-decisions.md`.
 
-## Gap 1 — No human intake workflow
+## Gap 1 — Minimum context contract
 
-**Status:** OPEN
-**Target:** Sprint 2
-**Blocks:** collecting real process context without hand-editing JSON
+**Status:** CLOSED in Sprint 1
 
-The contract defines what is needed, but the user must currently create or edit
-the bundle manually.
+Sprint 1 introduced:
 
-Needed:
+- `ContextBundle` version `0.1`,
+- strict graph and knowledge validation,
+- evidence and sensitivity metadata,
+- deterministic JSON persistence,
+- adaptation-readiness assessment,
+- committed JSON Schema and controlled fixtures.
 
-- gap-to-question mapping,
-- answer validation,
-- explicit unknown option,
-- review before confirmation,
-- resumable local session,
-- question and time metrics.
+Remaining questions about real-world sufficiency are tracked separately rather
+than reopening the implemented contract boundary.
 
-## Gap 2 — Readiness rules are hand-selected and unvalidated on real projects
+## Gap 2 — Human-guided process intake
 
-**Status:** OPEN
-**Target:** Sprint 2–6
-**Blocks:** justified claim that `ready=True` means sufficient context
+**Status:** CLOSED for the controlled Sprint 2 boundary
 
-Current rules are reasonable first constraints, not empirical proof.
+Sprint 2 introduced:
 
-Needed:
+- deterministic stage-specific questions,
+- collection and review phases,
+- provide, confirm, unknown, and skip actions,
+- self-contained persisted sessions,
+- pause, resume, blocked, complete, and retry behaviour,
+- interaction and active-time metrics,
+- CLI start, run, status, and export commands.
 
-- exercise against multiple process examples,
-- identify false blockers and missing blockers,
-- separate readiness for observation, POM proposal, code generation, and final
-  test acceptance if one boolean becomes insufficient.
+This closure means the reference incomplete bundle can be completed without
+manual JSON editing.
 
-## Gap 3 — No controlled browser target
+It does not mean greenfield context creation or real-user usability is proven.
 
-**Status:** OPEN
-**Target:** before Sprint 3
-**Blocks:** reproducible guided-observation tests
-
-The `.test` catalog fixture is JSON only.
-
-Needed:
-
-- a small deterministic local web page or selected existing controlled target,
-- known DOM and accessibility structure,
-- known overlays/states if required,
-- resettable data,
-- explicit expected capture output.
-
-Do not begin with a public portal whose UI and legal constraints are outside
-project control.
-
-## Gap 4 — No browser observation boundary
+## Gap 3 — Context-shell creation
 
 **Status:** OPEN
+
+**Target:** Sprint 3 or later, depending on evidence
+
+The intake currently starts from a structurally valid bundle containing
+pre-existing application, process-step, page, component, element, action, and
+evidence structure.
+
+The product cannot yet create that shell from:
+
+- a new project description,
+- a guided browser session,
+- existing automation code,
+- project artefacts.
+
+A premature generic wizard would force the user to manually author browser
+structure that Sprint 3 is intended to observe.
+
+## Gap 4 — Guided browser observation
+
+**Status:** OPEN
+
 **Target:** Sprint 3
-**Blocks:** application-derived evidence
 
-Undefined:
+The project cannot currently:
 
-- what DOM/accessibility data is captured,
-- what is filtered locally,
-- how page and component boundaries are proposed,
-- how actions are linked to process steps,
-- how iframes and Shadow DOM are represented,
-- what is persisted versus referenced.
+- launch Playwright,
+- observe a real page,
+- identify a selected element,
+- capture accessibility or bounded DOM evidence,
+- validate a locator candidate,
+- link browser evidence to a process step,
+- move an inferred locator to observed status,
+- distinguish safe capture from sensitive raw data.
 
-## Gap 5 — No external LLM safety policy or protocol
+This is the next active gap.
 
-**Status:** OPEN
-**Target:** before Sprint 4
-**Blocks:** safe live-provider use
-
-Needed:
-
-- field-level authorization,
-- data minimization,
-- redaction rules,
-- sensitivity handling,
-- provider-neutral request schema,
-- prohibited content,
-- raw request and response retention policy,
-- malformed-output handling,
-- cost and timeout bounds.
-
-## Gap 6 — No POM proposal contract
+## Gap 5 — Rich resolution of arbitrary open questions
 
 **Status:** OPEN
+
+**Target:** Revisit after Sprint 3
+
+`OpenQuestion` version `0.1` has no structured answer field.
+
+Sprint 2 retains the prompt and response through:
+
+- the interaction log,
+- a human evidence summary,
+- removal from the active open-question list.
+
+This is sufficient for the controlled reference flow but may be inadequate for
+mapping answers into:
+
+- business rules,
+- decision tables,
+- test-data constraints,
+- expected-result operators,
+- domain-specific structures.
+
+Do not revise the contract until real examples show the required shape.
+
+## Gap 6 — Human identity and confirmation authority
+
+**Status:** OPEN
+
+**Target:** Before multi-user or enterprise use
+
+The current session proves that an explicit confirmation action occurred. It
+does not prove:
+
+- who performed it,
+- whether that person was authorized,
+- whether a domain expert and automation engineer require separate approvals,
+- whether confirmation expires after a change.
+
+The first workflow is intentionally single-user and local.
+
+## Gap 7 — Security, minimization, and evidence retention
+
+**Status:** OPEN
+
+**Target:** Begin in Sprint 3; mandatory before external LLM or enterprise data
+
+Current sensitivity labels are descriptive only.
+
+Missing controls include:
+
+- redaction,
+- capture allowlists,
+- field-level external-processing authorization,
+- secret detection,
+- raw-evidence retention and deletion,
+- access control,
+- encryption,
+- prompt-injection handling,
+- malicious DOM or document handling.
+
+Browser observation must not become an uncontrolled raw-data collector.
+
+## Gap 8 — Bounded LLM protocol
+
+**Status:** OPEN
+
 **Target:** Sprint 4
-**Blocks:** deterministic interpretation of LLM output
 
-Needed:
+There is no:
 
-- page and component proposal schema,
-- methods and responsibilities,
-- locator placement,
-- test-data and fixture mapping,
-- open questions and unsupported claims,
+- provider-neutral request,
+- authorized context selector,
+- prompt protocol,
+- structured proposal schema,
 - strict parser,
-- architecture validation.
+- malformed-output handling,
+- replay adapter,
+- timeout, retry, latency, or cost policy.
 
-## Gap 7 — No qa-automation-framework reader or writer
+No live provider should be added before the local human and browser context is
+bounded.
 
-**Status:** OPEN
-**Target:** Sprint 5
-**Blocks:** actual framework adaptation
-
-Needed:
-
-- inspect target structure and conventions,
-- identify existing pages/components/fixtures,
-- avoid duplicate artefacts,
-- create a reviewable change set,
-- preserve human changes,
-- execute the resulting project.
-
-## Gap 8 — No execution-evidence model
+## Gap 9 — POM proposal and framework adaptation
 
 **Status:** OPEN
-**Target:** Sprint 5–6
-**Blocks:** linking generated code to runtime result
 
-Needed:
+**Target:** Sprints 4–5
 
-- command and environment metadata,
-- test result,
-- failure classification,
-- trace/screenshot references,
-- relation to context and generated files,
-- sensitive-data handling.
+The project cannot yet:
 
-## Gap 9 — No usability instrumentation
+- propose Page Object or component boundaries,
+- map actions to methods,
+- map symbolic data to fixtures,
+- inspect an existing target repository,
+- avoid duplicate objects,
+- generate reviewable file changes,
+- execute a generated test.
 
-**Status:** OPEN
-**Target:** begin Sprint 2
-**Blocks:** final ease-of-use and time comparison
-
-Needed from early prototypes:
-
-- setup duration,
-- active user duration,
-- question count,
-- navigation count,
-- correction count,
-- rejected proposals,
-- retries,
-- LLM requests and cost,
-- time to first runnable test.
-
-## Gap 10 — No schema migration strategy
-
-**Status:** OPEN, NON-BLOCKING FOR SPRINT 2
-**Target:** before incompatible contract change
-
-Version `0.1` is fixed, but no migration mechanism exists.
-
-Needed when the first incompatible change is justified:
-
-- compatibility policy,
-- version dispatch,
-- migration functions,
-- old fixture retention,
-- failure message for unsupported versions.
-
-## Gap 11 — No multi-process or shared application model
-
-**Status:** PARKED
-**Target:** after one-process vertical slice
-
-Version `0.1` may duplicate application, page, or component context across
-bundles.
-
-Do not introduce a global graph until duplication or impact analysis creates a
-measured problem.
-
-## Gap 12 — No comparative baseline
+## Gap 10 — Real usability and effort validation
 
 **Status:** OPEN
-**Target:** Sprint 6 and Sprint 9
 
-No evidence exists for claims that TestCartographer is faster, easier, or
-higher quality than:
+**Target:** Collect incrementally; controlled comparison in Sprint 9
 
-- manual adaptation,
-- ordinary DevTools/Codegen/general-LLM assistance.
+Sprint 2 records:
 
-The comparison must use equivalent scope and quality criteria.
+- interaction count,
+- answer actions,
+- active response seconds.
+
+It does not yet measure:
+
+- full setup time,
+- time spent reading documentation,
+- time spent reviewing exported context,
+- correction effort outside the CLI,
+- subjective difficulty,
+- trust and confidence,
+- manual baseline,
+- DevTools/Codegen/general-LLM baseline.
+
+Current metrics are instrumentation, not evidence of usability advantage.
+
+## Gap 11 — CI and reproducible development environment
+
+**Status:** OPEN
+
+**Target:** Before the first public prototype milestone
+
+The project currently has:
+
+- editable local installation,
+- version-ranged dependencies,
+- local deterministic tests.
+
+It lacks:
+
+- GitHub Actions,
+- dependency lock strategy,
+- supported-platform matrix,
+- automated schema-drift checks on push,
+- package build verification.
+
+CI is intentionally deferred until the core local workflow stabilizes enough to
+justify maintaining it.

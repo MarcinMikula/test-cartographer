@@ -1188,3 +1188,594 @@ It still cannot collect that context from a user.
 
 Sprint 2 should prove that a tester can move a bundle from incomplete toward
 reviewed context through a small, resumable, measurable intake workflow.
+
+---
+
+## Sprint 2 — deterministic human-guided process intake
+
+**Date:** 2026-08-01
+
+**Status:** Complete
+
+**Nature of work:** Deterministic collection, review, session, CLI, and metrics;
+no browser and no LLM
+
+### Starting question
+
+After Sprint 1, the project could represent and validate one process but could
+not collect the missing context from a user.
+
+The planned wording created an important clarification question:
+
+> Does Sprint 2 mean that the tool interviews a human using non-LLM,
+> deterministic rules?
+
+Yes.
+
+The purpose of Sprint 2 is not to build an intelligent conversational agent.
+It is to prove the durable state machine underneath any future conversational
+layer.
+
+Working flow:
+
+```text
+current ContextBundle
+→ identify human-answerable gap
+→ select deterministic question
+→ accept one explicit answer action
+→ update context and evidence
+→ reassess
+→ save session
+```
+
+### Why an LLM was excluded
+
+A free-form LLM interviewer could make the first demonstration look more
+natural, but it would hide several product questions:
+
+- Which fields are actually required?
+- Which blockers should be asked of a person?
+- Which blockers require browser evidence?
+- What does an answer change in the model?
+- How does the tool avoid repeated questions?
+- When is collection complete?
+- When is explicit review required?
+- What is the difference between incomplete and structurally invalid?
+
+The deterministic workflow provides exact answers that can later constrain an
+LLM.
+
+The future model may help:
+
+- rephrase a question,
+- interpret a long answer,
+- propose several field values,
+- detect likely contradictions.
+
+It should not silently own the persistent state transitions.
+
+### First scope correction: intake cannot honestly start from nothing yet
+
+The Sprint 1 context contract requires:
+
+- an application,
+- a process,
+- at least one page,
+- at least one element and locator candidate,
+- ordered steps,
+- evidence.
+
+A human-only intake cannot discover those browser structures reliably.
+
+Creating placeholder pages, elements, and locators from a few generic questions
+would either:
+
+- force the user to author technical JSON indirectly, or
+- invent application structure before observing the application.
+
+Sprint 2 therefore starts from a **structurally valid but incomplete bundle**.
+
+The controlled incomplete fixture already contains the application/process
+shell and deliberately leaves:
+
+- business risk unknown,
+- expected outcome unknown,
+- one blocking open question,
+- one primary locator inferred rather than observed.
+
+This allows Sprint 2 to prove human context collection while preserving a real
+browser-specific blocker for Sprint 3.
+
+### Stage-specific readiness became necessary
+
+The existing `assess_readiness()` combines:
+
+- business context,
+- process context,
+- open questions,
+- conflicts,
+- step usability,
+- locator evidence.
+
+Using the full report directly would produce a bad questionnaire:
+
+```text
+primary_locator_not_observed
+→ ask the tester to type a locator
+```
+
+That would move browser discovery back onto the human and weaken the product
+concept.
+
+Sprint 2 introduced `assess_intake()` as a stage-specific view of the full
+report.
+
+It includes only current human-answerable issues:
+
+- purpose,
+- risk,
+- role,
+- preconditions,
+- expected outcomes,
+- conflicts,
+- open questions.
+
+It excludes locator and browser-state blockers.
+
+This creates three distinct states:
+
+```text
+structural validity
+→ human-intake completion
+→ full adaptation readiness
+```
+
+A bundle may complete human intake and still be correctly blocked for
+adaptation.
+
+### Deterministic question order
+
+The first collection queue is stable:
+
+```text
+unresolved conflicts
+→ process purpose
+→ business risk
+→ user role
+→ preconditions
+→ expected outcomes
+→ stored open questions
+```
+
+Only values with these statuses require collection:
+
+```text
+UNKNOWN
+INFERRED
+STALE
+CONFLICTING
+```
+
+Already confirmed fields are not asked again.
+
+The same context state produces the same queue.
+
+### Collection and confirmation must remain separate
+
+The first simple design could have treated every typed answer as confirmed.
+
+That would violate the product principle that providing information and
+accepting it as the current test basis are different decisions.
+
+Sprint 2 therefore uses two phases.
+
+#### Collection
+
+A normal text answer creates:
+
+```text
+status = PROVIDED
+value = human answer
+evidence = HUMAN intake evidence
+```
+
+#### Review
+
+When required collection is resolved, the tool asks review questions for
+human-answerable values still marked:
+
+```text
+PROVIDED
+OBSERVED
+```
+
+`:confirm` changes the displayed value to `CONFIRMED` and appends separate
+confirmation evidence.
+
+A correction typed during review remains `PROVIDED` and appears again for
+confirmation.
+
+This gives the future product a clean place for:
+
+- domain-expert approval,
+- separate automation review,
+- role-based confirmation,
+- expiring confirmations after application changes.
+
+Those richer policies are not implemented yet.
+
+### Answer actions
+
+The workflow supports four persisted answer actions.
+
+#### Provide
+
+Normal text supplies or replaces a value.
+
+For a `KnowledgeText` target:
+
+- the value becomes `PROVIDED`,
+- prior selected value and evidence are replaced for that claim,
+- a new human evidence item is added,
+- a SHA-256 digest of the answer is retained.
+
+#### Confirm
+
+`:confirm` is available only when a current value exists.
+
+It:
+
+- preserves the current value,
+- changes status to `CONFIRMED`,
+- retains previous evidence,
+- appends human confirmation evidence.
+
+#### Unknown
+
+`:unknown` explicitly states that the information is not available.
+
+For a knowledge field:
+
+```text
+value = null
+status = UNKNOWN
+evidence = none
+```
+
+The question is deferred for the active session so the CLI does not
+immediately ask it again.
+
+#### Skip
+
+`:skip` leaves context unchanged and defers the question.
+
+This distinction matters:
+
+```text
+UNKNOWN
+→ the user explicitly says the answer is not known
+
+SKIP
+→ the user chooses not to answer now
+```
+
+Both avoid an immediate loop, but only `UNKNOWN` changes the knowledge field.
+
+### Stable question IDs across collection and review
+
+An early implementation used separate IDs such as:
+
+```text
+q_process_risk
+q_review_process_risk
+```
+
+This created a loop risk.
+
+If a user marked the review question unknown, the context returned to an
+unknown collection state with a different question ID. Deferring the review ID
+would not defer the newly regenerated collection ID.
+
+The design was corrected so one target keeps one stable question ID across
+collection and review.
+
+The interaction history still records the actual prompt and action, so the two
+phases remain distinguishable without changing identity.
+
+### Session states
+
+`IntakeSession` version `0.1` supports:
+
+```text
+ACTIVE
+PAUSED
+COMPLETE
+BLOCKED
+```
+
+#### Active
+
+At least one non-deferred collection or review question exists.
+
+#### Paused
+
+The user enters `:quit` or interrupts input. State is saved without recording a
+fake answer.
+
+#### Complete
+
+No current non-deferred question remains and human-intake blockers are zero.
+
+A complete session may still contain:
+
+- a skipped review warning,
+- browser-only adaptation blockers.
+
+#### Blocked
+
+Human-intake blockers remain, but all current questions are deferred.
+
+The user can reopen them explicitly with `--retry-deferred`.
+
+This avoids both infinite repetition and false completion.
+
+### Self-contained persistence
+
+The session embeds the complete current `ContextBundle` rather than storing
+only a path.
+
+Advantages:
+
+- one file is enough to resume,
+- the original input cannot change underneath an active session,
+- status and export use the same state,
+- session history remains attached to the context it changed.
+
+Trade-offs:
+
+- contexts are duplicated across session files,
+- concurrent sessions do not merge,
+- no database query layer exists,
+- retention remains the user's responsibility.
+
+The session is saved after:
+
+- creation,
+- every accepted answer action,
+- pause,
+- resume or deferred reset.
+
+### Open-question contract limitation
+
+`OpenQuestion` version `0.1` contains:
+
+- an ID,
+- prompt,
+- related IDs,
+- blocking flag.
+
+It has no generic structured answer field.
+
+Changing the context schema during Sprint 2 solely to anticipate every kind of
+question would have been premature.
+
+The bounded solution is:
+
+1. retain the prompt and answer in a human evidence summary,
+2. remove the resolved question from the active list,
+3. retain prompt, target, and action in session history.
+
+This preserves the reference answer but does not map it automatically into a
+business-rule object.
+
+The limitation is documented and carried forward rather than hidden.
+
+### Interaction metrics
+
+The product requirement includes final evaluation of difficulty and operation
+time.
+
+Sprint 2 begins instrumentation early.
+
+Each interaction stores:
+
+- sequence,
+- question ID and kind,
+- prompt,
+- target path,
+- answer action,
+- asked and answered times,
+- active response seconds.
+
+Calculated session metrics include:
+
+- interaction count,
+- provided count,
+- confirmed count,
+- unknown count,
+- skipped count,
+- total active response time.
+
+Normal answer text is not duplicated in the interaction log. It already lives
+in the context.
+
+Current timing does not include:
+
+- installation and setup,
+- reading documentation,
+- consulting another person,
+- reviewing exported JSON,
+- future code review.
+
+It is instrumentation, not proof that the tool is easy or fast.
+
+### CLI boundary
+
+The first CLI uses only the Python standard library.
+
+Commands:
+
+```text
+test-cartographer intake start
+test-cartographer intake run
+test-cartographer intake status
+test-cartographer intake export
+```
+
+The CLI deliberately remains plain.
+
+The sprint hypothesis concerns:
+
+- state transitions,
+- persistence,
+- traceability,
+- question burden,
+- review behaviour.
+
+A rich terminal or web framework would add presentation work before those
+behaviours are validated.
+
+### Line-ending policy
+
+The first Sprint 1 commit exposed Windows LF/CRLF warnings and trailing-space
+checks.
+
+Sprint 2 adds `.gitattributes` with explicit text treatment:
+
+- Python, Markdown, JSON, TOML, YAML use LF,
+- PowerShell scripts use CRLF.
+
+This does not change product behaviour, but it removes avoidable repository
+noise and makes future sprint packages safer to apply on Windows.
+
+### Test results
+
+Sprint 2 finishes with:
+
+```text
+47 passed
+```
+
+The total includes the 23 Sprint 1 tests and new coverage for:
+
+- deterministic question order,
+- stage-specific intake filtering,
+- review queue transition,
+- evidence-linked answers,
+- explicit unknown,
+- skip without mutation,
+- conflict resolution,
+- open-question resolution,
+- session states,
+- deferred retry,
+- pause and resume,
+- active-time metrics,
+- deterministic session persistence,
+- intake JSON Schema drift,
+- CLI start, run, status, export, and quit paths.
+
+### Manual CLI demonstration
+
+The controlled incomplete fixture was run through:
+
+```text
+risk answer
+→ expected-outcome answer
+→ matching-rule answer
+→ risk confirmation
+→ expected-outcome confirmation
+```
+
+Final status:
+
+```text
+State: complete
+Human-intake blockers: 0
+Human-intake warnings: 0
+Full adaptation blockers: 1
+Interactions: 5
+Provided: 3
+Confirmed: 2
+```
+
+The remaining blocker is the inferred submit-button locator.
+
+This is the intended result.
+
+Sprint 2 must not ask the user to convert an inferred locator into observed
+evidence.
+
+### What green tests mean
+
+They prove that controlled context state can drive a deterministic, resumable,
+reviewable, and measurable human workflow.
+
+They do not prove:
+
+- that a real tester finds the questions clear,
+- that the context shell can be created efficiently,
+- that the question set is sufficient for a real process,
+- that arbitrary answers are mapped into the right domain structures,
+- that browser evidence can be collected safely,
+- that LLM assistance improves the workflow,
+- that POM generation will be maintainable,
+- that TestCartographer saves time.
+
+### Sprint 2 decisions
+
+1. Keep question selection deterministic and non-LLM.
+2. Start from a structurally valid incomplete context shell.
+3. Add stage-specific human-intake assessment.
+4. Do not ask humans to supply browser-only evidence.
+5. Use a stable question identity per context target.
+6. Separate collection (`PROVIDED`) from review (`CONFIRMED`).
+7. Preserve explicit `UNKNOWN` separately from `SKIP`.
+8. Defer answered-unknown and skipped questions to prevent loops.
+9. Use visible `BLOCKED` state when required context remains deferred.
+10. Persist a self-contained session containing current context and history.
+11. Save after every accepted interaction.
+12. Record active answer time and action counts without duplicating normal
+    answer text.
+13. Retain generic open-question answers through evidence and session history
+    without changing context schema `0.1` yet.
+14. Use a standard-library CLI.
+15. Commit and test intake-session JSON Schema version `0.1`.
+16. Add explicit Git line-ending policy.
+17. Keep browser, LLM, Jira, POM proposal, and framework mutation outside the
+    sprint.
+
+### Open questions carried into Sprint 3
+
+- What controlled local application should replace the fictional `.test`
+  target?
+- What is the smallest safe browser observation for one selected element?
+- How does the user identify or authorize the next element/action?
+- Should capture prioritize accessibility data, selected DOM fragments,
+  Playwright locator inspection, or a combination?
+- What information must be excluded before persistence?
+- How should entered test-data values be prevented from appearing in evidence?
+- What exactly changes a locator from `INFERRED` to `OBSERVED`?
+- How should browser observations propose page or component ownership without
+  silently changing confirmed context?
+- Is a separate observation contract required before updating
+  `ContextBundle`?
+- Which parts can be replayed deterministically without opening a live external
+  website?
+- Does Sprint 3 also need a minimal context-shell builder, or can that remain a
+  later integration boundary?
+- How will browser interaction time be added to the existing effort metrics?
+
+### Sprint 2 conclusion
+
+Sprint 2 closes the first human-interaction boundary.
+
+TestCartographer can now take a controlled incomplete process context, ask only
+human-answerable questions, preserve uncertainty, require explicit review,
+save and resume work, and show why the result is or is not complete.
+
+The project still knows application structure only because the fixture supplied
+it.
+
+Sprint 3 should add one bounded, human-controlled browser observation and use
+real evidence to resolve the remaining locator blocker without introducing an
+LLM.

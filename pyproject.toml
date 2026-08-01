@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "test-cartographer"
-version = "0.1.0"
+version = "0.2.0"
 description = "LLM-assisted application discovery and framework adaptation for maintainable test automation."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -15,6 +15,9 @@ authors = [
 dependencies = [
     "pydantic>=2.11,<3",
 ]
+
+[project.scripts]
+test-cartographer = "test_cartographer.cli:main"
 
 [project.optional-dependencies]
 dev = [
