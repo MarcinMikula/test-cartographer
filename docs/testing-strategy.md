@@ -16,19 +16,25 @@ external interpretation and observation
 → controlled evidence and realistic evaluation later
 ```
 
-Sprint 3 adds a bounded application-observation layer while preserving the
-separation between deterministic contracts, browser execution, and human
-authority.
+Sprint 4 adds a bounded LLM-facing synthesis layer while preserving the
+separation between deterministic contracts, provider output, proposal
+authority, and human review.
 
 ## Current evidence
 
 ```text
-66 tests passing with Playwright Chromium
+104 tests expected with Playwright Chromium
 controlled browser readiness transition verified
+bounded synthesis replay and review transition verified
 ```
 
+The preparation environment produced `103 passed, 1 skipped` because an
+administrator policy blocks loopback browser navigation. The same browser test
+already passed on the normal Windows development environment in Sprint 3.
+
 The full result includes regression coverage for Playwright editability
-semantics on both non-editable buttons and native editable inputs.
+semantics and the complete bounded synthesis request, parser, validator,
+pipeline, persistence, CLI, and review boundary.
 
 The test suite covers:
 
@@ -48,7 +54,16 @@ The test suite covers:
 - locator strategy mapping, uniqueness, and visibility rules,
 - pending, accepted, and rejected review states,
 - evidence-backed context update and readiness transition,
-- controlled Chromium execution against a loopback reference page.
+- controlled Chromium execution against a loopback reference page,
+- bounded synthesis request construction and minimization,
+- deterministic prompt rendering,
+- strict proposal parsing and duplicate-key rejection,
+- exact raw-output preservation,
+- substantive proposal validation,
+- replay adapter request/prompt recording,
+- protocol, validation, pending-review, accepted, and rejected run states,
+- synthesis request/run persistence and JSON Schema drift,
+- synthesis CLI request, replay, status, and review paths.
 
 Passing tests prove the implemented rules for controlled fixtures. They do not
 prove semantic correctness, usability, safety against arbitrary applications,
@@ -381,6 +396,9 @@ The repository commits:
 schemas/context-bundle-v0.1.schema.json
 schemas/intake-session-v0.1.schema.json
 schemas/observation-v0.1.schema.json
+schemas/synthesis-request-v0.1.schema.json
+schemas/pom-proposal-v0.1.schema.json
+schemas/synthesis-run-v0.1.schema.json
 ```
 
 Any intentional contract change must:
@@ -406,9 +424,18 @@ Schema regeneration and focused verification:
 python scripts/export_context_schema.py
 python scripts/export_intake_schema.py
 python scripts/export_observation_schema.py
+python scripts/export_synthesis_schemas.py
 python -m pytest tests/unit/context/test_schema.py `
     tests/unit/intake/test_intake_schema.py `
-    tests/unit/observation/test_schema.py
+    tests/unit/observation/test_schema.py `
+    tests/unit/synthesis/test_schema.py
+```
+
+Boundary verifiers:
+
+```powershell
+python scripts/verify_browser_observation.py
+python scripts/verify_synthesis_replay.py
 ```
 
 Compilation check:
@@ -514,8 +541,8 @@ Before credentialed validation, tests must cover:
 - arbitrary external, dynamic, credentialed, iframe, or Shadow DOM applications,
 - cross-browser execution beyond Chromium,
 - redaction and secret handling,
-- LLM requests, parsing, latency, cost, or semantic quality,
-- POM proposal or generated source code,
+- live LLM provider requests, latency, cost, or semantic quality,
+- generated source code,
 - `qa-automation-framework` adaptation or independent execution,
 - framework-side execution-evidence collection,
 - reactive or proactive maintenance,
@@ -548,3 +575,107 @@ rather than an optional demonstration.
 The next test boundary is the provider-neutral LLM request and strict proposal
 parser. Live provider quality must remain separate from deterministic protocol
 correctness.
+
+
+## Sprint 4 synthesis test layers
+
+### Request-projection tests
+
+`tests/unit/synthesis/test_request.py` verifies:
+
+- only confirmed and observed values are authorized,
+- public and internal values are accepted by default,
+- not-ready context is rejected,
+- unauthorized status and restricted required values are rejected,
+- base URL, routes, raw source references, hashes, and source values are absent,
+- symbolic data references remain without concrete values,
+- deterministic prompt rendering does not reintroduce excluded values.
+
+### Strict parser tests
+
+`tests/unit/synthesis/test_parser.py` verifies:
+
+- valid proposal parsing,
+- empty output rejection,
+- Markdown-fence rejection,
+- non-object root rejection,
+- invalid JSON rejection,
+- duplicate-key rejection,
+- schema-version drift rejection,
+- unexpected-field rejection.
+
+These are protocol tests, not proposal-quality tests.
+
+### Proposal-validation tests
+
+`tests/unit/synthesis/test_validation.py` verifies:
+
+- the reference proposal passes,
+- execution-success overreach is rejected substantively,
+- invented locators are rejected,
+- omitted steps are rejected,
+- request-ID mismatch is rejected,
+- secret-bearing fixtures are rejected,
+- unknown or missing outcomes are rejected,
+- non-blocking questions remain warnings.
+
+### Pipeline and raw-preservation tests
+
+`tests/unit/synthesis/test_pipeline.py` verifies:
+
+- replay receives the exact request and deterministic prompt,
+- raw output is preserved exactly,
+- malformed output produces `PROTOCOL_ERROR`,
+- well-formed overreach produces `VALIDATION_REJECTED`,
+- valid output produces `READY_FOR_REVIEW`.
+
+The first implementation attempt exposed that inherited string trimming removed
+a trailing newline from raw output. A dedicated `SynthesisRun` configuration now
+preserves raw text exactly.
+
+### Human-review tests
+
+`tests/unit/synthesis/test_review.py` verifies:
+
+- only `READY_FOR_REVIEW` may be reviewed,
+- acceptance and rejection are separate final states,
+- rejection requires a reason,
+- protocol and validation failures cannot be accepted.
+
+### Persistence and schema tests
+
+`tests/unit/synthesis/test_io.py` and `test_schema.py` verify:
+
+- deterministic request and run round trips,
+- exact raw-output persistence,
+- committed request, proposal, and run schemas match the Python models.
+
+### CLI integration and full replay verifier
+
+`tests/integration/test_synthesis_cli.py` verifies request, replay, status, and
+review commands.
+
+`scripts/verify_synthesis_replay.py` verifies the complete local path:
+
+```text
+ready context
+→ bounded request
+→ deterministic prompt
+→ replay output
+→ strict parser
+→ deterministic validation
+→ explicit human acceptance
+```
+
+No live provider or repository mutation is involved.
+
+### Remaining synthesis evidence gap
+
+The deterministic suite proves the local protocol. It does not prove:
+
+- that a live model follows it,
+- that a model proposes good architecture across real applications,
+- provider-specific structured-output behaviour,
+- prompt-injection resistance,
+- enterprise data safety,
+- acceptable latency or cost.

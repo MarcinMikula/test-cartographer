@@ -694,3 +694,147 @@ not a maintained application map.
 - validation should measure repeated questions, observations, LLM input,
   duplicate artefacts, and review time,
 - stale knowledge must not be reused as automatic truth.
+
+## ADR-027 — Project ready context into a bounded synthesis request
+
+**Status:** Accepted and implemented in Sprint 4
+
+### Decision
+
+A live or replay synthesis adapter may receive only
+`BoundedSynthesisRequest` version `0.1`.
+
+Do not pass an arbitrary `ContextBundle`, browser object, page capture, session,
+repository, or conversation history to the adapter.
+
+The request builder:
+
+- requires full adaptation readiness,
+- includes only `CONFIRMED` and `OBSERVED` values,
+- allows `PUBLIC` and `INTERNAL` sensitivity by default,
+- fails on disallowed required values,
+- includes minimized evidence summaries,
+- records excluded paths and reasons,
+- records prohibited claims.
+
+### Rationale
+
+External-model authority should be explicit and testable. Passing a broad local
+model and relying on prompt instructions to ignore sensitive or irrelevant
+fields would make the effective data boundary hidden and provider-dependent.
+
+### Consequences
+
+- `application.base_url`, page routes, raw source references, hashes,
+  timestamps, notes, browser state, and repository files remain outside Sprint
+  4 requests,
+- local readiness and external authorization remain separate gates,
+- later enterprise profiles may define a different approved sensitivity set,
+  but must do so explicitly,
+- a missing authorized value blocks the request rather than encouraging model
+  invention.
+
+## ADR-028 — Preserve exact raw output and separate protocol failure
+
+**Status:** Accepted and implemented in Sprint 4
+
+### Decision
+
+Store the exact adapter output in `SynthesisRun.raw_output` without trimming or
+normalization.
+
+Treat empty output, Markdown fences, non-object roots, invalid JSON, duplicate
+keys, schema drift, missing fields, and unexpected fields as protocol failures.
+
+### Rationale
+
+Provider reliability, parser behaviour, replay, debugging, and future audits
+require the original output. Normalizing it would destroy evidence about what
+the adapter actually returned.
+
+Malformed output is operationally different from a well-formed proposal that
+violates project constraints.
+
+### Consequences
+
+- `SynthesisRun` overrides the shared string-stripping configuration,
+- nested structured models retain normal trimming and validation,
+- protocol errors contain a parse-failure code and no parsed proposal,
+- raw output is preserved on both success and failure,
+- retry or provider policy can later distinguish malformed-output handling from
+  proposal-quality handling.
+
+## ADR-029 — Validate proposal authority deterministically before human review
+
+**Status:** Accepted and implemented in Sprint 4
+
+### Decision
+
+A parsed `PomProposal` must pass deterministic validation against the exact
+`BoundedSynthesisRequest` before it can reach human review.
+
+The validator checks:
+
+- request and context identity,
+- authorized page and component coverage,
+- method ownership,
+- exactly-once process-step coverage,
+- action, element, locator, and symbolic-data consistency,
+- fixture role/environment mapping and absence of secret values,
+- test references and confirmed-outcome coverage,
+- prohibited claim flags,
+- open-question references.
+
+### Rationale
+
+Human review should focus on architectural judgement rather than discover
+simple referential errors, omitted steps, invented locators, or explicit
+overreach that software can reject reliably.
+
+### Consequences
+
+- structurally valid but unacceptable proposals become
+  `VALIDATION_REJECTED`,
+- protocol and validation failure remain separate,
+- only `READY_FOR_REVIEW` runs can be accepted or rejected,
+- deterministic validation does not claim semantic elegance or business
+  correctness,
+- non-blocking questions may remain warnings for review.
+
+## ADR-030 — Use replay before live providers and keep Sprint 4 read-only
+
+**Status:** Accepted and implemented in Sprint 4
+
+### Decision
+
+Implement and validate the synthesis pipeline with
+`ReplaySynthesisAdapter` before adding a live provider.
+
+Sprint 4 produces a logical POM proposal only. It does not inspect, write, or
+patch `qa-automation-framework`.
+
+### Rationale
+
+A live model would combine several uncertainties:
+
+- request design,
+- prompt rendering,
+- provider behaviour,
+- parser reliability,
+- proposal validation,
+- repository mapping.
+
+Replay isolates the local protocol and makes malformed, overreaching, and valid
+outputs deterministic.
+
+Repository file placement requires knowledge of the actual target workspace and
+must not be inferred from the logical proposal alone.
+
+### Consequences
+
+- Sprint 4 makes no provider-quality claim,
+- provider adapters remain a future integration behind the same contract,
+- an accepted proposal means only that logical boundaries may proceed to
+  framework inspection,
+- Sprint 5 must create a separate repository adaptation plan and review gate,
+- normal framework execution remains independent of the synthesis adapter.

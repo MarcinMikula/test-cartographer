@@ -1,0 +1,583 @@
+{
+  "$defs": {
+    "ActionKind": {
+      "description": "Small UI-action vocabulary for one guided process.",
+      "enum": [
+        "navigate",
+        "fill",
+        "click",
+        "select",
+        "check",
+        "uncheck",
+        "read"
+      ],
+      "title": "ActionKind",
+      "type": "string"
+    },
+    "AuthorizedAction": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/ActionKind"
+        },
+        "target_element_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Element Id"
+        },
+        "test_data_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Test Data Id"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "AuthorizedAction",
+      "type": "object"
+    },
+    "AuthorizedComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "element_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Element Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/AuthorizedValue"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "AuthorizedComponent",
+      "type": "object"
+    },
+    "AuthorizedElement": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/AuthorizedValue"
+        },
+        "owner_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Owner Id",
+          "type": "string"
+        },
+        "primary_locator": {
+          "$ref": "#/$defs/AuthorizedLocator"
+        },
+        "semantic_role": {
+          "$ref": "#/$defs/AuthorizedValue"
+        }
+      },
+      "required": [
+        "id",
+        "owner_id",
+        "name",
+        "semantic_role",
+        "primary_locator"
+      ],
+      "title": "AuthorizedElement",
+      "type": "object"
+    },
+    "AuthorizedEvidenceReference": {
+      "additionalProperties": false,
+      "description": "Minimized evidence reference; raw source content and source_ref are excluded.",
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/SensitivityLevel"
+        },
+        "source_type": {
+          "$ref": "#/$defs/EvidenceSourceType"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source_type",
+        "summary",
+        "sensitivity"
+      ],
+      "title": "AuthorizedEvidenceReference",
+      "type": "object"
+    },
+    "AuthorizedLocator": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "strategy": {
+          "$ref": "#/$defs/LocatorStrategy"
+        },
+        "value": {
+          "$ref": "#/$defs/AuthorizedValue"
+        }
+      },
+      "required": [
+        "id",
+        "strategy",
+        "value"
+      ],
+      "title": "AuthorizedLocator",
+      "type": "object"
+    },
+    "AuthorizedOutcome": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "related_element_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Related Element Ids",
+          "type": "array"
+        },
+        "statement": {
+          "$ref": "#/$defs/AuthorizedValue"
+        }
+      },
+      "required": [
+        "id",
+        "statement"
+      ],
+      "title": "AuthorizedOutcome",
+      "type": "object"
+    },
+    "AuthorizedPage": {
+      "additionalProperties": false,
+      "properties": {
+        "component_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Component Ids",
+          "type": "array"
+        },
+        "element_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Element Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/AuthorizedValue"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "title": "AuthorizedPage",
+      "type": "object"
+    },
+    "AuthorizedStep": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/AuthorizedAction"
+        },
+        "expected_state": {
+          "$ref": "#/$defs/AuthorizedValue"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "intent": {
+          "$ref": "#/$defs/AuthorizedValue"
+        },
+        "order": {
+          "minimum": 1,
+          "title": "Order",
+          "type": "integer"
+        },
+        "page_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Page Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "order",
+        "page_id",
+        "intent",
+        "action",
+        "expected_state"
+      ],
+      "title": "AuthorizedStep",
+      "type": "object"
+    },
+    "AuthorizedTestData": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "$ref": "#/$defs/AuthorizedValue"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "$ref": "#/$defs/AuthorizedValue"
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/SensitivityLevel"
+        },
+        "symbolic_ref": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Symbolic Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "symbolic_ref",
+        "sensitivity"
+      ],
+      "title": "AuthorizedTestData",
+      "type": "object"
+    },
+    "AuthorizedValue": {
+      "additionalProperties": false,
+      "description": "One authorized value copied into the bounded request.",
+      "properties": {
+        "evidence_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/SensitivityLevel"
+        },
+        "status": {
+          "enum": [
+            "confirmed",
+            "observed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "status",
+        "evidence_ids",
+        "sensitivity"
+      ],
+      "title": "AuthorizedValue",
+      "type": "object"
+    },
+    "EvidenceSourceType": {
+      "description": "Origin of evidence retained by the local context model.",
+      "enum": [
+        "human",
+        "document",
+        "application",
+        "repository",
+        "execution",
+        "system"
+      ],
+      "title": "EvidenceSourceType",
+      "type": "string"
+    },
+    "ExcludedField": {
+      "additionalProperties": false,
+      "properties": {
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "path": {
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "reason": {
+          "$ref": "#/$defs/ExclusionReason"
+        }
+      },
+      "required": [
+        "path",
+        "reason",
+        "explanation"
+      ],
+      "title": "ExcludedField",
+      "type": "object"
+    },
+    "ExclusionReason": {
+      "description": "Why a context field is deliberately excluded from the LLM request.",
+      "enum": [
+        "policy",
+        "sensitivity",
+        "status",
+        "not_required"
+      ],
+      "title": "ExclusionReason",
+      "type": "string"
+    },
+    "LocatorStrategy": {
+      "description": "Supported locator candidate types in the first contract.",
+      "enum": [
+        "role",
+        "label",
+        "test_id",
+        "placeholder",
+        "text",
+        "css",
+        "xpath"
+      ],
+      "title": "LocatorStrategy",
+      "type": "string"
+    },
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Provider-neutral, minimized request for one POM proposal.",
+  "properties": {
+    "application_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Application Id",
+      "type": "string"
+    },
+    "application_name": {
+      "$ref": "#/$defs/AuthorizedValue"
+    },
+    "components": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/AuthorizedComponent"
+      },
+      "title": "Components",
+      "type": "array"
+    },
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "elements": {
+      "items": {
+        "$ref": "#/$defs/AuthorizedElement"
+      },
+      "minItems": 1,
+      "title": "Elements",
+      "type": "array"
+    },
+    "environment": {
+      "$ref": "#/$defs/AuthorizedValue"
+    },
+    "evidence": {
+      "items": {
+        "$ref": "#/$defs/AuthorizedEvidenceReference"
+      },
+      "minItems": 1,
+      "title": "Evidence",
+      "type": "array"
+    },
+    "excluded_fields": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ExcludedField"
+      },
+      "title": "Excluded Fields",
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "outcomes": {
+      "items": {
+        "$ref": "#/$defs/AuthorizedOutcome"
+      },
+      "minItems": 1,
+      "title": "Outcomes",
+      "type": "array"
+    },
+    "output_schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Output Schema Version",
+      "type": "string"
+    },
+    "pages": {
+      "items": {
+        "$ref": "#/$defs/AuthorizedPage"
+      },
+      "minItems": 1,
+      "title": "Pages",
+      "type": "array"
+    },
+    "preconditions": {
+      "items": {
+        "$ref": "#/$defs/AuthorizedValue"
+      },
+      "minItems": 1,
+      "title": "Preconditions",
+      "type": "array"
+    },
+    "process_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Process Id",
+      "type": "string"
+    },
+    "process_name": {
+      "$ref": "#/$defs/AuthorizedValue"
+    },
+    "prohibited_claims": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Prohibited Claims",
+      "type": "array"
+    },
+    "protocol_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Protocol Version",
+      "type": "string"
+    },
+    "purpose": {
+      "$ref": "#/$defs/AuthorizedValue"
+    },
+    "risk": {
+      "$ref": "#/$defs/AuthorizedValue"
+    },
+    "role": {
+      "$ref": "#/$defs/AuthorizedValue"
+    },
+    "steps": {
+      "items": {
+        "$ref": "#/$defs/AuthorizedStep"
+      },
+      "minItems": 1,
+      "title": "Steps",
+      "type": "array"
+    },
+    "test_data": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/AuthorizedTestData"
+      },
+      "title": "Test Data",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "context_id",
+    "created_at",
+    "application_id",
+    "application_name",
+    "environment",
+    "process_id",
+    "process_name",
+    "purpose",
+    "risk",
+    "role",
+    "preconditions",
+    "steps",
+    "outcomes",
+    "pages",
+    "elements",
+    "evidence",
+    "prohibited_claims"
+  ],
+  "title": "BoundedSynthesisRequest",
+  "type": "object"
+}

@@ -1,0 +1,624 @@
+{
+  "schema_version": "0.1",
+  "id": "synrun_public_search",
+  "request": {
+    "protocol_version": "0.1",
+    "output_schema_version": "0.1",
+    "id": "synreq_public_search",
+    "context_id": "ctx_public_catalog_search_observation_ready",
+    "created_at": "2026-08-02T09:00:00Z",
+    "application_id": "app_public_catalog",
+    "application_name": {
+      "value": "Public catalog reference application",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_spec_search"
+      ],
+      "sensitivity": "public"
+    },
+    "environment": {
+      "value": "Controlled local reference environment",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope"
+      ],
+      "sensitivity": "internal"
+    },
+    "process_id": "proc_search_catalog",
+    "process_name": {
+      "value": "Search the public catalog",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope"
+      ],
+      "sensitivity": "internal"
+    },
+    "purpose": {
+      "value": "Allow a visitor to find catalog items matching a text query.",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope",
+        "ev_spec_search"
+      ],
+      "sensitivity": "internal"
+    },
+    "risk": {
+      "value": "Search failures can hide relevant catalog items.",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope"
+      ],
+      "sensitivity": "internal"
+    },
+    "role": {
+      "value": "Unauthenticated visitor",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_human_scope"
+      ],
+      "sensitivity": "internal"
+    },
+    "preconditions": [
+      {
+        "value": "The catalog application is available and contains indexed items.",
+        "status": "confirmed",
+        "evidence_ids": [
+          "ev_human_scope",
+          "ev_spec_search"
+        ],
+        "sensitivity": "internal"
+      }
+    ],
+    "steps": [
+      {
+        "id": "step_open_catalog",
+        "order": 1,
+        "page_id": "page_catalog",
+        "intent": {
+          "value": "Open the catalog search page.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "sensitivity": "internal"
+        },
+        "action": {
+          "kind": "navigate",
+          "target_element_id": null,
+          "test_data_id": null
+        },
+        "expected_state": {
+          "value": "The catalog search form is visible.",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        }
+      },
+      {
+        "id": "step_fill_query",
+        "order": 2,
+        "page_id": "page_catalog",
+        "intent": {
+          "value": "Enter the selected search query.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "sensitivity": "internal"
+        },
+        "action": {
+          "kind": "fill",
+          "target_element_id": "el_search_input",
+          "test_data_id": "data_search_query"
+        },
+        "expected_state": {
+          "value": "The search input contains the supplied query.",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        }
+      },
+      {
+        "id": "step_submit_search",
+        "order": 3,
+        "page_id": "page_catalog",
+        "intent": {
+          "value": "Submit the catalog search.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "sensitivity": "internal"
+        },
+        "action": {
+          "kind": "click",
+          "target_element_id": "el_search_submit",
+          "test_data_id": null
+        },
+        "expected_state": {
+          "value": "The results region is refreshed for the submitted query.",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        }
+      },
+      {
+        "id": "step_read_results",
+        "order": 4,
+        "page_id": "page_catalog",
+        "intent": {
+          "value": "Read the visible search results.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "sensitivity": "internal"
+        },
+        "action": {
+          "kind": "read",
+          "target_element_id": "el_results_list",
+          "test_data_id": null
+        },
+        "expected_state": {
+          "value": "The results list and query heading are visible.",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        }
+      }
+    ],
+    "outcomes": [
+      {
+        "id": "outcome_matching_results",
+        "statement": {
+          "value": "Matching items are shown in the visible results list.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "sensitivity": "internal"
+        },
+        "related_element_ids": [
+          "el_results_heading",
+          "el_results_list"
+        ]
+      }
+    ],
+    "pages": [
+      {
+        "id": "page_catalog",
+        "name": {
+          "value": "Catalog search page",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "component_ids": [
+          "cmp_search_form"
+        ],
+        "element_ids": [
+          "el_results_heading",
+          "el_results_list"
+        ]
+      }
+    ],
+    "components": [
+      {
+        "id": "cmp_search_form",
+        "name": {
+          "value": "Catalog search form",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "element_ids": [
+          "el_search_input",
+          "el_search_submit"
+        ]
+      }
+    ],
+    "elements": [
+      {
+        "id": "el_search_input",
+        "owner_id": "cmp_search_form",
+        "name": {
+          "value": "Search input",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "semantic_role": {
+          "value": "Text input labelled Search catalog",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "primary_locator": {
+          "id": "loc_search_input_label",
+          "strategy": "label",
+          "value": {
+            "value": "Search catalog",
+            "status": "observed",
+            "evidence_ids": [
+              "ev_app_catalog"
+            ],
+            "sensitivity": "internal"
+          }
+        }
+      },
+      {
+        "id": "el_search_submit",
+        "owner_id": "cmp_search_form",
+        "name": {
+          "value": "Search submit button",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "semantic_role": {
+          "value": "Button named Search",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "primary_locator": {
+          "id": "loc_search_submit_role",
+          "strategy": "role",
+          "value": {
+            "value": "button:Search",
+            "status": "observed",
+            "evidence_ids": [
+              "ev_app_catalog",
+              "ev_browser_83574fc32662c70b"
+            ],
+            "sensitivity": "internal"
+          }
+        }
+      },
+      {
+        "id": "el_results_heading",
+        "owner_id": "page_catalog",
+        "name": {
+          "value": "Results heading",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "semantic_role": {
+          "value": "Heading identifying the active query",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "primary_locator": {
+          "id": "loc_results_heading_role",
+          "strategy": "role",
+          "value": {
+            "value": "heading:Search results",
+            "status": "observed",
+            "evidence_ids": [
+              "ev_app_catalog"
+            ],
+            "sensitivity": "internal"
+          }
+        }
+      },
+      {
+        "id": "el_results_list",
+        "owner_id": "page_catalog",
+        "name": {
+          "value": "Results list",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "semantic_role": {
+          "value": "List containing matching catalog items",
+          "status": "observed",
+          "evidence_ids": [
+            "ev_app_catalog"
+          ],
+          "sensitivity": "internal"
+        },
+        "primary_locator": {
+          "id": "loc_results_list_test_id",
+          "strategy": "test_id",
+          "value": {
+            "value": "catalog-results",
+            "status": "observed",
+            "evidence_ids": [
+              "ev_app_catalog"
+            ],
+            "sensitivity": "internal"
+          }
+        }
+      }
+    ],
+    "test_data": [
+      {
+        "id": "data_search_query",
+        "name": {
+          "value": "Valid catalog search query",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope"
+          ],
+          "sensitivity": "internal"
+        },
+        "description": {
+          "value": "A non-empty query with at least one known matching catalog item.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_human_scope",
+            "ev_spec_search"
+          ],
+          "sensitivity": "internal"
+        },
+        "symbolic_ref": "valid_search_query",
+        "sensitivity": "public"
+      }
+    ],
+    "evidence": [
+      {
+        "id": "ev_app_catalog",
+        "source_type": "application",
+        "summary": "Controlled observation of the page, component, elements, states, and locator candidates.",
+        "sensitivity": "public"
+      },
+      {
+        "id": "ev_browser_83574fc32662c70b",
+        "source_type": "application",
+        "summary": "Accepted bounded observation for element el_search_submit using locator loc_search_submit_role.",
+        "sensitivity": "public"
+      },
+      {
+        "id": "ev_human_scope",
+        "source_type": "human",
+        "summary": "Tester-confirmed process purpose, risk, role, preconditions, and expected result.",
+        "sensitivity": "internal"
+      },
+      {
+        "id": "ev_spec_search",
+        "source_type": "document",
+        "summary": "Controlled reference specification for the public catalog search flow.",
+        "sensitivity": "public"
+      }
+    ],
+    "excluded_fields": [
+      {
+        "path": "application.base_url",
+        "reason": "policy",
+        "explanation": "The POM proposal does not require an environment URL."
+      },
+      {
+        "path": "pages[*].route",
+        "reason": "policy",
+        "explanation": "Routes are withheld until a repository mapping stage requires them."
+      },
+      {
+        "path": "evidence[*].source_ref",
+        "reason": "policy",
+        "explanation": "Raw source references are not required for architecture synthesis."
+      },
+      {
+        "path": "evidence[*].captured_at",
+        "reason": "not_required",
+        "explanation": "Capture timestamps do not affect the first POM proposal."
+      },
+      {
+        "path": "evidence[*].content_sha256",
+        "reason": "not_required",
+        "explanation": "Content hashes remain local provenance data."
+      },
+      {
+        "path": "knowledge[*].confidence",
+        "reason": "not_required",
+        "explanation": "Only confirmed or observed values are authorized."
+      },
+      {
+        "path": "knowledge[*].notes",
+        "reason": "policy",
+        "explanation": "Free-form notes are excluded from the bounded request."
+      },
+      {
+        "path": "open_questions",
+        "reason": "status",
+        "explanation": "A synthesis-ready context must not contain blocking open questions."
+      },
+      {
+        "path": "conflicts",
+        "reason": "status",
+        "explanation": "A synthesis-ready context must not contain unresolved conflicts."
+      }
+    ],
+    "prohibited_claims": [
+      "Do not claim that generated code has executed successfully.",
+      "Do not claim that the proposal is business-correct without human review.",
+      "Do not claim that any locator is stable beyond the supplied evidence.",
+      "Do not claim that proposed objects fit an uninspected repository.",
+      "Do not claim security, privacy, or compliance approval.",
+      "Do not invent credential values, repository paths, or source files."
+    ]
+  },
+  "prompt_sha256": "395424dfce7faa2d197b08cc49682b193ea91e3e4455406963542449f49b0102",
+  "raw_output": "{\n  \"schema_version\": \"0.1\",\n  \"id\": \"proposal_public_search\",\n  \"request_id\": \"synreq_public_search\",\n  \"context_id\": \"ctx_public_catalog_search_observation_ready\",\n  \"summary\": \"Represent the catalog page and its reusable search form as separate POM objects with one method per authorized process step.\",\n  \"pages\": [\n    {\n      \"id\": \"pom_page_catalog\",\n      \"class_name\": \"CatalogPage\",\n      \"source_page_id\": \"page_catalog\",\n      \"method_ids\": [\n        \"method_open_catalog\",\n        \"method_read_results\"\n      ],\n      \"component_object_ids\": [\n        \"pom_component_search_form\"\n      ]\n    }\n  ],\n  \"components\": [\n    {\n      \"id\": \"pom_component_search_form\",\n      \"class_name\": \"CatalogSearchForm\",\n      \"source_component_id\": \"cmp_search_form\",\n      \"method_ids\": [\n        \"method_enter_query\",\n        \"method_submit_search\"\n      ]\n    }\n  ],\n  \"methods\": [\n    {\n      \"id\": \"method_open_catalog\",\n      \"name\": \"open_catalog\",\n      \"owner_kind\": \"page\",\n      \"owner_source_id\": \"page_catalog\",\n      \"intent\": \"Open the catalog page through the framework navigation boundary.\",\n      \"actions\": [\n        {\n          \"step_id\": \"step_open_catalog\",\n          \"kind\": \"navigate\",\n          \"target_element_id\": null,\n          \"locator_id\": null,\n          \"test_data_id\": null\n        }\n      ]\n    },\n    {\n      \"id\": \"method_enter_query\",\n      \"name\": \"enter_query\",\n      \"owner_kind\": \"component\",\n      \"owner_source_id\": \"cmp_search_form\",\n      \"intent\": \"Fill the observed search input with symbolic test data.\",\n      \"actions\": [\n        {\n          \"step_id\": \"step_fill_query\",\n          \"kind\": \"fill\",\n          \"target_element_id\": \"el_search_input\",\n          \"locator_id\": \"loc_search_input_label\",\n          \"test_data_id\": \"data_search_query\"\n        }\n      ]\n    },\n    {\n      \"id\": \"method_submit_search\",\n      \"name\": \"submit_search\",\n      \"owner_kind\": \"component\",\n      \"owner_source_id\": \"cmp_search_form\",\n      \"intent\": \"Submit the search through the observed Search button.\",\n      \"actions\": [\n        {\n          \"step_id\": \"step_submit_search\",\n          \"kind\": \"click\",\n          \"target_element_id\": \"el_search_submit\",\n          \"locator_id\": \"loc_search_submit_role\",\n          \"test_data_id\": null\n        }\n      ]\n    },\n    {\n      \"id\": \"method_read_results\",\n      \"name\": \"read_results\",\n      \"owner_kind\": \"page\",\n      \"owner_source_id\": \"page_catalog\",\n      \"intent\": \"Expose the visible results state for test-level verification.\",\n      \"actions\": [\n        {\n          \"step_id\": \"step_read_results\",\n          \"kind\": \"read\",\n          \"target_element_id\": \"el_results_list\",\n          \"locator_id\": \"loc_results_list_test_id\",\n          \"test_data_id\": null\n        }\n      ]\n    }\n  ],\n  \"fixtures\": [\n    {\n      \"id\": \"fixture_catalog_context\",\n      \"name\": \"catalog_context\",\n      \"purpose\": \"Provide the authorized environment and unauthenticated visitor context without embedding values or secrets.\",\n      \"uses_role_from_context\": true,\n      \"uses_environment_from_context\": true,\n      \"secret_values_included\": false\n    }\n  ],\n  \"test\": {\n    \"id\": \"test_search_catalog\",\n    \"name\": \"test_search_catalog\",\n    \"process_id\": \"proc_search_catalog\",\n    \"fixture_ids\": [\n      \"fixture_catalog_context\"\n    ],\n    \"method_ids\": [\n      \"method_open_catalog\",\n      \"method_enter_query\",\n      \"method_submit_search\",\n      \"method_read_results\"\n    ],\n    \"assertions\": [\n      {\n        \"id\": \"assert_matching_results\",\n        \"outcome_id\": \"outcome_matching_results\",\n        \"page_id\": \"page_catalog\",\n        \"related_element_ids\": [\n          \"el_results_heading\",\n          \"el_results_list\"\n        ],\n        \"intent\": \"Verify the confirmed visible outcome without claiming execution success.\"\n      }\n    ]\n  },\n  \"open_questions\": [],\n  \"claim_flags\": {\n    \"execution_success\": false,\n    \"business_correctness\": false,\n    \"locator_stability\": false,\n    \"repository_fit\": false,\n    \"security_approval\": false\n  }\n}\n",
+  "status": "accepted",
+  "proposal": {
+    "schema_version": "0.1",
+    "id": "proposal_public_search",
+    "request_id": "synreq_public_search",
+    "context_id": "ctx_public_catalog_search_observation_ready",
+    "summary": "Represent the catalog page and its reusable search form as separate POM objects with one method per authorized process step.",
+    "pages": [
+      {
+        "id": "pom_page_catalog",
+        "class_name": "CatalogPage",
+        "source_page_id": "page_catalog",
+        "method_ids": [
+          "method_open_catalog",
+          "method_read_results"
+        ],
+        "component_object_ids": [
+          "pom_component_search_form"
+        ]
+      }
+    ],
+    "components": [
+      {
+        "id": "pom_component_search_form",
+        "class_name": "CatalogSearchForm",
+        "source_component_id": "cmp_search_form",
+        "method_ids": [
+          "method_enter_query",
+          "method_submit_search"
+        ]
+      }
+    ],
+    "methods": [
+      {
+        "id": "method_open_catalog",
+        "name": "open_catalog",
+        "owner_kind": "page",
+        "owner_source_id": "page_catalog",
+        "intent": "Open the catalog page through the framework navigation boundary.",
+        "actions": [
+          {
+            "step_id": "step_open_catalog",
+            "kind": "navigate",
+            "target_element_id": null,
+            "locator_id": null,
+            "test_data_id": null
+          }
+        ]
+      },
+      {
+        "id": "method_enter_query",
+        "name": "enter_query",
+        "owner_kind": "component",
+        "owner_source_id": "cmp_search_form",
+        "intent": "Fill the observed search input with symbolic test data.",
+        "actions": [
+          {
+            "step_id": "step_fill_query",
+            "kind": "fill",
+            "target_element_id": "el_search_input",
+            "locator_id": "loc_search_input_label",
+            "test_data_id": "data_search_query"
+          }
+        ]
+      },
+      {
+        "id": "method_submit_search",
+        "name": "submit_search",
+        "owner_kind": "component",
+        "owner_source_id": "cmp_search_form",
+        "intent": "Submit the search through the observed Search button.",
+        "actions": [
+          {
+            "step_id": "step_submit_search",
+            "kind": "click",
+            "target_element_id": "el_search_submit",
+            "locator_id": "loc_search_submit_role",
+            "test_data_id": null
+          }
+        ]
+      },
+      {
+        "id": "method_read_results",
+        "name": "read_results",
+        "owner_kind": "page",
+        "owner_source_id": "page_catalog",
+        "intent": "Expose the visible results state for test-level verification.",
+        "actions": [
+          {
+            "step_id": "step_read_results",
+            "kind": "read",
+            "target_element_id": "el_results_list",
+            "locator_id": "loc_results_list_test_id",
+            "test_data_id": null
+          }
+        ]
+      }
+    ],
+    "fixtures": [
+      {
+        "id": "fixture_catalog_context",
+        "name": "catalog_context",
+        "purpose": "Provide the authorized environment and unauthenticated visitor context without embedding values or secrets.",
+        "uses_role_from_context": true,
+        "uses_environment_from_context": true,
+        "secret_values_included": false
+      }
+    ],
+    "test": {
+      "id": "test_search_catalog",
+      "name": "test_search_catalog",
+      "process_id": "proc_search_catalog",
+      "fixture_ids": [
+        "fixture_catalog_context"
+      ],
+      "method_ids": [
+        "method_open_catalog",
+        "method_enter_query",
+        "method_submit_search",
+        "method_read_results"
+      ],
+      "assertions": [
+        {
+          "id": "assert_matching_results",
+          "outcome_id": "outcome_matching_results",
+          "page_id": "page_catalog",
+          "related_element_ids": [
+            "el_results_heading",
+            "el_results_list"
+          ],
+          "intent": "Verify the confirmed visible outcome without claiming execution success."
+        }
+      ]
+    },
+    "open_questions": [],
+    "claim_flags": {
+      "execution_success": false,
+      "business_correctness": false,
+      "locator_stability": false,
+      "repository_fit": false,
+      "security_approval": false
+    }
+  },
+  "parse_failure": null,
+  "validation": {
+    "issues": []
+  },
+  "decision": "accepted",
+  "started_at": "2026-08-02T09:01:00Z",
+  "completed_at": "2026-08-02T09:01:01Z",
+  "reviewed_at": "2026-08-02T09:02:00Z",
+  "review_reason": "Architecture mapping accepted for the reference flow.",
+  "review_seconds": 12.5
+}

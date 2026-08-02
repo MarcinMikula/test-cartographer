@@ -20,7 +20,7 @@ The product should help answer:
 
 ## Current implemented boundary
 
-Sprint 3 implements:
+Sprint 4 implements:
 
 - a strict local context contract for one UI process,
 - deterministic adaptation-readiness assessment,
@@ -36,22 +36,30 @@ Sprint 3 implements:
 - a separate bounded browser-observation contract and schema,
 - Playwright verification of one existing locator against one authorized page,
 - minimized selected-target capture and explicit human accept/reject review,
-- evidence-backed locator promotion from `INFERRED` to `OBSERVED`.
+- evidence-backed locator promotion from `INFERRED` to `OBSERVED`,
+- a bounded provider-neutral synthesis request built from ready context,
+- deterministic prompt rendering and replay adapter,
+- strict JSON proposal parsing and exact raw-output preservation,
+- a logical POM proposal linked to authorized source IDs,
+- deterministic proposal validation,
+- separate protocol, validation, and human-review states,
+- CLI request, replay, status, and review commands.
 
 The current package cannot:
 
 - create the context shell from an empty project,
 - discover an unknown page, element, or locator,
-- call an LLM,
-- propose a POM,
+- call a live LLM provider,
 - inspect or modify `qa-automation-framework`,
-- execute a generated test.
+- map proposals to actual framework files and symbols,
+- generate or execute source code.
 
 Implementation details are documented in:
 
 - [`context-contract.md`](context-contract.md),
 - [`intake-workflow.md`](intake-workflow.md),
-- [`browser-observation.md`](browser-observation.md).
+- [`browser-observation.md`](browser-observation.md),
+- [`synthesis-protocol.md`](synthesis-protocol.md).
 
 ## Problem statement
 

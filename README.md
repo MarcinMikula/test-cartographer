@@ -15,23 +15,26 @@ and expansion.
 
 ## Status
 
-**Sprint 3 — bounded guided browser observation: complete**
+**Sprint 4 — bounded LLM synthesis and POM proposal: complete**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
 Current evidence:
 
 ```text
-66 tests passing with Playwright Chromium
-controlled readiness transition verified end to end
+104 tests expected with Playwright Chromium
+controlled browser readiness transition verified end to end
+bounded synthesis replay and human-review transition verified end to end
 ```
 
-The repository now provides three executable boundaries:
+The repository now provides four executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
 3. a bounded Playwright observation that verifies one selected locator and
-   requires human acceptance before context changes.
+   requires human acceptance before context changes,
+4. a bounded LLM-facing request, strict POM proposal protocol, replay adapter,
+   deterministic validator, and separate human review state.
 
 The current workflow can:
 
@@ -48,10 +51,18 @@ The current workflow can:
 - open one user-authorized page through Playwright,
 - verify one existing primary locator against exactly one visible target,
 - persist a minimized observation and require explicit accept/reject review,
-- promote only an accepted locator to `OBSERVED`.
+- promote only an accepted locator to `OBSERVED`,
+- project ready context into a minimized provider-neutral synthesis request,
+- exclude URLs, routes, raw source references, notes, hashes, and secret values,
+- replay one stored raw model output through a strict parser,
+- distinguish protocol failure from substantive proposal rejection,
+- validate page, component, method, locator, data, fixture, test, and outcome
+  references deterministically,
+- keep the logical proposal pending until explicit human acceptance.
 
-It still cannot autonomously explore an application, call an LLM, propose a
-Page Object, generate a test, or modify `qa-automation-framework`.
+It still cannot autonomously explore an application, call a live LLM provider,
+inspect or modify `qa-automation-framework`, generate framework-specific source
+files, or prove execution success.
 
 ## The problem
 
@@ -177,6 +188,32 @@ whole-page capture. It does not discover a workflow or generate selectors.
 
 See [`docs/browser-observation.md`](docs/browser-observation.md).
 
+### Bounded LLM synthesis and POM proposal
+
+Sprint 4 adds a provider-neutral synthesis boundary:
+
+```text
+ready confirmed/observed context
+→ field-level authorization and minimization
+→ deterministic prompt
+→ replay adapter
+→ exact raw output preservation
+→ strict JSON parser
+→ deterministic POM proposal validation
+→ explicit human accept/reject review
+```
+
+The request excludes base URLs, routes, raw evidence references, evidence
+hashes, timestamps, free-form notes, browser state, and repository files. The
+proposal may reference only authorized page, component, step, element, locator,
+symbolic data, and outcome IDs.
+
+Sprint 4 uses replay rather than a live provider. Acceptance approves only the
+logical proposal as input to Sprint 5 repository inspection; it does not write
+files or claim execution success.
+
+See [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md).
+
 ## Structural validity, intake completion, and adaptation readiness
 
 The project deliberately separates three questions.
@@ -231,10 +268,10 @@ python -m playwright install chromium
 python -m pytest
 ```
 
-Expected Sprint 3 result after Chromium installation:
+Expected Sprint 4 result after Chromium installation:
 
 ```text
-66 passed
+104 passed
 ```
 
 ### Start a reference intake
@@ -342,15 +379,59 @@ test-cartographer observe review `
     --output-context .test-cartographer/public-search-observed.json
 ```
 
+### Verify bounded synthesis replay
+
+```powershell
+python scripts/verify_synthesis_replay.py
+```
+
+The verifier builds the minimized request, confirms excluded values do not
+enter the prompt, replays the committed proposal, validates every reference,
+and records explicit human acceptance without calling a live provider or
+modifying a repository.
+
+### Build, replay, and review a POM proposal
+
+Build a request from the committed synthesis-ready context:
+
+```powershell
+test-cartographer synthesize request `
+    --context testdata/context/synthesis_ready/public_search_flow.json `
+    --request .test-cartographer/public-search-request.json `
+    --request-id synreq_public_search
+```
+
+Replay the committed raw output:
+
+```powershell
+test-cartographer synthesize replay `
+    --request .test-cartographer/public-search-request.json `
+    --raw-output testdata/synthesis/raw/valid_public_search.json `
+    --run .test-cartographer/public-search-run.json `
+    --run-id synrun_public_search
+```
+
+Review the validated proposal:
+
+```powershell
+test-cartographer synthesize review `
+    --run .test-cartographer/public-search-run.json `
+    --decision accepted `
+    --reason "POM boundaries are acceptable for framework mapping." `
+    --review-seconds 15
+```
+
 ### Re-export contract schemas
 
 ```powershell
 python scripts/export_context_schema.py
 python scripts/export_intake_schema.py
 python scripts/export_observation_schema.py
+python scripts/export_synthesis_schemas.py
 python -m pytest tests/unit/context/test_schema.py `
     tests/unit/intake/test_intake_schema.py `
-    tests/unit/observation/test_schema.py
+    tests/unit/observation/test_schema.py `
+    tests/unit/synthesis/test_schema.py
 ```
 
 ## Current project structure
@@ -362,26 +443,34 @@ test-cartographer/
 │   ├── context-contract.md
 │   ├── intake-workflow.md
 │   ├── browser-observation.md
+│   ├── synthesis-protocol.md
 │   ├── testing-strategy.md
 │   └── ...
 ├── schemas/
 │   ├── context-bundle-v0.1.schema.json
 │   ├── intake-session-v0.1.schema.json
-│   └── observation-v0.1.schema.json
+│   ├── observation-v0.1.schema.json
+│   ├── synthesis-request-v0.1.schema.json
+│   ├── pom-proposal-v0.1.schema.json
+│   └── synthesis-run-v0.1.schema.json
 ├── scripts/
 │   ├── export_context_schema.py
 │   ├── export_intake_schema.py
 │   ├── export_observation_schema.py
-│   └── verify_browser_observation.py
+│   ├── export_synthesis_schemas.py
+│   ├── verify_browser_observation.py
+│   └── verify_synthesis_replay.py
 ├── src/test_cartographer/
 │   ├── cli.py
 │   ├── context/
 │   ├── intake/
-│   └── observation/
+│   ├── observation/
+│   └── synthesis/
 ├── testdata/
 │   ├── browser/
 │   ├── context/
-│   └── observation/
+│   ├── observation/
+│   └── synthesis/
 ├── tests/
 │   ├── integration/
 │   └── unit/
@@ -391,30 +480,31 @@ test-cartographer/
 └── pyproject.toml
 ```
 
-## What Sprint 3 proves
+## What Sprint 4 proves
 
-- one existing locator can be resolved through Playwright against a controlled
-  real page,
-- exact uniqueness and visibility can be required before evidence is created,
-- the selected target can be represented without values, page text, HTML,
-  screenshots, or whole-page capture,
-- capture and human acceptance can remain separate authority stages,
-- rejection can leave context unchanged,
-- accepted application evidence can promote one locator from `INFERRED` to
-  `OBSERVED`,
-- the final reference readiness blocker can be removed without changing
-  business context or unrelated application structure.
+- ready context can be projected into a strict minimized request,
+- only confirmed and observed values enter the request,
+- base URLs, routes, raw provenance, notes, hashes, browser state, and repository
+  files remain excluded,
+- the same request renders the same provider-neutral prompt,
+- exact raw output is preserved on success and failure,
+- malformed protocol output remains separate from substantive proposal
+  rejection,
+- POM references can be checked against authorized pages, components, steps,
+  elements, locators, data, fixtures, and outcomes,
+- prohibited claims such as execution success and repository fit are rejected,
+- a validated proposal remains pending until human acceptance,
+- the full boundary can be replayed without a live provider or repository
+  mutation.
 
-## What Sprint 3 does not prove
+## What Sprint 4 does not prove
 
-- greenfield application, page, element, or locator discovery,
-- safety against arbitrary public or enterprise applications,
-- authentication, iframes, Shadow DOM, multiple tabs, or complex waits,
-- long-term locator stability or semantic quality,
-- complete redaction and privacy protection,
-- LLM synthesis or POM proposal quality,
-- `qa-automation-framework` adaptation,
-- generated test correctness,
+- live-provider protocol compliance, reliability, latency, or cost,
+- semantic proposal quality across varied applications,
+- prompt-injection resistance or enterprise data safety,
+- correct file or symbol placement in `qa-automation-framework`,
+- generated source-code correctness or execution success,
+- authentication, Salesforce readiness, maintenance, expansion reuse,
 - easier operation or time savings compared with realistic alternatives.
 
 ## One lifecycle, two separately executable modules
@@ -447,7 +537,7 @@ See:
 | 2 | Deterministic human-guided process intake | Done |
 | 3 | Bounded guided browser observation | Done |
 | Architecture checkpoint A | Two-module lifecycle, maintenance modes, authentication directions, and enterprise target | Done in documentation |
-| 4 | Bounded LLM synthesis and POM proposal | Planned |
+| 4 | Bounded LLM synthesis and POM proposal | Done |
 | 5 | Project workspace and framework adaptation plan | Provisional |
 | 6 | First runnable framework test and creation-lifecycle evaluation | Provisional |
 | 7–10 | Execution evidence, reactive/proactive maintenance, and expansion reuse | Parked |
@@ -489,6 +579,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/context-contract.md`](docs/context-contract.md) | Semantic contract version `0.1` |
 | [`docs/intake-workflow.md`](docs/intake-workflow.md) | Sprint 2 question, answer, review, session, and CLI behaviour |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
+| [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/system-lifecycle.md`](docs/system-lifecycle.md) | Creation, execution, reactive/proactive maintenance, expansion, and enterprise validation lifecycle |
 | [`docs/authentication-strategies.md`](docs/authentication-strategies.md) | Parked storage-state, login-recipe, and interactive-login directions |
 | [`docs/architecture-decisions.md`](docs/architecture-decisions.md) | Accepted implementation decisions |

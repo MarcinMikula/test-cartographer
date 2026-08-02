@@ -2472,3 +2472,317 @@ It does not implement or validate:
 - expansion reuse,
 - Salesforce readiness,
 - better usability or economics.
+
+---
+
+## Sprint 4 — bounded LLM synthesis and POM proposal
+
+**Date:** 2026-08-02
+**Status:** Complete
+**Nature of work:** First LLM-facing protocol, replay, deterministic validation,
+and human review; no live provider and no repository mutation
+
+### Starting point
+
+Sprint 3 ended with a ready reference context:
+
+```text
+human-confirmed process context
++ accepted application observation
++ every primary locator OBSERVED
+→ full adaptation readiness
+```
+
+The next risk was not whether an LLM could produce plausible Python. The risk
+was whether TestCartographer would send too much context, accept fluent but
+unsupported output, or silently turn a model response into framework truth.
+
+Sprint 4 therefore focused on the protocol around the model rather than on a
+provider integration.
+
+### First boundary: request construction, not prompt improvisation
+
+The source `ContextBundle` contains information that is useful locally but is
+not required for the first POM proposal:
+
+- base URL,
+- page routes,
+- raw evidence source references,
+- evidence capture timestamps and hashes,
+- free-form notes,
+- browser state,
+- repository details that have not been inspected.
+
+Passing the whole context to a provider would make minimization implicit and
+hard to test.
+
+The sprint introduces `BoundedSynthesisRequest` version `0.1` as the only
+authorized LLM input.
+
+Request construction requires:
+
+- full adaptation readiness,
+- `CONFIRMED` or `OBSERVED` knowledge,
+- allowed sensitivity,
+- existing evidence references,
+- one observed primary locator per included element.
+
+The request records excluded paths and reasons. Exclusion is therefore visible
+rather than hidden inside prompt-building code.
+
+### Reference fixture needed one more confirmation
+
+The post-observation reference context was ready according to the existing
+readiness rules, but `application.name` still had status `PROVIDED`.
+
+The synthesis boundary deliberately accepts only `CONFIRMED` and `OBSERVED`
+values. The dedicated synthesis-ready fixture therefore records explicit
+confirmation of the application name instead of weakening the request rule.
+
+This revealed an important distinction:
+
+> Adaptation readiness and external-LLM authorization are related but not
+> identical gates.
+
+A context may be usable locally while a stricter external boundary still
+requires an explicit confirmation or sensitivity decision.
+
+### Prompt is a serialization of authority
+
+The provider-neutral prompt is deterministic and contains only:
+
+- fixed protocol instructions,
+- the exact `BoundedSynthesisRequest` JSON.
+
+There is no hidden repository context, browser session, prior conversation, or
+arbitrary adapter metadata.
+
+The prompt requires exactly one JSON object and prohibits Markdown fences,
+commentary, unsupported identifiers, and claims of:
+
+- execution success,
+- business correctness,
+- locator stability,
+- repository fit,
+- security or compliance approval.
+
+### Proposal is logical, not repository-specific
+
+`PomProposal` version `0.1` describes:
+
+- Page Object candidates linked to authorized page IDs,
+- component-object candidates linked to authorized component IDs,
+- methods linked to exact process steps,
+- actions linked to authorized elements, locators, and symbolic data,
+- symbolic fixture requirements,
+- one test intent and outcome-linked assertions,
+- optional review questions,
+- explicit claim flags.
+
+It intentionally does not contain:
+
+- repository paths,
+- generated source code,
+- credential values,
+- claims that code ran,
+- claims that the proposal fits an uninspected framework copy.
+
+Sprint 5 must inspect the actual target repository before any file placement is
+proposed.
+
+### Protocol failure and substantive rejection are different
+
+The strict parser rejects:
+
+- empty output,
+- Markdown fences,
+- non-object roots,
+- invalid JSON,
+- duplicate keys,
+- schema-version drift,
+- missing or unexpected fields.
+
+Those outcomes become `PROTOCOL_ERROR`.
+
+A structurally valid proposal may still reference an invented locator, omit a
+step, map the wrong action, include a secret claim, omit an outcome, or claim
+execution success. Those outcomes become `VALIDATION_REJECTED`.
+
+This separation matters operationally:
+
+```text
+malformed model output
+≠
+well-formed but unacceptable architecture proposal
+```
+
+The first is an adapter/protocol reliability problem. The second is a proposal
+quality or authority problem.
+
+### Raw output preservation exposed a contract bug
+
+The shared `ContractModel` strips outer whitespace from all strings. That is
+useful for identifiers and normal text, but it changed `SynthesisRun.raw_output`
+and violated the requirement to preserve exact provider output.
+
+The first test run caught the difference: the trailing newline from the replay
+fixture disappeared.
+
+`SynthesisRun` now overrides string stripping so raw output is preserved 1:1.
+Nested structured contracts retain their strict trimming rules.
+
+Lesson:
+
+> A generally helpful normalization rule can corrupt forensic protocol data.
+
+Raw provider output needs a deliberately different storage policy from normal
+validated text.
+
+### Exclusion names are not leaked values
+
+Another early test asserted that the substring `content_sha256` must not appear
+anywhere in the serialized request. The request intentionally listed
+`evidence[*].content_sha256` in `excluded_fields`, so the test confused the name
+of an excluded field with transmission of its value.
+
+The corrected test inspects minimized evidence objects and verifies that they
+do not contain `content_sha256` or `source_ref` keys.
+
+Lesson:
+
+> Data-minimization tests should inspect structure and values, not ban the
+> vocabulary used to explain exclusions.
+
+### Deterministic POM validation
+
+The validator checks the proposal against the exact request:
+
+- request and context IDs,
+- page and component coverage,
+- method ownership,
+- exactly-once process-step coverage,
+- action kind,
+- target element,
+- primary locator,
+- symbolic test data,
+- fixture role/environment mapping,
+- absence of secret values,
+- test references,
+- outcome assertion coverage,
+- assertion-related elements,
+- prohibited claim flags,
+- review-question references.
+
+The validator does not decide whether a class name is elegant or whether a
+business expert likes the abstraction. It enforces the authority and coverage
+boundary that can be checked deterministically.
+
+### Replay before live provider
+
+`ReplaySynthesisAdapter` records the exact request and prompt and returns stored
+raw output.
+
+This proves:
+
+- request rendering,
+- adapter boundary,
+- raw preservation,
+- strict parsing,
+- deterministic validation,
+- run persistence,
+- human review,
+- CLI orchestration.
+
+It does not prove that any live model follows the protocol or creates good POM
+boundaries.
+
+Starting with replay keeps provider behaviour from masking flaws in the local
+contract.
+
+### Human acceptance remains a separate authority stage
+
+A valid run reaches `READY_FOR_REVIEW`, not `ACCEPTED`.
+
+Only a validated proposal can be accepted or rejected. Protocol failures and
+validation-rejected proposals cannot be promoted through the review function.
+Rejection requires a reason.
+
+Acceptance means only:
+
+> The logical POM proposal is approved as input to target-repository inspection
+> and framework mapping.
+
+It does not mean that files should be written or that tests will pass.
+
+### Test result
+
+The complete suite produced:
+
+```text
+103 passed
+1 browser test skipped in the preparation environment because loopback
+navigation is blocked by administrator policy
+```
+
+On the normal Windows environment with Playwright Chromium, the expected result
+is:
+
+```text
+104 passed
+```
+
+The standalone synthesis verifier confirmed:
+
+```text
+ready context
+→ bounded request
+→ deterministic prompt
+→ replay raw output
+→ strict parse
+→ valid POM proposal
+→ explicit acceptance
+```
+
+No live provider was called and no repository file was modified.
+
+### Sprint 4 decisions
+
+1. A live provider may consume only `BoundedSynthesisRequest`, never an
+   arbitrary `ContextBundle` or browser/session object.
+2. Only confirmed and observed values enter the default request.
+3. Public and internal values are the default allowed sensitivity set;
+   disallowed required values block construction.
+4. Excluded paths and prohibited claims are part of the request contract.
+5. The first proposal is logical and source-linked, not repository-specific.
+6. Exact raw output must be preserved.
+7. Protocol failure remains separate from substantive proposal rejection.
+8. Proposal references and coverage are validated deterministically.
+9. A valid proposal remains pending until human review.
+10. Replay is required before any live-provider claim.
+11. Sprint 4 does not write or patch `qa-automation-framework`.
+
+### Open questions carried into Sprint 5
+
+- What is the minimum non-secret project/workspace profile?
+- How should TestCartographer inspect a concrete framework copy?
+- How should logical page, component, fixture, data, and test concepts map to
+  existing files and symbols?
+- How should existing artefacts and duplicate responsibilities be detected?
+- What plan format can explain exact proposed file and symbol changes without
+  writing them?
+- How should proposal acceptance and repository-plan acceptance remain separate?
+- Which framework conventions are deterministic, and which require human or LLM
+  judgement?
+
+### Sprint 4 conclusion
+
+The project now has a complete local boundary around an LLM proposal without
+having integrated an LLM.
+
+That is intentional. The sprint proves that a future model can be constrained
+by explicit authority, strict structure, deterministic checks, preserved raw
+output, and human review.
+
+The next uncertainty is no longer prompt parsing. It is mapping an accepted
+logical proposal into a real `qa-automation-framework` workspace without
+inventing file placement or duplicating existing architecture.

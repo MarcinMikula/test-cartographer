@@ -288,15 +288,18 @@ are implemented and approved.
 
 ## Current implementation boundary
 
-After Sprint 3, TestCartographer implements:
+After Sprint 4, TestCartographer implements:
 
 - one-process context modelling,
 - deterministic human intake,
-- one bounded human-reviewed Playwright observation.
+- one bounded human-reviewed Playwright observation,
+- one minimized provider-neutral synthesis request,
+- strict replayed POM proposal parsing and validation,
+- explicit human review of a logical proposal.
 
 It does not yet implement:
 
-- LLM synthesis,
+- a live LLM provider,
 - project workspace/profile mapping,
 - framework inspection or patching,
 - shared authentication profiles,

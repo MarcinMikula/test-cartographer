@@ -68,7 +68,7 @@ product framing
 | Sprint 2 | Deterministic human-guided process intake | Done |
 | Sprint 3 | Bounded guided browser observation | Done |
 | Architecture checkpoint A | Align the two-module lifecycle, maintenance modes, authentication directions, and enterprise validation target | Done in documentation |
-| Sprint 4 | Bounded LLM synthesis and POM proposal | Planned |
+| Sprint 4 | Bounded LLM synthesis and POM proposal | Done |
 | Sprint 5 | Project workspace, framework mapping, and first reviewable adaptation plan | Provisional |
 | Sprint 6 | First runnable framework test and creation-lifecycle evaluation | Provisional |
 | Sprint 7 | Framework execution-evidence contract | Parked |
@@ -369,32 +369,90 @@ workflow, expansion reuse, or Salesforce integration has been implemented.
 
 ## Sprint 4 — Bounded LLM synthesis and POM proposal
 
-**Status:** Planned
+**Status:** Done
 
 ### Goal
 
 Use only authorized, minimized, confirmed context and accepted observations to
-produce a strict, reviewable POM proposal.
+produce a strict, reviewable POM proposal without mutating a repository or
+claiming live-provider value.
 
-### Candidate scope
+### Delivered
 
-- provider-neutral bounded request,
-- field-level authorization and minimization,
-- explicit excluded fields and prohibited claims,
-- structured proposal for pages, components, methods, locators, fixtures,
-  symbolic data mappings, test intent, and unresolved questions,
-- strict parser and raw-output preservation,
-- malformed-output separation from substantive proposal rejection,
-- replay adapter before live-provider claims,
-- deterministic proposal validation,
-- human review of architecture boundaries,
-- no repository mutation.
+- provider-neutral `BoundedSynthesisRequest` version `0.1`,
+- field-level projection from a fully ready `ContextBundle`,
+- default authorization of `PUBLIC` and `INTERNAL` values only,
+- hard requirement for `CONFIRMED` or `OBSERVED` knowledge,
+- explicit excluded-field catalogue and prohibited claims,
+- deterministic prompt rendering from the exact request,
+- provider-neutral `SynthesisAdapter` boundary,
+- deterministic `ReplaySynthesisAdapter`,
+- strict `PomProposal` version `0.1`,
+- strict parser rejecting fences, invalid JSON, duplicate keys, schema drift,
+  missing fields, and unexpected fields,
+- exact raw-output preservation on success and failure,
+- deterministic validation of page, component, method, action, locator,
+  symbolic data, fixture, test, and outcome references,
+- separate `PROTOCOL_ERROR`, `VALIDATION_REJECTED`, and `READY_FOR_REVIEW`
+  states,
+- explicit human `ACCEPTED` or `REJECTED` review,
+- versioned `SynthesisRun` storing request, prompt hash, raw output, proposal,
+  validation, and review,
+- CLI commands for request construction, replay, status, and review,
+- committed request, valid, malformed, overreaching, unknown-locator, and
+  missing-step fixtures,
+- deterministic synthesis replay verifier,
+- three committed JSON Schemas,
+- focused request, parser, validator, pipeline, review, IO, schema, and CLI
+  tests.
+
+### Exit criteria
+
+- [x] A fully ready context can be projected into a bounded request.
+- [x] Base URL, routes, raw source references, evidence hashes, timestamps,
+      notes, browser state, and repository files remain outside the request.
+- [x] Required non-authorized status or sensitivity blocks request creation.
+- [x] The same request renders the same prompt.
+- [x] Replay receives the exact request and prompt.
+- [x] Raw output is preserved exactly, including outer whitespace.
+- [x] Malformed protocol output remains separate from substantive rejection.
+- [x] Invented locators, missing steps, secret claims, unknown outcomes, and
+      prohibited claims are rejected deterministically.
+- [x] A valid proposal remains pending until explicit human review.
+- [x] Rejected or invalid proposals cannot be promoted through review.
+- [x] No live provider is called.
+- [x] No repository file is modified by synthesis.
+
+### What Sprint 4 proves
+
+One LLM-facing boundary can be explicit, minimized, versioned, replayable,
+strictly parsed, deterministically validated, and separately reviewed before it
+is allowed to influence framework adaptation.
+
+### What Sprint 4 does not prove
+
+- live-provider compliance or semantic quality,
+- provider reliability, latency, cost, or privacy,
+- prompt-injection resistance,
+- correctness across varied applications,
+- repository-specific POM placement,
+- generated source code or execution,
+- enterprise authentication or Salesforce readiness,
+- usability or economic value.
 
 ### Gate to Sprint 5
 
-A proposal must be replayable, validated, source-linked, and reviewable without
-allowing the model to invent secrets, business truth, repository files, or
-execution success.
+Sprint 5 may consume only a human-accepted `SynthesisRun`. It must inspect a
+real target copy of `qa-automation-framework` and produce a reviewable mapping
+plan before any source file is written.
+
+The accepted logical proposal must not be treated as proof that:
+
+- named classes or fixtures already exist,
+- proposed names fit repository conventions,
+- file paths are known,
+- framework configuration and secrets are resolved,
+- the generated implementation would run.
 
 ## Sprint 5 — Project workspace and framework adaptation plan
 

@@ -216,3 +216,13 @@ Sprint 3 does not provide:
 - selector healing,
 - credentialed or enterprise sessions,
 - formal user identity or authorization policy.
+
+## Gate to bounded synthesis
+
+Accepted observation evidence can remove the final primary-locator readiness
+blocker. Sprint 4 still requires a separate synthesis projection and does not
+send `BrowserObservation`, page objects, browser contexts, screenshots, or raw
+page data to an adapter.
+
+Only the resulting `OBSERVED` locator and minimized evidence summary may enter
+the bounded request. See [`synthesis-protocol.md`](synthesis-protocol.md).

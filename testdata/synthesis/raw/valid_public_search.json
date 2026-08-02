@@ -1,0 +1,142 @@
+{
+  "schema_version": "0.1",
+  "id": "proposal_public_search",
+  "request_id": "synreq_public_search",
+  "context_id": "ctx_public_catalog_search_observation_ready",
+  "summary": "Represent the catalog page and its reusable search form as separate POM objects with one method per authorized process step.",
+  "pages": [
+    {
+      "id": "pom_page_catalog",
+      "class_name": "CatalogPage",
+      "source_page_id": "page_catalog",
+      "method_ids": [
+        "method_open_catalog",
+        "method_read_results"
+      ],
+      "component_object_ids": [
+        "pom_component_search_form"
+      ]
+    }
+  ],
+  "components": [
+    {
+      "id": "pom_component_search_form",
+      "class_name": "CatalogSearchForm",
+      "source_component_id": "cmp_search_form",
+      "method_ids": [
+        "method_enter_query",
+        "method_submit_search"
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "id": "method_open_catalog",
+      "name": "open_catalog",
+      "owner_kind": "page",
+      "owner_source_id": "page_catalog",
+      "intent": "Open the catalog page through the framework navigation boundary.",
+      "actions": [
+        {
+          "step_id": "step_open_catalog",
+          "kind": "navigate",
+          "target_element_id": null,
+          "locator_id": null,
+          "test_data_id": null
+        }
+      ]
+    },
+    {
+      "id": "method_enter_query",
+      "name": "enter_query",
+      "owner_kind": "component",
+      "owner_source_id": "cmp_search_form",
+      "intent": "Fill the observed search input with symbolic test data.",
+      "actions": [
+        {
+          "step_id": "step_fill_query",
+          "kind": "fill",
+          "target_element_id": "el_search_input",
+          "locator_id": "loc_search_input_label",
+          "test_data_id": "data_search_query"
+        }
+      ]
+    },
+    {
+      "id": "method_submit_search",
+      "name": "submit_search",
+      "owner_kind": "component",
+      "owner_source_id": "cmp_search_form",
+      "intent": "Submit the search through the observed Search button.",
+      "actions": [
+        {
+          "step_id": "step_submit_search",
+          "kind": "click",
+          "target_element_id": "el_search_submit",
+          "locator_id": "loc_search_submit_role",
+          "test_data_id": null
+        }
+      ]
+    },
+    {
+      "id": "method_read_results",
+      "name": "read_results",
+      "owner_kind": "page",
+      "owner_source_id": "page_catalog",
+      "intent": "Expose the visible results state for test-level verification.",
+      "actions": [
+        {
+          "step_id": "step_read_results",
+          "kind": "read",
+          "target_element_id": "el_results_list",
+          "locator_id": "loc_results_list_test_id",
+          "test_data_id": null
+        }
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "fixture_catalog_context",
+      "name": "catalog_context",
+      "purpose": "Provide the authorized environment and unauthenticated visitor context without embedding values or secrets.",
+      "uses_role_from_context": true,
+      "uses_environment_from_context": true,
+      "secret_values_included": false
+    }
+  ],
+  "test": {
+    "id": "test_search_catalog",
+    "name": "test_search_catalog",
+    "process_id": "proc_search_catalog",
+    "fixture_ids": [
+      "fixture_catalog_context"
+    ],
+    "method_ids": [
+      "method_open_catalog",
+      "method_enter_query",
+      "method_submit_search",
+      "method_read_results"
+    ],
+    "assertions": [
+      {
+        "id": "assert_matching_results",
+        "outcome_id": "outcome_matching_results",
+        "page_id": "page_catalog",
+        "related_element_ids": [
+          "el_results_heading",
+          "el_results_list"
+        ],
+        "intent": "Verify the confirmed visible outcome without claiming execution success."
+      }
+    ]
+  },
+  "open_questions": [],
+  "claim_flags": {
+    "execution_success": false,
+    "business_correctness": false,
+    "locator_stability": false,
+    "repository_fit": false,
+    "security_approval": false
+  }
+}

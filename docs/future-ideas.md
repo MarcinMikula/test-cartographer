@@ -330,6 +330,30 @@ They prove useful mechanisms but cannot establish enterprise readiness.
 
 This is a validation target, not a product dependency or early sprint scope.
 
+## Live LLM provider adapters
+
+Implement one or more providers behind the Sprint 4 `SynthesisAdapter`
+boundary.
+
+A provider slice should define and test:
+
+- model and endpoint configuration,
+- structured-output support versus plain raw text,
+- timeout and retry policy,
+- token, latency, and cost accounting,
+- provider error classification,
+- raw request/response retention policy,
+- privacy and external-processing approval,
+- replay capture for deterministic regression,
+- resistance to prompt injection or malicious context,
+- semantic evaluation against manually reviewed POM proposals.
+
+A live adapter must not receive more context than `BoundedSynthesisRequest` and
+must not bypass deterministic parsing, validation, or human review.
+
+Do not add multiple providers before one provider demonstrates the boundary and
+its operational costs clearly.
+
 ## Broader framework targets
 
 Possible later support:

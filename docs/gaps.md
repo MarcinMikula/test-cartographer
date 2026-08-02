@@ -146,38 +146,56 @@ Browser observation must not become an uncontrolled raw-data collector.
 
 ## Gap 8 — Bounded LLM protocol
 
-**Status:** OPEN
+**Status:** PARTIALLY CLOSED by Sprint 4
 
-**Target:** Sprint 4
+**Implemented:**
 
-There is no:
-
-- provider-neutral request,
-- authorized context selector,
-- prompt protocol,
+- provider-neutral bounded request,
+- confirmed/observed field authorization,
+- default public/internal sensitivity boundary,
+- explicit excluded fields and prohibited claims,
+- deterministic prompt rendering,
 - structured proposal schema,
-- strict parser,
-- malformed-output handling,
+- strict parser and duplicate-key rejection,
+- exact raw-output preservation,
+- malformed-output separation,
 - replay adapter,
-- timeout, retry, latency, or cost policy.
+- deterministic proposal validator,
+- human accept/reject review,
+- CLI and versioned run persistence.
 
-No live provider should be added before the local human and browser context is
-bounded.
+**Still open:**
+
+- live provider adapter,
+- provider timeout and retry policy,
+- latency and token/cost accounting,
+- provider-specific structured-output behaviour,
+- prompt-injection and malicious-context handling,
+- enterprise authorization for external processing,
+- semantic quality evaluation across varied applications.
 
 ## Gap 9 — POM proposal and framework adaptation
 
-**Status:** OPEN
+**Status:** PARTIALLY CLOSED by Sprint 4
 
-**Target:** Sprints 4–6
+**Implemented:**
 
-The project cannot yet:
+- strict logical Page Object and component proposals,
+- method ownership and exact step mapping,
+- authorized locator and symbolic-data references,
+- symbolic fixture requirements without secret values,
+- test intent and confirmed-outcome assertions,
+- deterministic rejection of invented references and prohibited claims,
+- explicit human review of the logical proposal.
 
-- propose Page Object or component boundaries,
-- map actions to methods,
-- map symbolic data to fixtures,
+**Still open — target Sprints 5–6:**
+
 - inspect an existing target repository,
-- avoid duplicate objects,
-- generate reviewable file changes,
+- map logical objects to actual files and symbols,
+- avoid duplicate or conflicting responsibilities,
+- resolve project-specific naming and fixture conventions,
+- generate a reviewable file-level adaptation plan,
+- write accepted source changes,
 - execute a generated test.
 
 ## Gap 10 — Real usability and effort validation

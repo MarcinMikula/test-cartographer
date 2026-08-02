@@ -8,12 +8,14 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Current implementation state
 
-- **The repository implements context, deterministic human intake, and one
-  bounded browser-observation path.** There is no LLM protocol, Page Object
-  proposal, framework adapter, or runnable generated test.
-- **The current suite contains 66 passing tests with Playwright Chromium,
-  including one controlled local browser flow and editability regression
-  coverage.** No real-user or external-application evaluation has occurred.
+- **The repository implements context, deterministic human intake, one bounded
+  browser-observation path, and one bounded synthesis replay path.** It has a
+  logical POM proposal contract but no live provider, framework adapter, or
+  runnable generated test.
+- **The expected normal Windows result is 104 passing tests with Playwright
+  Chromium.** The preparation environment runs 103 tests and skips one browser
+  test because administrator policy blocks loopback navigation. No real-user or
+  external-application evaluation has occurred.
 - **The CLI is local and single-user.** It has no authentication, authorization,
   remote service, or team workflow.
 - **No CI workflow is configured.** Verification is currently local.
@@ -146,8 +148,10 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 - **Sensitivity labels do not enforce policy.** They are descriptive metadata.
 - **No redaction or minimization engine exists.** Context and evidence may still
   contain confidential descriptions or URLs.
-- **No field is authorized for cloud processing.** There is no external LLM
-  request boundary.
+- **Only the Sprint 4 reference projection is authorized.** The bounded request
+  includes confirmed/observed public or internal values and excludes selected
+  URLs, routes, raw provenance, notes, hashes, and repository data. This is not
+  a complete enterprise authorization or redaction policy.
 - **No threat model exists.** Prompt injection, malicious DOM content, poisoned
   artefacts, and unsafe attachments remain future concerns.
 - **No encryption, access control, retention, or deletion workflow exists.**
@@ -156,23 +160,34 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## LLM use
 
-- **No LLM provider is integrated.** There is no request schema, response
-  schema, parser, replay adapter, timeout, retry, or budget control.
-- **No LLM claim has been validated.** The project has no evidence that a model
-  can interpret captured context or propose maintainable POM boundaries.
+- **No live LLM provider is integrated.** Sprint 4 implements a provider-neutral
+  adapter boundary and deterministic replay only.
+- **Protocol correctness is implemented.** The project has a bounded request,
+  deterministic prompt, strict parser, exact raw-output preservation,
+  deterministic proposal validator, run persistence, and human review.
+- **Semantic model quality is unproven.** The committed proposal is a controlled
+  fixture, not evidence that a live model creates maintainable POM boundaries.
+- **No timeout, retry, token, latency, or cost policy exists.**
+- **Prompt injection and malicious context are not handled.** The request is
+  minimized but not proven safe for arbitrary external or enterprise content.
 - **Local-model support is not promised.** Provider strategy remains open.
-- **Cost and latency are unmeasured.**
+- **Accepted means review-approved proposal, not correct code or successful
+  execution.**
 
 ## Framework adaptation
 
-- **TestCartographer cannot inspect or modify `qa-automation-framework`.**
-- **No POM proposal contract exists.** Pages, components, methods, fixtures, and
-  tests are not represented as generated proposals.
+- **A logical POM proposal contract now exists.** It represents pages,
+  components, methods, authorized actions and locators, symbolic fixtures, one
+  test intent, and outcome-linked assertions.
+- **The proposal is not repository-specific.** It contains no target file paths
+  and does not know what already exists in `qa-automation-framework`.
+- **TestCartographer still cannot inspect or modify the framework.**
 - **No generated code or reviewable repository diff exists.**
-- **No architecture validator checks proposed automation.**
+- **Deterministic validation checks authority and coverage, not architectural
+  elegance or framework-specific fit.**
 - **No test has been generated or executed.**
-- **Independence from a live LLM remains a requirement, not demonstrated
-  evidence.**
+- **Normal test execution independence remains a design rule for later
+  generated code.**
 
 ## Scope boundaries
 
@@ -230,10 +245,15 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 - **No controlled baseline has been run.**
 - **No claim of time savings, easier operation, higher code quality, cheaper
   maintenance, or faster expansion is justified.**
-- **Human-intake completion is not adaptation readiness.** Sprint 2 explicitly
-  leaves one browser locator blocker in the reference flow.
-- **Adaptation readiness would not prove a correct test.** Meaningful assertions,
-  architecture quality, execution, and maintenance still require evidence.
+- **Human-intake completion is not adaptation readiness.** The reference flow
+  reaches readiness only after accepted browser evidence observes the final
+  primary locator.
+- **Adaptation readiness and external synthesis authorization are separate.** A
+  ready local context may still contain supplied or sensitive values that the
+  bounded request refuses.
+- **An accepted POM proposal does not prove a correct test.** Framework mapping,
+  source generation, meaningful assertions, execution, and maintenance still
+  require evidence.
 
 - **Salesforce is a future acceptance target, not current support.** A safe
   environment, authentication strategy, secret policy, data policy, cleanup,
@@ -253,10 +273,10 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Next boundary to resolve
 
-Architecture checkpoint A aligns the long-term lifecycle, but no new runtime
-capability is introduced. Sprint 4 should define a bounded, provider-neutral
-LLM request and structured POM proposal protocol using only explicitly
-authorized confirmed context and accepted observations.
+Sprint 5 should inspect a concrete copy of `qa-automation-framework` and map one
+human-accepted logical proposal into a reviewable non-secret project/workspace
+adaptation plan.
 
-Do not send raw pages, credentials, arbitrary context files, or unrestricted
-browser evidence to a provider.
+Do not write source files, invent target paths, assume existing fixture names,
+or couple TestCartographer directly to pytest fixtures before repository
+inspection and duplicate-responsibility analysis are implemented.

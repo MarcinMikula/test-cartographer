@@ -780,3 +780,21 @@ Version `0.1` therefore continues to exclude:
 Three future authentication strategies are parked outside the current contract:
 shared storage state, declarative login recipe with in-memory secrets, and
 interactive human login.
+
+## Sprint 4 external-synthesis projection
+
+`ContextBundle` remains the richer local source of truth. It is not sent
+directly to a provider.
+
+Sprint 4 adds `BoundedSynthesisRequest` as a separate projection that:
+
+- requires full readiness,
+- accepts only `CONFIRMED` and `OBSERVED` values,
+- allows public and internal sensitivity by default,
+- includes only primary observed locators and symbolic data requirements,
+- minimizes evidence to ID, source type, summary, and sensitivity,
+- excludes base URL, routes, raw source references, hashes, timestamps, notes,
+  browser state, and repository content.
+
+This preserves the difference between local knowledge storage and external-LLM
+authority. See [`synthesis-protocol.md`](synthesis-protocol.md).

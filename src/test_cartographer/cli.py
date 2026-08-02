@@ -1,4 +1,4 @@
-"""Command-line entry point for deterministic intake and browser observation."""
+"""Command-line entry point for intake, observation, and bounded synthesis."""
 
 from __future__ import annotations
 
@@ -31,6 +31,18 @@ from test_cartographer.observation.review import (
     apply_accepted_observation,
     review_observation,
 )
+from test_cartographer.synthesis.adapter import ReplaySynthesisAdapter
+from test_cartographer.synthesis.enums import ProposalReviewDecision
+from test_cartographer.synthesis.io import (
+    load_raw_output,
+    load_synthesis_request,
+    load_synthesis_run,
+    save_synthesis_request,
+    save_synthesis_run,
+)
+from test_cartographer.synthesis.pipeline import run_synthesis
+from test_cartographer.synthesis.request import build_synthesis_request
+from test_cartographer.synthesis.review import review_synthesis_run
 
 InputFn = Callable[[str], str]
 OutputFn = Callable[[str], None]
@@ -46,6 +58,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _dispatch_intake(parser, args)
     if args.command == "observe":
         return _dispatch_observation(parser, args)
+    if args.command == "synthesize":
+        return _dispatch_synthesis(parser, args)
 
     parser.error("a command is required")
     return 2
@@ -190,6 +204,51 @@ def _build_parser() -> argparse.ArgumentParser:
     review.add_argument("--context", type=Path)
     review.add_argument("--output-context", type=Path)
 
+    synthesize = commands.add_parser(
+        "synthesize",
+        help="build, replay, validate, and review one bounded POM proposal",
+    )
+    synthesize_commands = synthesize.add_subparsers(dest="synthesize_command")
+
+    build_request = synthesize_commands.add_parser(
+        "request",
+        help="build one minimized synthesis request from ready context",
+    )
+    build_request.add_argument("--context", required=True, type=Path)
+    build_request.add_argument("--request", required=True, type=Path)
+    build_request.add_argument("--request-id")
+
+    replay = synthesize_commands.add_parser(
+        "replay",
+        help="replay one raw proposal through parser and validator",
+    )
+    replay.add_argument("--request", required=True, type=Path)
+    replay.add_argument("--raw-output", required=True, type=Path)
+    replay.add_argument("--run", required=True, type=Path)
+    replay.add_argument("--run-id")
+
+    synthesis_status = synthesize_commands.add_parser(
+        "status",
+        help="show one synthesis run and review state",
+    )
+    synthesis_status.add_argument("--run", required=True, type=Path)
+
+    synthesis_review = synthesize_commands.add_parser(
+        "review",
+        help="accept or reject one validated POM proposal",
+    )
+    synthesis_review.add_argument("--run", required=True, type=Path)
+    synthesis_review.add_argument(
+        "--decision",
+        required=True,
+        choices=[
+            ProposalReviewDecision.ACCEPTED.value,
+            ProposalReviewDecision.REJECTED.value,
+        ],
+    )
+    synthesis_review.add_argument("--reason")
+    synthesis_review.add_argument("--review-seconds", type=float, default=0.0)
+
     return parser
 
 
@@ -220,6 +279,22 @@ def _dispatch_observation(
     if args.observe_command == "review":
         return _review_command(parser, args)
     parser.error("an observe command is required")
+    return 2
+
+
+def _dispatch_synthesis(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    if args.synthesize_command == "request":
+        return _synthesis_request_command(args)
+    if args.synthesize_command == "replay":
+        return _synthesis_replay_command(args)
+    if args.synthesize_command == "status":
+        return _synthesis_status_command(args)
+    if args.synthesize_command == "review":
+        return _synthesis_review_command(parser, args)
+    parser.error("a synthesize command is required")
     return 2
 
 
@@ -319,6 +394,64 @@ def _review_command(
     return 0
 
 
+def _synthesis_request_command(args: argparse.Namespace) -> int:
+    context = load_context(args.context)
+    request_id = args.request_id or f"synreq_{uuid.uuid4().hex[:12]}"
+    request = build_synthesis_request(
+        context,
+        request_id=request_id,
+        created_at=datetime.now(timezone.utc),
+    )
+    save_synthesis_request(request, args.request)
+    print(f"Created synthesis request: {args.request}")
+    print(_format_synthesis_request_status(request))
+    return 0
+
+
+def _synthesis_replay_command(args: argparse.Namespace) -> int:
+    request = load_synthesis_request(args.request)
+    adapter = ReplaySynthesisAdapter(load_raw_output(args.raw_output))
+    now = datetime.now(timezone.utc)
+    run_id = args.run_id or f"synrun_{uuid.uuid4().hex[:12]}"
+    run = run_synthesis(
+        request,
+        adapter,
+        run_id=run_id,
+        started_at=now,
+        completed_at=now,
+    )
+    save_synthesis_run(run, args.run)
+    print(f"Created synthesis run: {args.run}")
+    print(_format_synthesis_run_status(run))
+    return 0
+
+
+def _synthesis_status_command(args: argparse.Namespace) -> int:
+    print(_format_synthesis_run_status(load_synthesis_run(args.run)))
+    return 0
+
+
+def _synthesis_review_command(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    decision = ProposalReviewDecision(args.decision)
+    if decision is ProposalReviewDecision.REJECTED and not args.reason:
+        parser.error("--reason is required when rejecting a proposal")
+    run = load_synthesis_run(args.run)
+    reviewed = review_synthesis_run(
+        run,
+        decision=decision,
+        reviewed_at=datetime.now(timezone.utc),
+        reason=args.reason,
+        review_seconds=args.review_seconds,
+    )
+    save_synthesis_run(reviewed, args.run)
+    print(f"Reviewed synthesis run: {args.run}")
+    print(_format_synthesis_run_status(reviewed))
+    return 0
+
+
 def _parse_answer(raw: str, question: IntakeQuestion) -> IntakeAnswer:
     if not raw:
         raise ValueError("enter a value or one of the displayed commands")
@@ -371,6 +504,42 @@ def _format_intake_status(session: IntakeSession) -> str:
             f"Unknown: {metrics.unknown_count}",
             f"Skipped: {metrics.skipped_count}",
             f"Active seconds: {metrics.active_seconds:.3f}",
+        )
+    )
+
+
+def _format_synthesis_request_status(request) -> str:
+    return "\n".join(
+        (
+            f"Synthesis request: {request.id}",
+            f"Context: {request.context_id}",
+            f"Steps: {len(request.steps)}",
+            f"Pages: {len(request.pages)}",
+            f"Components: {len(request.components)}",
+            f"Elements: {len(request.elements)}",
+            f"Excluded fields: {len(request.excluded_fields)}",
+            f"Prohibited claims: {len(request.prohibited_claims)}",
+        )
+    )
+
+
+def _format_synthesis_run_status(run) -> str:
+    parse_code = run.parse_failure.code if run.parse_failure is not None else "none"
+    errors = run.validation.error_count if run.validation is not None else 0
+    warnings = run.validation.warning_count if run.validation is not None else 0
+    proposal_id = run.proposal.id if run.proposal is not None else "none"
+    return "\n".join(
+        (
+            f"Synthesis run: {run.id}",
+            f"Status: {run.status.value}",
+            f"Decision: {run.decision.value}",
+            f"Request: {run.request.id}",
+            f"Proposal: {proposal_id}",
+            f"Protocol failure: {parse_code}",
+            f"Validation errors: {errors}",
+            f"Validation warnings: {warnings}",
+            f"Raw output characters: {len(run.raw_output)}",
+            f"Review seconds: {run.review_seconds:.3f}",
         )
     )
 
