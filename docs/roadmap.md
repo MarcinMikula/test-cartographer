@@ -16,7 +16,27 @@ Creating folders, interfaces, or agent classes without exercising a useful
 workflow is not sufficient.
 
 The roadmap becomes less specific with distance. Sprints beyond the next one
-are provisional and must be reshaped using findings from earlier work.
+are provisional or parked and must be reshaped using findings from earlier
+work.
+
+## System direction
+
+`qa-automation-framework` and TestCartographer are separately executable modules
+of one automation lifecycle.
+
+```text
+TestCartographer
+→ context, discovery, LLM-assisted adaptation, maintenance, expansion
+
+qa-automation-framework
+→ accepted POM/fixtures/tests, configuration, execution, assertions, evidence
+```
+
+Normal test execution must remain independent of TestCartographer and a live
+LLM. Creation, maintenance, and expansion may invoke TestCartographer and a
+bounded LLM under human review.
+
+See [`system-lifecycle.md`](system-lifecycle.md).
 
 ## Delivery stages
 
@@ -25,29 +45,39 @@ product framing
 → context contract
 → human intake
 → guided browser observation
+→ lifecycle alignment checkpoint
 → bounded LLM synthesis
-→ framework handoff
-→ end-to-end review
-→ maintenance and integrations
+→ framework workspace and handoff
+→ first runnable test
+→ creation-lifecycle evaluation
+→ execution evidence
+→ reactive maintenance
+→ proactive frontend/context regression
+→ expansion using the existing map
+→ enterprise authentication and validation
 → comparative validation
 → v1.0 decision
 ```
 
 ## Sprint overview
 
-| Sprint | Focus | Status |
+| Sprint or checkpoint | Focus | Status |
 |---|---|---|
 | Sprint 0 | Product framing and project boundaries | Done |
 | Sprint 1 | Minimum context contract and local evidence model | Done |
 | Sprint 2 | Deterministic human-guided process intake | Done |
 | Sprint 3 | Bounded guided browser observation | Done |
+| Architecture checkpoint A | Align the two-module lifecycle, maintenance modes, authentication directions, and enterprise validation target | Done in documentation |
 | Sprint 4 | Bounded LLM synthesis and POM proposal | Planned |
-| Sprint 5 | Framework handoff and first runnable test | Provisional |
-| Sprint 6 | Review, traceability, and first end-to-end evaluation | Provisional |
-| Sprint 7 | Change awareness and maintenance proposal | Parked |
-| Sprint 8 | External artefact ingestion and security expansion | Parked |
-| Sprint 9 | Comparative usability and quality validation | Parked |
-| Sprint 10 | v1.0 hardening and release decision | Parked |
+| Sprint 5 | Project workspace, framework mapping, and first reviewable adaptation plan | Provisional |
+| Sprint 6 | First runnable framework test and creation-lifecycle evaluation | Provisional |
+| Sprint 7 | Framework execution-evidence contract | Parked |
+| Sprint 8 | Reactive maintenance from execution evidence | Parked |
+| Sprint 9 | Proactive post-deployment frontend/context regression | Parked |
+| Sprint 10 | Expansion using the existing application map | Parked |
+| Sprint 11 | External artefacts, authentication profiles, and enterprise safety | Parked |
+| Sprint 12 | Validation ladder culminating in a safe Salesforce flow | Parked |
+| Sprint 13 | Comparative usability, effort, quality, and v1.0 decision | Parked |
 
 ## Sprint 0 — Product framing
 
@@ -238,7 +268,8 @@ LLM.
 - replay fixtures and generated observation JSON Schema,
 - CLI capture, status, and review commands,
 - controlled end-to-end verification script,
-- 65 total tests when Chromium is available.
+- 66 passing tests with Chromium, including regression coverage for editability
+  semantics.
 
 ### Reference flow
 
@@ -294,63 +325,289 @@ Any LLM request must consume an explicitly selected and minimized projection of
 confirmed context and accepted browser evidence. Raw pages, arbitrary session
 state, credentials, and unrelated context remain outside the request.
 
+## Architecture checkpoint A — Lifecycle and enterprise alignment
+
+**Status:** Done in documentation before Sprint 4
+
+### Goal
+
+Clarify the long-term system before introducing LLM synthesis and framework
+adaptation.
+
+### Decisions recorded
+
+- TestCartographer and `qa-automation-framework` are separately executable
+  modules of one automation lifecycle.
+- The framework owns normal execution; TestCartographer owns context,
+  LLM-assisted engineering, maintenance, and expansion.
+- Creation is human-guided and LLM-assisted rather than fully autonomous.
+- The framework remains independent of TestCartographer during normal runs.
+- A future framework-side Execution Evidence Collector supplies bounded
+  diagnostic input for maintenance.
+- Maintenance has reactive and proactive modes.
+- Proactive maintenance can re-observe approved areas after deployment windows,
+  including mapped elements outside the current test pool.
+- Expansion repeats creation but should reuse the existing application map,
+  repository knowledge, and accepted conventions.
+- Project configuration should store non-secret mappings and secret references,
+  not credential values.
+- Three authentication strategies are parked: shared storage state,
+  declarative login recipe with in-memory secrets, and interactive login for
+  SSO/MFA.
+- Salesforce remains an intentional enterprise acceptance target.
+
+### What the checkpoint proves
+
+The product lifecycle, module boundaries, future maintenance modes, and
+enterprise-validation direction are coherent enough to guide the next
+contracts.
+
+### What the checkpoint does not prove
+
+No workspace profile, authentication contract, evidence collector, maintenance
+workflow, expansion reuse, or Salesforce integration has been implemented.
+
 ## Sprint 4 — Bounded LLM synthesis and POM proposal
 
-**Status:** Provisional
+**Status:** Planned
 
-Possible scope:
+### Goal
+
+Use only authorized, minimized, confirmed context and accepted observations to
+produce a strict, reviewable POM proposal.
+
+### Candidate scope
 
 - provider-neutral bounded request,
-- explicit authorization and minimization,
-- structured POM proposal result,
+- field-level authorization and minimization,
+- explicit excluded fields and prohibited claims,
+- structured proposal for pages, components, methods, locators, fixtures,
+  symbolic data mappings, test intent, and unresolved questions,
 - strict parser and raw-output preservation,
-- malformed-output separation,
-- replay adapter before live provider claims,
-- human review of Page Object and component boundaries.
+- malformed-output separation from substantive proposal rejection,
+- replay adapter before live-provider claims,
+- deterministic proposal validation,
+- human review of architecture boundaries,
+- no repository mutation.
 
-## Sprint 5 — Framework handoff and first runnable test
+### Gate to Sprint 5
+
+A proposal must be replayable, validated, source-linked, and reviewable without
+allowing the model to invent secrets, business truth, repository files, or
+execution success.
+
+## Sprint 5 — Project workspace and framework adaptation plan
 
 **Status:** Provisional
 
-Possible scope:
+### Goal
 
-- inspect a clean `qa-automation-framework` copy,
-- prepare a reviewable file-level change set,
-- create or update Page Objects, components, fixtures, data, and one test,
+Map an accepted proposal into a concrete copy of `qa-automation-framework`
+without writing files blindly.
+
+### Candidate scope
+
+- inspect the target framework repository,
+- define the first non-secret project/workspace profile,
+- map logical environment, role, data, page, component, fixture, and test
+  concepts to existing framework structures,
+- detect existing artefacts and duplication risks,
+- prepare a reviewable file-level adaptation plan,
+- keep secret values and authenticated state outside context and proposals,
+- record source-to-target traceability,
+- require human acceptance before file changes.
+
+### Gate to Sprint 6
+
+The plan must identify exactly which files and symbols will change and why,
+without assuming that a generated class or fixture belongs in the target
+architecture merely because it is syntactically valid.
+
+## Sprint 6 — First runnable test and creation-lifecycle evaluation
+
+**Status:** Provisional
+
+### Goal
+
+Complete the first creation lifecycle:
+
+```text
+Cartographer context and observations
+→ bounded LLM proposal
+→ accepted framework adaptation
+→ one runnable test
+→ framework execution
+→ review and measurement
+```
+
+### Candidate scope
+
+- create or update the agreed Page Object, component, fixture, data, and test
+  artefacts,
 - execute the test without a live LLM dependency,
-- retain source-to-generated traceability.
+- preserve traceability from context and proposal to code,
+- record corrections and rejected proposals,
+- measure setup time, active user time, time to first runnable test, LLM usage,
+  and review effort,
+- assess architecture quality and meaningful assertions.
 
-## Sprint 6 — First end-to-end evaluation
+Sprint 6 is the earliest point at which the project may claim a working
+creation prototype.
 
-**Status:** Provisional
+## Sprint 7 — Framework execution-evidence contract
+
+**Status:** Parked
+
+### Direction
+
+Coordinate a framework-side Execution Evidence Collector that can export
+bounded, high-value diagnostic context without declaring every failure an
+application bug.
+
+Candidate evidence:
+
+- test, step, Page Object, and method identifiers,
+- action and locator,
+- exception and failure classification,
+- minimized element/page state,
+- environment and application-version metadata,
+- approved trace/screenshot/network references,
+- links to Cartographer context and accepted artefacts.
+
+This is a cross-repository workstream. The collector executes with the
+framework; Cartographer consumes and analyses its output.
+
+## Sprint 8 — Reactive maintenance
+
+**Status:** Parked
+
+### Direction
+
+Use failed-execution evidence to:
+
+- distinguish likely application, automation, data, environment, and context
+  problems,
+- re-observe the affected application area,
+- mark context stale or conflicting,
+- identify affected automation artefacts,
+- prepare a reviewable patch,
+- rerun the framework test after acceptance.
+
+## Sprint 9 — Proactive frontend/context regression
+
+**Status:** Parked
+
+### Direction
+
+Support bounded scheduled or post-deployment re-observation even when current
+framework tests remain green.
+
+The first version should use:
+
+- an approved observation inventory,
+- selected application areas,
+- read-only or allowlisted actions,
+- explicit authentication and sensitivity profiles,
+- time/page/cost budgets,
+- change and impact reports rather than silent repairs.
+
+## Sprint 10 — Expansion using the existing map
+
+**Status:** Parked
+
+### Direction
+
+Add a second process and measure whether existing context reduces:
+
+- repeated human questions,
+- repeated browser discovery,
+- duplicate pages and components,
+- LLM input size and cost,
+- review and implementation time.
+
+This is the first direct validation of the application's reusable map as a
+product asset rather than a one-process document.
+
+## Sprint 11 — External artefacts, authentication profiles, and enterprise safety
+
+**Status:** Parked
+
+### Direction
+
+Potential scope:
+
+- Jira and documentation ingestion,
+- non-secret `EnvironmentProfile` and `AuthProfile`,
+- secret-provider references,
+- one or more of the parked authentication strategies,
+- allowed-origin and action policy,
+- retention, deletion, and session-expiry rules,
+- SSO/MFA constraints,
+- safe credentialed browser observation.
+
+No strategy is the default until exercised against a controlled credentialed
+application.
+
+## Sprint 12 — Validation ladder culminating in Salesforce
+
+**Status:** Parked
+
+### Direction
+
+Progress through increasingly realistic targets:
+
+1. controlled local page,
+2. simple public application,
+3. modern dynamic public frontend,
+4. controlled multi-page application,
+5. credentialed enterprise-style reference system,
+6. safe Salesforce environment.
+
+A candidate Salesforce acceptance flow is:
+
+```text
+login
+→ open Accounts
+→ create an Account
+→ save
+→ verify the created record
+```
+
+Salesforce is a deliberate final-level target because simple sites cannot
+validate enterprise authentication, component-driven UI, data restrictions,
+complex process state, or maintenance economics.
+
+## Sprint 13 — Comparative validation and v1.0 decision
+
+**Status:** Parked
+
+### Direction
+
+Compare the same process and quality gates across:
+
+```text
+manual framework adaptation
+vs.
+DevTools + Playwright Codegen + general LLM
+vs.
+TestCartographer-assisted adaptation
+```
 
 Measure:
 
-- correctness,
-- architecture quality,
+- functional and assertion correctness,
+- POM and component quality,
 - unsupported assumptions,
 - human corrections,
-- setup time,
-- active user time,
+- setup and active user time,
 - time to first runnable test,
+- maintenance time after a controlled change,
+- effort to add a second process,
 - LLM usage and cost,
-- user confidence and perceived difficulty.
+- perceived difficulty, confidence, and willingness to reuse.
 
-Sprint 6 is the earliest point at which the project may claim a working
-end-to-end prototype.
-
-## Sprints 7–10 — Parked directions
-
-Potential later work includes:
-
-- change awareness and maintenance proposals,
-- Jira and documentation ingestion,
-- comparative manual/Codegen/general-LLM/TestCartographer evaluation,
-- Salesforce validation,
-- security and retention hardening,
-- release and v1.0 decision.
-
-These are not commitments until earlier evidence justifies them.
+v1.0 should be declared only if the system demonstrates useful quality and
+operational economics, not merely a completed feature list.
 
 ## Roadmap change policy
 
@@ -363,4 +620,4 @@ When evidence invalidates a planned sprint:
 4. state what the evidence proves and what it does not prove.
 
 The roadmap is a working hypothesis, not a promise to implement every parked
-idea.
+direction.

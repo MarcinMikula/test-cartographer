@@ -11,9 +11,9 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 - **The repository implements context, deterministic human intake, and one
   bounded browser-observation path.** There is no LLM protocol, Page Object
   proposal, framework adapter, or runnable generated test.
-- **The current suite contains 64 deterministic/replay tests and one controlled
-  Chromium integration test.** No real-user or external-application evaluation
-  has occurred.
+- **The current suite contains 66 passing tests with Playwright Chromium,
+  including one controlled local browser flow and editability regression
+  coverage.** No real-user or external-application evaluation has occurred.
 - **The CLI is local and single-user.** It has no authentication, authorization,
   remote service, or team workflow.
 - **No CI workflow is configured.** Verification is currently local.
@@ -189,25 +189,58 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 - **The tool is not a PhoenixQA replacement.** Runtime healing and initial
   adaptation remain separate concerns.
 
+## Two-module lifecycle integration
+
+- **The framework and Cartographer are aligned in documentation only.** There is
+  no shared project workspace, profile, repository adapter, or cross-module
+  protocol.
+- **Normal framework execution independence is a design requirement.** No
+  generated framework project exists yet to demonstrate it.
+- **No shared environment or authentication profile exists.** Framework fixtures
+  and Cartographer browser sessions cannot yet consume one logical profile.
+- **One-source/two-consumer secret handling is not implemented.** No secret
+  provider, rotation, expiry, or audit boundary exists.
+- **The three authentication strategies are parked, not supported.** Shared
+  storage state, declarative login recipe, and interactive SSO/MFA login remain
+  future directions.
+- **No execution-evidence contract exists between repositories.** The framework
+  cannot yet provide bounded failure context to Cartographer.
+
 ## Maintenance and change support
 
-- **No change detection exists.**
-- **No context-staleness automation exists.**
+- **No reactive maintenance workflow exists.** Failed framework runs cannot be
+  classified, re-observed, mapped to context, or converted into a reviewable
+  patch.
+- **No proactive maintenance exists.** Cartographer cannot run bounded
+  post-deployment frontend/context regression against an approved observation
+  inventory.
+- **No change detection or automatic staleness calculation exists.**
 - **No impact analysis exists.**
 - **No selector or workflow repair exists.**
-- **No accepted-change history beyond current intake evidence exists.**
+- **No accepted-change history beyond current intake and observation evidence
+  exists.**
+- **No second-process expansion has been evaluated.** The project has no proof
+  that its application map reduces repeated work.
 
 ## Validation and claims
 
-- **Only a controlled local HTML reference page has been exercised.** No public,
-  dynamic, credentialed, or enterprise application has been validated.
+- **Only a controlled local HTML reference page has been exercised.** No simple
+  public, dynamic public, controlled multi-page, credentialed, or enterprise
+  application has been validated.
 - **No controlled baseline has been run.**
-- **No claim of time savings, easier operation, or higher code quality is
-  justified.**
+- **No claim of time savings, easier operation, higher code quality, cheaper
+  maintenance, or faster expansion is justified.**
 - **Human-intake completion is not adaptation readiness.** Sprint 2 explicitly
   leaves one browser locator blocker in the reference flow.
 - **Adaptation readiness would not prove a correct test.** Meaningful assertions,
   architecture quality, execution, and maintenance still require evidence.
+
+- **Salesforce is a future acceptance target, not current support.** A safe
+  environment, authentication strategy, secret policy, data policy, cleanup,
+  and external-LLM boundary must exist first.
+- **Public pages are stepping stones only.** They cannot validate enterprise
+  authentication, data restrictions, complex business state, or maintenance
+  economics.
 
 ## Packaging and production readiness
 
@@ -220,9 +253,10 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Next boundary to resolve
 
-Sprint 4 should define a bounded, provider-neutral LLM request and structured
-POM proposal protocol using only explicitly authorized confirmed context and
-accepted observations.
+Architecture checkpoint A aligns the long-term lifecycle, but no new runtime
+capability is introduced. Sprint 4 should define a bounded, provider-neutral
+LLM request and structured POM proposal protocol using only explicitly
+authorized confirmed context and accepted observations.
 
 Do not send raw pages, credentials, arbitrary context files, or unrestricted
 browser evidence to a provider.

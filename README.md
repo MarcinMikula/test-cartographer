@@ -6,18 +6,24 @@
 organizing, verifying, and maintaining the context needed to adapt a reusable
 test automation framework to a real application.
 
-The project is intended to complement
-[`qa-automation-framework`](https://github.com/MarcinMikula/qa-automation-framework).
+Together with
+[`qa-automation-framework`](https://github.com/MarcinMikula/qa-automation-framework),
+TestCartographer is intended to form one automation lifecycle with two
+separately executable modules. The framework owns normal test execution;
+TestCartographer owns context acquisition, LLM-assisted adaptation, maintenance,
+and expansion.
 
 ## Status
 
 **Sprint 3 — bounded guided browser observation: complete**
 
+**Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
+
 Current evidence:
 
 ```text
-64 deterministic and replay tests passing
-1 real Chromium integration test included
+66 tests passing with Playwright Chromium
+controlled readiness transition verified end to end
 ```
 
 The repository now provides three executable boundaries:
@@ -70,31 +76,31 @@ that problem.
 
 ## Product direction
 
-TestCartographer should build a verified, reusable map of the tested
-application and use it to support controlled framework adaptation.
+TestCartographer and `qa-automation-framework` are two modules of one lifecycle.
 
 ```text
-human knowledge
-+ project artefacts
-+ guided application observation
-+ existing repository and execution evidence
-                         |
-                         v
-          structured application context
-                         |
-                         v
-       qa-automation-framework adaptation
-                         |
-                         v
-         reviewed and executable automation
+TestCartographer
+→ context, application map, evidence, LLM-assisted proposals, maintenance
+
+qa-automation-framework
+→ accepted POM, fixtures, data, tests, configuration, execution, assertions
 ```
 
-The first useful product is not expected to be an autonomous application
-crawler or a one-prompt test-suite generator.
+The creation path combines human testing knowledge, bounded LLM assistance,
+Cartographer evidence, and the framework's architecture. The project uses
+**AItomatyzacja testów** as an informal shorthand for AI-supported automation
+engineering, not fully autonomous test creation.
 
-The first useful product should understand one small, human-guided process well
-enough to propose a maintainable Page Object representation and help create one
-reviewed, runnable test in a copy of `qa-automation-framework`.
+Normal test execution remains independent of TestCartographer and a live LLM.
+Future maintenance reconnects the modules through bounded execution evidence,
+reactive failure analysis, and scheduled post-deployment re-observation.
+
+The first useful product is not expected to be an autonomous application
+crawler or a one-prompt test-suite generator. It should understand one small,
+human-guided process well enough to propose a maintainable POM representation,
+help adapt `qa-automation-framework`, and produce one reviewed, runnable test.
+
+See [`docs/system-lifecycle.md`](docs/system-lifecycle.md).
 
 ## Implemented architecture
 
@@ -228,7 +234,7 @@ python -m pytest
 Expected Sprint 3 result after Chromium installation:
 
 ```text
-65 passed
+66 passed
 ```
 
 ### Start a reference intake
@@ -411,16 +417,26 @@ test-cartographer/
 - generated test correctness,
 - easier operation or time savings compared with realistic alternatives.
 
-## Relationship with qa-automation-framework
+## One lifecycle, two separately executable modules
 
-| Project | Responsibility |
+| Module | Primary responsibility |
 |---|---|
-| `qa-automation-framework` | Provides reusable POM/SOM architecture, conventions, fixtures, testing principles, and adaptation guidance |
-| TestCartographer | Collects and verifies project-specific context, then helps map it into that architecture |
+| `qa-automation-framework` | Execution plane: accepted POM/components, fixtures, test data, configuration, secret retrieval, pytest/Playwright execution, assertions, reports, and future bounded execution evidence |
+| TestCartographer | Engineering and maintenance plane: context acquisition, application mapping, bounded LLM proposals, adaptation plans, change analysis, proactive re-observation, and expansion |
 
-The resulting automation must remain normal Python, Playwright, and pytest
-code. It should be understandable, reviewable, version-controlled, and usable
-without TestCartographer during ordinary test execution.
+The modules cooperate through a future shared project workspace, non-secret
+project/authentication profiles, repository changes, and execution evidence.
+They should not share credentials by copying values or couple Cartographer to
+pytest fixtures.
+
+The resulting automation remains normal Python, Playwright, and pytest code. It
+must be understandable, reviewable, version-controlled, and usable without
+TestCartographer during ordinary execution.
+
+See:
+
+- [`docs/system-lifecycle.md`](docs/system-lifecycle.md),
+- [`docs/authentication-strategies.md`](docs/authentication-strategies.md).
 
 ## Roadmap
 
@@ -430,10 +446,12 @@ without TestCartographer during ordinary test execution.
 | 1 | Minimum context contract and local evidence model | Done |
 | 2 | Deterministic human-guided process intake | Done |
 | 3 | Bounded guided browser observation | Done |
+| Architecture checkpoint A | Two-module lifecycle, maintenance modes, authentication directions, and enterprise target | Done in documentation |
 | 4 | Bounded LLM synthesis and POM proposal | Planned |
-| 5 | Framework handoff and first runnable test | Provisional |
-| 6 | First end-to-end evaluation | Provisional |
-| 7+ | Maintenance, integrations, comparative validation, and hardening | Parked |
+| 5 | Project workspace and framework adaptation plan | Provisional |
+| 6 | First runnable framework test and creation-lifecycle evaluation | Provisional |
+| 7–10 | Execution evidence, reactive/proactive maintenance, and expansion reuse | Parked |
+| 11–13 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
 
@@ -454,7 +472,13 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 7. **Usability is part of quality.** Active user effort and operation time are
    measured from the first workflow.
 8. **Generated code must survive without the generator.** Normal test execution
-   must not require a live LLM.
+   must not require TestCartographer or a live LLM.
+9. **Execution should feed maintenance without becoming maintenance.** The
+   framework may collect bounded evidence; Cartographer analyses and evolves it.
+10. **Maintenance is reactive and proactive.** Failed tests are one signal, but
+    approved post-deployment re-observation must also detect uncovered drift.
+11. **Enterprise relevance must be proven.** Public pages are stepping stones; a
+    safe Salesforce flow remains a deliberate acceptance target.
 
 ## Documentation
 
@@ -465,6 +489,8 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/context-contract.md`](docs/context-contract.md) | Semantic contract version `0.1` |
 | [`docs/intake-workflow.md`](docs/intake-workflow.md) | Sprint 2 question, answer, review, session, and CLI behaviour |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
+| [`docs/system-lifecycle.md`](docs/system-lifecycle.md) | Creation, execution, reactive/proactive maintenance, expansion, and enterprise validation lifecycle |
+| [`docs/authentication-strategies.md`](docs/authentication-strategies.md) | Parked storage-state, login-recipe, and interactive-login directions |
 | [`docs/architecture-decisions.md`](docs/architecture-decisions.md) | Accepted implementation decisions |
 | [`docs/testing-strategy.md`](docs/testing-strategy.md) | Current test layers and evidence limits |
 | [`docs/gaps.md`](docs/gaps.md) | Open implementation gaps and closed slices |
@@ -474,7 +500,8 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 ## Related projects
 
 - [`qa-automation-framework`](https://github.com/MarcinMikula/qa-automation-framework)
-  — reusable framework skeleton to be adapted.
+  — the execution-plane module and reusable framework skeleton that
+  TestCartographer is intended to adapt and later help maintain.
 - [`PhoenixQA`](https://github.com/MarcinMikula/PhoenixQA)
   — separate runtime recovery and selector-healing experiment.
 - [`llm-qa-toolkit`](https://github.com/MarcinMikula/llm-qa-toolkit)

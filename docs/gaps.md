@@ -85,7 +85,7 @@ locator generation, or enterprise-browser safety. Those remain separate gaps.
 
 **Status:** OPEN
 
-**Target:** Revisit after Sprint 3
+**Target:** Revisit after Sprint 4–6 evidence
 
 `OpenQuestion` version `0.1` has no structured answer field.
 
@@ -168,7 +168,7 @@ bounded.
 
 **Status:** OPEN
 
-**Target:** Sprints 4–5
+**Target:** Sprints 4–6
 
 The project cannot yet:
 
@@ -184,7 +184,7 @@ The project cannot yet:
 
 **Status:** OPEN
 
-**Target:** Collect incrementally; controlled comparison in Sprint 9
+**Target:** Collect incrementally; controlled comparison in Sprint 13
 
 Sprint 2 records:
 
@@ -249,10 +249,162 @@ the LLM synthesis sprint.
 Current browser evidence covers one public local page and one top-level DOM
 target. Missing capabilities include:
 
-- login and approved secret-store integration,
+- login and approved secret-provider integration,
 - storage state and session lifecycle,
+- one of the parked storage-state, login-recipe, or interactive-login paths,
+- allowed-origin and action policy,
 - iframes,
 - Shadow DOM,
 - multiple tabs,
 - asynchronous application states,
 - safe handling of sensitive URLs and attributes.
+
+Authentication is documented separately from framework fixtures because both
+modules need the same logical account and environment but have different
+browser lifecycles.
+
+## Gap 14 — Shared project workspace and framework mapping
+
+**Status:** OPEN
+
+**Target:** Sprint 5
+
+The projects do not yet share a concrete automation workspace or a non-secret
+project profile.
+
+Missing capabilities include:
+
+- locating and inspecting a target `qa-automation-framework` repository,
+- mapping environments, roles, symbolic data, pages, components, fixtures, and
+  tests to existing framework artefacts,
+- detecting duplicate or conflicting files and symbols,
+- preserving source-to-target traceability,
+- storing accepted Cartographer state beside the concrete automation project
+  without polluting normal test execution.
+
+The project must validate the actual framework structure before freezing a
+workspace schema.
+
+## Gap 15 — Authentication profiles and one-source secret handling
+
+**Status:** OPEN
+
+**Target:** Before credentialed or enterprise validation
+
+The framework and Cartographer may need the same environment and account, but no
+shared lower-level authentication contract exists.
+
+Missing capabilities include:
+
+- non-secret `EnvironmentProfile` and `AuthProfile`,
+- secret-provider references,
+- approved origin and action policy,
+- role and account verification,
+- session expiry and refresh,
+- sensitive Playwright storage-state handling,
+- deletion and retention rules.
+
+Three strategies are parked rather than selected:
+
+1. shared Playwright storage state,
+2. declarative login recipe with in-memory secrets,
+3. interactive human login for SSO/MFA.
+
+## Gap 16 — Framework execution-evidence collector
+
+**Status:** OPEN
+
+**Target:** After the first runnable framework test
+
+No framework-side collector currently exports bounded maintenance evidence.
+
+A future contract should capture enough context to analyse a failure without
+assuming it is an application bug, including:
+
+- test, step, Page Object, and method identifiers,
+- action and locator,
+- exception and failure classification,
+- minimized element/page state,
+- environment and application-version metadata,
+- policy-approved trace, screenshot, or network references,
+- links to Cartographer context and accepted artefacts.
+
+This is a cross-repository gap: collection belongs to the framework; analysis
+belongs to TestCartographer.
+
+## Gap 17 — Reactive maintenance workflow
+
+**Status:** OPEN
+
+**Target:** After execution evidence exists
+
+The product cannot yet:
+
+- consume a failed-run evidence package,
+- distinguish likely application, automation, data, environment, and stale-
+  context failures,
+- target a re-observation,
+- mark affected knowledge stale or conflicting,
+- calculate change impact,
+- prepare a reviewable patch,
+- trigger or guide a framework retest after acceptance.
+
+## Gap 18 — Proactive frontend/context regression
+
+**Status:** OPEN
+
+**Target:** After bounded maintenance and authentication profiles exist
+
+The product cannot re-observe approved application areas after deployment
+windows or on a schedule.
+
+Missing controls include:
+
+- observation inventory,
+- approved application areas and origins,
+- read-only or allowlisted actions,
+- authentication profile,
+- time, page, and cost budgets,
+- change comparison and impact report,
+- handling of mapped elements that are not exercised by current tests.
+
+This gap is separate from test execution because a green test suite does not
+prove that the broader mapped frontend is unchanged.
+
+## Gap 19 — Reuse during automation expansion
+
+**Status:** OPEN
+
+**Target:** After the first complete creation lifecycle
+
+No second process has been added using the existing application map.
+
+The project has no evidence that prior knowledge reduces:
+
+- repeated human questions,
+- repeated browser observation,
+- duplicate Page Objects or components,
+- LLM context size and cost,
+- review and implementation time.
+
+Expansion must be evaluated as reuse rather than another independent demo.
+
+## Gap 20 — Enterprise validation and Salesforce acceptance
+
+**Status:** OPEN
+
+**Target:** After authentication, security, maintenance, and framework handoff
+
+Only a controlled local page has been exercised.
+
+The validation ladder still lacks:
+
+- simple public application evidence,
+- modern dynamic public frontend evidence,
+- controlled multi-page application evidence,
+- credentialed enterprise-style reference evidence,
+- a safe Salesforce flow.
+
+Salesforce remains a deliberate acceptance target because simple pages cannot
+validate enterprise authentication, component-driven UI, data restrictions,
+complex process state, or realistic maintenance economics.

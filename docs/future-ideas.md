@@ -233,10 +233,79 @@ Support separate roles for:
 
 The first product remains single-user and local.
 
+## Authentication strategies for credentialed systems
+
+Three strategies are parked for systems such as Salesforce:
+
+1. **Shared Playwright storage state** used by framework execution and
+   Cartographer discovery through separate browser contexts.
+2. **Declarative login recipe** that resolves approved secrets in memory,
+   performs the login, verifies success, and may create short-lived storage
+   state.
+3. **Interactive human login** in a headed browser for SSO/MFA flows that should
+   not be automated.
+
+The strategies share common principles:
+
+- project files contain secret references, not values,
+- the framework and Cartographer consume one approved secret source through
+  separate runtime adapters,
+- storage state is sensitive and ignored by Git,
+- allowed origins, actions, retention, and session expiry are explicit,
+- pytest fixtures remain execution-plane details rather than Cartographer APIs.
+
+See [`authentication-strategies.md`](authentication-strategies.md).
+
+## Framework execution-evidence collector
+
+Add a bounded collector to `qa-automation-framework` that exports useful
+maintenance context without assuming every failed test is an application bug.
+
+Potential evidence:
+
+- test, step, Page Object, and method identifiers,
+- action, locator, and failure classification,
+- minimized page/element state,
+- environment and application-version metadata,
+- policy-approved trace, screenshot, or network references,
+- links to the relevant Cartographer context.
+
+Collection belongs to the framework execution plane. Diagnosis, context
+updates, impact analysis, and patch proposals belong to TestCartographer.
+
+## Proactive frontend/context regression
+
+Run bounded re-observation after deployment windows or on an approved schedule,
+even when current tests remain green.
+
+The observation inventory may include:
+
+- elements used by current tests,
+- shared components,
+- mapped elements not yet used by tests,
+- areas planned for future automation.
+
+This is not unrestricted crawling. It requires approved areas, read-only or
+allowlisted actions, authentication profiles, sensitivity rules, and budgets.
+
+## Expansion using the existing application map
+
+Add a second process while reusing existing:
+
+- pages and components,
+- locators and observations,
+- environment and authentication mappings,
+- fixtures and test-data patterns,
+- naming conventions and accepted decisions.
+
+Measure whether reuse reduces repeated questions, observations, duplicate code,
+LLM input, cost, and review time.
+
 ## Salesforce validation case
 
-Use a safe Salesforce Developer Edition or Trailhead-style environment for an
-enterprise validation flow:
+Use a safe Salesforce Developer Edition, Trailhead-style environment, or other
+approved non-production Salesforce environment for an enterprise validation
+flow:
 
 ```text
 login
@@ -245,6 +314,19 @@ login
 → save
 → verify the record
 ```
+
+Salesforce is deliberately retained as a major acceptance target because it can
+exercise:
+
+- credentialed access and session reuse,
+- dynamic component-driven UI,
+- complex navigation and application state,
+- enterprise data restrictions,
+- difficult locator and synchronization decisions,
+- realistic creation, execution, maintenance, and expansion workflows.
+
+Simple public pages and modern public portals remain earlier validation levels.
+They prove useful mechanisms but cannot establish enterprise readiness.
 
 This is a validation target, not a product dependency or early sprint scope.
 

@@ -2190,3 +2190,285 @@ without silently rewriting business meaning.
 Sprint 4 should use this bounded context as input to a provider-neutral POM
 proposal protocol. It must not bypass the safety boundary by sending raw pages
 or entire session files to an LLM.
+
+---
+
+## Architecture checkpoint A — one lifecycle, two modules
+
+**Date:** 2026-08-02
+**Status:** Complete in documentation
+**Nature of work:** Product and roadmap alignment after Sprint 3; no runtime implementation
+
+### Trigger
+
+After the bounded browser-observation slice, the relationship between
+TestCartographer and `qa-automation-framework` required a more precise model.
+
+Earlier wording described TestCartographer as a companion that supplies context
+to the framework. That was directionally correct but too weak.
+
+The intended product is one automation lifecycle with two separately executable
+modules:
+
+```text
+TestCartographer
+→ engineering and maintenance plane
+
+qa-automation-framework
+→ test-execution plane
+```
+
+The framework provides the runnable POM architecture. TestCartographer supplies
+and maintains the project-specific knowledge, evidence, and changes needed to
+create, extend, and maintain that automation.
+
+### Creation is AI-assisted engineering, not one-click generation
+
+The creation flow was clarified as:
+
+```text
+human testing and domain knowledge
++ Cartographer context and observations
++ bounded LLM assistance
++ qa-automation-framework conventions
+→ POM, components, fixtures, data, and tests
+→ human review and acceptance
+→ framework execution
+```
+
+The user has informally called this model **AItomatyzacja testów** for years.
+The term is useful as a memorable description, but it must not imply that the
+LLM owns business correctness or can generate an accepted suite without human
+review.
+
+### Normal execution remains independent
+
+Ordinary test execution should require:
+
+```text
+framework
++ accepted code
++ project configuration
++ approved secrets
+→ pytest / Playwright
+```
+
+It should not require TestCartographer or a live LLM.
+
+This preserves deterministic operation, normal CI/CD, understandable code, and
+the ability to use the adapted framework even when Cartographer is not running.
+
+### Execution should still feed maintenance
+
+Independence does not mean isolation.
+
+Real test suites fail, but a failed test is not automatically an application
+bug. It may indicate:
+
+- an application defect,
+- an automation defect,
+- changed application behaviour,
+- stale or invalid test data,
+- environment failure,
+- stale Cartographer context,
+- an unsupported state.
+
+A future framework-side component should therefore collect bounded diagnostic
+context. The working name is **Execution Evidence Collector**, which is more
+accurate than "bug logger".
+
+Collection belongs to the framework because it knows the executed test,
+fixture, Page Object, method, action, locator, environment, and exception.
+Diagnosis, context evolution, impact analysis, and patch proposals belong to
+TestCartographer.
+
+### Maintenance has reactive and proactive modes
+
+The original maintenance description focused on failures.
+
+That is insufficient because the current test pool may not touch every mapped
+or relevant frontend element. A shared component or future automation target
+can change while all existing tests remain green.
+
+The product direction now separates:
+
+#### Reactive maintenance
+
+```text
+failed run or explicit drift signal
+→ execution evidence
+→ targeted Cartographer analysis and re-observation
+→ context and impact update
+→ reviewable patch
+→ framework retest
+```
+
+#### Proactive maintenance
+
+```text
+deployment window or schedule
+→ approved observation inventory
+→ bounded read-only re-observation
+→ comparison with accepted context
+→ stale/conflicting/change findings
+→ impact report and optional patch proposal
+```
+
+This proactive mode is a form of frontend/context regression. It does not grant
+permission to crawl an enterprise application without scope or limits.
+
+A future run needs approved origins, application areas, actions, budgets,
+authentication, sensitivity, and retention rules.
+
+### Expansion is creation with reusable prior knowledge
+
+Adding a new process is structurally similar to initial creation:
+
+```text
+new process
+→ missing human context
+→ application observation
+→ LLM-assisted proposal
+→ human review
+→ framework extension
+```
+
+The difference is that TestCartographer should already know some environments,
+roles, pages, components, locators, fixtures, naming conventions, and accepted
+decisions.
+
+A future product hypothesis is that adding the second process requires:
+
+- fewer repeated questions,
+- fewer repeated observations,
+- fewer duplicate artefacts,
+- smaller LLM input,
+- lower cost,
+- less review and implementation time.
+
+This must be measured rather than assumed.
+
+### Shared configuration without copied secrets
+
+Both modules may need the same environment and account, especially for
+credentialed systems such as Salesforce.
+
+The intended direction is one approved secret source with two runtime
+consumers, not two copied configurations.
+
+```text
+secret source
+├── framework runtime adapter
+└── TestCartographer runtime adapter
+```
+
+A future non-secret project profile should contain logical mappings and secret
+references, not actual credentials.
+
+TestCartographer should not import pytest fixtures as its authentication API.
+Fixtures remain execution-plane details. Both modules should eventually
+interpret lower-level concepts such as `EnvironmentProfile`, `AuthProfile`, and
+`SecretProvider` references.
+
+### Three authentication strategies parked
+
+Three directions are retained without selecting a universal default:
+
+1. **Shared Playwright storage state** for framework execution and Cartographer
+   sessions.
+2. **Declarative login recipe** using secrets resolved only in memory and an
+   explicit success condition.
+3. **Interactive human login** for SSO/MFA flows that should not be scripted.
+
+The choice may differ by environment, identity provider, and company policy.
+
+### Salesforce remains a deliberate acceptance target
+
+Simple pages such as Wikipedia-like sites and modern public portals are useful
+for proving narrow mechanisms and increasing frontend difficulty.
+
+They are not representative of the final commercial target.
+
+A safe Salesforce environment remains an intentional enterprise validation
+level because it can exercise:
+
+- authentication and session reuse,
+- dynamic component-driven UI,
+- complex navigation and state,
+- enterprise data restrictions,
+- difficult synchronization and locator decisions,
+- realistic creation, execution, maintenance, and expansion.
+
+A candidate flow remains:
+
+```text
+login
+→ open Accounts
+→ create an Account
+→ save
+→ verify the record
+```
+
+Salesforce must not be used before safe non-production access, secret and
+session handling, allowed actions, test data, external-LLM boundaries, and
+cleanup are defined.
+
+### Decisions
+
+1. Treat TestCartographer and `qa-automation-framework` as two separately
+   executable modules of one automation lifecycle.
+2. Keep normal framework execution independent of Cartographer and a live LLM.
+3. Use Cartographer context and bounded LLM assistance to support human-guided
+   creation and adaptation.
+4. Plan a future framework-side Execution Evidence Collector.
+5. Separate reactive maintenance from proactive post-deployment
+   frontend/context regression.
+6. Evaluate expansion as reuse of the existing application map.
+7. Plan a shared non-secret project/workspace profile rather than fixture
+   coupling.
+8. Keep one approved secret source with separate framework and Cartographer
+   consumers.
+9. Park storage-state, login-recipe, and interactive-login strategies.
+10. Retain Salesforce as a major enterprise acceptance target.
+
+### Consequences for the roadmap
+
+The roadmap now extends beyond initial POM generation:
+
+```text
+Sprint 4 — bounded LLM synthesis
+Sprint 5 — project workspace and framework mapping
+Sprint 6 — first runnable test and creation evaluation
+Sprint 7 — execution-evidence contract
+Sprint 8 — reactive maintenance
+Sprint 9 — proactive frontend/context regression
+Sprint 10 — expansion using the existing map
+Sprint 11 — enterprise authentication and safety
+Sprint 12 — validation ladder culminating in Salesforce
+Sprint 13 — comparative validation and v1.0 decision
+```
+
+Only Sprint 4 is planned. Later slices remain provisional or parked and must be
+reshaped using evidence.
+
+### What this checkpoint proves
+
+The product lifecycle and module boundaries are coherent enough to guide the
+next contracts without treating framework adaptation as the end of the
+project.
+
+### What this checkpoint does not prove
+
+It does not implement or validate:
+
+- project/workspace profiles,
+- authentication or secret providers,
+- storage-state reuse,
+- login recipes,
+- interactive SSO/MFA sessions,
+- framework adaptation,
+- execution-evidence collection,
+- reactive or proactive maintenance,
+- expansion reuse,
+- Salesforce readiness,
+- better usability or economics.

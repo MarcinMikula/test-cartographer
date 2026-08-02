@@ -23,12 +23,12 @@ authority.
 ## Current evidence
 
 ```text
-64 deterministic and replay tests passing
-1 controlled Chromium integration test included
+66 tests passing with Playwright Chromium
+controlled browser readiness transition verified
 ```
 
-With Chromium installed in a normal development environment, the expected full
-result is `65 passed`.
+The full result includes regression coverage for Playwright editability
+semantics on both non-editable buttons and native editable inputs.
 
 The test suite covers:
 
@@ -417,6 +417,92 @@ Compilation check:
 python -m compileall -q src tests
 ```
 
+## Lifecycle validation model
+
+The long-term test strategy must follow the complete two-module lifecycle rather
+than stop at code generation.
+
+### Creation validation
+
+Validate:
+
+- bounded context and observation input,
+- LLM request authorization and minimization,
+- POM/fixture/test proposal quality,
+- framework mapping and reviewable patches,
+- one runnable test with meaningful assertions,
+- time to first runnable test and human correction effort.
+
+### Independent execution validation
+
+Validate that the adapted `qa-automation-framework` project:
+
+- installs and runs without TestCartographer,
+- does not require a live LLM,
+- resolves configuration and secrets through its own execution path,
+- produces ordinary pytest/Playwright results,
+- can emit bounded execution evidence without changing test semantics.
+
+### Reactive maintenance validation
+
+Inject controlled failure classes such as:
+
+- application defect,
+- changed locator or DOM structure,
+- stale test data,
+- environment failure,
+- automation bug,
+- stale context.
+
+Measure whether the system classifies the problem, selects the right evidence,
+updates context safely, proposes an appropriate patch, and supports retest.
+
+### Proactive maintenance validation
+
+After a controlled deployment change, re-observe an approved inventory that
+contains both:
+
+- elements touched by current tests,
+- mapped elements not touched by the current suite.
+
+Verify that the system can identify relevant drift without unrestricted
+crawling or silent repair.
+
+### Expansion validation
+
+Add a second process using the existing application map and compare against the
+first process:
+
+- number of human questions,
+- number of new observations,
+- duplicate Page Objects/components avoided,
+- LLM input and cost,
+- review and implementation time.
+
+### Enterprise validation ladder
+
+Progress through:
+
+1. controlled local page,
+2. simple public application,
+3. modern dynamic public frontend,
+4. controlled multi-page reference application,
+5. credentialed enterprise-style system,
+6. safe Salesforce environment.
+
+Simple pages prove narrow mechanisms only. Salesforce remains a deliberate
+acceptance target for authentication, dynamic component-driven UI, data
+restrictions, complex state, and realistic maintenance economics.
+
+Before credentialed validation, tests must cover:
+
+- authentication profile parsing,
+- secret-reference resolution without persistence,
+- storage-state sensitivity and deletion,
+- allowed-origin and action policies,
+- session expiry and refresh,
+- external-LLM minimization and authorization.
+
 ## What current tests do not cover
 
 - a real terminal operated by a real tester,
@@ -430,8 +516,12 @@ python -m compileall -q src tests
 - redaction and secret handling,
 - LLM requests, parsing, latency, cost, or semantic quality,
 - POM proposal or generated source code,
-- `qa-automation-framework` adaptation,
-- comparative usability or time savings.
+- `qa-automation-framework` adaptation or independent execution,
+- framework-side execution-evidence collection,
+- reactive or proactive maintenance,
+- expansion using an existing application map,
+- credentialed enterprise or Salesforce validation,
+- comparative usability, maintenance economics, or time savings.
 
 ## Sprint 3 browser test layers
 

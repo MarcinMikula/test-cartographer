@@ -744,3 +744,39 @@ and unrelated elements remain unchanged.
 
 This preserves the distinction between an observation artefact and the current
 accepted context state.
+
+## Project workspace, authentication, and secret boundary
+
+`ContextBundle` describes application and testing knowledge. It is not the
+project's credential store, pytest configuration, or authenticated-session
+container.
+
+Future lifecycle integration should keep three concerns separate:
+
+```text
+ContextBundle
+→ process, application, evidence, and automation meaning
+
+Project / workspace profile
+→ non-secret mappings to framework configuration, fixtures, files, roles, and
+  authentication profiles
+
+Secret provider and authenticated state
+→ runtime-only sensitive values and sessions
+```
+
+The framework and TestCartographer may consume the same logical environment and
+authentication profile, but they should do so through separate runtime adapters.
+Cartographer should not import pytest fixtures as its browser-session API.
+
+Version `0.1` therefore continues to exclude:
+
+- usernames, passwords, tokens, and MFA material,
+- Playwright storage state,
+- secret values or decrypted configuration,
+- framework-specific fixture objects,
+- authenticated browser contexts.
+
+Three future authentication strategies are parked outside the current contract:
+shared storage state, declarative login recipe with in-memory secrets, and
+interactive human login.

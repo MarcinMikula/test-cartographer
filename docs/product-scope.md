@@ -6,8 +6,12 @@ TestCartographer is an experimental LLM-assisted tool for collecting,
 organizing, verifying, and maintaining the application context required to
 adapt a reusable automation framework to a real project.
 
-It is designed as a companion to
-[`qa-automation-framework`](https://github.com/MarcinMikula/qa-automation-framework).
+Together with
+[`qa-automation-framework`](https://github.com/MarcinMikula/qa-automation-framework),
+TestCartographer is intended to form one automation lifecycle with two
+separately executable modules. The framework owns normal execution.
+TestCartographer owns context acquisition, LLM-assisted adaptation, maintenance,
+and expansion.
 
 The product should help answer:
 
@@ -93,15 +97,29 @@ TestCartographer should create and maintain a verified map between:
 business and testing knowledge
 + application structure and behaviour
 + project artefacts
++ repository and execution evidence
 + automation architecture
 ```
 
-and use that map to support reviewed adaptation of
-`qa-automation-framework`.
+and use that map throughout the lifecycle of `qa-automation-framework`:
+
+```text
+create automation
+→ execute independently in the framework
+→ collect bounded execution evidence
+→ maintain reactively or proactively
+→ expand using the existing application map
+```
 
 The tool is not defined by the amount of code it generates. Its value depends
-on whether it reduces repeated discovery and improves the correctness,
-traceability, maintainability, and efficiency of framework adaptation.
+on whether it reduces repeated discovery and improves correctness,
+traceability, maintainability, expansion efficiency, and the economics of
+framework adaptation.
+
+The human-guided creation model combines Cartographer evidence, bounded LLM
+assistance, framework conventions, and human review. The project uses
+**AItomatyzacja testów** as an informal shorthand for that AI-supported
+automation-engineering workflow, not for fully autonomous test creation.
 
 ## Intended user
 
@@ -193,7 +211,8 @@ During a human-guided browser session, the tool may observe:
 - relevant network activity,
 - visible outcomes.
 
-The next planned scope is guided observation, not autonomous crawling.
+Sprint 3 implements one bounded guided observation of an existing target;
+autonomous crawling remains outside the current scope.
 
 #### Repository and execution evidence
 
@@ -354,19 +373,52 @@ A future proposed change should make it possible to answer:
 Sprint 2 proves the first local provide/confirm distinction and interaction
 history. It does not yet review code or repository diffs.
 
-### 7. Maintenance support
+### 7. Lifecycle maintenance and expansion
 
-Later versions may:
+Maintenance has two distinct future modes.
 
-- compare current observations with stored context,
-- detect potential locator or structure changes,
-- identify affected Page Objects and tests,
-- detect changed required fields or process steps,
-- mark context as stale or conflicting,
-- propose bounded updates,
-- retain accepted-change history.
+#### Reactive maintenance
 
-Autonomous repair is not part of the first vertical slice.
+A framework execution failure or explicit drift signal supplies bounded evidence
+for Cartographer analysis:
+
+```text
+execution evidence
+→ failure classification
+→ targeted re-observation
+→ context and impact update
+→ reviewable patch
+→ accepted framework retest
+```
+
+A future framework-side Execution Evidence Collector should capture valuable
+context without labelling every failed test as an application bug.
+
+#### Proactive maintenance
+
+Cartographer should also support scheduled or post-deployment re-observation of
+an approved inventory. This frontend/context regression can detect changes in:
+
+- mapped elements not touched by the current test pool,
+- shared components,
+- future automation targets,
+- process areas whose existing tests still pass despite accumulating drift.
+
+Proactive maintenance must remain bounded by approved origins, areas, actions,
+authentication profiles, sensitivity rules, and time/page/cost budgets.
+
+#### Expansion
+
+Adding a new process repeats much of initial creation, but it should reuse the
+existing application map, accepted Page Objects, components, fixtures,
+configuration mappings, and prior decisions.
+
+A future validation hypothesis is that later processes require fewer repeated
+questions, observations, LLM tokens, duplicate artefacts, and review time than
+the first process.
+
+Autonomous repair and unrestricted crawling are not part of the first vertical
+slice.
 
 ## Relationship with testing methodology
 
@@ -387,26 +439,43 @@ treat the syllabus as an algorithm for generating tests.
 Knowing how to interact with a page is different from knowing what should be
 tested and why.
 
-## Relationship with qa-automation-framework
+## System boundary — two modules of one lifecycle
 
-### qa-automation-framework provides
+### qa-automation-framework — execution plane
 
-- reusable POM/SOM structure,
-- automation conventions,
-- fixtures and configuration patterns,
-- testing and adaptation guidance,
-- maintainability principles.
+The adapted framework owns:
 
-### TestCartographer provides
+- reusable POM/SOM structure and project code,
+- Page Objects and components,
+- fixtures, workflows, and test data,
+- environment configuration and secret retrieval,
+- Playwright/pytest execution,
+- assertions, reporting, and CI/CD,
+- future bounded execution-evidence collection.
 
-- project-specific discovery,
-- structured context,
-- missing-context questions,
-- evidence and provenance,
-- architecture-aware adaptation proposals,
-- later change-impact support.
+### TestCartographer — engineering and maintenance plane
 
-The framework remains usable without TestCartographer after adaptation.
+TestCartographer owns:
+
+- project-specific discovery and application mapping,
+- structured context, questions, evidence, and provenance,
+- bounded LLM-assisted architecture and test proposals,
+- framework adaptation plans and reviewable patches,
+- reactive and proactive change analysis,
+- reuse of the application map during expansion.
+
+The modules should cooperate through a concrete project workspace, non-secret
+project/authentication profiles, accepted repository changes, and execution
+evidence. Cartographer should not import pytest fixtures as its authentication
+API, and neither module should copy secrets into context files.
+
+The framework remains usable without TestCartographer or a live LLM during
+ordinary execution.
+
+See:
+
+- [`system-lifecycle.md`](system-lifecycle.md),
+- [`authentication-strategies.md`](authentication-strategies.md).
 
 ## Technical boundary
 
@@ -423,6 +492,10 @@ Current implementation:
 
 Still-open decisions include:
 
+- shared project/workspace profile and framework mappings,
+- non-secret environment and authentication profiles,
+- one-source/two-consumer secret resolution,
+- the parked storage-state, login-recipe, and interactive-login strategies,
 - safe credentialed browser sessions,
 - greenfield discovery and element selection,
 - raw evidence storage beyond the current no-raw-capture rule,
@@ -452,12 +525,13 @@ The first product-level slice should cover one small process.
 12. Measure operator time and corrections.
 ```
 
-Current progress:
+Current progress after Sprint 3:
 
 ```text
 Step 2 — controlled fixture only
 Step 3 — implemented for the deterministic reference flow
-Steps 4–12 — not implemented
+Steps 4–5 — bounded for one selected existing locator
+Steps 6–12 — not implemented
 ```
 
 Not required for the first product slice:
@@ -501,7 +575,11 @@ local acquisition
 
 Requirements:
 
-- credentials must not be included in prompts or committed files,
+- credentials must not be included in prompts, context bundles, observations,
+  generated documentation, or committed files,
+- project configuration should contain secret references rather than values,
+- the framework and Cartographer should consume one approved secret source
+  through separate runtime adapters,
 - raw application capture must not automatically be sent to a provider,
 - data minimization must happen before external inference,
 - source and sensitivity metadata must be retained where relevant,
@@ -544,7 +622,9 @@ A future usable version should demonstrate:
 - active user time is measured,
 - time to first runnable test is measured,
 - LLM usage and cost are measured,
-- update time after an application change is measured.
+- update time after an application change is measured,
+- effort for reactive versus proactive maintenance is measured,
+- effort to add a second process using the existing application map is measured.
 
 Sprint 3 measures intake interactions and active answer time, plus browser
 capture duration, review duration, and capture/review action count. It still
@@ -576,10 +656,33 @@ TestCartographer can:
 8. produce and execute a runnable test,
 9. explain assumptions and sources,
 10. support human correction and acceptance,
-11. analyse a later application change,
-12. demonstrate usable operation time and comparative value.
+11. execute accepted tests independently through the framework,
+12. consume bounded execution evidence for reactive maintenance,
+13. perform bounded proactive post-deployment re-observation,
+14. add a later process while reusing the existing application map,
+15. operate through an approved credentialed enterprise flow,
+16. demonstrate usable operation time and comparative value.
 
 This is a product-level direction, not the current implemented capability.
+
+## Validation ladder and enterprise target
+
+Validation should progress from controlled mechanisms to realistic systems:
+
+1. controlled local page,
+2. simple public application,
+3. modern dynamic public frontend,
+4. controlled multi-page reference application,
+5. credentialed enterprise-style system,
+6. safe Salesforce environment.
+
+Wikipedia-like pages and public portals are stepping stones. They do not prove
+enterprise authentication, data handling, component-driven UI, complex process
+state, or maintenance economics.
+
+Salesforce remains a deliberate acceptance target, with a candidate Account
+creation flow. It must use a safe non-production environment and an implemented
+authentication, secret, authorization, data, and retention boundary.
 
 ## Out of scope until separately justified
 

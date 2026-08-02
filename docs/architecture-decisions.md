@@ -430,6 +430,10 @@ needed from this slice.
 - cross-process graph,
 - repository patching,
 - POM proposal schema,
+- project/workspace profile schema,
+- authentication profile and secret-provider adapters,
+- execution-evidence contract,
+- reactive and proactive maintenance implementation,
 - CI workflow,
 - logging framework,
 - rich terminal or web review interface,
@@ -515,3 +519,178 @@ introduce pytest-playwright into product code.
 - unit tests can use protocol-compatible fakes,
 - one integration test and verifier exercise Chromium,
 - other browsers remain unsupported.
+
+## ADR-021 — Treat the framework and Cartographer as two modules of one lifecycle
+
+**Status:** Accepted at Architecture checkpoint A
+
+### Decision
+
+Treat `qa-automation-framework` and TestCartographer as separately executable
+modules of one automation lifecycle.
+
+- The framework owns accepted automation and normal execution.
+- TestCartographer owns context acquisition, LLM-assisted adaptation,
+  maintenance, and expansion.
+
+### Rationale
+
+The target is not a standalone locator database beside an unrelated framework.
+The framework provides the execution architecture; Cartographer supplies and
+maintains the project-specific knowledge and changes required to use it.
+
+At the same time, coupling every test run to Cartographer or an LLM would make
+execution slower, less deterministic, and operationally fragile.
+
+### Consequences
+
+- ordinary pytest execution remains independent of Cartographer and a live LLM,
+- lifecycle integration happens through explicit profiles, repository changes,
+  and evidence contracts,
+- future roadmap work must cover creation, execution evidence, maintenance, and
+  expansion rather than only initial code generation.
+
+## ADR-022 — Use a shared project profile instead of fixture coupling
+
+**Status:** Direction accepted; contract deferred
+
+### Decision
+
+Introduce a future non-secret project/workspace profile that maps logical
+Cartographer concepts to framework mechanisms.
+
+TestCartographer must not import or execute pytest fixtures merely to obtain
+configuration, test data, or an authenticated browser session.
+
+Both modules should instead interpret lower-level project concepts such as:
+
+- `EnvironmentProfile`,
+- `AuthProfile`,
+- secret-provider references,
+- framework target mappings,
+- context and evidence locations.
+
+### Rationale
+
+Fixtures are execution-plane implementation details. Direct fixture coupling
+would make Cartographer depend on pytest lifecycle and project-specific code,
+while duplicated configuration would drift.
+
+### Consequences
+
+- one concrete automation repository becomes the shared workspace,
+- framework fixtures and Cartographer sessions may consume the same logical
+  profile through separate adapters,
+- the profile stores secret references and mappings, not secret values,
+- the exact schema and repository layout remain a Sprint 5 or later decision.
+
+## ADR-023 — Keep one approved secret source with two runtime consumers
+
+**Status:** Principle accepted; implementation deferred
+
+### Decision
+
+The framework and TestCartographer may need the same environment and account,
+but secret values must not be copied into separate configurations.
+
+Use one approved secret source with two consumers:
+
+```text
+secret store / environment / enterprise manager
+├── framework runtime adapter
+└── TestCartographer runtime adapter
+```
+
+### Rationale
+
+Credential duplication increases leakage, rotation, and consistency risk.
+Cartographer still needs authenticated access for systems such as Salesforce,
+but `ContextBundle`, observations, prompts, generated documentation, and source
+control are not appropriate secret stores.
+
+### Consequences
+
+- project files contain logical secret references only,
+- secrets should be resolved in memory for the shortest practical time,
+- authenticated Playwright storage state is treated as sensitive,
+- three implementation strategies remain parked: shared storage state,
+  declarative login recipe, and interactive login.
+
+## ADR-024 — Separate reactive and proactive maintenance
+
+**Status:** Accepted as product direction; implementation deferred
+
+### Decision
+
+Model maintenance as two separate lifecycle modes.
+
+1. **Reactive maintenance** begins with a failed execution or explicit drift
+   signal.
+2. **Proactive maintenance** performs bounded scheduled or post-deployment
+   re-observation of an approved inventory, even when tests remain green.
+
+### Rationale
+
+A test suite observes only the paths it executes. Shared components, mapped but
+unused elements, future automation targets, or untested application areas can
+change without failing the current pool.
+
+### Consequences
+
+- the roadmap includes both execution-evidence analysis and proactive
+  frontend/context regression,
+- proactive runs require approved scope, actions, budgets, authentication, and
+  sensitivity policy,
+- neither mode authorizes unrestricted crawling or silent repair.
+
+## ADR-025 — Collect execution evidence in the framework, analyse it in Cartographer
+
+**Status:** Accepted as product direction; implementation deferred
+
+### Decision
+
+Place future bounded execution-evidence collection in the
+`qa-automation-framework` execution plane. TestCartographer consumes that
+evidence for diagnosis, context evolution, impact analysis, and patch
+proposals.
+
+Use the broader term **Execution Evidence Collector** rather than assuming each
+failed test is an application bug.
+
+### Rationale
+
+The framework knows the executed test, fixture, Page Object, method, action,
+locator, environment, and exception at failure time. Cartographer owns the
+application map and maintenance reasoning. Keeping those responsibilities
+separate preserves normal execution independence while providing valuable
+maintenance input.
+
+### Consequences
+
+- a future cross-repository evidence contract is required,
+- failure evidence must distinguish application, automation, data, environment,
+  and stale-context possibilities,
+- screenshots, traces, network references, and page state remain policy-bound,
+- the collector does not itself decide or apply repairs.
+
+## ADR-026 — Treat expansion as reuse validation, not another greenfield demo
+
+**Status:** Accepted as product direction; implementation deferred
+
+### Decision
+
+After the first complete process, validate a second process using the existing
+application map, accepted automation, project profiles, and prior decisions.
+
+### Rationale
+
+The product's long-term value depends on reducing repeated work. A tool that is
+useful only for the first process but cannot reuse knowledge is a generator,
+not a maintained application map.
+
+### Consequences
+
+- expansion receives its own roadmap slice,
+- validation should measure repeated questions, observations, LLM input,
+  duplicate artefacts, and review time,
+- stale knowledge must not be reused as automatic truth.

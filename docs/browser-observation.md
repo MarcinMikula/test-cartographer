@@ -112,6 +112,30 @@ Acceptance performs a deliberately narrow change:
 
 Rejection changes only the observation record. It does not modify context.
 
+
+## Authorization and authentication boundary
+
+In Sprint 3, "user-authorized" means that the operator explicitly supplies the
+URL and existing context element ID to the CLI. It does not mean the tool has a
+persistent identity, permission model, allowed-domain registry, or credential
+policy.
+
+The current implementation supports only an unauthenticated controlled local
+page. Credentialed discovery and maintenance will require a separate project
+and authentication boundary.
+
+Parked directions are:
+
+1. shared Playwright storage state,
+2. declarative login recipe with secrets resolved only in memory,
+3. interactive human login for SSO/MFA.
+
+Those strategies should be consumed through a future non-secret `AuthProfile`
+and approved secret provider. They must not place credentials or session state
+inside `BrowserObservation` or `ContextBundle`.
+
+See [`authentication-strategies.md`](authentication-strategies.md).
+
 ## CLI
 
 Capture one controlled target:
@@ -189,4 +213,6 @@ Sprint 3 does not provide:
 - LLM calls,
 - POM generation,
 - framework modification,
-- selector healing.
+- selector healing,
+- credentialed or enterprise sessions,
+- formal user identity or authorization policy.
