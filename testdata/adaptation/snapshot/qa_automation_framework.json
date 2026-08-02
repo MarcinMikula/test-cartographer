@@ -1,0 +1,162 @@
+{
+  "schema_version": "0.1",
+  "id": "snapshot_qaf_reference",
+  "profile_id": "workspace_qaf_reference",
+  "captured_at": "2026-08-02T12:00:00Z",
+  "repository_label": "qa-automation-framework controlled reference",
+  "root_fingerprint": "64e36467002d5241670bb5b6e3d329cafc19f7d33805c95640a879ef54c51c70",
+  "entries": [
+    {
+      "path": "README.md",
+      "kind": "file",
+      "size_bytes": 44,
+      "sha256": "ba0f7e6e229ad20d14ca239c4a1c6a811cc5ab72d911140ac900d1cac1cb0c4b",
+      "python_symbols": []
+    },
+    {
+      "path": "components",
+      "kind": "directory",
+      "size_bytes": 0,
+      "sha256": null,
+      "python_symbols": []
+    },
+    {
+      "path": "components/__init__.py",
+      "kind": "file",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "python_symbols": []
+    },
+    {
+      "path": "components/navbar.py",
+      "kind": "file",
+      "size_bytes": 60,
+      "sha256": "2fbdbadc5e313f7f3a991a22373c02c0db0253c63d344b007f1813a80b0ff14f",
+      "python_symbols": [
+        {
+          "kind": "class",
+          "name": "Navbar",
+          "bases": [],
+          "method_names": [
+            "open_cart"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "pages",
+      "kind": "directory",
+      "size_bytes": 0,
+      "sha256": null,
+      "python_symbols": []
+    },
+    {
+      "path": "pages/__init__.py",
+      "kind": "file",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "python_symbols": []
+    },
+    {
+      "path": "pages/base_page.py",
+      "kind": "file",
+      "size_bytes": 186,
+      "sha256": "2952cde38e4c51dcd4b28e7c33d4a7dd15709ee32c383ea2beae086a4adcbc79",
+      "python_symbols": [
+        {
+          "kind": "class",
+          "name": "BasePage",
+          "bases": [],
+          "method_names": [
+            "__init__",
+            "navigate"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "pages/ecommerce_search_page.py",
+      "kind": "file",
+      "size_bytes": 134,
+      "sha256": "91de68ae5b77bbe0ef1de089a1f99ee518b143667f0bba32e0356906104da6b0",
+      "python_symbols": [
+        {
+          "kind": "class",
+          "name": "EcommerceSearchPage",
+          "bases": [
+            "BasePage"
+          ],
+          "method_names": [
+            "search_for"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "requirements.txt",
+      "kind": "file",
+      "size_bytes": 18,
+      "sha256": "f942e56f2025a807eb2af924bffa686df86f56a76b62e26d80aff56f74b5a801",
+      "python_symbols": []
+    },
+    {
+      "path": "testdata",
+      "kind": "directory",
+      "size_bytes": 0,
+      "sha256": null,
+      "python_symbols": []
+    },
+    {
+      "path": "testdata/settings.py",
+      "kind": "file",
+      "size_bytes": 25,
+      "sha256": "e1f5502791a33151499519756cbb87563f03b002aae587feed2b1d609c1359ba",
+      "python_symbols": []
+    },
+    {
+      "path": "tests/e2e",
+      "kind": "directory",
+      "size_bytes": 0,
+      "sha256": null,
+      "python_symbols": []
+    },
+    {
+      "path": "tests/e2e/__init__.py",
+      "kind": "file",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "python_symbols": []
+    },
+    {
+      "path": "tests/e2e/conftest.py",
+      "kind": "file",
+      "size_bytes": 145,
+      "sha256": "c68afc8f6124613c08587b93e3a037f28f182d7a2656a2b3eda10a2f5453a4ed",
+      "python_symbols": [
+        {
+          "kind": "function",
+          "name": "ecommerce_context",
+          "bases": [],
+          "method_names": []
+        }
+      ]
+    },
+    {
+      "path": "tests/e2e/test_ecommerce_checkout_flow.py",
+      "kind": "file",
+      "size_bytes": 48,
+      "sha256": "3f4f5198fbe3e9f8a4b3506fd47bbd34e6c2d4fac30a6d81e193c1953f7571eb",
+      "python_symbols": [
+        {
+          "kind": "function",
+          "name": "test_ecommerce_checkout",
+          "bases": [],
+          "method_names": []
+        }
+      ]
+    }
+  ],
+  "source_contents_persisted": false,
+  "absolute_paths_persisted": false,
+  "secret_values_persisted": false
+}

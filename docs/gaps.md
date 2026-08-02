@@ -176,7 +176,7 @@ Browser observation must not become an uncontrolled raw-data collector.
 
 ## Gap 9 — POM proposal and framework adaptation
 
-**Status:** PARTIALLY CLOSED by Sprint 4
+**Status:** PARTIALLY CLOSED by Sprints 4–5
 
 **Implemented:**
 
@@ -188,15 +188,23 @@ Browser observation must not become an uncontrolled raw-data collector.
 - deterministic rejection of invented references and prohibited claims,
 - explicit human review of the logical proposal.
 
-**Still open — target Sprints 5–6:**
+**Implemented in Sprint 5:**
 
-- inspect an existing target repository,
-- map logical objects to actual files and symbols,
-- avoid duplicate or conflicting responsibilities,
-- resolve project-specific naming and fixture conventions,
-- generate a reviewable file-level adaptation plan,
-- write accepted source changes,
-- execute a generated test.
+- bounded local framework inspection,
+- non-secret workspace profile,
+- relative paths, hashes, sizes, and Python symbol snapshot,
+- exact file and symbol mapping,
+- create-file, add-symbol, and reuse-symbol classification,
+- source-to-target traceability,
+- reviewable adaptation plan and separate acceptance.
+
+**Still open — target Sprint 6:**
+
+- validate project-specific naming and fixture conventions against a full copy,
+- generate reviewable source code,
+- apply accepted changes safely,
+- handle concurrent framework drift and merge conflicts,
+- collect and execute the generated test.
 
 ## Gap 10 — Real usability and effort validation
 
@@ -283,25 +291,24 @@ browser lifecycles.
 
 ## Gap 14 — Shared project workspace and framework mapping
 
-**Status:** OPEN
+**Status:** PARTIALLY CLOSED by Sprint 5
 
-**Target:** Sprint 5
+**Target:** Continue in Sprint 6
 
-The projects do not yet share a concrete automation workspace or a non-secret
-project profile.
+Sprint 5 now provides a first non-secret `WorkspaceProfile`, bounded local
+inspection, a minimized `FrameworkSnapshot`, exact file/symbol planning, and
+source-to-target traceability.
 
-Missing capabilities include:
+Still missing:
 
-- locating and inspecting a target `qa-automation-framework` repository,
-- mapping environments, roles, symbolic data, pages, components, fixtures, and
-  tests to existing framework artefacts,
-- detecting duplicate or conflicting files and symbols,
-- preserving source-to-target traceability,
-- storing accepted Cartographer state beside the concrete automation project
-  without polluting normal test execution.
-
-The project must validate the actual framework structure before freezing a
-workspace schema.
+- a production project profile that covers environment, role, and symbolic data
+  mappings without secret values,
+- a full real-copy acceptance run against the current framework repository,
+- storing accepted Cartographer state beside a concrete automation project,
+- drift reconciliation when the framework changes after snapshot creation,
+- source generation and safe application,
+- proof that the first deterministic fixture and file conventions fit realistic
+  adaptations.
 
 ## Gap 15 — Authentication profiles and one-source secret handling
 

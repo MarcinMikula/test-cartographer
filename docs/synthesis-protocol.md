@@ -313,3 +313,15 @@ The verifier proves:
 - usability or time savings.
 
 These limits are intentional gates to later sprints.
+
+
+## Sprint 5 handoff
+
+An accepted `SynthesisRun` is now a required input to the read-only adaptation
+planner. Acceptance does not supply file paths. Sprint 5 combines the logical
+proposal with a separately approved `WorkspaceProfile` and exact
+`FrameworkSnapshot`, then requires another human decision over the resulting
+`AdaptationPlan`.
+
+This preserves the distinction between logical architecture approval and
+repository-placement approval.

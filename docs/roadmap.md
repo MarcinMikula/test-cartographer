@@ -69,8 +69,8 @@ product framing
 | Sprint 3 | Bounded guided browser observation | Done |
 | Architecture checkpoint A | Align the two-module lifecycle, maintenance modes, authentication directions, and enterprise validation target | Done in documentation |
 | Sprint 4 | Bounded LLM synthesis and POM proposal | Done |
-| Sprint 5 | Project workspace, framework mapping, and first reviewable adaptation plan | Provisional |
-| Sprint 6 | First runnable framework test and creation-lifecycle evaluation | Provisional |
+| Sprint 5 | Project workspace, framework mapping, and first reviewable adaptation plan | Done |
+| Sprint 6 | First runnable framework test and creation-lifecycle evaluation | Planned |
 | Sprint 7 | Framework execution-evidence contract | Parked |
 | Sprint 8 | Reactive maintenance from execution evidence | Parked |
 | Sprint 9 | Proactive post-deployment frontend/context regression | Parked |
@@ -456,34 +456,70 @@ The accepted logical proposal must not be treated as proof that:
 
 ## Sprint 5 — Project workspace and framework adaptation plan
 
-**Status:** Provisional
+**Status:** Done
 
 ### Goal
 
-Map an accepted proposal into a concrete copy of `qa-automation-framework`
-without writing files blindly.
+Map one human-accepted logical proposal into a concrete, bounded
+`qa-automation-framework` workspace without writing files blindly.
 
-### Candidate scope
+### Delivered
 
-- inspect the target framework repository,
-- define the first non-secret project/workspace profile,
-- map logical environment, role, data, page, component, fixture, and test
-  concepts to existing framework structures,
-- detect existing artefacts and duplication risks,
-- prepare a reviewable file-level adaptation plan,
-- keep secret values and authenticated state outside context and proposals,
-- record source-to-target traceability,
-- require human acceptance before file changes.
+- non-secret `WorkspaceProfile` version `0.1`,
+- marker files, allowed roots, ignored names, and inspection budgets,
+- read-only local workspace inspection,
+- minimized `FrameworkSnapshot` version `0.1`,
+- repository-relative paths, file hashes, sizes, and Python symbol metadata,
+- deterministic root fingerprint,
+- no persisted source contents, absolute paths, or secret values,
+- `AdaptationPlan` version `0.1`,
+- exact page, component, fixture, and E2E test target paths,
+- `create_file`, `add_symbol`, and `reuse_symbol` operations,
+- source-proposal traceability and operation dependencies,
+- separate adaptation-plan review,
+- CLI for inspect, plan, status, and review,
+- controlled framework fixture and replay artefacts,
+- three generated and tested JSON Schemas,
+- standalone verifier proving byte-for-byte framework immutability,
+- 128 tests expected with Chromium on the normal Windows environment.
+
+### Exit criteria
+
+- [x] One controlled framework workspace can be inspected locally.
+- [x] The user supplies the approved profile and framework root.
+- [x] Traversal is limited by marker, allowlist, count, and size constraints.
+- [x] Source contents and absolute paths are not persisted.
+- [x] Python classes, functions, bases, and method names are replayable.
+- [x] One accepted proposal maps to exact framework files and symbols.
+- [x] Existing targets are distinguished from new files and missing symbols.
+- [x] Proposal acceptance does not imply adaptation-plan acceptance.
+- [x] Plan acceptance changes only the plan state.
+- [x] No generated source is included and no framework file is modified.
+- [x] No live provider is required.
+
+### What Sprint 5 proves
+
+A repository-aware planning boundary can be deterministic, explainable,
+replayable, and read-only before source generation is introduced.
+
+### What Sprint 5 does not prove
+
+- correctness of the first target-placement convention for every project,
+- complete repository semantics,
+- source generation or patch application,
+- collection or execution success,
+- secret detection,
+- full enterprise-repository usefulness.
 
 ### Gate to Sprint 6
 
-The plan must identify exactly which files and symbols will change and why,
-without assuming that a generated class or fixture belongs in the target
-architecture merely because it is syntactically valid.
+Sprint 6 may consume only a human-accepted adaptation plan tied to the exact
+snapshot fingerprint. If the framework changes, it must be re-inspected and the
+plan rebuilt or explicitly reconciled before source changes are proposed.
 
 ## Sprint 6 — First runnable test and creation-lifecycle evaluation
 
-**Status:** Provisional
+**Status:** Planned
 
 ### Goal
 

@@ -1,0 +1,90 @@
+{
+  "schema_version": "0.1",
+  "id": "adapt_public_search",
+  "workspace_profile_id": "workspace_qaf_reference",
+  "snapshot_id": "snapshot_qaf_reference",
+  "snapshot_fingerprint": "64e36467002d5241670bb5b6e3d329cafc19f7d33805c95640a879ef54c51c70",
+  "synthesis_run_id": "synrun_public_search",
+  "proposal_id": "proposal_public_search",
+  "context_id": "ctx_public_catalog_search_observation_ready",
+  "created_at": "2026-08-02T12:05:00Z",
+  "status": "ready_for_review",
+  "decision": "pending",
+  "operations": [
+    {
+      "id": "adapt_page_01",
+      "kind": "create_file",
+      "target_kind": "page",
+      "target_path": "pages/catalog_page.py",
+      "symbol_name": "CatalogPage",
+      "source_proposal_ids": [
+        "pom_page_catalog",
+        "page_catalog",
+        "method_open_catalog",
+        "method_read_results"
+      ],
+      "rationale": "Map the accepted logical Page Object to the framework pages layer.",
+      "depends_on": []
+    },
+    {
+      "id": "adapt_component_01",
+      "kind": "create_file",
+      "target_kind": "component",
+      "target_path": "components/catalog_search_form.py",
+      "symbol_name": "CatalogSearchForm",
+      "source_proposal_ids": [
+        "pom_component_search_form",
+        "cmp_search_form",
+        "method_enter_query",
+        "method_submit_search"
+      ],
+      "rationale": "Map the accepted logical component to the framework components layer.",
+      "depends_on": []
+    },
+    {
+      "id": "adapt_fixture_01",
+      "kind": "add_symbol",
+      "target_kind": "fixture",
+      "target_path": "tests/e2e/conftest.py",
+      "symbol_name": "catalog_context",
+      "source_proposal_ids": [
+        "fixture_catalog_context"
+      ],
+      "rationale": "Add or reuse the symbolic pytest fixture required by the accepted proposal.",
+      "depends_on": []
+    },
+    {
+      "id": "adapt_test_01",
+      "kind": "create_file",
+      "target_kind": "test",
+      "target_path": "tests/e2e/test_search_catalog.py",
+      "symbol_name": "test_search_catalog",
+      "source_proposal_ids": [
+        "test_search_catalog",
+        "method_open_catalog",
+        "method_enter_query",
+        "method_submit_search",
+        "method_read_results",
+        "assert_matching_results"
+      ],
+      "rationale": "Map the accepted test intent to the framework E2E layer without generating source code.",
+      "depends_on": [
+        "adapt_page_01",
+        "adapt_component_01",
+        "adapt_fixture_01"
+      ]
+    }
+  ],
+  "verification_commands": [
+    "python -m compileall -q pages components tests testdata",
+    "python -m pytest --collect-only -q",
+    "python -m pytest tests/unit/ -v",
+    "python -m pytest tests/e2e/ -v"
+  ],
+  "open_questions": [],
+  "framework_files_modified": false,
+  "generated_source_included": false,
+  "reviewed_at": null,
+  "review_reason": null,
+  "review_seconds": 0.0
+}

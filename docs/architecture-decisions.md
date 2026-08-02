@@ -838,3 +838,57 @@ must not be inferred from the logical proposal alone.
   framework inspection,
 - Sprint 5 must create a separate repository adaptation plan and review gate,
 - normal framework execution remains independent of the synthesis adapter.
+
+
+## ADR-031 — Inspect framework workspaces through an explicit allowlist
+
+**Decision:** `WorkspaceProfile` defines root markers, allowed repository roots,
+ignored names, and file-count/file-size budgets. The local absolute path is an
+invocation parameter and is not persisted.
+
+**Why:** Repository awareness is required for adaptation, but unconstrained
+recursive ingestion would expand privacy, performance, and prompt-injection
+risk before the project has evidence that it is useful.
+
+**Consequence:** The first inspector can miss relevant files outside the
+allowlist. That is preferable to silently scanning an entire enterprise
+repository.
+
+## ADR-032 — Persist repository structure, not source contents
+
+**Decision:** `FrameworkSnapshot` stores repository-relative paths, sizes,
+SHA-256 hashes, and top-level Python symbol metadata. It does not store source
+text, absolute paths, or secret values.
+
+**Why:** Sprint 5 needs duplicate detection, target selection, replay, and stale
+snapshot detection. It does not need to preserve full source code in the
+Cartographer contract.
+
+**Consequence:** A later source-generation slice will need a separate bounded
+read mechanism tied to exact approved files. The snapshot alone cannot explain
+all runtime behaviour.
+
+## ADR-033 — Separate logical proposal acceptance from repository-plan acceptance
+
+**Decision:** An accepted Sprint 4 `SynthesisRun` may produce only a pending
+`AdaptationPlan`. A second human decision is required for exact file and symbol
+targets.
+
+**Why:** A logical Page Object boundary can be reasonable while its file name,
+fixture location, or relationship to existing symbols is wrong.
+
+**Consequence:** Human review remains explicit at both authority boundaries.
+Plan acceptance still does not authorize source writes.
+
+## ADR-034 — Keep Sprint 5 read-only and source-free
+
+**Decision:** Sprint 5 may classify operations as `create_file`, `add_symbol`,
+or `reuse_symbol`, but may not include generated Python source or modify the
+framework.
+
+**Why:** Repository inspection, placement, source generation, patching, and
+execution are separate uncertainties. Combining them would make failures hard
+to attribute and review.
+
+**Consequence:** Sprint 6 must verify that an accepted plan still matches the
+same snapshot fingerprint before proposing or applying source changes.

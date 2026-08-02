@@ -2786,3 +2786,250 @@ output, and human review.
 The next uncertainty is no longer prompt parsing. It is mapping an accepted
 logical proposal into a real `qa-automation-framework` workspace without
 inventing file placement or duplicating existing architecture.
+
+
+---
+
+## Sprint 5 — Project workspace and framework adaptation plan
+
+### Starting question
+
+Sprint 4 ended with a human-accepted logical POM proposal. The proposal knew
+which application pages, components, methods, fixtures, process steps, locators,
+and outcomes were authorized. It deliberately did not know where those concepts
+belonged in a concrete `qa-automation-framework` repository.
+
+The next uncertainty was therefore not code generation. It was repository
+placement:
+
+> Can TestCartographer inspect a bounded framework workspace and produce an
+> exact, reviewable file/symbol plan without reading the whole repository into a
+> model or modifying any file?
+
+### Why source generation stayed out of scope
+
+It would have been tempting to combine repository inspection, class generation,
+patching, and pytest execution in one sprint. That would have hidden several
+independent failure modes:
+
+- the repository snapshot could be wrong,
+- the target path could be wrong,
+- an existing class or fixture could be duplicated,
+- generated code could be invalid,
+- a valid patch could still fail at runtime.
+
+Sprint 5 therefore stops before source code. It proves the placement boundary
+first.
+
+### Workspace profile as an inspection policy
+
+The first `WorkspaceProfile` is intentionally non-secret and small. It defines:
+
+- root marker files,
+- allowlisted repository roots,
+- ignored names,
+- maximum entry count,
+- maximum file size.
+
+The framework root itself is supplied at runtime. Its absolute path is not
+stored in the snapshot.
+
+This was an important product decision. A general recursive repository scan
+would be easier to code, but it would be harder to justify in an enterprise
+workspace. The allowlist makes missing context visible and reviewable instead
+of treating full-repository ingestion as harmless.
+
+### Snapshot metadata versus source contents
+
+The inspector reads allowlisted files locally, hashes them, and parses Python
+with the standard-library `ast` module. The persisted snapshot stores only:
+
+- relative paths,
+- file sizes,
+- SHA-256 hashes,
+- top-level classes and functions,
+- class bases and method names.
+
+It does not persist source text, absolute paths, or secret values.
+
+This does not mean the inspector can prove that inspected files were safe. It
+has no secret scanner. The profile owner must exclude secret-bearing files.
+The privacy flags describe persisted output, not universal safety of the input
+workspace.
+
+### Deterministic repository fingerprint
+
+The root fingerprint is calculated from sorted entry metadata rather than the
+capture timestamp. The same repository state therefore produces the same
+fingerprint even when inspected later.
+
+The fingerprint becomes a future stale-plan guard:
+
+```text
+accepted plan
++ unchanged snapshot fingerprint
+→ eligible for Sprint 6 source proposal
+
+accepted plan
++ changed framework fingerprint
+→ re-inspect and reconcile before writing
+```
+
+Sprint 5 records this rule but does not yet apply patches.
+
+### First mapping convention
+
+For the first POM-only slice, accepted logical artefacts map to:
+
+```text
+Page Object       → pages/<class_name>.py
+Component Object  → components/<class_name>.py
+Fixture           → tests/e2e/conftest.py
+E2E test           → tests/e2e/<test_name>.py
+```
+
+Class names are converted to snake_case for filenames. The planner checks the
+snapshot and classifies each target as:
+
+- `create_file`,
+- `add_symbol`,
+- `reuse_symbol`.
+
+This is a deterministic convention, not a universal architecture truth. A full
+framework adaptation may place fixtures differently or reuse an existing page
+boundary. That is why plan review is separate from proposal review.
+
+The first draft mapped fixtures to `tests/conftest.py`. A final check against the
+current framework structure showed that its browser fixtures live in
+`tests/e2e/conftest.py`. The mapping, controlled fixture, snapshot, plan, tests,
+and documentation were corrected before packaging. This is concrete evidence
+for the Sprint 5 premise: repository placement must be derived from the inspected
+framework rather than remembered or guessed.
+
+### Two acceptance stages are necessary
+
+Sprint 4 acceptance means:
+
+> The logical POM proposal is acceptable as a representation of the authorized
+> process.
+
+Sprint 5 acceptance means:
+
+> The exact repository file and symbol targets are acceptable for the inspected
+> framework state.
+
+Neither decision means that source code has been generated or that tests pass.
+
+### Controlled framework fixture
+
+The committed framework fixture mirrors the relevant current skeleton layers:
+
+- root markers,
+- `pages/`,
+- `components/`,
+- `tests/e2e/`,
+- `testdata/`.
+
+It is deliberately not a vendored copy of the full framework. A small fixture
+keeps replay stable and avoids making TestCartographer tests depend on another
+repository's network availability or unrelated changes.
+
+The production-facing CLI still accepts a real local framework root. A full
+real-copy acceptance run remains a separate evidence step before the mapping
+contract is treated as mature.
+
+### Reference plan
+
+The accepted public-search proposal maps to:
+
+```text
+pages/catalog_page.py             → CatalogPage
+components/catalog_search_form.py → CatalogSearchForm
+tests/e2e/conftest.py             → catalog_context
+tests/e2e/test_search_catalog.py  → test_search_catalog
+```
+
+The page, component, and test targets are `create_file` operations. The existing
+E2E `conftest.py` produces `add_symbol` for `catalog_context`. A separate test
+exercises `reuse_symbol` when the exact symbol already exists.
+
+### Read-only verifier
+
+The standalone verifier:
+
+1. copies the controlled framework to a temporary directory,
+2. hashes the complete tree,
+3. inspects the workspace,
+4. builds the adaptation plan,
+5. records human acceptance,
+6. hashes the tree again,
+7. requires exact byte-for-byte equality.
+
+The verifier confirms that plan acceptance changes only Cartographer state.
+
+### Test result
+
+The full suite in the preparation environment produced:
+
+```text
+127 passed
+1 browser test skipped because loopback navigation is blocked by administrator
+policy in the preparation environment
+```
+
+The expected normal Windows result with Playwright Chromium is:
+
+```text
+128 passed
+```
+
+The standalone Sprint 5 verifier produced:
+
+```text
+Controlled qa-automation-framework workspace inspected read-only.
+Only relative paths, file hashes, sizes, and Python symbols were persisted.
+Accepted POM proposal mapped to exact page, component, fixture, and test targets.
+Human acceptance changed only the adaptation-plan state.
+No generated source code was included and no framework file was modified.
+```
+
+### Sprint 5 decisions
+
+1. Framework inspection requires an explicit non-secret profile.
+2. Absolute local paths are invocation data, not persisted contract data.
+3. Traversal is bounded by markers, allowlists, ignored names, file count, and
+   file size.
+4. The snapshot stores structure and hashes, not source contents.
+5. Python files are parsed, not imported or executed.
+6. The same repository state must produce the same fingerprint.
+7. Only an accepted Sprint 4 run may enter adaptation planning.
+8. Logical proposal acceptance and repository-plan acceptance are separate.
+9. Exact target operations remain traceable to proposal IDs.
+10. Sprint 5 includes no generated source and performs no framework write.
+11. A changed framework fingerprint invalidates silent reuse of the old plan.
+12. The first file-placement convention remains provisional until Sprint 6 and
+    realistic framework acceptance provide evidence.
+
+### Open questions carried into Sprint 6
+
+- What bounded source context is required to generate each accepted operation?
+- Should code generation produce complete files, AST edits, or reviewable
+  patches?
+- How should the tool prove that the framework still matches the accepted
+  fingerprint before applying changes?
+- How should an existing fixture or class be extended without overwriting human
+  code?
+- How should imports and `__init__.py` exports be planned?
+- Which verification commands are mandatory before a patch can be accepted?
+- How should failed collection or execution feed corrections back into the
+  proposal and plan?
+- What is the smallest meaningful assertion for the first runnable test?
+
+### Sprint 5 conclusion
+
+TestCartographer can now move from an accepted application-level proposal to an
+exact repository-aware implementation plan without mutating the framework.
+
+The next uncertainty is source realization: generating and applying the
+smallest reviewable patch, then proving that one meaningful framework test can
+run independently of TestCartographer and a live LLM.

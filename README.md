@@ -15,26 +15,29 @@ and expansion.
 
 ## Status
 
-**Sprint 4 — bounded LLM synthesis and POM proposal: complete**
+**Sprint 5 — project workspace and framework adaptation plan: complete**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
 Current evidence:
 
 ```text
-104 tests expected with Playwright Chromium
+128 tests expected with Playwright Chromium
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
+read-only framework inspection and adaptation-plan review verified end to end
 ```
 
-The repository now provides four executable boundaries:
+The repository now provides five executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
 3. a bounded Playwright observation that verifies one selected locator and
    requires human acceptance before context changes,
 4. a bounded LLM-facing request, strict POM proposal protocol, replay adapter,
-   deterministic validator, and separate human review state.
+   deterministic validator, and separate human review state,
+5. a bounded workspace profile, read-only framework snapshot, deterministic
+   file/symbol adaptation plan, and separate human review state.
 
 The current workflow can:
 
@@ -58,11 +61,16 @@ The current workflow can:
 - distinguish protocol failure from substantive proposal rejection,
 - validate page, component, method, locator, data, fixture, test, and outcome
   references deterministically,
-- keep the logical proposal pending until explicit human acceptance.
+- keep the logical proposal pending until explicit human acceptance,
+- inspect one allowlisted local framework workspace without persisting source text
+  or absolute paths,
+- map an accepted proposal to exact page, component, fixture, and E2E test targets,
+- distinguish create-file, add-symbol, and reuse-symbol operations,
+- keep the adaptation plan pending until a separate human acceptance.
 
 It still cannot autonomously explore an application, call a live LLM provider,
-inspect or modify `qa-automation-framework`, generate framework-specific source
-files, or prove execution success.
+generate or apply framework-specific source files, execute the planned test, or
+prove that the first repository mapping convention is correct for every project.
 
 ## The problem
 
@@ -214,6 +222,26 @@ files or claim execution success.
 
 See [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md).
 
+### Framework workspace and adaptation plan
+
+Sprint 5 adds a read-only repository-aware boundary:
+
+```text
+accepted logical POM proposal
++ non-secret WorkspaceProfile
++ allowlisted local framework copy
+→ minimized FrameworkSnapshot
+→ exact file/symbol AdaptationPlan
+→ explicit human accept/reject review
+```
+
+The snapshot stores repository-relative paths, file hashes, sizes, and top-level
+Python symbols. It does not persist source content, absolute paths, or secret
+values. The plan distinguishes `create_file`, `add_symbol`, and `reuse_symbol`
+and never writes to the framework.
+
+See [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md).
+
 ## Structural validity, intake completion, and adaptation readiness
 
 The project deliberately separates three questions.
@@ -268,10 +296,10 @@ python -m playwright install chromium
 python -m pytest
 ```
 
-Expected Sprint 4 result after Chromium installation:
+Expected Sprint 5 result after Chromium installation:
 
 ```text
-104 passed
+128 passed
 ```
 
 ### Start a reference intake
@@ -421,6 +449,43 @@ test-cartographer synthesize review `
     --review-seconds 15
 ```
 
+
+### Verify framework inspection and adaptation planning
+
+```powershell
+python scripts/verify_framework_adaptation_plan.py
+```
+
+The verifier copies the controlled framework fixture, fingerprints every file,
+inspects it, builds and accepts the adaptation plan, and proves that the
+framework tree remains byte-for-byte unchanged.
+
+Inspect a real local copy without modifying it:
+
+```powershell
+test-cartographer adapt inspect `
+    --profile testdata/adaptation/profile/qa_automation_framework.json `
+    --framework-root C:\path\to\qa-automation-framework `
+    --snapshot .test-cartographer\framework-snapshot.json `
+    --snapshot-id snapshot_local_qaf
+```
+
+Create and review the repository plan:
+
+```powershell
+test-cartographer adapt plan `
+    --profile testdata/adaptation/profile/qa_automation_framework.json `
+    --snapshot .test-cartographer\framework-snapshot.json `
+    --run testdata/synthesis/run/accepted_public_search.json `
+    --plan .test-cartographer\public-search-adaptation-plan.json `
+    --plan-id adapt_public_search
+
+test-cartographer adapt review `
+    --plan .test-cartographer\public-search-adaptation-plan.json `
+    --decision accepted `
+    --reason "Exact targets match the intended framework architecture."
+```
+
 ### Re-export contract schemas
 
 ```powershell
@@ -428,10 +493,12 @@ python scripts/export_context_schema.py
 python scripts/export_intake_schema.py
 python scripts/export_observation_schema.py
 python scripts/export_synthesis_schemas.py
+python scripts/export_adaptation_schemas.py
 python -m pytest tests/unit/context/test_schema.py `
     tests/unit/intake/test_intake_schema.py `
     tests/unit/observation/test_schema.py `
-    tests/unit/synthesis/test_schema.py
+    tests/unit/synthesis/test_schema.py `
+    tests/unit/adaptation/test_schema.py
 ```
 
 ## Current project structure
@@ -444,6 +511,7 @@ test-cartographer/
 │   ├── intake-workflow.md
 │   ├── browser-observation.md
 │   ├── synthesis-protocol.md
+│   ├── framework-adaptation-planning.md
 │   ├── testing-strategy.md
 │   └── ...
 ├── schemas/
@@ -452,25 +520,32 @@ test-cartographer/
 │   ├── observation-v0.1.schema.json
 │   ├── synthesis-request-v0.1.schema.json
 │   ├── pom-proposal-v0.1.schema.json
-│   └── synthesis-run-v0.1.schema.json
+│   ├── synthesis-run-v0.1.schema.json
+│   ├── workspace-profile-v0.1.schema.json
+│   ├── framework-snapshot-v0.1.schema.json
+│   └── adaptation-plan-v0.1.schema.json
 ├── scripts/
 │   ├── export_context_schema.py
 │   ├── export_intake_schema.py
 │   ├── export_observation_schema.py
 │   ├── export_synthesis_schemas.py
 │   ├── verify_browser_observation.py
-│   └── verify_synthesis_replay.py
+│   ├── verify_synthesis_replay.py
+│   └── verify_framework_adaptation_plan.py
 ├── src/test_cartographer/
 │   ├── cli.py
 │   ├── context/
 │   ├── intake/
 │   ├── observation/
-│   └── synthesis/
+│   ├── synthesis/
+│   └── adaptation/
 ├── testdata/
 │   ├── browser/
 │   ├── context/
 │   ├── observation/
-│   └── synthesis/
+│   ├── synthesis/
+│   ├── adaptation/
+│   └── framework/
 ├── tests/
 │   ├── integration/
 │   └── unit/
@@ -480,32 +555,30 @@ test-cartographer/
 └── pyproject.toml
 ```
 
-## What Sprint 4 proves
+## What Sprint 5 proves
 
-- ready context can be projected into a strict minimized request,
-- only confirmed and observed values enter the request,
-- base URLs, routes, raw provenance, notes, hashes, browser state, and repository
-  files remain excluded,
-- the same request renders the same provider-neutral prompt,
-- exact raw output is preserved on success and failure,
-- malformed protocol output remains separate from substantive proposal
-  rejection,
-- POM references can be checked against authorized pages, components, steps,
-  elements, locators, data, fixtures, and outcomes,
-- prohibited claims such as execution success and repository fit are rejected,
-- a validated proposal remains pending until human acceptance,
-- the full boundary can be replayed without a live provider or repository
-  mutation.
+- an approved local framework root can be inspected through explicit marker,
+  allowlist, count, and size constraints,
+- the persisted snapshot can contain relative paths, hashes, sizes, and Python
+  symbols without source text or absolute paths,
+- the same repository state produces the same fingerprint,
+- an accepted logical proposal can map to exact page, component, fixture, and
+  test targets,
+- existing files and symbols can produce `add_symbol` or `reuse_symbol` instead
+  of blind duplication,
+- proposal acceptance and repository-plan acceptance remain separate,
+- the full inspection, planning, and review flow can leave the framework
+  byte-for-byte unchanged.
 
-## What Sprint 4 does not prove
+## What Sprint 5 does not prove
 
-- live-provider protocol compliance, reliability, latency, or cost,
-- semantic proposal quality across varied applications,
-- prompt-injection resistance or enterprise data safety,
-- correct file or symbol placement in `qa-automation-framework`,
-- generated source-code correctness or execution success,
-- authentication, Salesforce readiness, maintenance, expansion reuse,
-- easier operation or time savings compared with realistic alternatives.
+- that the first mapping convention fits every framework adaptation,
+- complete understanding of imports, decorators, fixtures, or runtime behavior,
+- source-code generation, patch safety, collection, or execution success,
+- secret detection in inspected files,
+- usefulness on a full enterprise repository,
+- live-provider quality, authentication, maintenance, expansion, or Salesforce
+  readiness.
 
 ## One lifecycle, two separately executable modules
 
@@ -538,8 +611,8 @@ See:
 | 3 | Bounded guided browser observation | Done |
 | Architecture checkpoint A | Two-module lifecycle, maintenance modes, authentication directions, and enterprise target | Done in documentation |
 | 4 | Bounded LLM synthesis and POM proposal | Done |
-| 5 | Project workspace and framework adaptation plan | Provisional |
-| 6 | First runnable framework test and creation-lifecycle evaluation | Provisional |
+| 5 | Project workspace and framework adaptation plan | Done |
+| 6 | First runnable framework test and creation-lifecycle evaluation | Planned |
 | 7–10 | Execution evidence, reactive/proactive maintenance, and expansion reuse | Parked |
 | 11–13 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 
@@ -580,6 +653,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/intake-workflow.md`](docs/intake-workflow.md) | Sprint 2 question, answer, review, session, and CLI behaviour |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
+| [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
 | [`docs/system-lifecycle.md`](docs/system-lifecycle.md) | Creation, execution, reactive/proactive maintenance, expansion, and enterprise validation lifecycle |
 | [`docs/authentication-strategies.md`](docs/authentication-strategies.md) | Parked storage-state, login-recipe, and interactive-login directions |
 | [`docs/architecture-decisions.md`](docs/architecture-decisions.md) | Accepted implementation decisions |

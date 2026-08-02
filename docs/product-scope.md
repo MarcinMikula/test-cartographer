@@ -20,7 +20,7 @@ The product should help answer:
 
 ## Current implemented boundary
 
-Sprint 4 implements:
+Sprint 5 implements:
 
 - a strict local context contract for one UI process,
 - deterministic adaptation-readiness assessment,
@@ -43,23 +43,31 @@ Sprint 4 implements:
 - a logical POM proposal linked to authorized source IDs,
 - deterministic proposal validation,
 - separate protocol, validation, and human-review states,
-- CLI request, replay, status, and review commands.
+- CLI request, replay, status, and review commands,
+- a non-secret workspace inspection profile,
+- bounded read-only inspection of one local framework root,
+- relative-path, hash, size, and Python-symbol snapshots,
+- deterministic root fingerprints,
+- exact file/symbol adaptation operations,
+- separate plan status and human review,
+- CLI inspect, plan, status, and review commands.
 
 The current package cannot:
 
 - create the context shell from an empty project,
 - discover an unknown page, element, or locator,
 - call a live LLM provider,
-- inspect or modify `qa-automation-framework`,
-- map proposals to actual framework files and symbols,
-- generate or execute source code.
+- generate or apply source changes to `qa-automation-framework`,
+- execute the planned framework test,
+- prove that the first mapping convention fits every project.
 
 Implementation details are documented in:
 
 - [`context-contract.md`](context-contract.md),
 - [`intake-workflow.md`](intake-workflow.md),
 - [`browser-observation.md`](browser-observation.md),
-- [`synthesis-protocol.md`](synthesis-protocol.md).
+- [`synthesis-protocol.md`](synthesis-protocol.md),
+- [`framework-adaptation-planning.md`](framework-adaptation-planning.md).
 
 ## Problem statement
 
@@ -496,11 +504,12 @@ Current implementation:
 - standard-library CLI,
 - Playwright with Python as an optional browser dependency,
 - human-authorized bounded observation of one selected target,
-- no LLM dependency.
+- provider-neutral synthesis replay with no live LLM dependency,
+- bounded local framework inspection and read-only adaptation planning.
 
 Still-open decisions include:
 
-- shared project/workspace profile and framework mappings,
+- production project profile beyond the Sprint 5 inspection profile,
 - non-secret environment and authentication profiles,
 - one-source/two-consumer secret resolution,
 - the parked storage-state, login-recipe, and interactive-login strategies,
@@ -509,8 +518,7 @@ Still-open decisions include:
 - raw evidence storage beyond the current no-raw-capture rule,
 - external LLM provider,
 - prompt and response protocol,
-- repository-writing mechanism,
-- POM proposal schema,
+- repository source-generation and writing mechanism,
 - richer review interface,
 - database or cross-process storage.
 
@@ -533,13 +541,15 @@ The first product-level slice should cover one small process.
 12. Measure operator time and corrections.
 ```
 
-Current progress after Sprint 3:
+Current progress after Sprint 5:
 
 ```text
 Step 2 — controlled fixture only
 Step 3 — implemented for the deterministic reference flow
 Steps 4–5 — bounded for one selected existing locator
-Steps 6–12 — not implemented
+Steps 6–8 — bounded synthesis proposal implemented with replay
+Step 9 — read-only file/symbol adaptation plan implemented
+Steps 10–12 — not implemented
 ```
 
 Not required for the first product slice:

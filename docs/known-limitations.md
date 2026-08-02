@@ -176,18 +176,24 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Framework adaptation
 
-- **A logical POM proposal contract now exists.** It represents pages,
-  components, methods, authorized actions and locators, symbolic fixtures, one
-  test intent, and outcome-linked assertions.
-- **The proposal is not repository-specific.** It contains no target file paths
-  and does not know what already exists in `qa-automation-framework`.
-- **TestCartographer still cannot inspect or modify the framework.**
-- **No generated code or reviewable repository diff exists.**
-- **Deterministic validation checks authority and coverage, not architectural
-  elegance or framework-specific fit.**
-- **No test has been generated or executed.**
-- **Normal test execution independence remains a design rule for later
-  generated code.**
+- **A logical POM proposal and repository-aware plan now exist.** Sprint 5 maps
+  one accepted proposal to exact Page Object, component, fixture, and E2E test
+  targets.
+- **The first mapping convention is intentionally narrow.** Page Objects map to
+  `pages/`, components to `components/`, fixtures to `tests/e2e/conftest.py`, and
+  E2E tests to `tests/e2e/`. This is not proven universal.
+- **The inspector persists metadata, not source code.** It records relative
+  paths, hashes, sizes, and top-level Python symbols. It cannot understand full
+  runtime behaviour, decorators, fixture scopes, or indirect imports.
+- **Allowlisting is not secret detection.** The profile owner must exclude
+  secret-bearing files. The current inspector has no credential or malicious
+  source scanner.
+- **The controlled framework fixture is not the full repository.** It mirrors
+  relevant layers for deterministic replay but does not prove full-repository
+  usefulness.
+- **No generated code or repository diff exists.** Plan acceptance changes only
+  the plan state and leaves framework files unchanged.
+- **No test has been generated, collected, or executed.**
 
 ## Scope boundaries
 
@@ -206,9 +212,9 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Two-module lifecycle integration
 
-- **The framework and Cartographer are aligned in documentation only.** There is
-  no shared project workspace, profile, repository adapter, or cross-module
-  protocol.
+- **The first workspace and repository-planning contracts exist.** They cover
+  a non-secret inspection profile, minimized snapshot, and adaptation plan, but
+  not a full project/authentication profile or executable cross-repository flow.
 - **Normal framework execution independence is a design requirement.** No
   generated framework project exists yet to demonstrate it.
 - **No shared environment or authentication profile exists.** Framework fixtures
@@ -273,10 +279,9 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Next boundary to resolve
 
-Sprint 5 should inspect a concrete copy of `qa-automation-framework` and map one
-human-accepted logical proposal into a reviewable non-secret project/workspace
-adaptation plan.
+Sprint 6 should consume only a human-accepted `AdaptationPlan` tied to the
+current snapshot fingerprint, generate a reviewable source proposal, apply it
+to a controlled framework copy, and run the first meaningful test.
 
-Do not write source files, invent target paths, assume existing fixture names,
-or couple TestCartographer directly to pytest fixtures before repository
-inspection and duplicate-responsibility analysis are implemented.
+Do not treat plan acceptance as source-write authorization. Do not reuse a plan
+silently after the framework fingerprint changes.

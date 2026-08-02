@@ -1,0 +1,175 @@
+{
+  "$defs": {
+    "PythonSymbol": {
+      "additionalProperties": false,
+      "properties": {
+        "bases": {
+          "default": [],
+          "items": {
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+            "type": "string"
+          },
+          "title": "Bases",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/PythonSymbolKind"
+        },
+        "method_names": {
+          "default": [],
+          "items": {
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+            "type": "string"
+          },
+          "title": "Method Names",
+          "type": "array"
+        },
+        "name": {
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "name"
+      ],
+      "title": "PythonSymbol",
+      "type": "object"
+    },
+    "PythonSymbolKind": {
+      "enum": [
+        "class",
+        "function"
+      ],
+      "title": "PythonSymbolKind",
+      "type": "string"
+    },
+    "RepositoryEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/RepositoryEntryKind"
+        },
+        "path": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+          "title": "Path",
+          "type": "string"
+        },
+        "python_symbols": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/PythonSymbol"
+          },
+          "title": "Python Symbols",
+          "type": "array"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "kind",
+        "size_bytes"
+      ],
+      "title": "RepositoryEntry",
+      "type": "object"
+    },
+    "RepositoryEntryKind": {
+      "enum": [
+        "file",
+        "directory"
+      ],
+      "title": "RepositoryEntryKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Minimized, replayable repository structure without source-file content.",
+  "properties": {
+    "absolute_paths_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Absolute Paths Persisted",
+      "type": "boolean"
+    },
+    "captured_at": {
+      "format": "date-time",
+      "title": "Captured At",
+      "type": "string"
+    },
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/RepositoryEntry"
+      },
+      "minItems": 1,
+      "title": "Entries",
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "repository_label": {
+      "minLength": 1,
+      "title": "Repository Label",
+      "type": "string"
+    },
+    "root_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Root Fingerprint",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "secret_values_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Secret Values Persisted",
+      "type": "boolean"
+    },
+    "source_contents_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Source Contents Persisted",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "profile_id",
+    "captured_at",
+    "repository_label",
+    "root_fingerprint",
+    "entries"
+  ],
+  "title": "FrameworkSnapshot",
+  "type": "object"
+}

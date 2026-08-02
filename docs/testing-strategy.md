@@ -679,3 +679,71 @@ The deterministic suite proves the local protocol. It does not prove:
 - prompt-injection resistance,
 - enterprise data safety,
 - acceptable latency or cost.
+
+
+## Sprint 5 adaptation test layers
+
+### Workspace-profile and model tests
+
+`tests/unit/adaptation/test_models.py` verifies safe relative paths, unique
+allowlists, entry-shape rules, immutable privacy flags, and operation graph
+constraints.
+
+### Read-only scanner tests
+
+`tests/unit/adaptation/test_scanner.py` verifies:
+
+- marker and allowlist enforcement,
+- deterministic snapshots and fingerprints,
+- file-size budgets,
+- Python class/function/base/method extraction,
+- source-change detection,
+- absence of source text and absolute paths from the snapshot,
+- byte-for-byte workspace immutability.
+
+The scanner parses source locally with `ast`; tests do not claim that metadata
+extraction is equivalent to complete static analysis.
+
+### Planner tests
+
+`tests/unit/adaptation/test_planner.py` verifies:
+
+- only an accepted synthesis run can be planned,
+- snapshot/profile identity must match,
+- exact Page Object, component, fixture, and test targets,
+- deterministic operation dependencies,
+- `create_file`, `add_symbol`, and `reuse_symbol` classification,
+- no generated source or framework mutation flags.
+
+### Review, persistence, and schema tests
+
+Review tests preserve a separate plan authority stage and require a rejection
+reason. IO tests verify deterministic round trips. Schema tests verify the
+committed profile, snapshot, and plan schemas against the Pydantic models.
+
+### CLI integration and standalone verifier
+
+`tests/integration/test_adaptation_cli.py` exercises inspect, plan, status, and
+review while hashing the controlled framework before and after.
+
+`scripts/verify_framework_adaptation_plan.py` verifies:
+
+```text
+controlled framework copy
+→ read-only snapshot
+→ accepted Sprint 4 proposal
+→ exact adaptation plan
+→ human acceptance
+→ unchanged framework fingerprint and bytes
+```
+
+### Remaining adaptation evidence gap
+
+Current tests do not prove:
+
+- mapping quality on a full project copy,
+- semantic understanding of imports, decorators, or fixture scope,
+- source generation or patch safety,
+- pytest collection or execution in the target framework,
+- usefulness on enterprise repositories,
+- secret or malicious-source detection.

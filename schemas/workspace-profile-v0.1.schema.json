@@ -1,0 +1,85 @@
+{
+  "additionalProperties": false,
+  "description": "Non-secret instructions for inspecting one framework workspace.",
+  "properties": {
+    "allowed_roots": {
+      "items": {
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Allowed Roots",
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "ignored_names": {
+      "default": [
+        ".git",
+        ".venv",
+        "__pycache__",
+        ".pytest_cache",
+        "allure-results"
+      ],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Ignored Names",
+      "type": "array"
+    },
+    "max_file_bytes": {
+      "default": 200000,
+      "maximum": 5000000,
+      "minimum": 1,
+      "title": "Max File Bytes",
+      "type": "integer"
+    },
+    "max_files": {
+      "default": 500,
+      "maximum": 5000,
+      "minimum": 1,
+      "title": "Max Files",
+      "type": "integer"
+    },
+    "repository_kind": {
+      "const": "qa_automation_framework",
+      "default": "qa_automation_framework",
+      "title": "Repository Kind",
+      "type": "string"
+    },
+    "repository_label": {
+      "minLength": 1,
+      "title": "Repository Label",
+      "type": "string"
+    },
+    "root_marker_files": {
+      "items": {
+        "minLength": 1,
+        "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Root Marker Files",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "repository_label",
+    "root_marker_files",
+    "allowed_roots"
+  ],
+  "title": "WorkspaceProfile",
+  "type": "object"
+}

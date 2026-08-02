@@ -1,0 +1,244 @@
+{
+  "$defs": {
+    "AdaptationOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "depends_on": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/AdaptationOperationKind"
+        },
+        "rationale": {
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "source_proposal_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Source Proposal Ids",
+          "type": "array"
+        },
+        "symbol_name": {
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+          "title": "Symbol Name",
+          "type": "string"
+        },
+        "target_kind": {
+          "$ref": "#/$defs/AdaptationTargetKind"
+        },
+        "target_path": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+          "title": "Target Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "target_kind",
+        "target_path",
+        "symbol_name",
+        "source_proposal_ids",
+        "rationale"
+      ],
+      "title": "AdaptationOperation",
+      "type": "object"
+    },
+    "AdaptationOperationKind": {
+      "enum": [
+        "create_file",
+        "add_symbol",
+        "reuse_symbol"
+      ],
+      "title": "AdaptationOperationKind",
+      "type": "string"
+    },
+    "AdaptationPlanStatus": {
+      "enum": [
+        "ready_for_review",
+        "accepted",
+        "rejected"
+      ],
+      "title": "AdaptationPlanStatus",
+      "type": "string"
+    },
+    "AdaptationReviewDecision": {
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "title": "AdaptationReviewDecision",
+      "type": "string"
+    },
+    "AdaptationTargetKind": {
+      "enum": [
+        "page",
+        "component",
+        "fixture",
+        "test"
+      ],
+      "title": "AdaptationTargetKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Exact, reviewable plan that does not contain generated source code.",
+  "properties": {
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/AdaptationReviewDecision",
+      "default": "pending"
+    },
+    "framework_files_modified": {
+      "const": false,
+      "default": false,
+      "title": "Framework Files Modified",
+      "type": "boolean"
+    },
+    "generated_source_included": {
+      "const": false,
+      "default": false,
+      "title": "Generated Source Included",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "open_questions": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Open Questions",
+      "type": "array"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/AdaptationOperation"
+      },
+      "minItems": 1,
+      "title": "Operations",
+      "type": "array"
+    },
+    "proposal_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Proposal Id",
+      "type": "string"
+    },
+    "review_reason": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Review Reason"
+    },
+    "review_seconds": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Review Seconds",
+      "type": "number"
+    },
+    "reviewed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewed At"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "snapshot_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Snapshot Fingerprint",
+      "type": "string"
+    },
+    "snapshot_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/AdaptationPlanStatus",
+      "default": "ready_for_review"
+    },
+    "synthesis_run_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Synthesis Run Id",
+      "type": "string"
+    },
+    "verification_commands": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Verification Commands",
+      "type": "array"
+    },
+    "workspace_profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Workspace Profile Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "workspace_profile_id",
+    "snapshot_id",
+    "snapshot_fingerprint",
+    "synthesis_run_id",
+    "proposal_id",
+    "context_id",
+    "created_at",
+    "operations",
+    "verification_commands"
+  ],
+  "title": "AdaptationPlan",
+  "type": "object"
+}

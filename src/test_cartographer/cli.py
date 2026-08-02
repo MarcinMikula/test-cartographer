@@ -1,4 +1,4 @@
-"""Command-line entry point for intake, observation, and bounded synthesis."""
+"""Command-line entry point for intake, observation, synthesis, and adaptation."""
 
 from __future__ import annotations
 
@@ -10,6 +10,17 @@ from collections.abc import Callable, Sequence
 from datetime import datetime, timezone
 from pathlib import Path
 
+from test_cartographer.adaptation.enums import AdaptationReviewDecision
+from test_cartographer.adaptation.io import (
+    load_adaptation_plan,
+    load_framework_snapshot,
+    load_workspace_profile,
+    save_adaptation_plan,
+    save_framework_snapshot,
+)
+from test_cartographer.adaptation.planner import build_adaptation_plan
+from test_cartographer.adaptation.review import review_adaptation_plan
+from test_cartographer.adaptation.scanner import inspect_framework
 from test_cartographer.context.enums import SensitivityLevel
 from test_cartographer.context.io import load_context, save_context
 from test_cartographer.context.readiness import assess_readiness
@@ -60,6 +71,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _dispatch_observation(parser, args)
     if args.command == "synthesize":
         return _dispatch_synthesis(parser, args)
+    if args.command == "adapt":
+        return _dispatch_adaptation(parser, args)
 
     parser.error("a command is required")
     return 2
@@ -249,6 +262,55 @@ def _build_parser() -> argparse.ArgumentParser:
     synthesis_review.add_argument("--reason")
     synthesis_review.add_argument("--review-seconds", type=float, default=0.0)
 
+
+    adapt = commands.add_parser(
+        "adapt",
+        help="inspect a framework workspace and build a reviewable adaptation plan",
+    )
+    adapt_commands = adapt.add_subparsers(dest="adapt_command")
+
+    inspect_command = adapt_commands.add_parser(
+        "inspect",
+        help="create a minimized read-only framework snapshot",
+    )
+    inspect_command.add_argument("--profile", required=True, type=Path)
+    inspect_command.add_argument("--framework-root", required=True, type=Path)
+    inspect_command.add_argument("--snapshot", required=True, type=Path)
+    inspect_command.add_argument("--snapshot-id")
+
+    plan_command = adapt_commands.add_parser(
+        "plan",
+        help="map an accepted POM proposal to exact framework targets",
+    )
+    plan_command.add_argument("--profile", required=True, type=Path)
+    plan_command.add_argument("--snapshot", required=True, type=Path)
+    plan_command.add_argument("--run", required=True, type=Path)
+    plan_command.add_argument("--plan", required=True, type=Path)
+    plan_command.add_argument("--plan-id")
+
+    plan_status = adapt_commands.add_parser(
+        "status",
+        help="show one framework snapshot or adaptation plan",
+    )
+    plan_status.add_argument("--snapshot", type=Path)
+    plan_status.add_argument("--plan", type=Path)
+
+    plan_review = adapt_commands.add_parser(
+        "review",
+        help="accept or reject one deterministic adaptation plan",
+    )
+    plan_review.add_argument("--plan", required=True, type=Path)
+    plan_review.add_argument(
+        "--decision",
+        required=True,
+        choices=[
+            AdaptationReviewDecision.ACCEPTED.value,
+            AdaptationReviewDecision.REJECTED.value,
+        ],
+    )
+    plan_review.add_argument("--reason")
+    plan_review.add_argument("--review-seconds", type=float, default=0.0)
+
     return parser
 
 
@@ -295,6 +357,23 @@ def _dispatch_synthesis(
     if args.synthesize_command == "review":
         return _synthesis_review_command(parser, args)
     parser.error("a synthesize command is required")
+    return 2
+
+
+
+def _dispatch_adaptation(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    if args.adapt_command == "inspect":
+        return _adapt_inspect_command(args)
+    if args.adapt_command == "plan":
+        return _adapt_plan_command(args)
+    if args.adapt_command == "status":
+        return _adapt_status_command(parser, args)
+    if args.adapt_command == "review":
+        return _adapt_review_command(parser, args)
+    parser.error("an adapt command is required")
     return 2
 
 
@@ -452,6 +531,75 @@ def _synthesis_review_command(
     return 0
 
 
+
+def _adapt_inspect_command(args: argparse.Namespace) -> int:
+    profile = load_workspace_profile(args.profile)
+    snapshot_id = args.snapshot_id or f"snapshot_{uuid.uuid4().hex[:12]}"
+    snapshot = inspect_framework(
+        args.framework_root,
+        profile,
+        snapshot_id=snapshot_id,
+        captured_at=datetime.now(timezone.utc),
+    )
+    save_framework_snapshot(snapshot, args.snapshot)
+    print(f"Created framework snapshot: {args.snapshot}")
+    print(_format_framework_snapshot(snapshot))
+    return 0
+
+
+def _adapt_plan_command(args: argparse.Namespace) -> int:
+    profile = load_workspace_profile(args.profile)
+    snapshot = load_framework_snapshot(args.snapshot)
+    run = load_synthesis_run(args.run)
+    plan_id = args.plan_id or f"adapt_{uuid.uuid4().hex[:12]}"
+    plan = build_adaptation_plan(
+        run,
+        profile,
+        snapshot,
+        plan_id=plan_id,
+        created_at=datetime.now(timezone.utc),
+    )
+    save_adaptation_plan(plan, args.plan)
+    print(f"Created adaptation plan: {args.plan}")
+    print(_format_adaptation_plan(plan))
+    return 0
+
+
+def _adapt_status_command(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    if (args.snapshot is None) == (args.plan is None):
+        parser.error("provide exactly one of --snapshot or --plan")
+    if args.snapshot is not None:
+        print(_format_framework_snapshot(load_framework_snapshot(args.snapshot)))
+    else:
+        print(_format_adaptation_plan(load_adaptation_plan(args.plan)))
+    return 0
+
+
+def _adapt_review_command(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    decision = AdaptationReviewDecision(args.decision)
+    if decision is AdaptationReviewDecision.REJECTED and not args.reason:
+        parser.error("--reason is required when rejecting an adaptation plan")
+    plan = load_adaptation_plan(args.plan)
+    reviewed = review_adaptation_plan(
+        plan,
+        decision=decision,
+        reviewed_at=datetime.now(timezone.utc),
+        reason=args.reason,
+        review_seconds=args.review_seconds,
+    )
+    save_adaptation_plan(reviewed, args.plan)
+    print(f"Reviewed adaptation plan: {args.plan}")
+    print(_format_adaptation_plan(reviewed))
+    print("Framework files were not modified.")
+    return 0
+
+
 def _parse_answer(raw: str, question: IntakeQuestion) -> IntakeAnswer:
     if not raw:
         raise ValueError("enter a value or one of the displayed commands")
@@ -540,6 +688,49 @@ def _format_synthesis_run_status(run) -> str:
             f"Validation warnings: {warnings}",
             f"Raw output characters: {len(run.raw_output)}",
             f"Review seconds: {run.review_seconds:.3f}",
+        )
+    )
+
+
+
+def _format_framework_snapshot(snapshot) -> str:
+    files = sum(entry.kind.value == "file" for entry in snapshot.entries)
+    symbols = sum(len(entry.python_symbols) for entry in snapshot.entries)
+    return "\n".join(
+        (
+            f"Framework snapshot: {snapshot.id}",
+            f"Profile: {snapshot.profile_id}",
+            f"Repository: {snapshot.repository_label}",
+            f"Entries: {len(snapshot.entries)}",
+            f"Files: {files}",
+            f"Python symbols: {symbols}",
+            f"Fingerprint: {snapshot.root_fingerprint}",
+            "Source contents persisted: false",
+            "Absolute paths persisted: false",
+            "Secret values persisted: false",
+        )
+    )
+
+
+def _format_adaptation_plan(plan) -> str:
+    counts: dict[str, int] = {}
+    for operation in plan.operations:
+        counts[operation.kind.value] = counts.get(operation.kind.value, 0) + 1
+    rendered_counts = ", ".join(f"{key}={counts[key]}" for key in sorted(counts))
+    return "\n".join(
+        (
+            f"Adaptation plan: {plan.id}",
+            f"Status: {plan.status.value}",
+            f"Decision: {plan.decision.value}",
+            f"Snapshot: {plan.snapshot_id}",
+            f"Synthesis run: {plan.synthesis_run_id}",
+            f"Proposal: {plan.proposal_id}",
+            f"Operations: {len(plan.operations)}",
+            f"Operation kinds: {rendered_counts}",
+            f"Open questions: {len(plan.open_questions)}",
+            "Framework files modified: false",
+            "Generated source included: false",
+            f"Review seconds: {plan.review_seconds:.3f}",
         )
     )
 
