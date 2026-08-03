@@ -288,7 +288,7 @@ are implemented and approved.
 
 ## Current implementation boundary
 
-After Sprint 5, TestCartographer implements:
+After Sprint 6, TestCartographer implements:
 
 - one-process context modelling,
 - deterministic human intake,
@@ -300,13 +300,17 @@ After Sprint 5, TestCartographer implements:
 - bounded read-only framework inspection,
 - one minimized repository snapshot and fingerprint,
 - one exact file/symbol adaptation plan,
+- one exact source patch with separate review,
+- atomic application to a clean framework copy,
+- one independently runnable browser test,
+- one persisted creation-lifecycle evaluation,
 - separate human review of repository placement.
 
 It does not yet implement:
 
 - a live LLM provider,
-- source generation or patch application,
-- a runnable adapted framework test,
+- general source editing or direct writes to the original framework,
+- enterprise-ready generated automation,
 - shared environment or authentication profiles,
 - execution evidence collection,
 - reactive or proactive maintenance,

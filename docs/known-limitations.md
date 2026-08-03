@@ -279,9 +279,27 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Next boundary to resolve
 
-Sprint 6 should consume only a human-accepted `AdaptationPlan` tied to the
-current snapshot fingerprint, generate a reviewable source proposal, apply it
-to a controlled framework copy, and run the first meaningful test.
+Sprint 7 should define a bounded execution-evidence contract. A failed test is
+not automatically an application bug, and raw traces, screenshots, URLs, values,
+and secrets must not be captured without explicit policy.
 
-Do not treat plan acceptance as source-write authorization. Do not reuse a plan
-silently after the framework fingerprint changes.
+Do not make ordinary framework execution depend on TestCartographer or a live
+LLM. Do not send unrestricted failure artefacts into maintenance analysis.
+
+- **The Sprint 6 sandbox contains only accepted snapshot entries.** This prevents
+  uninspected files such as a parent `tests/conftest.py` from influencing the
+  generated-test acceptance gate. It also means the gate does not yet prove
+  compatibility with every file and plugin in the full framework repository.
+  Full-repository integration remains a later acceptance concern.
+
+## Deterministic templates require declared framework primitives
+
+Sprint 6 generation currently requires the selected snapshot to expose:
+
+- `pages/base_page.py::BasePage` as a class,
+- `components/base_component.py::BaseComponent` as a class.
+
+The requirements are now explicit and validated before plan review. The tool
+does not yet adapt its inheritance strategy automatically when a project uses
+different base abstractions. Such a repository is reported as incompatible with
+the selected generation profile rather than silently handled.

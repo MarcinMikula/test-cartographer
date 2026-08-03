@@ -892,3 +892,72 @@ to attribute and review.
 
 **Consequence:** Sprint 6 must verify that an accepted plan still matches the
 same snapshot fingerprint before proposing or applying source changes.
+
+
+## ADR-035 — Separate source acceptance from proposal and placement acceptance
+
+**Decision:** Exact generated source is persisted as a `CodePatch` and requires
+its own explicit human decision. Sprint 4 proposal acceptance and Sprint 5
+placement acceptance do not authorize a write.
+
+**Why:** Logical correctness, repository placement, and exact implementation can
+fail independently and require different review evidence.
+
+**Consequence:** There are three review gates before controlled application.
+
+## ADR-036 — Revalidate framework state before generation and application
+
+**Decision:** Generation rescans the framework and requires the accepted snapshot
+fingerprint. Application repeats fingerprint and target-hash preflight.
+
+**Why:** A reviewed plan or patch becomes unsafe when the repository changes.
+
+**Consequence:** Drift blocks silent reuse and requires re-inspection or explicit
+reconciliation.
+
+## ADR-037 — Apply the first patch to a clean copy, not the original repository
+
+**Decision:** Sprint 6 applies source only to a controlled copy. The setup script
+proves that the original framework Git status remains unchanged.
+
+**Why:** The first creation proof should establish source quality and execution
+before granting authority over user-maintained code.
+
+**Consequence:** Direct original-repository patching remains a future boundary.
+
+## ADR-038 — Keep runtime configuration out of generated source
+
+**Decision:** The generated fixture reads the application URL from a named
+environment variable. Symbolic test data must be explicitly bound through a
+non-secret generation profile.
+
+**Why:** A runnable example must not turn context or source artefacts into a
+secret store.
+
+**Consequence:** Missing runtime configuration fails visibly; no URL, username,
+or password is embedded in the patch.
+
+## ADR-039 — Require independent framework execution as creation evidence
+
+**Decision:** The generated test must compile, be collected, and execute using
+the framework without importing TestCartographer and without a live LLM call.
+
+**Why:** Cartographer is an engineering module, not a runtime dependency for
+normal test execution.
+
+**Consequence:** Sprint 6 can claim a working creation prototype, not merely
+valid generated Python.
+
+## ADR-040 — Declare and validate generation-template framework prerequisites
+
+**Decision:** `GenerationProfile` declares exact framework paths, symbols, and
+symbol kinds required by its deterministic templates. The local snapshot is
+validated before plan review and again before patch generation.
+
+**Why:** Repository placement evidence does not prove that imported base
+abstractions exist. A real acceptance run produced valid Python text with an
+unresolvable `BaseComponent` import because this dependency was implicit.
+
+**Consequence:** Incompatible or stale framework checkouts fail early with a
+precise contract error. Automatic negotiation of alternative base abstractions
+remains future scope.

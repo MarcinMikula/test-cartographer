@@ -1,0 +1,61 @@
+{
+  "schema_version": "0.1",
+  "id": "creation_public_search",
+  "context_id": "ctx_public_catalog_search_observation_ready",
+  "synthesis_run_id": "synrun_public_search",
+  "adaptation_plan_id": "adapt_public_search",
+  "code_patch_id": "patch_public_search",
+  "application_report_id": "apply_public_search",
+  "completed_at": "2026-08-02T12:30:00Z",
+  "status": "passed",
+  "target_test": "tests/e2e/test_search_catalog.py",
+  "generated_file_count": 3,
+  "modified_file_count": 1,
+  "reused_symbol_count": 0,
+  "collected_test_count": 1,
+  "passed_test_count": 1,
+  "synthesis_review_seconds": 12.5,
+  "adaptation_review_seconds": 18.0,
+  "code_review_seconds": 24.0,
+  "application_seconds": 0.0007646550000117713,
+  "verification_seconds": 1.6,
+  "time_to_first_runnable_test_seconds": 58.4,
+  "llm_call_count": 0,
+  "live_llm_used": false,
+  "page_object_generated": true,
+  "component_generated": true,
+  "fixture_generated": true,
+  "test_generated": true,
+  "meaningful_test_assertion_present": true,
+  "framework_execution_independent": true,
+  "original_framework_unchanged": true,
+  "verification_results": [
+    {
+      "name": "compileall",
+      "command": "python -m compileall -q pages components tests testdata",
+      "exit_code": 0,
+      "duration_seconds": 0.2,
+      "output_sha256": "186de4776299c15aa116e39a8ee192079e7e5e2d853be64e13300e1fefcfe50b",
+      "passed": true
+    },
+    {
+      "name": "collect",
+      "command": "python -m pytest --collect-only -q tests/e2e/test_search_catalog.py",
+      "exit_code": 0,
+      "duration_seconds": 0.3,
+      "output_sha256": "dc6653e270e4f3af35c340036f4b58ecac9983da1e08bfd5378e4ff86ac6bad4",
+      "passed": true
+    },
+    {
+      "name": "target_test",
+      "command": "python -m pytest -q tests/e2e/test_search_catalog.py",
+      "exit_code": 0,
+      "duration_seconds": 1.1,
+      "output_sha256": "c170a0864a6f10c7f15ff52e35b6a315716aea7e6c95ad3856f9349f05cd28be",
+      "passed": true
+    }
+  ],
+  "corrections": [
+    "Aligned fixture placement with tests/e2e/conftest.py before source generation."
+  ]
+}

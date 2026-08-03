@@ -233,3 +233,23 @@ also cover `reuse_symbol` when the exact target symbol already exists.
 - successful pytest collection or execution in the target framework,
 - usefulness on a full enterprise repository,
 - live LLM quality, authentication, maintenance, or Salesforce readiness.
+
+
+## Sprint 6 realization
+
+Sprint 6 now consumes only an accepted plan whose snapshot fingerprint still
+matches the current framework. It does not reinterpret placement. Instead it
+creates a separate exact `CodePatch`, requires source review, and applies the
+accepted patch first to a clean copy.
+
+The first mapping is realized as:
+
+```text
+pages/catalog_page.py                 → create CatalogPage
+components/catalog_search_form.py     → create CatalogSearchForm
+tests/e2e/conftest.py                 → append catalog_context
+tests/e2e/test_search_catalog.py      → create test_search_catalog
+```
+
+The source stage is documented in [`source-delivery.md`](source-delivery.md).
+Plan acceptance remains necessary but is no longer sufficient for a write.

@@ -10,6 +10,7 @@
   "allowed_roots": [
     "README.md",
     "requirements.txt",
+    "pytest.ini",
     "pages",
     "components",
     "tests/e2e",

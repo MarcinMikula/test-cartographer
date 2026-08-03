@@ -1,0 +1,314 @@
+{
+  "$defs": {
+    "AdaptationTargetKind": {
+      "enum": [
+        "page",
+        "component",
+        "fixture",
+        "test"
+      ],
+      "title": "AdaptationTargetKind",
+      "type": "string"
+    },
+    "CodePatchStatus": {
+      "enum": [
+        "ready_for_review",
+        "accepted",
+        "rejected"
+      ],
+      "title": "CodePatchStatus",
+      "type": "string"
+    },
+    "PatchReviewDecision": {
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "title": "PatchReviewDecision",
+      "type": "string"
+    },
+    "ReusedTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "operation_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "symbol_name": {
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+          "title": "Symbol Name",
+          "type": "string"
+        },
+        "target_kind": {
+          "$ref": "#/$defs/AdaptationTargetKind"
+        },
+        "target_path": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+          "title": "Target Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation_id",
+        "target_kind",
+        "target_path",
+        "symbol_name"
+      ],
+      "title": "ReusedTarget",
+      "type": "object"
+    },
+    "SourceChange": {
+      "additionalProperties": false,
+      "properties": {
+        "content": {
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        },
+        "content_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Content Sha256",
+          "type": "string"
+        },
+        "expected_after_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Expected After Sha256",
+          "type": "string"
+        },
+        "expected_before_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Before Sha256"
+        },
+        "kind": {
+          "$ref": "#/$defs/SourceChangeKind"
+        },
+        "operation_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "source_proposal_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Source Proposal Ids",
+          "type": "array"
+        },
+        "symbol_name": {
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+          "title": "Symbol Name",
+          "type": "string"
+        },
+        "target_kind": {
+          "$ref": "#/$defs/AdaptationTargetKind"
+        },
+        "target_path": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+          "title": "Target Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation_id",
+        "kind",
+        "target_kind",
+        "target_path",
+        "symbol_name",
+        "source_proposal_ids",
+        "content",
+        "content_sha256",
+        "expected_after_sha256"
+      ],
+      "title": "SourceChange",
+      "type": "object"
+    },
+    "SourceChangeKind": {
+      "enum": [
+        "create_file",
+        "append_symbol"
+      ],
+      "title": "SourceChangeKind",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Exact generated source proposal. It cannot write to the framework itself.",
+  "properties": {
+    "changes": {
+      "items": {
+        "$ref": "#/$defs/SourceChange"
+      },
+      "minItems": 1,
+      "title": "Changes",
+      "type": "array"
+    },
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/PatchReviewDecision",
+      "default": "pending"
+    },
+    "framework_files_modified": {
+      "const": false,
+      "default": false,
+      "title": "Framework Files Modified",
+      "type": "boolean"
+    },
+    "generated_source_included": {
+      "const": true,
+      "default": true,
+      "title": "Generated Source Included",
+      "type": "boolean"
+    },
+    "generation_profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Generation Profile Id",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "live_llm_used": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Used",
+      "type": "boolean"
+    },
+    "plan_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "proposal_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Proposal Id",
+      "type": "string"
+    },
+    "reused_targets": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ReusedTarget"
+      },
+      "title": "Reused Targets",
+      "type": "array"
+    },
+    "review_reason": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Review Reason"
+    },
+    "review_seconds": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Review Seconds",
+      "type": "number"
+    },
+    "reviewed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewed At"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "secret_values_included": {
+      "const": false,
+      "default": false,
+      "title": "Secret Values Included",
+      "type": "boolean"
+    },
+    "snapshot_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Snapshot Fingerprint",
+      "type": "string"
+    },
+    "snapshot_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/CodePatchStatus",
+      "default": "ready_for_review"
+    },
+    "synthesis_run_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Synthesis Run Id",
+      "type": "string"
+    },
+    "verification_commands": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Verification Commands",
+      "type": "array"
+    },
+    "workspace_profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Workspace Profile Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "plan_id",
+    "workspace_profile_id",
+    "generation_profile_id",
+    "snapshot_id",
+    "snapshot_fingerprint",
+    "synthesis_run_id",
+    "proposal_id",
+    "context_id",
+    "created_at",
+    "changes",
+    "verification_commands"
+  ],
+  "title": "CodePatch",
+  "type": "object"
+}

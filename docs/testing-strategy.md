@@ -747,3 +747,45 @@ Current tests do not prove:
 - pytest collection or execution in the target framework,
 - usefulness on enterprise repositories,
 - secret or malicious-source detection.
+
+
+## Sprint 6 source-delivery test strategy
+
+The source-delivery layer is tested at four levels.
+
+### Contract and deterministic generation
+
+Unit tests cover strict models, exact whitespace preservation, schema round
+trips, explicit public test-data binding, traceability, deterministic source
+hashes, forbidden source constructs, stale snapshot rejection, and declared
+framework prerequisites. They verify missing files, missing symbols, and wrong
+symbol kinds are rejected before source generation.
+
+### Review and application safety
+
+Tests prove that only an accepted patch can be applied, target paths remain
+inside the workspace allowlist, create and append preconditions are checked
+before writing, target hashes are respected, temporary replacement is atomic,
+and a simulated later write failure rolls back earlier changes. Sandbox tests
+also prove that only entries from the accepted snapshot are copied, stale source
+bytes block materialization, and an out-of-scope parent `tests/conftest.py` is
+excluded before pytest collection.
+
+### Framework collection and execution
+
+The integration gate first materializes a framework sandbox from exact snapshot
+entries, applies the patch there, runs `compileall`, requires pytest to collect
+exactly one generated target, serves
+the controlled local page, and executes the test with Chromium where available.
+The normal Windows setup requires the browser test rather than accepting a skip.
+
+### Lifecycle evaluation
+
+`CreationEvaluation` can report `PASSED` only when review, application, compile,
+collection, execution, assertion placement, runtime independence, no-live-LLM,
+and original-framework immutability all pass. The evaluation also stores timing
+and correction evidence for later comparison with manual and general-LLM paths.
+
+Expected normal Windows result after the corrected Sprint 6: `159 passed`. The
+preparation environment reports `157 passed, 2 skipped` only because
+administrator policy blocks the two real-browser loopback gates.

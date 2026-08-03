@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "id": "generation_public_search",
+  "workspace_profile_id": "workspace_qaf_reference",
+  "environment_url_variable": "TEST_CARTOGRAPHER_CATALOG_URL",
+  "required_framework_symbols": [
+    {
+      "path": "pages/base_page.py",
+      "symbol_name": "BasePage",
+      "symbol_kind": "class"
+    },
+    {
+      "path": "components/base_component.py",
+      "symbol_name": "BaseComponent",
+      "symbol_kind": "class"
+    }
+  ],
+  "test_data_bindings": [
+    {
+      "test_data_id": "data_search_query",
+      "fixture_key": "search_query",
+      "value": "Example",
+      "sensitivity": "public",
+      "secret": false
+    }
+  ],
+  "browser_headless": true,
+  "secret_values_included": false,
+  "live_llm_used": false
+}

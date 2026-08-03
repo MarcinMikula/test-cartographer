@@ -325,3 +325,21 @@ proposal with a separately approved `WorkspaceProfile` and exact
 
 This preserves the distinction between logical architecture approval and
 repository-placement approval.
+
+
+## Sprint 6 downstream realization
+
+An accepted synthesis run now has two additional downstream gates. Sprint 5
+maps it to repository targets; Sprint 6 realizes the accepted mapping as exact
+source. The synthesis output itself still contains neither repository paths nor
+Python code.
+
+```text
+accepted SynthesisRun
+→ accepted AdaptationPlan
+→ reviewed CodePatch
+→ controlled-copy application and execution
+```
+
+This preserves the provider-neutral synthesis boundary and prevents a logical
+model response from becoming an implicit source-write command.

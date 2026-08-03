@@ -1,0 +1,148 @@
+{
+  "$defs": {
+    "FrameworkSymbolRequirement": {
+      "additionalProperties": false,
+      "description": "One framework primitive required by a deterministic generation template.",
+      "properties": {
+        "path": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+          "title": "Path",
+          "type": "string"
+        },
+        "symbol_kind": {
+          "$ref": "#/$defs/PythonSymbolKind"
+        },
+        "symbol_name": {
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+          "title": "Symbol Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "symbol_name",
+        "symbol_kind"
+      ],
+      "title": "FrameworkSymbolRequirement",
+      "type": "object"
+    },
+    "PythonSymbolKind": {
+      "enum": [
+        "class",
+        "function"
+      ],
+      "title": "PythonSymbolKind",
+      "type": "string"
+    },
+    "TestDataBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "fixture_key": {
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+          "title": "Fixture Key",
+          "type": "string"
+        },
+        "secret": {
+          "const": false,
+          "default": false,
+          "title": "Secret",
+          "type": "boolean"
+        },
+        "sensitivity": {
+          "enum": [
+            "public",
+            "internal"
+          ],
+          "title": "Sensitivity",
+          "type": "string"
+        },
+        "test_data_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Test Data Id",
+          "type": "string"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "test_data_id",
+        "fixture_key",
+        "value",
+        "sensitivity"
+      ],
+      "title": "TestDataBinding",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Non-secret runtime bindings used by deterministic Sprint 6 templates.",
+  "properties": {
+    "browser_headless": {
+      "default": true,
+      "title": "Browser Headless",
+      "type": "boolean"
+    },
+    "environment_url_variable": {
+      "pattern": "^[A-Z][A-Z0-9_]{2,79}$",
+      "title": "Environment Url Variable",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "live_llm_used": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Used",
+      "type": "boolean"
+    },
+    "required_framework_symbols": {
+      "items": {
+        "$ref": "#/$defs/FrameworkSymbolRequirement"
+      },
+      "minItems": 1,
+      "title": "Required Framework Symbols",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "secret_values_included": {
+      "const": false,
+      "default": false,
+      "title": "Secret Values Included",
+      "type": "boolean"
+    },
+    "test_data_bindings": {
+      "items": {
+        "$ref": "#/$defs/TestDataBinding"
+      },
+      "minItems": 1,
+      "title": "Test Data Bindings",
+      "type": "array"
+    },
+    "workspace_profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Workspace Profile Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "workspace_profile_id",
+    "environment_url_variable",
+    "required_framework_symbols",
+    "test_data_bindings"
+  ],
+  "title": "GenerationProfile",
+  "type": "object"
+}

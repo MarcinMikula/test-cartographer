@@ -3033,3 +3033,216 @@ exact repository-aware implementation plan without mutating the framework.
 The next uncertainty is source realization: generating and applying the
 smallest reviewable patch, then proving that one meaningful framework test can
 run independently of TestCartographer and a live LLM.
+
+
+## Sprint 6 — Controlled source delivery and first runnable framework test
+
+### The final gap was not “generate Python”
+
+After Sprint 5, target files and symbols were known. The remaining uncertainty
+was authority and execution:
+
+> Can an accepted plan become exact reviewable source, can that source be
+> applied without silently overwriting human work, and can the resulting
+> framework test run without TestCartographer?
+
+A direct `plan → write files` path was rejected. It would have collapsed three
+independent decisions: whether the logical model is right, whether repository
+placement is right, and whether the exact implementation is acceptable.
+
+### Three review gates
+
+The complete creation flow now has separate acceptance for:
+
+1. the logical POM proposal,
+2. the exact framework file/symbol plan,
+3. the exact generated source patch.
+
+This is more ceremony than a one-prompt generator, but it creates a traceable
+authority chain and exposes where a correction belongs.
+
+### Explicit test-data binding was required
+
+The accepted logical proposal names `data_search_query`; it does not supply a
+concrete runtime value. A runnable test cannot invent that value silently. The
+first `GenerationProfile` therefore maps the symbolic requirement to the public
+reference value `Example` and separately names the environment variable holding
+the application URL.
+
+This preserves the earlier rule: ContextBundle and model-facing artefacts are
+not secret stores. The generation profile is an explicit execution decision.
+
+### Generated code is a more sensitive artefact than repository metadata
+
+Sprint 5 snapshots could remain source-free. Sprint 6 must preserve exact source
+for human review and deterministic application. `CodePatch` therefore overrides
+global string stripping and stores exact whitespace and resulting hashes.
+
+This improves replay but raises the data classification. A source patch can
+contain proprietary names or logic even when it contains no credential. It must
+be stored locally and reviewed as code, not treated like harmless metadata.
+
+### A real AST guard found a false positive
+
+The first source safety checker rejected `self.open()` because it searched for
+the name `open` without distinguishing a direct built-in call from an object
+method. The rule was narrowed to reject direct `ast.Name` calls only.
+
+Lesson: security-flavoured static checks need semantic precision. A broad string
+or name match can block ordinary framework APIs while still giving a false sense
+of safety. The current guard is useful for the bounded templates, not a proof
+that arbitrary generated Python is safe.
+
+### Meaningful assertion forced the page contract to grow
+
+The first generated page exposed the results region but omitted the observed
+results heading. The runnable test needed both a content assertion and a visible
+heading check, so `CatalogPage` gained the heading locator already authorized by
+the accepted proposal.
+
+This was a useful correction: “code compiles” is weaker than “the test expresses
+the accepted outcome.” Assertion design feeds back into the Page Object surface.
+
+### Existing fixture files require append semantics
+
+The current framework already has `tests/e2e/conftest.py`. Sprint 6 therefore
+uses `append_symbol`, validates the original file hash, and preserves its bytes
+before adding `catalog_context`. It does not replace the file or create a second
+conftest.
+
+The generated fixture starts and closes its own Playwright context for this
+controlled reference slice. That lets the copied framework run through the
+TestCartographer verification environment without making the generated test
+import TestCartographer. This is a reference implementation, not yet the final
+fixture convention for every adapted project.
+
+### Preflight must finish before the first write
+
+All create and append operations are checked before any target changes. A later
+failure triggers rollback from captured preflight bytes. Temporary files and
+`os.replace` avoid exposing partially written individual files.
+
+This does not solve concurrent editing or merge conflicts. It does establish a
+minimum transaction-like boundary for the controlled copy.
+
+### The original framework remains outside the write boundary
+
+The acceptance workflow inspects the user's real local framework, builds and
+reviews a plan and patch, then materializes a bounded sandbox and applies only
+inside that sandbox. Git status of the original is compared before and after.
+
+The first real Windows acceptance run exposed an important mismatch: the
+inspection profile allowed `tests/e2e`, but the setup used broad `robocopy /E`
+and therefore also copied an out-of-scope `tests/conftest.py`. Pytest loaded that
+parent conftest and failed before collecting the generated test. The patch had
+been applied correctly; the sandbox boundary was wrong.
+
+The correction is stronger than excluding one filename. The sandbox is now
+materialized from the exact entries stored in the accepted `FrameworkSnapshot`.
+Every source file is rechecked against its stored size and SHA-256, the resulting
+sandbox is rescanned, and its fingerprint must match before patch application.
+Files not inspected cannot silently participate in acceptance execution.
+
+Lesson: a bounded analysis followed by an unbounded copy is not bounded in
+practice. Execution evidence is trustworthy only when the execution workspace
+is derived from the same authority boundary as the plan.
+
+This distinction matters. Sprint 6 proves that generated automation can run in
+the accepted workspace slice; it does not yet prove compatibility with every
+plugin and file in the full framework repository or that Cartographer should be
+allowed to edit a working project repository directly.
+
+### “Runnable” requires independent execution
+
+The first framework test is not considered runnable merely because Python parses.
+The gate requires:
+
+- successful framework compilation,
+- exact pytest collection of one target test,
+- execution with real Chromium in the normal Windows environment,
+- meaningful assertions in the test layer,
+- no import of TestCartographer,
+- no live LLM call.
+
+This is the first point at which the project can honestly claim a working
+creation prototype: accepted evidence has become a framework test that the
+framework can execute on its own.
+
+### Creation evaluation is evidence, not a benchmark yet
+
+`CreationEvaluation` records generated, modified, and reused artefacts; review
+and application status; compile, collection, and execution timing; correction
+count; and time to first runnable test.
+
+One controlled result is not comparative evidence. The same measurements later
+need manual, Codegen/general-LLM, and TestCartographer-assisted paths across more
+realistic applications.
+
+### Sprint terminology
+
+The roadmap uses “Sprint” as a named, closed delivery increment with exit
+criteria, tests, documentation, and a commit. It is not a claim that the project
+follows formal timeboxed Scrum. In a larger team these contracts and stories
+could span several calendar sprints.
+
+### Sprint 6 decisions
+
+1. Plan acceptance does not authorize source writes.
+2. Exact source is a separately reviewed `CodePatch`.
+3. Runtime URL and concrete public test data require explicit generation input.
+4. Generation and application both reject stale framework fingerprints.
+5. Append operations require an exact pre-change file hash.
+6. All operations pass preflight before the first write.
+7. A failed multi-file application rolls back earlier changes.
+8. The first acceptance write occurs only in a sandbox materialized from exact accepted snapshot entries.
+9. A runnable result requires compile, collection, real execution, and assertion
+   evidence.
+10. Normal framework execution must not import TestCartographer or call an LLM.
+11. Creation metrics are persisted for later comparative validation.
+12. Files outside the accepted snapshot are excluded from the execution sandbox.
+13. Direct original-repository modification remains outside Sprint 6 authority.
+14. Generation profiles declare required framework files, symbols, and symbol kinds.
+15. Framework-contract compatibility is checked before plan review and again before source generation.
+
+### Real acceptance finding: generated imports require an explicit framework contract
+
+The second Windows acceptance run proved the snapshot-bounded sandbox fix, but
+then failed during pytest collection because generated `CatalogSearchForm`
+imported `components.base_component.BaseComponent` while the selected local
+framework snapshot did not contain that file and symbol.
+
+The deterministic template had an implicit assumption that was stronger than
+the inspected evidence. A snapshot can be internally valid and still be
+incompatible with a specific generation template.
+
+Correction:
+
+- `GenerationProfile` now declares exact required framework files and symbols,
+- the local snapshot is checked before the placement plan is shown for review,
+- source generation repeats the same contract check,
+- missing or wrong-kind symbols block the workflow before code is proposed,
+- the error tells the user to select or synchronize a compatible framework
+  checkout rather than generating imports that cannot resolve.
+
+Lesson: repository awareness is not only target-path awareness. Generation must
+validate the framework API it intends to inherit from or import.
+
+### Open questions carried into Sprint 7
+
+- What is the minimum useful failure-evidence contract?
+- Which URL, DOM, screenshot, trace, network, and value fields are allowed?
+- How will credentials and business data be redacted before persistence?
+- How will evidence distinguish test defects, framework defects, environment
+  failures, and application defects?
+- How will execution evidence link back to ContextBundle, proposal, plan, patch,
+  and exact framework revision?
+- What evidence should trigger Cartographer analysis automatically and what
+  still requires user authorization?
+
+### Sprint 6 conclusion
+
+TestCartographer can now move from accepted application knowledge to an exact,
+reviewed source patch and one independently runnable framework test in a
+snapshot-bounded sandbox. The next uncertainty is no longer creation. It is how ordinary framework
+execution should return bounded, high-value evidence for maintenance without
+turning every failure into an assumed application bug or leaking sensitive data.

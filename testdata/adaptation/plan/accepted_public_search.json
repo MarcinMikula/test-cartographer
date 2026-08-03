@@ -8,8 +8,8 @@
   "proposal_id": "proposal_public_search",
   "context_id": "ctx_public_catalog_search_observation_ready",
   "created_at": "2026-08-02T12:05:00Z",
-  "status": "ready_for_review",
-  "decision": "pending",
+  "status": "accepted",
+  "decision": "accepted",
   "operations": [
     {
       "id": "adapt_page_01",
@@ -84,7 +84,7 @@
   "open_questions": [],
   "framework_files_modified": false,
   "generated_source_included": false,
-  "reviewed_at": null,
-  "review_reason": null,
-  "review_seconds": 0.0
+  "reviewed_at": "2026-08-02T12:10:00Z",
+  "review_reason": "Exact framework targets reviewed for controlled delivery.",
+  "review_seconds": 18.0
 }

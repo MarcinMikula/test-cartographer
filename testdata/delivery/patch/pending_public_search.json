@@ -1,0 +1,97 @@
+{
+  "schema_version": "0.1",
+  "id": "patch_public_search",
+  "plan_id": "adapt_public_search",
+  "workspace_profile_id": "workspace_qaf_reference",
+  "generation_profile_id": "generation_public_search",
+  "snapshot_id": "snapshot_qaf_reference",
+  "snapshot_fingerprint": "33ead73e2e07c909a8c9e11b2971a61aa918d39daeb08b1487fc6d27aebd66bb",
+  "synthesis_run_id": "synrun_public_search",
+  "proposal_id": "proposal_public_search",
+  "context_id": "ctx_public_catalog_search_observation_ready",
+  "created_at": "2026-08-02T12:15:00Z",
+  "status": "ready_for_review",
+  "decision": "pending",
+  "changes": [
+    {
+      "operation_id": "adapt_page_01",
+      "kind": "create_file",
+      "target_kind": "page",
+      "target_path": "pages/catalog_page.py",
+      "symbol_name": "CatalogPage",
+      "source_proposal_ids": [
+        "pom_page_catalog",
+        "page_catalog",
+        "method_open_catalog",
+        "method_read_results"
+      ],
+      "expected_before_sha256": null,
+      "content": "\"\"\"Generated from accepted proposal proposal_public_search; review before production use.\"\"\"\n\nfrom __future__ import annotations\n\nfrom playwright.sync_api import Locator, Page\n\nfrom components.catalog_search_form import CatalogSearchForm\nfrom pages.base_page import BasePage\n\nTRACEABILITY = ('pom_page_catalog', 'page_catalog', 'method_open_catalog', 'method_read_results', 'pom_component_search_form')\n\n\nclass CatalogPage(BasePage):\n    \"\"\"Application-facing actions and state for the mapped page.\"\"\"\n\n    def __init__(self, page: Page, base_url: str = \"\") -> None:\n        super().__init__(page, base_url=base_url)\n        self.search_form = CatalogSearchForm(page)\n\n    @property\n    def results_heading(self) -> Locator:\n        \"\"\"Return the observed locator loc_results_heading_role.\"\"\"\n        return self.page.get_by_role('heading', name='Search results')\n\n    @property\n    def results_list(self) -> Locator:\n        \"\"\"Return the observed locator loc_results_list_test_id.\"\"\"\n        return self.page.get_by_test_id('catalog-results')\n\n    def open_catalog(self) -> None:\n        \"\"\"Open the catalog page through the framework navigation boundary.\"\"\"\n        self.open()\n\n    def read_results(self) -> str:\n        \"\"\"Expose the visible results state for test-level verification.\"\"\"\n        return self.results_list.inner_text()\n",
+      "content_sha256": "6c67e461b067f8e0288b6e2b11cda75f530a23bb6fa31617543a0304d9b03752",
+      "expected_after_sha256": "6c67e461b067f8e0288b6e2b11cda75f530a23bb6fa31617543a0304d9b03752"
+    },
+    {
+      "operation_id": "adapt_component_01",
+      "kind": "create_file",
+      "target_kind": "component",
+      "target_path": "components/catalog_search_form.py",
+      "symbol_name": "CatalogSearchForm",
+      "source_proposal_ids": [
+        "pom_component_search_form",
+        "cmp_search_form",
+        "method_enter_query",
+        "method_submit_search"
+      ],
+      "expected_before_sha256": null,
+      "content": "\"\"\"Generated from accepted proposal proposal_public_search; review before production use.\"\"\"\n\nfrom __future__ import annotations\n\nfrom playwright.sync_api import Locator, Page\n\nfrom components.base_component import BaseComponent\n\nTRACEABILITY = ('pom_component_search_form', 'cmp_search_form', 'method_enter_query', 'method_submit_search')\n\n\nclass CatalogSearchForm(BaseComponent):\n    \"\"\"Application-facing actions for the mapped UI component.\"\"\"\n\n    def __init__(self, page: Page) -> None:\n        super().__init__(page)\n\n    @property\n    def search_input(self) -> Locator:\n        \"\"\"Return the observed locator loc_search_input_label.\"\"\"\n        return self.page.get_by_label('Search catalog')\n\n    @property\n    def search_submit(self) -> Locator:\n        \"\"\"Return the observed locator loc_search_submit_role.\"\"\"\n        return self.page.get_by_role('button', name='Search')\n\n    def enter_query(self, value: str) -> None:\n        \"\"\"Fill the observed search input with symbolic test data.\"\"\"\n        self.search_input.fill(value)\n\n    def submit_search(self) -> None:\n        \"\"\"Submit the search through the observed Search button.\"\"\"\n        self.search_submit.click()\n",
+      "content_sha256": "012dac30bfc6c2f54a254e2fbe49e202b58a2096277756c630a051ab8805c573",
+      "expected_after_sha256": "012dac30bfc6c2f54a254e2fbe49e202b58a2096277756c630a051ab8805c573"
+    },
+    {
+      "operation_id": "adapt_fixture_01",
+      "kind": "append_symbol",
+      "target_kind": "fixture",
+      "target_path": "tests/e2e/conftest.py",
+      "symbol_name": "catalog_context",
+      "source_proposal_ids": [
+        "fixture_catalog_context"
+      ],
+      "expected_before_sha256": "c68afc8f6124613c08587b93e3a037f28f182d7a2656a2b3eda10a2f5453a4ed",
+      "content": "\n# TestCartographer trace: fixture_catalog_context, proposal_public_search\nimport os\nfrom collections.abc import Generator\n\nimport pytest\nfrom playwright.sync_api import sync_playwright\n\n\n@pytest.fixture\ndef catalog_context() -> Generator[dict[str, object], None, None]:\n    \"\"\"Provide one bounded browser session and explicit non-secret test data.\"\"\"\n    base_url = os.environ.get('TEST_CARTOGRAPHER_CATALOG_URL')\n    if not base_url:\n        pytest.fail('Missing required environment variable: TEST_CARTOGRAPHER_CATALOG_URL')\n\n    with sync_playwright() as playwright:\n        browser = playwright.chromium.launch(headless=True)\n        page = browser.new_page()\n        yield {\n            \"page\": page,\n            \"base_url\": base_url,\n            'search_query': 'Example',\n        }\n        browser.close()\n",
+      "content_sha256": "963cf653cbe302976497e9dd86b0a90a18a44f67c152bf5ef2deed601dfac968",
+      "expected_after_sha256": "67cf04939502443f616c803ea789c999d410ee758a291a85cd4573e99496fcaf"
+    },
+    {
+      "operation_id": "adapt_test_01",
+      "kind": "create_file",
+      "target_kind": "test",
+      "target_path": "tests/e2e/test_search_catalog.py",
+      "symbol_name": "test_search_catalog",
+      "source_proposal_ids": [
+        "test_search_catalog",
+        "method_open_catalog",
+        "method_enter_query",
+        "method_submit_search",
+        "method_read_results",
+        "assert_matching_results"
+      ],
+      "expected_before_sha256": null,
+      "content": "\"\"\"Generated executable test from accepted proposal proposal_public_search.\"\"\"\n\nfrom __future__ import annotations\n\nimport pytest\nfrom playwright.sync_api import expect\n\nfrom pages.catalog_page import CatalogPage\n\nTRACEABILITY = ('test_search_catalog', 'method_open_catalog', 'method_enter_query', 'method_submit_search', 'method_read_results', 'assert_matching_results')\n\n\n@pytest.mark.e2e\ndef test_search_catalog(catalog_context) -> None:\n    page = catalog_context[\"page\"]\n    catalog_page = CatalogPage(page, base_url=catalog_context[\"base_url\"])\n    catalog_page.open_catalog()\n    catalog_page.search_form.enter_query(catalog_context['search_query'])\n    catalog_page.search_form.submit_search()\n    read_results_value = catalog_page.read_results()\n    expect(catalog_page.results_heading).to_be_visible()\n    expected_fragment = str(catalog_context['search_query']).casefold()\n    assert expected_fragment in str(read_results_value).casefold(), (\n        \"The visible results do not contain the explicitly supplied search query.\"\n    )\n",
+      "content_sha256": "99ef8d1ac667fc42d2be0bbd72de7dd38fd707556ba34e700aeb7a0a1d0a6478",
+      "expected_after_sha256": "99ef8d1ac667fc42d2be0bbd72de7dd38fd707556ba34e700aeb7a0a1d0a6478"
+    }
+  ],
+  "reused_targets": [],
+  "verification_commands": [
+    "python -m compileall -q pages components tests testdata",
+    "python -m pytest --collect-only -q tests/e2e/test_search_catalog.py",
+    "python -m pytest -q tests/e2e/test_search_catalog.py"
+  ],
+  "generated_source_included": true,
+  "secret_values_included": false,
+  "live_llm_used": false,
+  "framework_files_modified": false,
+  "reviewed_at": null,
+  "review_reason": null,
+  "review_seconds": 0.0
+}

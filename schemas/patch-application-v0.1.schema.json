@@ -1,0 +1,157 @@
+{
+  "$defs": {
+    "AppliedChange": {
+      "additionalProperties": false,
+      "properties": {
+        "after_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "After Sha256",
+          "type": "string"
+        },
+        "before_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Before Sha256"
+        },
+        "bytes_written": {
+          "minimum": 1,
+          "title": "Bytes Written",
+          "type": "integer"
+        },
+        "operation_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "target_path": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+          "title": "Target Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation_id",
+        "target_path",
+        "after_sha256",
+        "bytes_written"
+      ],
+      "title": "AppliedChange",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "after_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "After Fingerprint",
+      "type": "string"
+    },
+    "application_seconds": {
+      "minimum": 0.0,
+      "title": "Application Seconds",
+      "type": "number"
+    },
+    "applied_at": {
+      "format": "date-time",
+      "title": "Applied At",
+      "type": "string"
+    },
+    "changes": {
+      "items": {
+        "$ref": "#/$defs/AppliedChange"
+      },
+      "minItems": 1,
+      "title": "Changes",
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "patch_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Patch Id",
+      "type": "string"
+    },
+    "plan_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "preflight_passed": {
+      "const": true,
+      "default": true,
+      "title": "Preflight Passed",
+      "type": "boolean"
+    },
+    "rollback_performed": {
+      "const": false,
+      "default": false,
+      "title": "Rollback Performed",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "snapshot_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Snapshot Fingerprint",
+      "type": "string"
+    },
+    "snapshot_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "status": {
+      "const": "applied",
+      "default": "applied",
+      "title": "Status",
+      "type": "string"
+    },
+    "target_root_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Target Root Persisted",
+      "type": "boolean"
+    },
+    "verification_pending": {
+      "const": true,
+      "default": true,
+      "title": "Verification Pending",
+      "type": "boolean"
+    },
+    "workspace_files_modified": {
+      "const": true,
+      "default": true,
+      "title": "Workspace Files Modified",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "patch_id",
+    "plan_id",
+    "snapshot_id",
+    "snapshot_fingerprint",
+    "applied_at",
+    "application_seconds",
+    "changes",
+    "after_fingerprint"
+  ],
+  "title": "PatchApplicationReport",
+  "type": "object"
+}

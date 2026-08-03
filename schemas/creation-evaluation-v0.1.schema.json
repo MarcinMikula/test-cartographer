@@ -1,0 +1,253 @@
+{
+  "$defs": {
+    "CreationEvaluationStatus": {
+      "enum": [
+        "passed",
+        "failed"
+      ],
+      "title": "CreationEvaluationStatus",
+      "type": "string"
+    },
+    "VerificationResult": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "minLength": 1,
+          "title": "Command",
+          "type": "string"
+        },
+        "duration_seconds": {
+          "minimum": 0.0,
+          "title": "Duration Seconds",
+          "type": "number"
+        },
+        "exit_code": {
+          "title": "Exit Code",
+          "type": "integer"
+        },
+        "name": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Name",
+          "type": "string"
+        },
+        "output_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Output Sha256",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "command",
+        "exit_code",
+        "duration_seconds",
+        "output_sha256",
+        "passed"
+      ],
+      "title": "VerificationResult",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Measured evidence for the first complete automation-creation lifecycle.",
+  "properties": {
+    "adaptation_plan_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Adaptation Plan Id",
+      "type": "string"
+    },
+    "adaptation_review_seconds": {
+      "minimum": 0.0,
+      "title": "Adaptation Review Seconds",
+      "type": "number"
+    },
+    "application_report_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Application Report Id",
+      "type": "string"
+    },
+    "application_seconds": {
+      "minimum": 0.0,
+      "title": "Application Seconds",
+      "type": "number"
+    },
+    "code_patch_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Code Patch Id",
+      "type": "string"
+    },
+    "code_review_seconds": {
+      "minimum": 0.0,
+      "title": "Code Review Seconds",
+      "type": "number"
+    },
+    "collected_test_count": {
+      "minimum": 0,
+      "title": "Collected Test Count",
+      "type": "integer"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "component_generated": {
+      "title": "Component Generated",
+      "type": "boolean"
+    },
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "corrections": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Corrections",
+      "type": "array"
+    },
+    "fixture_generated": {
+      "title": "Fixture Generated",
+      "type": "boolean"
+    },
+    "framework_execution_independent": {
+      "title": "Framework Execution Independent",
+      "type": "boolean"
+    },
+    "generated_file_count": {
+      "minimum": 0,
+      "title": "Generated File Count",
+      "type": "integer"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "live_llm_used": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Used",
+      "type": "boolean"
+    },
+    "llm_call_count": {
+      "const": 0,
+      "default": 0,
+      "title": "Llm Call Count",
+      "type": "integer"
+    },
+    "meaningful_test_assertion_present": {
+      "title": "Meaningful Test Assertion Present",
+      "type": "boolean"
+    },
+    "modified_file_count": {
+      "minimum": 0,
+      "title": "Modified File Count",
+      "type": "integer"
+    },
+    "original_framework_unchanged": {
+      "title": "Original Framework Unchanged",
+      "type": "boolean"
+    },
+    "page_object_generated": {
+      "title": "Page Object Generated",
+      "type": "boolean"
+    },
+    "passed_test_count": {
+      "minimum": 0,
+      "title": "Passed Test Count",
+      "type": "integer"
+    },
+    "reused_symbol_count": {
+      "minimum": 0,
+      "title": "Reused Symbol Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/CreationEvaluationStatus"
+    },
+    "synthesis_review_seconds": {
+      "minimum": 0.0,
+      "title": "Synthesis Review Seconds",
+      "type": "number"
+    },
+    "synthesis_run_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Synthesis Run Id",
+      "type": "string"
+    },
+    "target_test": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+      "title": "Target Test",
+      "type": "string"
+    },
+    "test_generated": {
+      "title": "Test Generated",
+      "type": "boolean"
+    },
+    "time_to_first_runnable_test_seconds": {
+      "minimum": 0.0,
+      "title": "Time To First Runnable Test Seconds",
+      "type": "number"
+    },
+    "verification_results": {
+      "items": {
+        "$ref": "#/$defs/VerificationResult"
+      },
+      "minItems": 1,
+      "title": "Verification Results",
+      "type": "array"
+    },
+    "verification_seconds": {
+      "minimum": 0.0,
+      "title": "Verification Seconds",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "context_id",
+    "synthesis_run_id",
+    "adaptation_plan_id",
+    "code_patch_id",
+    "application_report_id",
+    "completed_at",
+    "status",
+    "target_test",
+    "generated_file_count",
+    "modified_file_count",
+    "reused_symbol_count",
+    "collected_test_count",
+    "passed_test_count",
+    "synthesis_review_seconds",
+    "adaptation_review_seconds",
+    "code_review_seconds",
+    "application_seconds",
+    "verification_seconds",
+    "time_to_first_runnable_test_seconds",
+    "page_object_generated",
+    "component_generated",
+    "fixture_generated",
+    "test_generated",
+    "meaningful_test_assertion_present",
+    "framework_execution_independent",
+    "original_framework_unchanged",
+    "verification_results"
+  ],
+  "title": "CreationEvaluation",
+  "type": "object"
+}

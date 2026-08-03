@@ -1,0 +1,47 @@
+{
+  "schema_version": "0.1",
+  "id": "apply_public_search",
+  "patch_id": "patch_public_search",
+  "plan_id": "adapt_public_search",
+  "snapshot_id": "snapshot_qaf_reference",
+  "snapshot_fingerprint": "33ead73e2e07c909a8c9e11b2971a61aa918d39daeb08b1487fc6d27aebd66bb",
+  "applied_at": "2026-08-02T12:25:00Z",
+  "application_seconds": 0.0007646550000117713,
+  "status": "applied",
+  "changes": [
+    {
+      "operation_id": "adapt_page_01",
+      "target_path": "pages/catalog_page.py",
+      "before_sha256": null,
+      "after_sha256": "6c67e461b067f8e0288b6e2b11cda75f530a23bb6fa31617543a0304d9b03752",
+      "bytes_written": 1339
+    },
+    {
+      "operation_id": "adapt_component_01",
+      "target_path": "components/catalog_search_form.py",
+      "before_sha256": null,
+      "after_sha256": "012dac30bfc6c2f54a254e2fbe49e202b58a2096277756c630a051ab8805c573",
+      "bytes_written": 1180
+    },
+    {
+      "operation_id": "adapt_fixture_01",
+      "target_path": "tests/e2e/conftest.py",
+      "before_sha256": "c68afc8f6124613c08587b93e3a037f28f182d7a2656a2b3eda10a2f5453a4ed",
+      "after_sha256": "67cf04939502443f616c803ea789c999d410ee758a291a85cd4573e99496fcaf",
+      "bytes_written": 959
+    },
+    {
+      "operation_id": "adapt_test_01",
+      "target_path": "tests/e2e/test_search_catalog.py",
+      "before_sha256": null,
+      "after_sha256": "99ef8d1ac667fc42d2be0bbd72de7dd38fd707556ba34e700aeb7a0a1d0a6478",
+      "bytes_written": 1043
+    }
+  ],
+  "after_fingerprint": "ee92ec229bd7c30d1afcab64f30404a4f1914383d649ccc1fec01075219f061e",
+  "preflight_passed": true,
+  "rollback_performed": false,
+  "workspace_files_modified": true,
+  "target_root_persisted": false,
+  "verification_pending": true
+}

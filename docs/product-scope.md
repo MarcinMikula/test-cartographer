@@ -20,7 +20,7 @@ The product should help answer:
 
 ## Current implemented boundary
 
-Sprint 5 implements:
+Sprint 6 implements:
 
 - a strict local context contract for one UI process,
 - deterministic adaptation-readiness assessment,
@@ -57,7 +57,7 @@ The current package cannot:
 - create the context shell from an empty project,
 - discover an unknown page, element, or locator,
 - call a live LLM provider,
-- generate or apply source changes to `qa-automation-framework`,
+- safely modify the user's original `qa-automation-framework` repository without a separate acceptance path,
 - execute the planned framework test,
 - prove that the first mapping convention fits every project.
 
@@ -372,7 +372,7 @@ verification intent and business assertions
 
 Generated output remains a draft until reviewed and executed.
 
-No framework adaptation is currently implemented.
+Repository planning and controlled-copy source delivery are implemented for one POM slice. Direct production-repository adaptation is not implemented.
 
 ### 6. Review and traceability
 
@@ -518,7 +518,7 @@ Still-open decisions include:
 - raw evidence storage beyond the current no-raw-capture rule,
 - external LLM provider,
 - prompt and response protocol,
-- repository source-generation and writing mechanism,
+- general repository source editing and direct original-repository writing mechanism,
 - richer review interface,
 - database or cross-process storage.
 
@@ -541,7 +541,7 @@ The first product-level slice should cover one small process.
 12. Measure operator time and corrections.
 ```
 
-Current progress after Sprint 5:
+Current progress after Sprint 6:
 
 ```text
 Step 2 — controlled fixture only
@@ -549,6 +549,9 @@ Step 3 — implemented for the deterministic reference flow
 Steps 4–5 — bounded for one selected existing locator
 Steps 6–8 — bounded synthesis proposal implemented with replay
 Step 9 — read-only file/symbol adaptation plan implemented
+Step 10 — exact source patch and separate source review implemented
+Step 11 — controlled-copy application and first runnable browser test implemented
+Step 12 — creation-lifecycle evaluation implemented
 Steps 10–12 — not implemented
 ```
 

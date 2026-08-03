@@ -4,7 +4,7 @@
   "profile_id": "workspace_qaf_reference",
   "captured_at": "2026-08-02T12:00:00Z",
   "repository_label": "qa-automation-framework controlled reference",
-  "root_fingerprint": "64e36467002d5241670bb5b6e3d329cafc19f7d33805c95640a879ef54c51c70",
+  "root_fingerprint": "33ead73e2e07c909a8c9e11b2971a61aa918d39daeb08b1487fc6d27aebd66bb",
   "entries": [
     {
       "path": "README.md",
@@ -26,6 +26,23 @@
       "size_bytes": 0,
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "python_symbols": []
+    },
+    {
+      "path": "components/base_component.py",
+      "kind": "file",
+      "size_bytes": 498,
+      "sha256": "14682f1001593b615e944d75f605c7ae7f4bf662e8eaca83065c6d3c3e207a11",
+      "python_symbols": [
+        {
+          "kind": "class",
+          "name": "BaseComponent",
+          "bases": [],
+          "method_names": [
+            "__init__",
+            "by_test_id"
+          ]
+        }
+      ]
     },
     {
       "path": "components/navbar.py",
@@ -60,8 +77,8 @@
     {
       "path": "pages/base_page.py",
       "kind": "file",
-      "size_bytes": 186,
-      "sha256": "2952cde38e4c51dcd4b28e7c33d4a7dd15709ee32c383ea2beae086a4adcbc79",
+      "size_bytes": 827,
+      "sha256": "656f8188dd31c4d7a1196ef0343287778b944c4b46736874c25167783dc2dd3d",
       "python_symbols": [
         {
           "kind": "class",
@@ -69,7 +86,9 @@
           "bases": [],
           "method_names": [
             "__init__",
-            "navigate"
+            "open",
+            "by_test_id",
+            "_build_url"
           ]
         }
       ]
@@ -93,10 +112,17 @@
       ]
     },
     {
+      "path": "pytest.ini",
+      "kind": "file",
+      "size_bytes": 92,
+      "sha256": "5acf97425e5ea11431fd99df1a440a5ea0422d7431a2db9422fe35b1db7ebc9e",
+      "python_symbols": []
+    },
+    {
       "path": "requirements.txt",
       "kind": "file",
-      "size_bytes": 18,
-      "sha256": "f942e56f2025a807eb2af924bffa686df86f56a76b62e26d80aff56f74b5a801",
+      "size_bytes": 34,
+      "sha256": "134a6e6566b1810af6512fd153bccaa505316c0b9a357dba62a5f3cc881c93a3",
       "python_symbols": []
     },
     {

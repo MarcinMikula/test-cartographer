@@ -291,9 +291,9 @@ browser lifecycles.
 
 ## Gap 14 — Shared project workspace and framework mapping
 
-**Status:** PARTIALLY CLOSED by Sprint 5
+**Status:** PARTIALLY CLOSED by Sprint 6
 
-**Target:** Continue in Sprint 6
+**Target:** Continue after the first execution-evidence slice
 
 Sprint 5 now provides a first non-secret `WorkspaceProfile`, bounded local
 inspection, a minimized `FrameworkSnapshot`, exact file/symbol planning, and
@@ -433,3 +433,19 @@ The validation ladder still lacks:
 Salesforce remains a deliberate acceptance target because simple pages cannot
 validate enterprise authentication, component-driven UI, data restrictions,
 complex process state, or realistic maintenance economics.
+
+## Gap 21 — Framework-contract negotiation
+
+**Status:** OPEN
+
+**Target:** After the first deterministic creation proof
+
+Sprint 6 now validates exact required framework primitives, but it cannot yet
+negotiate alternatives such as a differently named base component, composition
+instead of inheritance, or project-specific constructor signatures.
+
+Future adaptation must distinguish:
+
+- a stale or incomplete checkout,
+- a compatible framework with different conventions,
+- a genuinely unsupported architecture.

@@ -1,4 +1,4 @@
-"""Command-line entry point for intake, observation, synthesis, and adaptation."""
+"""Command-line entry point for context collection and controlled framework delivery."""
 
 from __future__ import annotations
 
@@ -21,6 +21,18 @@ from test_cartographer.adaptation.io import (
 from test_cartographer.adaptation.planner import build_adaptation_plan
 from test_cartographer.adaptation.review import review_adaptation_plan
 from test_cartographer.adaptation.scanner import inspect_framework
+from test_cartographer.delivery.apply import apply_code_patch
+from test_cartographer.delivery.enums import PatchReviewDecision
+from test_cartographer.delivery.generation import build_code_patch
+from test_cartographer.delivery.io import (
+    load_application_report,
+    load_code_patch,
+    load_creation_evaluation,
+    load_generation_profile,
+    save_application_report,
+    save_code_patch,
+)
+from test_cartographer.delivery.review import review_code_patch
 from test_cartographer.context.enums import SensitivityLevel
 from test_cartographer.context.io import load_context, save_context
 from test_cartographer.context.readiness import assess_readiness
@@ -73,6 +85,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _dispatch_synthesis(parser, args)
     if args.command == "adapt":
         return _dispatch_adaptation(parser, args)
+    if args.command == "deliver":
+        return _dispatch_delivery(parser, args)
 
     parser.error("a command is required")
     return 2
@@ -311,6 +325,66 @@ def _build_parser() -> argparse.ArgumentParser:
     plan_review.add_argument("--reason")
     plan_review.add_argument("--review-seconds", type=float, default=0.0)
 
+    deliver = commands.add_parser(
+        "deliver",
+        help="build, review, and apply one exact framework code patch",
+    )
+    deliver_commands = deliver.add_subparsers(dest="deliver_command")
+
+    deliver_build = deliver_commands.add_parser(
+        "build",
+        help="generate exact source changes from an accepted adaptation plan",
+    )
+    deliver_build.add_argument("--profile", required=True, type=Path)
+    deliver_build.add_argument("--generation-profile", required=True, type=Path)
+    deliver_build.add_argument("--snapshot", required=True, type=Path)
+    deliver_build.add_argument("--run", required=True, type=Path)
+    deliver_build.add_argument("--plan", required=True, type=Path)
+    deliver_build.add_argument("--framework-root", required=True, type=Path)
+    deliver_build.add_argument("--patch", required=True, type=Path)
+    deliver_build.add_argument("--patch-id")
+
+    deliver_status = deliver_commands.add_parser(
+        "status",
+        help="show one code patch, application report, or creation evaluation",
+    )
+    deliver_status.add_argument("--patch", type=Path)
+    deliver_status.add_argument("--application", type=Path)
+    deliver_status.add_argument("--evaluation", type=Path)
+
+    deliver_preview = deliver_commands.add_parser(
+        "preview",
+        help="print the exact generated source proposal",
+    )
+    deliver_preview.add_argument("--patch", required=True, type=Path)
+
+    deliver_review = deliver_commands.add_parser(
+        "review",
+        help="accept or reject one exact generated source proposal",
+    )
+    deliver_review.add_argument("--patch", required=True, type=Path)
+    deliver_review.add_argument(
+        "--decision",
+        required=True,
+        choices=[
+            PatchReviewDecision.ACCEPTED.value,
+            PatchReviewDecision.REJECTED.value,
+        ],
+    )
+    deliver_review.add_argument("--reason")
+    deliver_review.add_argument("--review-seconds", type=float, default=0.0)
+
+    deliver_apply = deliver_commands.add_parser(
+        "apply",
+        help="apply an accepted code patch after fingerprint and hash preflight",
+    )
+    deliver_apply.add_argument("--profile", required=True, type=Path)
+    deliver_apply.add_argument("--snapshot", required=True, type=Path)
+    deliver_apply.add_argument("--patch", required=True, type=Path)
+    deliver_apply.add_argument("--framework-root", required=True, type=Path)
+    deliver_apply.add_argument("--application", required=True, type=Path)
+    deliver_apply.add_argument("--application-id")
+
     return parser
 
 
@@ -374,6 +448,24 @@ def _dispatch_adaptation(
     if args.adapt_command == "review":
         return _adapt_review_command(parser, args)
     parser.error("an adapt command is required")
+    return 2
+
+
+def _dispatch_delivery(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    if args.deliver_command == "build":
+        return _deliver_build_command(args)
+    if args.deliver_command == "status":
+        return _deliver_status_command(parser, args)
+    if args.deliver_command == "preview":
+        return _deliver_preview_command(args)
+    if args.deliver_command == "review":
+        return _deliver_review_command(parser, args)
+    if args.deliver_command == "apply":
+        return _deliver_apply_command(args)
+    parser.error("a deliver command is required")
     return 2
 
 
@@ -600,6 +692,98 @@ def _adapt_review_command(
     return 0
 
 
+def _deliver_build_command(args: argparse.Namespace) -> int:
+    workspace_profile = load_workspace_profile(args.profile)
+    generation_profile = load_generation_profile(args.generation_profile)
+    snapshot = load_framework_snapshot(args.snapshot)
+    run = load_synthesis_run(args.run)
+    plan = load_adaptation_plan(args.plan)
+    patch_id = args.patch_id or f"patch_{uuid.uuid4().hex[:12]}"
+    patch = build_code_patch(
+        run,
+        plan,
+        workspace_profile,
+        generation_profile,
+        snapshot,
+        args.framework_root,
+        patch_id=patch_id,
+        created_at=datetime.now(timezone.utc),
+    )
+    save_code_patch(patch, args.patch)
+    print(f"Created code patch: {args.patch}")
+    print(_format_code_patch(patch))
+    print("Framework files were not modified.")
+    return 0
+
+
+def _deliver_status_command(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    selected = [args.patch, args.application, args.evaluation]
+    if sum(item is not None for item in selected) != 1:
+        parser.error("provide exactly one of --patch, --application, or --evaluation")
+    if args.patch is not None:
+        print(_format_code_patch(load_code_patch(args.patch)))
+    elif args.application is not None:
+        print(_format_application_report(load_application_report(args.application)))
+    else:
+        print(_format_creation_evaluation(load_creation_evaluation(args.evaluation)))
+    return 0
+
+
+def _deliver_preview_command(args: argparse.Namespace) -> int:
+    patch = load_code_patch(args.patch)
+    print(_format_code_patch(patch))
+    for change in patch.changes:
+        print("")
+        print(f"===== {change.kind.value}: {change.target_path}::{change.symbol_name} =====")
+        print(change.content, end="" if change.content.endswith("\n") else "\n")
+    return 0
+
+
+def _deliver_review_command(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    decision = PatchReviewDecision(args.decision)
+    if decision is PatchReviewDecision.REJECTED and not args.reason:
+        parser.error("--reason is required when rejecting a code patch")
+    patch = load_code_patch(args.patch)
+    reviewed = review_code_patch(
+        patch,
+        decision=decision,
+        reviewed_at=datetime.now(timezone.utc),
+        reason=args.reason,
+        review_seconds=args.review_seconds,
+    )
+    save_code_patch(reviewed, args.patch)
+    print(f"Reviewed code patch: {args.patch}")
+    print(_format_code_patch(reviewed))
+    print("Framework files were not modified.")
+    return 0
+
+
+def _deliver_apply_command(args: argparse.Namespace) -> int:
+    profile = load_workspace_profile(args.profile)
+    snapshot = load_framework_snapshot(args.snapshot)
+    patch = load_code_patch(args.patch)
+    application_id = args.application_id or f"apply_{uuid.uuid4().hex[:12]}"
+    report = apply_code_patch(
+        patch,
+        profile,
+        snapshot,
+        args.framework_root,
+        application_id=application_id,
+        applied_at=datetime.now(timezone.utc),
+    )
+    save_application_report(report, args.application)
+    print(f"Applied code patch: {args.application}")
+    print(_format_application_report(report))
+    return 0
+
+
+
 def _parse_answer(raw: str, question: IntakeQuestion) -> IntakeAnswer:
     if not raw:
         raise ValueError("enter a value or one of the displayed commands")
@@ -731,6 +915,63 @@ def _format_adaptation_plan(plan) -> str:
             "Framework files modified: false",
             "Generated source included: false",
             f"Review seconds: {plan.review_seconds:.3f}",
+        )
+    )
+
+
+def _format_code_patch(patch) -> str:
+    create_count = sum(change.kind.value == "create_file" for change in patch.changes)
+    append_count = sum(change.kind.value == "append_symbol" for change in patch.changes)
+    return "\n".join(
+        (
+            f"Code patch: {patch.id}",
+            f"Status: {patch.status.value}",
+            f"Decision: {patch.decision.value}",
+            f"Adaptation plan: {patch.plan_id}",
+            f"Snapshot: {patch.snapshot_id}",
+            f"Changes: {len(patch.changes)}",
+            f"Create files: {create_count}",
+            f"Append symbols: {append_count}",
+            f"Reused targets: {len(patch.reused_targets)}",
+            "Generated source included: true",
+            "Secret values included: false",
+            "Live LLM used: false",
+            "Framework files modified: false",
+            f"Review seconds: {patch.review_seconds:.3f}",
+        )
+    )
+
+
+def _format_application_report(report) -> str:
+    return "\n".join(
+        (
+            f"Patch application: {report.id}",
+            f"Status: {report.status.value}",
+            f"Code patch: {report.patch_id}",
+            f"Changed files: {len(report.changes)}",
+            f"After fingerprint: {report.after_fingerprint}",
+            f"Application seconds: {report.application_seconds:.3f}",
+            "Preflight passed: true",
+            "Rollback performed: false",
+            "Verification pending: true",
+            "Target root persisted: false",
+        )
+    )
+
+
+def _format_creation_evaluation(evaluation) -> str:
+    return "\n".join(
+        (
+            f"Creation evaluation: {evaluation.id}",
+            f"Status: {evaluation.status.value}",
+            f"Target test: {evaluation.target_test}",
+            f"Collected tests: {evaluation.collected_test_count}",
+            f"Passed tests: {evaluation.passed_test_count}",
+            f"Generated files: {evaluation.generated_file_count}",
+            f"Modified files: {evaluation.modified_file_count}",
+            f"Time to first runnable test: {evaluation.time_to_first_runnable_test_seconds:.3f}s",
+            "Live LLM used: false",
+            f"Original framework unchanged: {str(evaluation.original_framework_unchanged).lower()}",
         )
     )
 

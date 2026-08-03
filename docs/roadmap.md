@@ -70,8 +70,8 @@ product framing
 | Architecture checkpoint A | Align the two-module lifecycle, maintenance modes, authentication directions, and enterprise validation target | Done in documentation |
 | Sprint 4 | Bounded LLM synthesis and POM proposal | Done |
 | Sprint 5 | Project workspace, framework mapping, and first reviewable adaptation plan | Done |
-| Sprint 6 | First runnable framework test and creation-lifecycle evaluation | Planned |
-| Sprint 7 | Framework execution-evidence contract | Parked |
+| Sprint 6 | First runnable framework test and creation-lifecycle evaluation | Done |
+| Sprint 7 | Framework execution-evidence contract | Planned |
 | Sprint 8 | Reactive maintenance from execution evidence | Parked |
 | Sprint 9 | Proactive post-deployment frontend/context regression | Parked |
 | Sprint 10 | Expansion using the existing application map | Parked |
@@ -519,38 +519,91 @@ plan rebuilt or explicitly reconciled before source changes are proposed.
 
 ## Sprint 6 — First runnable test and creation-lifecycle evaluation
 
-**Status:** Planned
+**Status:** Done
 
 ### Goal
 
-Complete the first creation lifecycle:
+Complete the first controlled creation lifecycle:
 
 ```text
-Cartographer context and observations
-→ bounded LLM proposal
-→ accepted framework adaptation
-→ one runnable test
-→ framework execution
-→ review and measurement
+accepted ContextBundle and observation
+→ accepted logical POM proposal
+→ accepted repository adaptation plan
+→ exact source patch ready for review
+→ explicit source acceptance
+→ safe application to a clean framework copy
+→ one independently runnable browser test
+→ creation-lifecycle evaluation
 ```
 
-### Candidate scope
+### Delivered
 
-- create or update the agreed Page Object, component, fixture, data, and test
-  artefacts,
-- execute the test without a live LLM dependency,
-- preserve traceability from context and proposal to code,
-- record corrections and rejected proposals,
-- measure setup time, active user time, time to first runnable test, LLM usage,
-  and review effort,
-- assess architecture quality and meaningful assertions.
+- non-secret `GenerationProfile` version `0.1`,
+- explicit public symbolic test-data binding,
+- `CodePatch` version `0.1` with exact UTF-8 source and hashes,
+- deterministic templates for one Page Object, one Component Object, one
+  existing E2E fixture extension, and one E2E test,
+- source AST safety checks for the bounded slice,
+- separate patch preview, status, accept, and reject commands,
+- stale snapshot and stale target-hash rejection,
+- full preflight before any write,
+- atomic temporary-file replacement and rollback,
+- `PatchApplicationReport` version `0.1`,
+- compile, exact pytest collection, and real-browser execution gate,
+- `CreationEvaluation` version `0.1`,
+- metrics for generated/modified/reused artefacts, correction count, compile,
+  collection, execution, and time to first runnable test,
+- explicit proof that ordinary execution uses neither TestCartographer nor a
+  live LLM,
+- controlled-copy and local-framework-copy acceptance paths,
+- four generated and tested JSON Schemas,
+- standalone verifier, CLI coverage, and deterministic replay fixtures,
+- 153 tests expected with Chromium on the normal Windows environment.
 
-Sprint 6 is the earliest point at which the project may claim a working
-creation prototype.
+### Exit criteria
+
+- [x] Only an accepted Sprint 5 plan tied to the current fingerprint is used.
+- [x] Test data is supplied through an explicit non-secret binding.
+- [x] Exact source is a separate reviewable artefact.
+- [x] Proposal, placement, and source acceptance remain separate.
+- [x] Stale framework state blocks generation or application.
+- [x] Existing `tests/e2e/conftest.py` is extended rather than replaced.
+- [x] All target operations pass preflight before the first write.
+- [x] Partial application is rolled back on write failure.
+- [x] A clean framework copy compiles after application.
+- [x] Pytest collects exactly one generated target test.
+- [x] Real Chromium executes the target test in the normal Windows gate.
+- [x] The test contains meaningful assertions outside Page Objects.
+- [x] The resulting test runs without TestCartographer or a live LLM.
+- [x] The original framework repository remains unchanged.
+- [x] Creation timing and correction evidence is persisted.
+
+### What Sprint 6 proves
+
+The first end-to-end creation prototype can move from accepted application
+evidence to a reviewed, applied, collected, and executed framework test while
+preserving explicit authority boundaries and leaving the original framework
+untouched.
+
+### What Sprint 6 does not prove
+
+- safe unattended writes to the original project repository,
+- arbitrary AST edits or merge-conflict handling,
+- general code quality across applications,
+- live-provider quality or prompt-injection resistance,
+- enterprise authentication and Salesforce usefulness,
+- maintenance after application drift,
+- superiority over manual, Codegen, or general-LLM workflows.
+
+### Gate to Sprint 7
+
+Sprint 7 may consume execution evidence only through an explicit bounded
+contract. A failed test must not automatically be labeled an application bug,
+and traces, screenshots, URLs, values, and secrets require separate policy.
 
 ## Sprint 7 — Framework execution-evidence contract
 
-**Status:** Parked
+**Status:** Planned
 
 ### Direction
 

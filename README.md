@@ -15,20 +15,21 @@ and expansion.
 
 ## Status
 
-**Sprint 5 — project workspace and framework adaptation plan: complete**
+**Sprint 6 — controlled source delivery and first runnable framework test: complete**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
 Current evidence:
 
 ```text
-128 tests expected with Playwright Chromium
+153 tests expected with Playwright Chromium
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
+controlled source review, patch application, and first runnable test verified end to end
 ```
 
-The repository now provides five executable boundaries:
+The repository now provides six executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -37,7 +38,9 @@ The repository now provides five executable boundaries:
 4. a bounded LLM-facing request, strict POM proposal protocol, replay adapter,
    deterministic validator, and separate human review state,
 5. a bounded workspace profile, read-only framework snapshot, deterministic
-   file/symbol adaptation plan, and separate human review state.
+   file/symbol adaptation plan, and separate human review state,
+6. an exact source patch, separate source review, fingerprint preflight, atomic
+   application to a snapshot-bounded framework sandbox, and creation-lifecycle evaluation.
 
 The current workflow can:
 
@@ -66,11 +69,18 @@ The current workflow can:
   or absolute paths,
 - map an accepted proposal to exact page, component, fixture, and E2E test targets,
 - distinguish create-file, add-symbol, and reuse-symbol operations,
-- keep the adaptation plan pending until a separate human acceptance.
+- keep the adaptation plan pending until a separate human acceptance,
+- generate an exact framework-specific patch from an accepted plan,
+- preview and accept source separately from proposal and placement review,
+- reject stale framework state before generation or application,
+- apply the accepted patch atomically to a snapshot-bounded framework sandbox,
+- compile, collect, and execute one generated Playwright test,
+- record first-creation timing, correction, and independence evidence.
 
 It still cannot autonomously explore an application, call a live LLM provider,
-generate or apply framework-specific source files, execute the planned test, or
-prove that the first repository mapping convention is correct for every project.
+safely patch the user's original framework repository, handle arbitrary source
+edits, or prove that the first generation and placement conventions generalize
+to enterprise projects.
 
 ## The problem
 
@@ -242,6 +252,32 @@ and never writes to the framework.
 
 See [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md).
 
+### Controlled source delivery and first runnable test
+
+Sprint 6 consumes only a human-accepted adaptation plan tied to the current
+framework fingerprint. It creates an exact `CodePatch`, keeps source review
+separate, materializes a sandbox from exact accepted snapshot entries, applies
+the accepted patch there, and records a `CreationEvaluation` after compile,
+collection, and browser execution.
+
+```text
+accepted plan
+→ exact source patch
+→ source preview and acceptance
+→ fingerprint preflight
+→ snapshot-bounded sandbox materialization
+→ atomic application
+→ pytest collection and execution
+→ creation evaluation
+```
+
+The reference flow adds `CatalogPage`, `CatalogSearchForm`, `catalog_context`,
+and `test_search_catalog`. The generated test runs with the framework alone; it
+does not import TestCartographer and makes no live LLM call. The original local
+framework remains unchanged during the acceptance run.
+
+See [`docs/source-delivery.md`](docs/source-delivery.md).
+
 ## Structural validity, intake completion, and adaptation readiness
 
 The project deliberately separates three questions.
@@ -296,10 +332,10 @@ python -m playwright install chromium
 python -m pytest
 ```
 
-Expected Sprint 5 result after Chromium installation:
+Expected corrected Sprint 6 result after Chromium installation:
 
 ```text
-128 passed
+156 passed
 ```
 
 ### Start a reference intake
@@ -486,6 +522,34 @@ test-cartographer adapt review `
     --reason "Exact targets match the intended framework architecture."
 ```
 
+### Verify controlled source delivery and the first runnable test
+
+```powershell
+python scripts/verify_first_runnable_test.py --require-browser
+```
+
+Build exact source only from the accepted plan and current framework snapshot:
+
+```powershell
+test-cartographer deliver build `
+    --profile testdata/adaptation/profile/qa_automation_framework.json `
+    --generation-profile testdata/delivery/profile/public_search_generation.json `
+    --snapshot testdata/adaptation/snapshot/qa_automation_framework.json `
+    --run testdata/synthesis/run/accepted_public_search.json `
+    --plan testdata/adaptation/plan/accepted_public_search.json `
+    --framework-root testdata/framework/reference `
+    --patch .test-cartographer/public-search-code-patch.json `
+    --patch-id patch_public_search
+
+test-cartographer deliver preview `
+    --patch .test-cartographer/public-search-code-patch.json
+```
+
+Exact source must then be accepted separately before `deliver apply` can write
+to an explicitly supplied framework copy. See
+[`docs/source-delivery.md`](docs/source-delivery.md) for the full preflight,
+rollback, execution, and evaluation contract.
+
 ### Re-export contract schemas
 
 ```powershell
@@ -494,11 +558,13 @@ python scripts/export_intake_schema.py
 python scripts/export_observation_schema.py
 python scripts/export_synthesis_schemas.py
 python scripts/export_adaptation_schemas.py
+python scripts/export_delivery_schemas.py
 python -m pytest tests/unit/context/test_schema.py `
     tests/unit/intake/test_intake_schema.py `
     tests/unit/observation/test_schema.py `
     tests/unit/synthesis/test_schema.py `
-    tests/unit/adaptation/test_schema.py
+    tests/unit/adaptation/test_schema.py `
+    tests/unit/delivery/test_schema.py
 ```
 
 ## Current project structure
@@ -506,13 +572,12 @@ python -m pytest tests/unit/context/test_schema.py `
 ```text
 test-cartographer/
 ├── docs/
-│   ├── architecture-decisions.md
 │   ├── context-contract.md
 │   ├── intake-workflow.md
 │   ├── browser-observation.md
 │   ├── synthesis-protocol.md
 │   ├── framework-adaptation-planning.md
-│   ├── testing-strategy.md
+│   ├── source-delivery.md
 │   └── ...
 ├── schemas/
 │   ├── context-bundle-v0.1.schema.json
@@ -523,62 +588,58 @@ test-cartographer/
 │   ├── synthesis-run-v0.1.schema.json
 │   ├── workspace-profile-v0.1.schema.json
 │   ├── framework-snapshot-v0.1.schema.json
-│   └── adaptation-plan-v0.1.schema.json
+│   ├── adaptation-plan-v0.1.schema.json
+│   ├── generation-profile-v0.1.schema.json
+│   ├── code-patch-v0.1.schema.json
+│   ├── patch-application-v0.1.schema.json
+│   └── creation-evaluation-v0.1.schema.json
 ├── scripts/
-│   ├── export_context_schema.py
-│   ├── export_intake_schema.py
-│   ├── export_observation_schema.py
-│   ├── export_synthesis_schemas.py
+│   ├── export_*_schemas.py
 │   ├── verify_browser_observation.py
 │   ├── verify_synthesis_replay.py
-│   └── verify_framework_adaptation_plan.py
+│   ├── verify_framework_adaptation_plan.py
+│   ├── verify_first_runnable_test.py
+│   └── record_creation_evaluation.py
 ├── src/test_cartographer/
-│   ├── cli.py
 │   ├── context/
 │   ├── intake/
 │   ├── observation/
 │   ├── synthesis/
-│   └── adaptation/
-├── testdata/
-│   ├── browser/
-│   ├── context/
-│   ├── observation/
-│   ├── synthesis/
 │   ├── adaptation/
-│   └── framework/
+│   └── delivery/
+├── testdata/
 ├── tests/
-│   ├── integration/
-│   └── unit/
 ├── LEARNINGS.md
-├── LICENSE
 ├── README.md
 └── pyproject.toml
 ```
 
-## What Sprint 5 proves
+## What Sprint 6 proves
 
-- an approved local framework root can be inspected through explicit marker,
-  allowlist, count, and size constraints,
-- the persisted snapshot can contain relative paths, hashes, sizes, and Python
-  symbols without source text or absolute paths,
-- the same repository state produces the same fingerprint,
-- an accepted logical proposal can map to exact page, component, fixture, and
-  test targets,
-- existing files and symbols can produce `add_symbol` or `reuse_symbol` instead
-  of blind duplication,
-- proposal acceptance and repository-plan acceptance remain separate,
-- the full inspection, planning, and review flow can leave the framework
-  byte-for-byte unchanged.
+- an accepted logical proposal and accepted repository plan can become exact,
+  traceable source,
+- exact source remains a separate human-review artefact,
+- framework drift is checked before generation and application,
+- create and append operations are fully preflighted before the first write,
+- an existing fixture file can be extended without replacing it,
+- the patch can be applied atomically to a snapshot-bounded framework sandbox with rollback,
+- files outside the accepted snapshot cannot affect pytest collection,
+- the resulting framework compiles and pytest collects one generated test,
+- real Chromium executes the generated test in the normal Windows gate,
+- the test contains meaningful assertions in the test layer,
+- normal execution requires neither TestCartographer nor a live LLM,
+- the original framework remains unchanged during acceptance,
+- creation timing, correction, review, and execution evidence is replayable.
 
-## What Sprint 5 does not prove
+## What Sprint 6 does not prove
 
-- that the first mapping convention fits every framework adaptation,
-- complete understanding of imports, decorators, fixtures, or runtime behavior,
-- source-code generation, patch safety, collection, or execution success,
-- secret detection in inspected files,
-- usefulness on a full enterprise repository,
-- live-provider quality, authentication, maintenance, expansion, or Salesforce
-  readiness.
+- safe unattended modification of the original framework repository,
+- arbitrary source refactoring or merge-conflict handling,
+- general code quality across applications and architectures,
+- live-provider quality or prompt-injection resistance,
+- enterprise authentication, secret handling, or Salesforce usefulness,
+- maintenance after application drift,
+- superiority over manual, Codegen, or general-LLM workflows.
 
 ## One lifecycle, two separately executable modules
 
@@ -612,8 +673,9 @@ See:
 | Architecture checkpoint A | Two-module lifecycle, maintenance modes, authentication directions, and enterprise target | Done in documentation |
 | 4 | Bounded LLM synthesis and POM proposal | Done |
 | 5 | Project workspace and framework adaptation plan | Done |
-| 6 | First runnable framework test and creation-lifecycle evaluation | Planned |
-| 7–10 | Execution evidence, reactive/proactive maintenance, and expansion reuse | Parked |
+| 6 | First runnable framework test and creation-lifecycle evaluation | Done |
+| 7 | Framework execution-evidence contract | Planned |
+| 8–10 | Reactive/proactive maintenance and expansion reuse | Parked |
 | 11–13 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
@@ -654,6 +716,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
+| [`docs/source-delivery.md`](docs/source-delivery.md) | Sprint 6 exact source proposal, review, safe-copy application, execution, and evaluation |
 | [`docs/system-lifecycle.md`](docs/system-lifecycle.md) | Creation, execution, reactive/proactive maintenance, expansion, and enterprise validation lifecycle |
 | [`docs/authentication-strategies.md`](docs/authentication-strategies.md) | Parked storage-state, login-recipe, and interactive-login directions |
 | [`docs/architecture-decisions.md`](docs/architecture-decisions.md) | Accepted implementation decisions |
@@ -677,3 +740,25 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 ## License
 
 MIT License. See [`LICENSE`](LICENSE).
+
+
+## Sprint 6 result
+
+The first controlled creation lifecycle is now executable:
+
+```text
+accepted application evidence
+→ accepted logical proposal
+→ accepted framework placement
+→ exact source review
+→ safe-copy application
+→ compile and pytest collection
+→ real Playwright execution
+→ creation evaluation
+```
+
+Expected normal Windows result: `159 passed`. The generated target remains a
+small public-search reference test, but it is a real framework test with a
+meaningful assertion and no TestCartographer or live-LLM runtime dependency.
+The original `qa-automation-framework` repository is not modified by the Sprint
+6 acceptance workflow.
