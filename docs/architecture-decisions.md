@@ -645,11 +645,11 @@ change without failing the current pool.
 
 ## ADR-025 — Collect execution evidence in the framework, analyse it in Cartographer
 
-**Status:** Accepted as product direction; implementation deferred
+**Status:** Accepted and implemented for the bounded Sprint 7 reference contract
 
 ### Decision
 
-Place future bounded execution-evidence collection in the
+Place bounded execution-evidence collection in the
 `qa-automation-framework` execution plane. TestCartographer consumes that
 evidence for diagnosis, context evolution, impact analysis, and patch
 proposals.
@@ -667,11 +667,17 @@ maintenance input.
 
 ### Consequences
 
-- a future cross-repository evidence contract is required,
-- failure evidence must distinguish application, automation, data, environment,
-  and stale-context possibilities,
-- screenshots, traces, network references, and page state remain policy-bound,
-- the collector does not itself decide or apply repairs.
+- Sprint 7 provides a standalone pytest collector and provider-neutral JSON
+  contract without importing TestCartographer,
+- persisted outcomes distinguish pass, call-phase failure, and infrastructure
+  error but do not claim root cause,
+- failure records use safe summaries, relative locations, and redacted hashes
+  rather than raw exception messages or tracebacks,
+- screenshots, traces, network references, page state, and captured output
+  remain outside the default contract,
+- deterministic readiness can reject incomplete traceability or missing step
+  context before Sprint 8 analysis,
+- the collector does not decide or apply repairs.
 
 ## ADR-026 — Treat expansion as reuse validation, not another greenfield demo
 
@@ -961,3 +967,54 @@ unresolvable `BaseComponent` import because this dependency was implicit.
 **Consequence:** Incompatible or stale framework checkouts fail early with a
 precise contract error. Automatic negotiation of alternative base abstractions
 remains future scope.
+
+
+## ADR-041 — Classify execution evidence by pytest phase, not assumed root cause
+
+**Status:** Accepted and implemented in Sprint 7
+
+### Decision
+
+Persist `test_failure` only for a failed pytest call phase and
+`infrastructure_error` for collection, setup, or teardown failures. Do not
+serialize `application_bug`, `automation_bug`, or similar root-cause labels in
+version `0.1`.
+
+### Rationale
+
+The execution framework knows which pytest phase failed. It usually does not
+know why. Treating an assertion or Playwright exception as proof of an
+application defect would recreate the false-certainty problem that the project
+explicitly avoids in LLM judging and context modelling.
+
+### Consequences
+
+- classification is deterministic and replayable,
+- infrastructure failures are not mixed with call-phase failures,
+- Sprint 8 must support uncertainty and human review,
+- a failed test remains a diagnostic signal rather than a bug record.
+
+## ADR-042 — Persist redacted hashes and structural context instead of raw failure text
+
+**Status:** Accepted and implemented in Sprint 7
+
+### Decision
+
+Store exception type, safe phase summary, relative location, bounded step
+metadata, and SHA-256 of redacted bounded text. Do not persist raw exception
+messages, raw tracebacks, stdout, stderr, input values, HTML, screenshots, or
+traces in the default execution-evidence contract.
+
+### Rationale
+
+Assertion messages, Playwright traces, screenshots, and captured output can
+contain credentials, personal data, business data, URLs, and NDA-protected
+application content. Their diagnostic value does not make them safe by
+default.
+
+### Consequences
+
+- the default bundle is smaller and safer to retain,
+- equality and replay checks remain possible through redacted hashes,
+- some diagnoses will require a separately reviewed artefact policy,
+- the contract cannot silently expand by adding arbitrary raw strings.

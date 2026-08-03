@@ -3246,3 +3246,177 @@ reviewed source patch and one independently runnable framework test in a
 snapshot-bounded sandbox. The next uncertainty is no longer creation. It is how ordinary framework
 execution should return bounded, high-value evidence for maintenance without
 turning every failure into an assumed application bug or leaking sensitive data.
+
+## Sprint 7 — Framework execution evidence
+
+### A failed test is an observation, not a bug verdict
+
+The first design temptation was to build a “bug logger”. That name already
+assumes too much. A failed test can come from the application, automation code,
+test data, configuration, fixtures, environment, an incorrect expectation, or
+stale context.
+
+Sprint 7 therefore persists only three execution outcomes:
+
+```text
+passed
+test_failure
+infrastructure_error
+```
+
+The distinction is based on pytest phase, which the framework actually knows:
+
+- call failure becomes `test_failure`,
+- collection/setup/teardown failure becomes `infrastructure_error`.
+
+Neither outcome states root cause. This preserves evidence without converting a
+technical signal into false certainty.
+
+### Framework execution must remain independent
+
+The reference collector is a standalone pytest plugin containing only standard
+library and pytest imports. The framework process writes provider-neutral JSON.
+TestCartographer loads and assesses that JSON only after pytest has finished.
+
+This proves a stronger form of independence than calling Cartographer from a
+fixture:
+
+```text
+framework execution
+→ JSON contract
+→ later Cartographer analysis
+```
+
+The adapted automation remains usable even when TestCartographer and every LLM
+provider are unavailable.
+
+### Raw failure text was excluded deliberately
+
+Exception messages, assertion introspection, tracebacks, captured output,
+screenshots, and Playwright traces can contain credentials, personal data,
+business values, full URLs, DOM content, and NDA-protected information.
+
+The default record keeps:
+
+- exception type,
+- safe phase summary,
+- relative failure location,
+- SHA-256 of bounded redacted message and traceback text,
+- redaction and truncation metadata.
+
+The raw strings are not serialized. Diagnostic richness can be added later only
+through a separate artefact policy; it should not enter v0.1 as an unrestricted
+string field.
+
+### A useful step probe must not become a data logger
+
+Maintenance needs more than a node ID and exception type. It needs to know the
+last relevant application interaction. But accepting arbitrary dictionaries or
+method arguments would recreate the raw-data problem.
+
+The Sprint 7 probe accepts only structural fields:
+
+- step ID,
+- Page Object,
+- method,
+- action,
+- target element ID,
+- locator ID,
+- URL for minimization.
+
+It does not accept input values or arguments. The reference bundle therefore
+identifies `CatalogSearchForm.submit_search` and the observed locator without
+persisting the search value.
+
+### URL minimization is part of the contract, not caller discipline
+
+A supplied URL may contain user information, query values, tokens, filters, or
+fragments. The collector reduces it to origin and path before serialization.
+
+```text
+https://user:password@example.test/catalog?query=Example#results
+→ https://example.test + /catalog
+```
+
+The JSON also contains literal false flags for credentials, query, and fragment
+persistence. This makes the privacy claim machine-checkable.
+
+### Traceability can combine run defaults and generated source IDs
+
+A bounded run can provide non-secret defaults for context, process, synthesis,
+adaptation, and patch IDs. The generated test already carries a module-level
+`TRACEABILITY` tuple with proposal, method, and assertion IDs.
+
+The reference collector combines both. This allows Sprint 7 to link execution
+back to creation without changing ordinary test assertions or importing
+Cartographer.
+
+The limitation is explicit: a mixed suite will eventually need per-test
+generated metadata rather than one profile default.
+
+### Maintenance readiness is not diagnosis readiness
+
+`assess_execution_evidence()` requires every failure record to contain:
+
+- failure details,
+- complete high-level traceability,
+- at least one bounded step,
+- no truncated records.
+
+When those conditions are met, the bundle is ready to enter Sprint 8. That does
+not mean Cartographer knows what failed or what should change. It means the next
+analysis has a trustworthy starting basis.
+
+### Sprint 7 decisions
+
+1. Execution collection belongs to the framework; analysis belongs to
+   TestCartographer.
+2. The collector must not import TestCartographer or call an LLM.
+3. Version 0.1 classifies by pytest phase, not assumed root cause.
+4. `test_failure` must never be presented as synonymous with application bug.
+5. Raw exception messages, tracebacks, stdout, stderr, HTML, screenshots, and
+   traces are excluded by default.
+6. Known runtime secrets are redacted in memory before bounded hashes are
+   calculated.
+7. Step evidence is structural and does not accept values or method arguments.
+8. URLs are minimized to origin and path before persistence.
+9. Record and step budgets are part of the profile.
+10. Missing traceability and missing step context remain explicit blockers.
+11. Static replay and a live intentionally failing pytest subprocess are both
+    required.
+12. Sprint 8 may analyse validated evidence but must retain uncertainty and
+    human review.
+
+### Open questions carried into Sprint 8
+
+- What diagnosis vocabulary avoids false certainty while remaining useful?
+- When should evidence produce REVIEW, INSUFFICIENT_EVIDENCE, or a targeted
+  re-observation request?
+- How should Cartographer choose the smallest affected observation area?
+- Which failure types justify marking context `STALE` or `CONFLICTING`?
+- How should automation, application, data, and environment hypotheses be
+  ranked without treating an LLM as an authority?
+- What additional artefacts can be authorized safely, and who approves them?
+- How will a repaired proposal be linked to the original evidence and retest?
+
+### Sprint 7 conclusion
+
+The execution plane can now return a bounded, traceable, provider-neutral
+maintenance handoff while remaining autonomous relative to TestCartographer.
+The next uncertainty is not evidence collection. It is whether Cartographer can
+use that evidence to guide a safe, reviewable reactive-maintenance workflow
+without guessing root cause or applying silent repairs.
+
+## Sprint 7 acceptance finding — imported CLI tests did not exercise the module entry point
+
+The first real Windows setup passed all 183 tests and generated valid execution
+evidence, but `python -m test_cartographer.cli evidence status` failed with a
+`NameError`. The execution-format helpers existed below the module's
+`if __name__ == "__main__"` block. Direct tests imported and called `main()`, so
+the module finished defining every helper before the command ran; the real
+module entry point executed earlier and exposed the ordering defect.
+
+The correction moves the entry-point block to the physical end of `cli.py` and
+adds subprocess regression tests for both `evidence status` and
+`evidence assess`. A CLI contract is not fully tested when only its Python
+function is invoked; at least one test must execute the shipped module boundary.

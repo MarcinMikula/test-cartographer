@@ -1,0 +1,203 @@
+{
+  "additionalProperties": false,
+  "description": "Non-secret collection limits interpreted by the framework-side plugin.",
+  "properties": {
+    "captured_stderr_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Captured Stderr Persisted",
+      "type": "boolean"
+    },
+    "captured_stdout_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Captured Stdout Persisted",
+      "type": "boolean"
+    },
+    "credentials_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Credentials Persisted",
+      "type": "boolean"
+    },
+    "default_adaptation_plan_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Default Adaptation Plan Id"
+    },
+    "default_code_patch_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Default Code Patch Id"
+    },
+    "default_context_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Default Context Id"
+    },
+    "default_process_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Default Process Id"
+    },
+    "default_synthesis_run_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Default Synthesis Run Id"
+    },
+    "environment_label": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Environment Label",
+      "type": "string"
+    },
+    "framework_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Framework Id",
+      "type": "string"
+    },
+    "html_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Html Persisted",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "include_passed": {
+      "default": true,
+      "title": "Include Passed",
+      "type": "boolean"
+    },
+    "input_values_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Input Values Persisted",
+      "type": "boolean"
+    },
+    "live_llm_used": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Used",
+      "type": "boolean"
+    },
+    "max_failure_text_characters": {
+      "default": 2000,
+      "maximum": 20000,
+      "minimum": 128,
+      "title": "Max Failure Text Characters",
+      "type": "integer"
+    },
+    "max_records": {
+      "default": 100,
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Max Records",
+      "type": "integer"
+    },
+    "max_steps_per_test": {
+      "default": 8,
+      "maximum": 32,
+      "minimum": 1,
+      "title": "Max Steps Per Test",
+      "type": "integer"
+    },
+    "raw_exception_messages_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Exception Messages Persisted",
+      "type": "boolean"
+    },
+    "raw_tracebacks_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Tracebacks Persisted",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "screenshots_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Screenshots Persisted",
+      "type": "boolean"
+    },
+    "secret_environment_variable_names": {
+      "default": [],
+      "items": {
+        "pattern": "^[A-Z][A-Z0-9_]{2,79}$",
+        "type": "string"
+      },
+      "title": "Secret Environment Variable Names",
+      "type": "array"
+    },
+    "sensitivity": {
+      "default": "internal",
+      "enum": [
+        "public",
+        "internal"
+      ],
+      "title": "Sensitivity",
+      "type": "string"
+    },
+    "traces_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Traces Persisted",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "framework_id",
+    "environment_label"
+  ],
+  "title": "ExecutionEvidenceProfile",
+  "type": "object"
+}

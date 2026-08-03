@@ -56,7 +56,7 @@ The adapted framework is responsible for:
 - secret retrieval and authenticated browser setup,
 - test execution and assertions,
 - CI/CD and ordinary reporting,
-- future collection of bounded execution evidence for maintenance analysis.
+- bounded execution-evidence collection for maintenance handoff.
 
 Once an adaptation is accepted, ordinary test runs must not require
 TestCartographer or a live LLM.
@@ -150,8 +150,9 @@ qa-automation-framework
 
 This phase is autonomous relative to TestCartographer.
 
-A future framework-side **Execution Evidence Collector** should capture bounded,
-high-value diagnostic context. The name is intentionally broader than "bug
+Sprint 7 implements a bounded provider-neutral **Execution Evidence Collector**
+reference contract. The production framework integration should follow the same
+boundary. The name is intentionally broader than "bug
 logger" because a failed test may indicate:
 
 - an application defect,
@@ -162,18 +163,19 @@ logger" because a failed test may indicate:
 - stale project context,
 - an unsupported state.
 
-Candidate evidence includes:
+The implemented v0.1 evidence includes:
 
 - test, step, Page Object, and method identifiers,
 - attempted action and locator,
-- exception and failure classification,
-- minimized URL and element state,
-- environment and application-version metadata,
-- trace, screenshot, or network references only when policy allows,
+- pytest phase and outcome without root-cause claims,
+- exception type, safe summary, redacted hashes, and relative failure location,
+- minimized application origin/path and bounded structural step metadata,
+- framework/runtime metadata,
 - links back to the relevant ContextBundle and accepted automation artefacts.
 
-The collector belongs to the execution plane, while analysis and context
-updates belong to TestCartographer.
+The collector belongs to the execution plane, while validation, maintenance
+readiness, analysis, and context updates belong to TestCartographer. Raw traces,
+screenshots, network data, and captured output remain outside v0.1.
 
 ## Lifecycle phase 3 — reactive maintenance
 

@@ -223,3 +223,16 @@ acceptance.
 - usefulness across multiple processes and applications,
 - maintenance after a later application change,
 - superiority over manual, Codegen, or general-LLM adaptation.
+
+
+## Sprint 7 handoff
+
+The Sprint 6 generated test already carries a module-level `TRACEABILITY` tuple.
+Sprint 7's framework-side collector can combine those source IDs with a
+non-secret execution profile containing the accepted context, process,
+synthesis-run, adaptation-plan, and code-patch IDs.
+
+This avoids changing source-delivery authority: accepting generated code still
+does not authorize evidence collection, raw failure retention, or maintenance.
+Those are separate runtime and analysis policies. Mixed suites will eventually
+need per-test generated metadata rather than one profile default.

@@ -1,0 +1,29 @@
+{
+  "schema_version": "0.1",
+  "id": "exec_profile_strict_internal",
+  "framework_id": "qaf_reference",
+  "environment_label": "controlled_local",
+  "include_passed": true,
+  "max_records": 20,
+  "max_steps_per_test": 8,
+  "max_failure_text_characters": 2000,
+  "secret_environment_variable_names": [
+    "TEST_CARTOGRAPHER_SECRET"
+  ],
+  "default_context_id": "ctx_public_catalog_search_observation_ready",
+  "default_process_id": "proc_search_catalog",
+  "default_synthesis_run_id": "synrun_public_search",
+  "default_adaptation_plan_id": "adapt_public_search",
+  "default_code_patch_id": "patch_public_search",
+  "sensitivity": "internal",
+  "input_values_persisted": false,
+  "credentials_persisted": false,
+  "raw_exception_messages_persisted": false,
+  "raw_tracebacks_persisted": false,
+  "captured_stdout_persisted": false,
+  "captured_stderr_persisted": false,
+  "html_persisted": false,
+  "screenshots_persisted": false,
+  "traces_persisted": false,
+  "live_llm_used": false
+}

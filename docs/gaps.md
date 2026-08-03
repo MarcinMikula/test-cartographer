@@ -198,13 +198,13 @@ Browser observation must not become an uncontrolled raw-data collector.
 - source-to-target traceability,
 - reviewable adaptation plan and separate acceptance.
 
-**Still open — target Sprint 6:**
+**Still open after Sprints 5–6:**
 
 - validate project-specific naming and fixture conventions against a full copy,
-- generate reviewable source code,
-- apply accepted changes safely,
-- handle concurrent framework drift and merge conflicts,
-- collect and execute the generated test.
+- safe writes to the original project repository,
+- arbitrary source refactoring and merge-conflict handling,
+- broader naming and fixture conventions,
+- enterprise-scale framework compatibility.
 
 ## Gap 10 — Real usability and effort validation
 
@@ -337,31 +337,39 @@ Three strategies are parked rather than selected:
 
 ## Gap 16 — Framework execution-evidence collector
 
-**Status:** OPEN
+**Status:** PARTIALLY CLOSED by Sprint 7
 
-**Target:** After the first runnable framework test
+**Implemented:**
 
-No framework-side collector currently exports bounded maintenance evidence.
+- provider-neutral `ExecutionEvidenceProfile` and `ExecutionEvidenceBundle`,
+- standalone pytest reference collector with no TestCartographer import,
+- distinct pass, call-phase test failure, and setup/teardown infrastructure
+  outcomes,
+- complete links to context, process, synthesis, plan, patch, and source IDs,
+- bounded structural step probe,
+- minimized origin/path location,
+- redaction-before-hashing and explicit raw-data exclusions,
+- deterministic readiness assessment for reactive-maintenance intake,
+- static replay and live subprocess verification.
 
-A future contract should capture enough context to analyse a failure without
-assuming it is an application bug, including:
+**Still open:**
 
-- test, step, Page Object, and method identifiers,
-- action and locator,
-- exception and failure classification,
-- minimized element/page state,
-- environment and application-version metadata,
-- policy-approved trace, screenshot, or network references,
-- links to Cartographer context and accepted artefacts.
+- installation and ownership in the production `qa-automation-framework` repo,
+- xdist and multi-process aggregation,
+- retries and flaky-run correlation,
+- crash-safe streaming,
+- policy-approved screenshot, trace, and network references,
+- CI upload, retention, access control, and deletion,
+- application-version metadata from real enterprise systems.
 
-This is a cross-repository gap: collection belongs to the framework; analysis
-belongs to TestCartographer.
+Collection belongs to the framework execution plane; diagnosis and context
+evolution remain TestCartographer responsibilities.
 
 ## Gap 17 — Reactive maintenance workflow
 
 **Status:** OPEN
 
-**Target:** After execution evidence exists
+**Target:** Sprint 8
 
 The product cannot yet:
 

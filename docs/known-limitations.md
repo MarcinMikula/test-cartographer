@@ -277,14 +277,36 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
   telemetry policy, or production-readiness claim.**
 - **The MIT license does not imply fitness for a particular purpose.**
 
+## Sprint 7 execution-evidence limitations
+
+- **The collector is a reference implementation, not yet installed in the
+  production framework repository.** It proves the contract and independent
+  runtime boundary in a controlled pytest subprocess.
+- **`test_failure` is not an application-bug verdict.** Version `0.1` classifies
+  by pytest phase only. Sprint 8 must preserve uncertainty and support
+  insufficient-evidence outcomes.
+- **Raw failure text is intentionally absent.** The contract stores exception
+  type, safe summary, relative location, and redacted hashes. Some diagnoses
+  will require a separately authorized artefact policy.
+- **No screenshots, traces, network bodies, DOM, HTML, stdout, or stderr are
+  persisted.** Their future usefulness does not override the current privacy
+  boundary.
+- **The bounded step probe requires explicit instrumentation.** Tests without a
+  probe may be valid evidence records but are not ready for automatic Sprint 8
+  handoff.
+- **Forced process termination may lose the bundle.** Version `0.1` writes the
+  final bundle at pytest session finish; it is not crash-safe streaming.
+- **No xdist, retry, rerun, or flaky-run correlation exists.** One record maps to
+  one normal single-process pytest execution.
+- **Profile defaults are suitable only for a bounded run.** Mixed suites will
+  need per-test or generated traceability metadata.
+
 ## Next boundary to resolve
 
-Sprint 7 should define a bounded execution-evidence contract. A failed test is
-not automatically an application bug, and raw traces, screenshots, URLs, values,
-and secrets must not be captured without explicit policy.
-
-Do not make ordinary framework execution depend on TestCartographer or a live
-LLM. Do not send unrestricted failure artefacts into maintenance analysis.
+Sprint 8 should consume validated failure records without forcing a premature
+root-cause verdict. It should target re-observation, mark context stale or
+conflicting when justified, calculate impact, and keep diagnosis separate from
+patch acceptance.
 
 - **The Sprint 6 sandbox contains only accepted snapshot entries.** This prevents
   uninspected files such as a parent `tests/conftest.py` from influencing the
@@ -303,3 +325,10 @@ The requirements are now explicit and validated before plan review. The tool
 does not yet adapt its inheritance strategy automatically when a project uses
 different base abstractions. Such a repository is reported as incompatible with
 the selected generation profile rather than silently handled.
+
+- **CLI entry-point coverage is intentionally selective.** Sprint 7 adds real
+  subprocess coverage for the new execution-evidence commands after direct
+  `main()` tests missed a module-definition-order defect. Older CLI commands are
+  still primarily tested through direct dispatch and do not yet all have an
+  equivalent `python -m` regression test. Tracked as future hardening rather
+  than a Sprint 7 blocker.

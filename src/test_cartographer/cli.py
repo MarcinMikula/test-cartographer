@@ -33,6 +33,8 @@ from test_cartographer.delivery.io import (
     save_code_patch,
 )
 from test_cartographer.delivery.review import review_code_patch
+from test_cartographer.execution.assessment import assess_execution_evidence
+from test_cartographer.execution.io import load_execution_bundle
 from test_cartographer.context.enums import SensitivityLevel
 from test_cartographer.context.io import load_context, save_context
 from test_cartographer.context.readiness import assess_readiness
@@ -87,6 +89,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _dispatch_adaptation(parser, args)
     if args.command == "deliver":
         return _dispatch_delivery(parser, args)
+    if args.command == "evidence":
+        return _dispatch_evidence(parser, args)
 
     parser.error("a command is required")
     return 2
@@ -385,6 +389,24 @@ def _build_parser() -> argparse.ArgumentParser:
     deliver_apply.add_argument("--application", required=True, type=Path)
     deliver_apply.add_argument("--application-id")
 
+    evidence = commands.add_parser(
+        "evidence",
+        help="validate and assess one bounded framework execution-evidence bundle",
+    )
+    evidence_commands = evidence.add_subparsers(dest="evidence_command")
+
+    evidence_status = evidence_commands.add_parser(
+        "status",
+        help="show outcomes, privacy boundaries, and traceability coverage",
+    )
+    evidence_status.add_argument("--bundle", required=True, type=Path)
+
+    evidence_assess = evidence_commands.add_parser(
+        "assess",
+        help="assess readiness for future reactive maintenance",
+    )
+    evidence_assess.add_argument("--bundle", required=True, type=Path)
+
     return parser
 
 
@@ -466,6 +488,18 @@ def _dispatch_delivery(
     if args.deliver_command == "apply":
         return _deliver_apply_command(args)
     parser.error("a deliver command is required")
+    return 2
+
+
+def _dispatch_evidence(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    if args.evidence_command == "status":
+        return _evidence_status_command(args)
+    if args.evidence_command == "assess":
+        return _evidence_assess_command(args)
+    parser.error("an evidence command is required")
     return 2
 
 
@@ -784,6 +818,19 @@ def _deliver_apply_command(args: argparse.Namespace) -> int:
 
 
 
+def _evidence_status_command(args: argparse.Namespace) -> int:
+    bundle = load_execution_bundle(args.bundle)
+    print(_format_execution_bundle(bundle))
+    return 0
+
+
+def _evidence_assess_command(args: argparse.Namespace) -> int:
+    bundle = load_execution_bundle(args.bundle)
+    print(_format_execution_bundle(bundle))
+    print(_format_execution_assessment(assess_execution_evidence(bundle)))
+    return 0
+
+
 def _parse_answer(raw: str, question: IntakeQuestion) -> IntakeAnswer:
     if not raw:
         raise ValueError("enter a value or one of the displayed commands")
@@ -1002,6 +1049,41 @@ def _format_observation_status(observation: BrowserObservation) -> str:
             "Input value persisted: false",
             "Text content persisted: false",
             "HTML persisted: false",
+        )
+    )
+
+
+def _format_execution_bundle(bundle) -> str:
+    complete = sum(record.traceability.complete for record in bundle.records)
+    return "\n".join(
+        (
+            f"Execution evidence bundle: {bundle.id}",
+            f"Run: {bundle.run_id}",
+            f"Profile: {bundle.profile_id}",
+            f"Records: {len(bundle.records)}",
+            f"Passed: {bundle.passed_count}",
+            f"Test failures: {bundle.test_failure_count}",
+            f"Infrastructure errors: {bundle.infrastructure_error_count}",
+            f"Complete traceability: {complete}/{len(bundle.records)}",
+            f"Truncated records: {bundle.truncated_record_count}",
+            "Raw artifacts persisted: false",
+            "Cartographer runtime required: false",
+            "Live LLM used: false",
+        )
+    )
+
+
+def _format_execution_assessment(report) -> str:
+    issues = ", ".join(item.value for item in report.issue_codes) or "none"
+    return "\n".join(
+        (
+            f"Failure records: {report.failure_count}",
+            f"Actionable failures: {report.actionable_failure_count}",
+            f"Missing traceability: {report.missing_traceability_count}",
+            f"Missing last step: {report.missing_last_step_count}",
+            f"Issues: {issues}",
+            "Ready for reactive maintenance: "
+            f"{str(report.ready_for_reactive_maintenance).lower()}",
         )
     )
 

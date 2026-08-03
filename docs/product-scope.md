@@ -20,7 +20,7 @@ The product should help answer:
 
 ## Current implemented boundary
 
-Sprint 6 implements:
+Sprint 7 implements:
 
 - a strict local context contract for one UI process,
 - deterministic adaptation-readiness assessment,
@@ -50,7 +50,16 @@ Sprint 6 implements:
 - deterministic root fingerprints,
 - exact file/symbol adaptation operations,
 - separate plan status and human review,
-- CLI inspect, plan, status, and review commands.
+- CLI inspect, plan, status, and review commands,
+- exact deterministic source patches with separate source review,
+- snapshot-bounded sandbox application and first runnable framework test,
+- creation-lifecycle evaluation,
+- a standalone framework-side pytest execution-evidence collector,
+- provider-neutral profile, record, and bundle contracts,
+- explicit pass, test-failure, and infrastructure-error outcomes,
+- bounded structural step and minimized URL evidence,
+- deterministic readiness assessment for reactive maintenance,
+- CLI evidence status and assessment commands.
 
 The current package cannot:
 
@@ -58,8 +67,9 @@ The current package cannot:
 - discover an unknown page, element, or locator,
 - call a live LLM provider,
 - safely modify the user's original `qa-automation-framework` repository without a separate acceptance path,
-- execute the planned framework test,
-- prove that the first mapping convention fits every project.
+- diagnose root cause from execution evidence,
+- perform reactive or proactive maintenance,
+- prove that the first mapping and evidence conventions fit every project.
 
 Implementation details are documented in:
 
@@ -67,7 +77,9 @@ Implementation details are documented in:
 - [`intake-workflow.md`](intake-workflow.md),
 - [`browser-observation.md`](browser-observation.md),
 - [`synthesis-protocol.md`](synthesis-protocol.md),
-- [`framework-adaptation-planning.md`](framework-adaptation-planning.md).
+- [`framework-adaptation-planning.md`](framework-adaptation-planning.md),
+- [`source-delivery.md`](source-delivery.md),
+- [`execution-evidence.md`](execution-evidence.md).
 
 ## Problem statement
 
@@ -232,7 +244,7 @@ autonomous crawling remains outside the current scope.
 
 #### Repository and execution evidence
 
-The tool should eventually inspect:
+The lifecycle may inspect or consume:
 
 - existing Page Objects and components,
 - fixtures and workflows,
@@ -245,7 +257,10 @@ The tool should eventually inspect:
 
 This prevents duplication and supports maintenance over multiple iterations.
 
-No repository or execution connector is currently implemented.
+Sprint 5 implements bounded read-only repository inspection. Sprint 7 implements
+a provider-neutral execution-evidence contract and reference pytest collector.
+Production framework installation, CI transport, and raw artefact policy remain
+open.
 
 ### 2. Context modelling
 
@@ -391,7 +406,8 @@ history. It does not yet review code or repository diffs.
 
 ### 7. Lifecycle maintenance and expansion
 
-Maintenance has two distinct future modes.
+Maintenance has two distinct modes in the product direction. Sprint 7 now
+implements the bounded evidence input; diagnosis and repair remain future work.
 
 #### Reactive maintenance
 
@@ -407,8 +423,9 @@ execution evidence
 → accepted framework retest
 ```
 
-A future framework-side Execution Evidence Collector should capture valuable
-context without labelling every failed test as an application bug.
+The Sprint 7 framework-side reference collector captures bounded structural
+context without labelling a failed test as an application bug. Production
+integration and richer policy-approved artefacts remain future work.
 
 #### Proactive maintenance
 

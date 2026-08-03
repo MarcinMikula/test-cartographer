@@ -1,0 +1,285 @@
+{
+  "schema_version": "0.1",
+  "id": "bundle_9d452252bd25449e",
+  "run_id": "run_reference_execution",
+  "profile_id": "exec_profile_strict_internal",
+  "started_at": "2026-08-03T15:00:00Z",
+  "completed_at": "2026-08-03T15:00:03Z",
+  "records": [
+    {
+      "schema_version": "0.1",
+      "id": "exe_b5c834b18fbdfa60",
+      "run_id": "run_reference_execution",
+      "profile_id": "exec_profile_strict_internal",
+      "captured_at": "2026-08-03T15:00:01Z",
+      "outcome": "passed",
+      "test": {
+        "nodeid": "testdata/execution/framework_suite/test_execution_outcomes.py::test_reference_execution_passes",
+        "relative_path": "testdata/execution/framework_suite/test_execution_outcomes.py",
+        "test_name": "test_reference_execution_passes",
+        "line_number": 28,
+        "marker_names": []
+      },
+      "traceability": {
+        "context_id": "ctx_public_catalog_search_observation_ready",
+        "process_id": "proc_search_catalog",
+        "synthesis_run_id": "synrun_public_search",
+        "adaptation_plan_id": "adapt_public_search",
+        "code_patch_id": "patch_public_search",
+        "source_ids": [
+          "test_search_catalog",
+          "method_open_catalog",
+          "method_enter_query",
+          "method_submit_search",
+          "assert_matching_results"
+        ],
+        "complete": true,
+        "missing_fields": []
+      },
+      "environment": {
+        "framework_id": "qaf_reference",
+        "environment_label": "controlled_local",
+        "python_version": "3.11.9",
+        "pytest_version": "9.1.1",
+        "playwright_version": "1.62.0",
+        "platform_system": "Windows",
+        "host_name_persisted": false,
+        "environment_values_persisted": false
+      },
+      "duration_seconds": 0.25,
+      "steps": [
+        {
+          "sequence": 1,
+          "step_id": "step_submit_search",
+          "page_object": "CatalogSearchForm",
+          "method_name": "submit_search",
+          "action": "click",
+          "target_element_id": "el_search_submit",
+          "locator_id": "loc_search_submit_role",
+          "location": {
+            "origin": "https://example.test",
+            "path": "/catalog",
+            "credentials_persisted": false,
+            "query_persisted": false,
+            "fragment_persisted": false
+          },
+          "input_value_persisted": false,
+          "method_arguments_persisted": false
+        }
+      ],
+      "failure": null,
+      "sensitivity": "internal",
+      "raw_page_persisted": false,
+      "input_values_persisted": false,
+      "credentials_persisted": false,
+      "raw_exception_messages_persisted": false,
+      "raw_tracebacks_persisted": false,
+      "captured_stdout_persisted": false,
+      "captured_stderr_persisted": false,
+      "html_persisted": false,
+      "screenshots_persisted": false,
+      "traces_persisted": false,
+      "framework_execution_independent": true,
+      "cartographer_runtime_required": false,
+      "live_llm_used": false
+    },
+    {
+      "schema_version": "0.1",
+      "id": "exe_0da499c3f8d22426",
+      "run_id": "run_reference_execution",
+      "profile_id": "exec_profile_strict_internal",
+      "captured_at": "2026-08-03T15:00:02Z",
+      "outcome": "infrastructure_error",
+      "test": {
+        "nodeid": "testdata/execution/framework_suite/test_execution_outcomes.py::test_reference_infrastructure_error_is_captured",
+        "relative_path": "testdata/execution/framework_suite/test_execution_outcomes.py",
+        "test_name": "test_reference_infrastructure_error_is_captured",
+        "line_number": 54,
+        "marker_names": []
+      },
+      "traceability": {
+        "context_id": "ctx_public_catalog_search_observation_ready",
+        "process_id": "proc_search_catalog",
+        "synthesis_run_id": "synrun_public_search",
+        "adaptation_plan_id": "adapt_public_search",
+        "code_patch_id": "patch_public_search",
+        "source_ids": [
+          "test_search_catalog",
+          "method_open_catalog",
+          "method_enter_query",
+          "method_submit_search",
+          "assert_matching_results"
+        ],
+        "complete": true,
+        "missing_fields": []
+      },
+      "environment": {
+        "framework_id": "qaf_reference",
+        "environment_label": "controlled_local",
+        "python_version": "3.11.9",
+        "pytest_version": "9.1.1",
+        "playwright_version": "1.62.0",
+        "platform_system": "Windows",
+        "host_name_persisted": false,
+        "environment_values_persisted": false
+      },
+      "duration_seconds": 0.4,
+      "steps": [
+        {
+          "sequence": 1,
+          "step_id": "step_prepare_browser",
+          "page_object": "CatalogPage",
+          "method_name": "open_catalog",
+          "action": "setup",
+          "target_element_id": null,
+          "locator_id": null,
+          "location": {
+            "origin": "https://example.test",
+            "path": "/catalog",
+            "credentials_persisted": false,
+            "query_persisted": false,
+            "fragment_persisted": false
+          },
+          "input_value_persisted": false,
+          "method_arguments_persisted": false
+        }
+      ],
+      "failure": {
+        "phase": "setup",
+        "exception_type": "RuntimeError",
+        "safe_summary": "RuntimeError during setup",
+        "message_sha256": "426cd611a20753f6fe111c32c455b4bcd92cce3df942144b46f46c5fb820d4a4",
+        "traceback_sha256": "c0533e984d989b34eeb3c1a091b8fe577c60cad942ad4e990282901d3e04e61a",
+        "redaction_count": 0,
+        "message_truncated": false,
+        "location": {
+          "relative_path": "testdata/execution/framework_suite/test_execution_outcomes.py",
+          "line_number": 24,
+          "function_name": "unavailable_browser_service"
+        },
+        "raw_message_persisted": false,
+        "raw_traceback_persisted": false,
+        "captured_output_persisted": false,
+        "expected_actual_values_persisted": false
+      },
+      "sensitivity": "internal",
+      "raw_page_persisted": false,
+      "input_values_persisted": false,
+      "credentials_persisted": false,
+      "raw_exception_messages_persisted": false,
+      "raw_tracebacks_persisted": false,
+      "captured_stdout_persisted": false,
+      "captured_stderr_persisted": false,
+      "html_persisted": false,
+      "screenshots_persisted": false,
+      "traces_persisted": false,
+      "framework_execution_independent": true,
+      "cartographer_runtime_required": false,
+      "live_llm_used": false
+    },
+    {
+      "schema_version": "0.1",
+      "id": "exe_860647f9e7987c2d",
+      "run_id": "run_reference_execution",
+      "profile_id": "exec_profile_strict_internal",
+      "captured_at": "2026-08-03T15:00:03Z",
+      "outcome": "test_failure",
+      "test": {
+        "nodeid": "testdata/execution/framework_suite/test_execution_outcomes.py::test_reference_test_failure_is_captured",
+        "relative_path": "testdata/execution/framework_suite/test_execution_outcomes.py",
+        "test_name": "test_reference_test_failure_is_captured",
+        "line_number": 41,
+        "marker_names": []
+      },
+      "traceability": {
+        "context_id": "ctx_public_catalog_search_observation_ready",
+        "process_id": "proc_search_catalog",
+        "synthesis_run_id": "synrun_public_search",
+        "adaptation_plan_id": "adapt_public_search",
+        "code_patch_id": "patch_public_search",
+        "source_ids": [
+          "test_search_catalog",
+          "method_open_catalog",
+          "method_enter_query",
+          "method_submit_search",
+          "assert_matching_results"
+        ],
+        "complete": true,
+        "missing_fields": []
+      },
+      "environment": {
+        "framework_id": "qaf_reference",
+        "environment_label": "controlled_local",
+        "python_version": "3.11.9",
+        "pytest_version": "9.1.1",
+        "playwright_version": "1.62.0",
+        "platform_system": "Windows",
+        "host_name_persisted": false,
+        "environment_values_persisted": false
+      },
+      "duration_seconds": 0.35,
+      "steps": [
+        {
+          "sequence": 1,
+          "step_id": "step_assert_results",
+          "page_object": "CatalogPage",
+          "method_name": "read_results",
+          "action": "assert",
+          "target_element_id": "el_results_list",
+          "locator_id": "loc_results_list_test_id",
+          "location": {
+            "origin": "https://example.test",
+            "path": "/catalog",
+            "credentials_persisted": false,
+            "query_persisted": false,
+            "fragment_persisted": false
+          },
+          "input_value_persisted": false,
+          "method_arguments_persisted": false
+        }
+      ],
+      "failure": {
+        "phase": "call",
+        "exception_type": "AssertionError",
+        "safe_summary": "AssertionError during call",
+        "message_sha256": "d875070ced3a4f2d1279a4a3728144207fb89485f1a7ede0e3ee2cfbb491e7a5",
+        "traceback_sha256": "3f2d5acbc3f7c5158f51e80bb74f1814a4ee57be8af2e0396970e2066d4de893",
+        "redaction_count": 0,
+        "message_truncated": false,
+        "location": {
+          "relative_path": "testdata/execution/framework_suite/test_execution_outcomes.py",
+          "line_number": 50,
+          "function_name": "test_reference_test_failure_is_captured"
+        },
+        "raw_message_persisted": false,
+        "raw_traceback_persisted": false,
+        "captured_output_persisted": false,
+        "expected_actual_values_persisted": false
+      },
+      "sensitivity": "internal",
+      "raw_page_persisted": false,
+      "input_values_persisted": false,
+      "credentials_persisted": false,
+      "raw_exception_messages_persisted": false,
+      "raw_tracebacks_persisted": false,
+      "captured_stdout_persisted": false,
+      "captured_stderr_persisted": false,
+      "html_persisted": false,
+      "screenshots_persisted": false,
+      "traces_persisted": false,
+      "framework_execution_independent": true,
+      "cartographer_runtime_required": false,
+      "live_llm_used": false
+    }
+  ],
+  "passed_count": 1,
+  "test_failure_count": 1,
+  "infrastructure_error_count": 1,
+  "truncated_record_count": 0,
+  "collector_name": "test_cartographer_pytest_reference",
+  "collector_version": "0.1",
+  "framework_execution_independent": true,
+  "cartographer_runtime_required": false,
+  "raw_artifacts_persisted": false,
+  "live_llm_used": false
+}

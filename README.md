@@ -15,21 +15,22 @@ and expansion.
 
 ## Status
 
-**Sprint 6 — controlled source delivery and first runnable framework test: complete**
+**Sprint 7 — framework execution-evidence contract: complete**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
 Current evidence:
 
 ```text
-153 tests expected with Playwright Chromium
+183 tests expected with Playwright Chromium
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
 controlled source review, patch application, and first runnable test verified end to end
+framework-side execution-evidence collection and maintenance-readiness verified end to end
 ```
 
-The repository now provides six executable boundaries:
+The repository now provides seven executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -40,7 +41,10 @@ The repository now provides six executable boundaries:
 5. a bounded workspace profile, read-only framework snapshot, deterministic
    file/symbol adaptation plan, and separate human review state,
 6. an exact source patch, separate source review, fingerprint preflight, atomic
-   application to a snapshot-bounded framework sandbox, and creation-lifecycle evaluation.
+   application to a snapshot-bounded framework sandbox, and creation-lifecycle evaluation,
+7. a framework-side pytest collector and strict execution-evidence bundle that
+   distinguishes pass, test failure, and infrastructure error without importing
+   TestCartographer or using an LLM.
 
 The current workflow can:
 
@@ -75,7 +79,13 @@ The current workflow can:
 - reject stale framework state before generation or application,
 - apply the accepted patch atomically to a snapshot-bounded framework sandbox,
 - compile, collect, and execute one generated Playwright test,
-- record first-creation timing, correction, and independence evidence.
+- record first-creation timing, correction, and independence evidence,
+- collect one bounded execution-evidence bundle from an independent pytest process,
+- distinguish call-phase test failure from setup/teardown infrastructure error,
+- link execution records to context, process, synthesis, plan, patch, and source IDs,
+- retain a bounded structural step without input values or method arguments,
+- minimize application URLs to origin and path,
+- assess whether failure evidence is sufficient for future reactive-maintenance intake.
 
 It still cannot autonomously explore an application, call a live LLM provider,
 safely patch the user's original framework repository, handle arbitrary source
@@ -278,6 +288,30 @@ framework remains unchanged during the acceptance run.
 
 See [`docs/source-delivery.md`](docs/source-delivery.md).
 
+### Framework execution evidence
+
+Sprint 7 adds a provider-neutral handoff from normal framework execution back
+to future maintenance:
+
+```text
+standalone pytest collector
+→ bounded ExecutionEvidenceBundle
+→ deterministic TestCartographer validation
+→ reactive-maintenance readiness assessment
+```
+
+The framework-side reference plugin imports pytest and the Python standard
+library, but it does not import TestCartographer. It records one of three
+outcomes: `passed`, `test_failure`, or `infrastructure_error`. A failed test is
+not labeled an application bug.
+
+The contract persists test identity, traceability IDs, phase-aware failure
+hashes, relative failure location, runtime versions, and bounded structural
+steps. It excludes input values, credentials, raw messages, raw tracebacks,
+stdout/stderr, HTML, screenshots, traces, and URL query/fragment data.
+
+See [`docs/execution-evidence.md`](docs/execution-evidence.md).
+
 ## Structural validity, intake completion, and adaptation readiness
 
 The project deliberately separates three questions.
@@ -332,10 +366,10 @@ python -m playwright install chromium
 python -m pytest
 ```
 
-Expected corrected Sprint 6 result after Chromium installation:
+Expected Sprint 7 result after Chromium installation:
 
 ```text
-156 passed
+183 passed
 ```
 
 ### Start a reference intake
@@ -550,6 +584,27 @@ to an explicitly supplied framework copy. See
 [`docs/source-delivery.md`](docs/source-delivery.md) for the full preflight,
 rollback, execution, and evaluation contract.
 
+### Verify framework execution evidence
+
+```powershell
+python scripts/verify_execution_evidence_contract.py
+```
+
+Inspect the committed replay bundle:
+
+```powershell
+test-cartographer evidence status `
+    --bundle testdata/execution/bundle/reference_outcomes.json
+
+test-cartographer evidence assess `
+    --bundle testdata/execution/bundle/reference_outcomes.json
+```
+
+The verifier runs a separate pytest process that intentionally produces one
+pass, one call-phase failure, and one setup-phase infrastructure error. The
+collector writes the JSON without importing TestCartographer; Cartographer
+loads and assesses it only after pytest finishes.
+
 ### Re-export contract schemas
 
 ```powershell
@@ -559,12 +614,14 @@ python scripts/export_observation_schema.py
 python scripts/export_synthesis_schemas.py
 python scripts/export_adaptation_schemas.py
 python scripts/export_delivery_schemas.py
+python scripts/export_execution_schemas.py
 python -m pytest tests/unit/context/test_schema.py `
     tests/unit/intake/test_intake_schema.py `
     tests/unit/observation/test_schema.py `
     tests/unit/synthesis/test_schema.py `
     tests/unit/adaptation/test_schema.py `
-    tests/unit/delivery/test_schema.py
+    tests/unit/delivery/test_schema.py `
+    tests/unit/execution/test_schema.py
 ```
 
 ## Current project structure
@@ -578,6 +635,7 @@ test-cartographer/
 │   ├── synthesis-protocol.md
 │   ├── framework-adaptation-planning.md
 │   ├── source-delivery.md
+│   ├── execution-evidence.md
 │   └── ...
 ├── schemas/
 │   ├── context-bundle-v0.1.schema.json
@@ -592,13 +650,16 @@ test-cartographer/
 │   ├── generation-profile-v0.1.schema.json
 │   ├── code-patch-v0.1.schema.json
 │   ├── patch-application-v0.1.schema.json
-│   └── creation-evaluation-v0.1.schema.json
+│   ├── creation-evaluation-v0.1.schema.json
+│   ├── execution-evidence-profile-v0.1.schema.json
+│   └── execution-evidence-bundle-v0.1.schema.json
 ├── scripts/
 │   ├── export_*_schemas.py
 │   ├── verify_browser_observation.py
 │   ├── verify_synthesis_replay.py
 │   ├── verify_framework_adaptation_plan.py
 │   ├── verify_first_runnable_test.py
+│   ├── verify_execution_evidence_contract.py
 │   └── record_creation_evaluation.py
 ├── src/test_cartographer/
 │   ├── context/
@@ -606,7 +667,8 @@ test-cartographer/
 │   ├── observation/
 │   ├── synthesis/
 │   ├── adaptation/
-│   └── delivery/
+│   ├── delivery/
+│   └── execution/
 ├── testdata/
 ├── tests/
 ├── LEARNINGS.md
@@ -641,6 +703,30 @@ test-cartographer/
 - maintenance after application drift,
 - superiority over manual, Codegen, or general-LLM workflows.
 
+## What Sprint 7 proves
+
+- a standalone pytest collector can emit the contract without importing
+  TestCartographer,
+- pass, call-phase test failure, and setup/teardown infrastructure error remain
+  distinct,
+- failure outcome is evidence, not an application-bug verdict,
+- execution links remain traceable to accepted context and generation artefacts,
+- bounded POM steps preserve useful location without input values or arguments,
+- URL credentials, query, and fragment are removed before persistence,
+- raw messages, tracebacks, output, HTML, screenshots, and traces remain outside
+  the default contract,
+- static replay and a live pytest subprocess produce the same valid schema,
+- deterministic assessment can gate Sprint 8 intake.
+
+## What Sprint 7 does not prove
+
+- root-cause analysis or application-bug classification,
+- automatic repair or selector healing,
+- xdist aggregation, retries, crash-safe streaming, or CI retention,
+- approved screenshot, trace, or network artefact policy,
+- installation in a commercial framework repository,
+- enterprise authentication or Salesforce usefulness.
+
 ## One lifecycle, two separately executable modules
 
 | Module | Primary responsibility |
@@ -674,8 +760,9 @@ See:
 | 4 | Bounded LLM synthesis and POM proposal | Done |
 | 5 | Project workspace and framework adaptation plan | Done |
 | 6 | First runnable framework test and creation-lifecycle evaluation | Done |
-| 7 | Framework execution-evidence contract | Planned |
-| 8–10 | Reactive/proactive maintenance and expansion reuse | Parked |
+| 7 | Framework execution-evidence contract | Done |
+| 8 | Reactive maintenance from execution evidence | Planned |
+| 9–10 | Proactive maintenance and expansion reuse | Parked |
 | 11–13 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
@@ -717,6 +804,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
 | [`docs/source-delivery.md`](docs/source-delivery.md) | Sprint 6 exact source proposal, review, safe-copy application, execution, and evaluation |
+| [`docs/execution-evidence.md`](docs/execution-evidence.md) | Sprint 7 framework-side collector, bounded evidence bundle, privacy rules, and maintenance-readiness assessment |
 | [`docs/system-lifecycle.md`](docs/system-lifecycle.md) | Creation, execution, reactive/proactive maintenance, expansion, and enterprise validation lifecycle |
 | [`docs/authentication-strategies.md`](docs/authentication-strategies.md) | Parked storage-state, login-recipe, and interactive-login directions |
 | [`docs/architecture-decisions.md`](docs/architecture-decisions.md) | Accepted implementation decisions |
@@ -742,23 +830,21 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 MIT License. See [`LICENSE`](LICENSE).
 
 
-## Sprint 6 result
+## Sprint 7 result
 
-The first controlled creation lifecycle is now executable:
+The creation lifecycle now feeds a bounded maintenance handoff:
 
 ```text
 accepted application evidence
-→ accepted logical proposal
-→ accepted framework placement
-→ exact source review
-→ safe-copy application
-→ compile and pytest collection
-→ real Playwright execution
-→ creation evaluation
+→ runnable framework test
+→ independent pytest execution
+→ pass / test_failure / infrastructure_error
+→ bounded ExecutionEvidenceBundle
+→ deterministic maintenance-readiness assessment
 ```
 
-Expected normal Windows result: `159 passed`. The generated target remains a
-small public-search reference test, but it is a real framework test with a
-meaningful assertion and no TestCartographer or live-LLM runtime dependency.
-The original `qa-automation-framework` repository is not modified by the Sprint
-6 acceptance workflow.
+Expected normal Windows result: `183 passed`. The Sprint 7 reference run
+contains one pass, one intentional call-phase failure, and one intentional
+setup-phase infrastructure error. The framework-side collector requires neither
+TestCartographer nor a live LLM, and the persisted bundle excludes raw failure
+text and browser artefacts by default.

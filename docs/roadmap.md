@@ -4,6 +4,11 @@
 
 TestCartographer is developed through evidence-producing vertical slices.
 
+In this roadmap, **Sprint** means a named, closed delivery increment rather than
+a fixed Scrum timebox. The project is currently developed in a small
+research/engineering workflow, so scope evidence and exit criteria define the
+boundary more strongly than calendar duration.
+
 A sprint is complete only when it produces one or more of:
 
 - a working end-to-end capability,
@@ -71,8 +76,8 @@ product framing
 | Sprint 4 | Bounded LLM synthesis and POM proposal | Done |
 | Sprint 5 | Project workspace, framework mapping, and first reviewable adaptation plan | Done |
 | Sprint 6 | First runnable framework test and creation-lifecycle evaluation | Done |
-| Sprint 7 | Framework execution-evidence contract | Planned |
-| Sprint 8 | Reactive maintenance from execution evidence | Parked |
+| Sprint 7 | Framework execution-evidence contract | Done |
+| Sprint 8 | Reactive maintenance from execution evidence | Planned |
 | Sprint 9 | Proactive post-deployment frontend/context regression | Parked |
 | Sprint 10 | Expansion using the existing application map | Parked |
 | Sprint 11 | External artefacts, authentication profiles, and enterprise safety | Parked |
@@ -558,7 +563,7 @@ accepted ContextBundle and observation
 - controlled-copy and local-framework-copy acceptance paths,
 - four generated and tested JSON Schemas,
 - standalone verifier, CLI coverage, and deterministic replay fixtures,
-- 153 tests expected with Chromium on the normal Windows environment.
+- 159 tests expected with Chromium on the normal Windows environment.
 
 ### Exit criteria
 
@@ -603,30 +608,86 @@ and traces, screenshots, URLs, values, and secrets require separate policy.
 
 ## Sprint 7 — Framework execution-evidence contract
 
-**Status:** Planned
+**Status:** Done
 
-### Direction
+### Goal
 
-Coordinate a framework-side Execution Evidence Collector that can export
-bounded, high-value diagnostic context without declaring every failure an
-application bug.
+Define and exercise one provider-neutral, privacy-bounded handoff from normal
+pytest execution to future TestCartographer maintenance without making the
+framework depend on TestCartographer or a live LLM.
 
-Candidate evidence:
+### Delivered
 
-- test, step, Page Object, and method identifiers,
-- action and locator,
-- exception and failure classification,
-- minimized element/page state,
-- environment and application-version metadata,
-- approved trace/screenshot/network references,
-- links to Cartographer context and accepted artefacts.
+- strict `ExecutionEvidenceProfile` version `0.1`,
+- strict `ExecutionEvidenceBundle` and per-test record contract version `0.1`,
+- standalone framework-side pytest reference collector,
+- no TestCartographer imports in the collector process,
+- three explicit outcomes: `passed`, `test_failure`, and
+  `infrastructure_error`,
+- deterministic phase rule for call versus setup/teardown failure,
+- complete links to context, process, synthesis run, adaptation plan, code
+  patch, and source IDs,
+- bounded structural step probe without values or method arguments,
+- URL minimization to origin and path,
+- redaction-before-hashing for configured runtime secrets and common named
+  secret assignments,
+- exception type, safe summary, relative failure location, and redacted hashes
+  instead of raw failure text,
+- explicit non-persistence of input values, credentials, raw messages, raw
+  tracebacks, stdout/stderr, HTML, screenshots, traces, and host names,
+- record and step budgets,
+- deterministic `assess_execution_evidence()` readiness report for Sprint 8,
+- `evidence status` and `evidence assess` CLI commands,
+- committed replay profile and three-outcome bundle,
+- live subprocess verifier that intentionally produces one pass, one test
+  failure, and one infrastructure error,
+- two generated and tested JSON Schemas,
+- 183 tests expected with Chromium on the normal Windows environment.
 
-This is a cross-repository workstream. The collector executes with the
-framework; Cartographer consumes and analyses its output.
+### Exit criteria
+
+- [x] The framework-side collector runs without importing TestCartographer.
+- [x] One pass, one call-phase failure, and one setup-phase error are captured.
+- [x] Test failure is not labeled an application bug.
+- [x] Reference records link to accepted Cartographer artefacts.
+- [x] The last bounded POM step is retained without input values.
+- [x] URL credentials, query, and fragment are excluded.
+- [x] Raw exception messages and tracebacks are not persisted.
+- [x] Captured output, HTML, screenshots, and traces are not persisted.
+- [x] Bundle counts are validated against actual records.
+- [x] Missing traceability or last-step context remains explicit.
+- [x] Static replay and live subprocess collection both validate.
+- [x] Deterministic assessment marks the reference failure bundle ready for
+  Sprint 8 intake.
+- [x] No live LLM is used.
+
+### What Sprint 7 proves
+
+A normal pytest process can produce a small, traceable and privacy-bounded
+maintenance handoff that TestCartographer validates only after framework
+execution has completed.
+
+### What Sprint 7 does not prove
+
+- root-cause diagnosis or application-bug classification,
+- automatic repair,
+- crash-safe evidence streaming,
+- xdist aggregation, retries, or flaky-run correlation,
+- approved screenshot, trace, or network artefact retention,
+- CI upload and retention,
+- production installation in `qa-automation-framework`,
+- enterprise authentication or Salesforce usefulness.
+
+### Gate to Sprint 8
+
+Sprint 8 may consume only validated evidence records. It must keep technical
+classification separate from root-cause conclusions and must support REVIEW or
+INSUFFICIENT_EVIDENCE rather than forcing every failure into an application,
+automation, data, or environment verdict.
 
 ## Sprint 8 — Reactive maintenance
 
-**Status:** Parked
+**Status:** Planned
 
 ### Direction
 

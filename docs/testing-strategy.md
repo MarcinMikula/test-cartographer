@@ -789,3 +789,112 @@ and correction evidence for later comparison with manual and general-LLM paths.
 Expected normal Windows result after the corrected Sprint 6: `159 passed`. The
 preparation environment reports `157 passed, 2 skipped` only because
 administrator policy blocks the two real-browser loopback gates.
+
+## Sprint 7 execution-evidence test strategy
+
+The execution-evidence layer is tested at five levels.
+
+### Contract tests
+
+Unit tests validate:
+
+- the closed pass/test-failure/infrastructure outcome vocabulary,
+- outcome-to-phase consistency,
+- failure-required and failure-forbidden states,
+- exact bundle counts,
+- traceability completeness and explicit missing fields,
+- timezone-aware timestamps,
+- unique IDs and source references,
+- literal false privacy guarantees,
+- non-secret profile budgets and secret-variable-name uniqueness.
+
+### Minimization tests
+
+Deterministic tests prove that:
+
+- URL user information, query, and fragment are removed,
+- configured runtime secret values are redacted in memory,
+- common password/token/secret assignments are redacted,
+- redacted bounded digests are stable,
+- absolute paths outside the repository are not persisted.
+
+### Maintenance-readiness tests
+
+`assess_execution_evidence()` is tested against:
+
+- a complete reference bundle with two actionable failures,
+- missing high-level traceability,
+- missing structural step context,
+- truncated record budgets.
+
+The assessment does not diagnose root cause. It answers only whether Sprint 8
+has enough bounded evidence to begin analysis.
+
+### Independent framework subprocess
+
+`tests/integration/test_execution_evidence_reference.py` starts a separate
+pytest process with the standalone reference plugin. Plugin autoload is disabled
+and the collector's import path contains only the framework-side reference
+module.
+
+The nested run intentionally produces:
+
+```text
+one pass
+one call-phase AssertionError
+one setup-phase RuntimeError
+```
+
+The outer test expects the nested pytest exit code to be non-zero, then validates
+the emitted JSON with TestCartographer.
+
+This distinction is important: an intentionally failing framework run is the
+input evidence, not a failed TestCartographer test.
+
+### Leakage assertions
+
+The generated evidence file is searched for values that must not survive:
+
+- configured secret value,
+- URL credentials,
+- query and fragment,
+- raw assertion message,
+- raw setup error message.
+
+Tests also require explicit false flags for raw tracebacks, captured output,
+HTML, screenshots, and traces.
+
+### Standalone verifier
+
+```powershell
+python scripts/verify_execution_evidence_contract.py
+```
+
+The verifier repeats the subprocess run, validates all three counts, checks
+leakage exclusions, and requires deterministic readiness for Sprint 8.
+
+Expected normal Windows result after Sprint 7: `183 passed`.
+
+The preparation environment reports `181 passed, 2 skipped` because its
+administrator policy blocks the existing two loopback Chromium gates. The
+execution-evidence verifier itself requires no browser and is not skipped.
+
+### Evidence still missing
+
+Sprint 7 tests do not prove:
+
+- production plugin installation in `qa-automation-framework`,
+- xdist or multi-process merging,
+- crash-safe incremental writes,
+- retries or flaky-test correlation,
+- CI retention and access control,
+- approved screenshot, trace, or network artefact references,
+- root-cause diagnosis or correct repair.
+
+### CLI module-entry regression gate
+
+Commands exposed through `python -m test_cartographer.cli` must be tested through
+a subprocess in addition to direct `main([...])` tests. Direct imports do not
+prove that module-level definition order and the `__main__` entry point are
+correct. Sprint 7 added subprocess coverage for `evidence status` and
+`evidence assess` after the Windows acceptance run exposed this difference.
