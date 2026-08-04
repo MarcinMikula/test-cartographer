@@ -1058,3 +1058,19 @@ proactive maintenance remain planned but move behind this block. The reason is
 product validation: the central promise is reducing expensive context discovery
 and creation work, so the first external demonstration should exercise that
 promise before the project expands its maintenance surface.
+
+## ADR — Browser ranking, LLM phrasing, and human selection are separate authorities
+
+**Status:** Accepted in Sprint 9
+
+For multi-element discovery, Playwright collects bounded facts and deterministic
+code ranks candidates. When the leading candidates are too close, the local LLM
+may phrase one question over the immutable candidate set. Only a human may
+select the intended candidate, and a separate human decision accepts the final
+discovery.
+
+This prevents three unsafe shortcuts:
+
+- treating a unique locator as proof of process meaning,
+- allowing an LLM to select a DOM element from a verbal description,
+- applying browser findings to context without review.

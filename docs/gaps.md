@@ -479,3 +479,22 @@ The individual creation contracts exist, but there is no single user-facing
 workflow from short request through interview, browser discovery, proposal,
 repository plan, patch, runnable test, and effort summary. There is also no
 measured basis for claiming a percentage of saved work.
+
+## Closed in Sprint 9
+
+- A discovery-ready Sprint 8 context can drive a real bounded browser scan.
+- Several target elements and unique locator candidates can be collected in one
+  session.
+- Equal semantic candidates create an explicit ambiguity instead of false
+  certainty.
+- A local LLM can phrase the ambiguity while the human remains selection
+  authority.
+- Accepted discovery can replace the technical placeholder and satisfy the
+  existing full-readiness gate.
+
+## Next creation gap
+
+The individual boundaries are still invoked through separate scripts and
+artefacts. Sprint 10 must orchestrate the complete path from a short request to
+a runnable framework test and report total elapsed time, model time, and human
+actions without concealing the review points.

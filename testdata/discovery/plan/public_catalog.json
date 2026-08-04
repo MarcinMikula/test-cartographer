@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1",
+  "id": "discovery_plan_public_catalog",
+  "context_id": "ctx_product_search_minimal",
+  "process_id": "proc_target",
+  "page_id": "page_catalog",
+  "page_name": "Public catalog",
+  "route": "/public_catalog_discovery.html",
+  "source_url": "http://127.0.0.1:8765/public_catalog_discovery.html",
+  "component_ids": [
+    "comp_catalog_search"
+  ],
+  "targets": [
+    {
+      "id": "target_search_query",
+      "element_id": "el_search_query",
+      "owner_id": "comp_catalog_search",
+      "name": "Search catalog query",
+      "action_kind": "fill",
+      "expected_roles": [
+        "searchbox",
+        "textbox"
+      ],
+      "test_data_symbolic_ref": "catalog_query",
+      "outcome_target": false
+    },
+    {
+      "id": "target_search_submit",
+      "element_id": "el_search_submit",
+      "owner_id": "comp_catalog_search",
+      "name": "Search action",
+      "action_kind": "click",
+      "expected_roles": [
+        "button"
+      ],
+      "test_data_symbolic_ref": null,
+      "outcome_target": false
+    },
+    {
+      "id": "target_search_results",
+      "element_id": "el_search_results",
+      "owner_id": "page_catalog",
+      "name": "Catalog results",
+      "action_kind": "read",
+      "expected_roles": [
+        "list"
+      ],
+      "test_data_symbolic_ref": null,
+      "outcome_target": true
+    }
+  ],
+  "sensitivity": "public"
+}

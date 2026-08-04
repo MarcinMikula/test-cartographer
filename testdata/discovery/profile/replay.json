@@ -1,0 +1,30 @@
+{
+  "schema_version": "0.1",
+  "id": "discovery_replay_strict",
+  "provider": "replay",
+  "model": "replay-discovery",
+  "base_url": "replay://local",
+  "timeout_seconds": 10.0,
+  "max_elements_scanned": 40,
+  "max_candidates_per_target": 4,
+  "minimum_candidate_score": 45,
+  "ambiguity_score_delta": 3,
+  "max_prompt_characters": 6000,
+  "max_response_characters": 2000,
+  "max_output_tokens": 256,
+  "keep_alive_seconds": 900,
+  "temperature": 0.0,
+  "seed": 42,
+  "allowed_sensitivities": [
+    "public",
+    "internal"
+  ],
+  "raw_page_persisted": false,
+  "screenshot_persisted": false,
+  "html_persisted": false,
+  "input_values_persisted": false,
+  "generic_page_text_persisted": false,
+  "raw_prompts_persisted": false,
+  "raw_responses_persisted": false,
+  "cloud_allowed": false
+}

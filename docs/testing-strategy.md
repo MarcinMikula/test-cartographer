@@ -914,7 +914,7 @@ Sprint 8 uses three complementary layers:
    the generated interview, applies controlled human answers, and verifies that
    raw prompt/response text and the URL are absent from `GuidedIntakeRun`.
 
-The complete normal Windows test gate after Sprint 8 is `205 passed`. The live
+The complete normal Windows test gate after Sprint 8 is `209 passed`. The live
 Ollama verifier is an additional acceptance gate and is not replaced by a skip.
 The preparation environment uses HTTP mock transport and replay because it has
 no local Ollama daemon.
@@ -936,3 +936,19 @@ keep-alive, bounded JSON-Schema text fields, preload behavior, and timeout-speci
 errors. The real verifier must print progress before and after both provider
 turns so a long non-streaming call is not silently confused with a completed or
 idle process.
+
+## Sprint 9 discovery tests
+
+The discovery layer is tested at five boundaries:
+
+1. strict models and generated JSON Schemas,
+2. deterministic scoring, tie detection, and missing-target behaviour,
+3. strict LLM-output parsing and immutable candidate-set validation,
+4. human resolution, acceptance, and ContextBundle application,
+5. a real controlled Chromium page with two equal `Search` buttons.
+
+A separate live-provider verifier loads the already captured candidate set and
+performs one local-Ollama structured-output call. This isolates model latency
+from browser collection and proves that the model can phrase a question without
+selecting a candidate. The real Windows gate is `235 passed`; preparation
+environments without usable Chromium may report `232 passed, 3 skipped`.

@@ -755,3 +755,11 @@ It does not change the execution plane and does not make generated framework
 tests depend on Ollama. The first external-demo target remains Sprint 10, after
 guided multi-element discovery can feed the existing synthesis, planning, and
 delivery chain.
+
+## Sprint 9 scope increment
+
+TestCartographer now includes bounded multi-element discovery for one authorized
+page. The product may propose and verify several locator candidates, detect an
+ambiguity, ask the human to choose, and apply an accepted process map to the
+existing context contract. Whole-application crawling and autonomous element
+selection remain explicitly outside product scope.

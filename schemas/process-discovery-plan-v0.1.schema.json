@@ -1,0 +1,171 @@
+{
+  "$defs": {
+    "ActionKind": {
+      "description": "Small UI-action vocabulary for one guided process.",
+      "enum": [
+        "navigate",
+        "fill",
+        "click",
+        "select",
+        "check",
+        "uncheck",
+        "read"
+      ],
+      "title": "ActionKind",
+      "type": "string"
+    },
+    "DiscoveryTarget": {
+      "additionalProperties": false,
+      "properties": {
+        "action_kind": {
+          "$ref": "#/$defs/ActionKind"
+        },
+        "element_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Element Id",
+          "type": "string"
+        },
+        "expected_roles": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_-]*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Expected Roles",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "outcome_target": {
+          "default": false,
+          "title": "Outcome Target",
+          "type": "boolean"
+        },
+        "owner_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Owner Id",
+          "type": "string"
+        },
+        "test_data_symbolic_ref": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Test Data Symbolic Ref"
+        }
+      },
+      "required": [
+        "id",
+        "element_id",
+        "owner_id",
+        "name",
+        "action_kind",
+        "expected_roles"
+      ],
+      "title": "DiscoveryTarget",
+      "type": "object"
+    },
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "component_ids": {
+      "default": [],
+      "items": {
+        "pattern": "^[a-z][a-z0-9_]{2,63}$",
+        "type": "string"
+      },
+      "title": "Component Ids",
+      "type": "array"
+    },
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "page_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Page Id",
+      "type": "string"
+    },
+    "page_name": {
+      "minLength": 1,
+      "title": "Page Name",
+      "type": "string"
+    },
+    "process_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Process Id",
+      "type": "string"
+    },
+    "route": {
+      "minLength": 1,
+      "title": "Route",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sensitivity": {
+      "$ref": "#/$defs/SensitivityLevel",
+      "default": "internal"
+    },
+    "source_url": {
+      "minLength": 1,
+      "title": "Source Url",
+      "type": "string"
+    },
+    "targets": {
+      "items": {
+        "$ref": "#/$defs/DiscoveryTarget"
+      },
+      "minItems": 2,
+      "title": "Targets",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "context_id",
+    "process_id",
+    "page_id",
+    "page_name",
+    "route",
+    "source_url",
+    "targets"
+  ],
+  "title": "ProcessDiscoveryPlan",
+  "type": "object"
+}

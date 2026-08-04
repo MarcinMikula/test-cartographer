@@ -15,14 +15,14 @@ and expansion.
 
 ## Status
 
-**Sprint 8 — live local-LLM guided intake from minimal context: complete**
+**Sprint 9 — guided multi-element process discovery: complete**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
 Current evidence:
 
 ```text
-203 tests expected with Playwright Chromium
+235 tests expected with Playwright Chromium
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
@@ -31,7 +31,7 @@ framework-side execution-evidence collection and maintenance-readiness verified 
 live local-Ollama interview planning from a minimal request verified end to end
 ```
 
-The repository now provides eight executable boundaries:
+The repository now provides nine executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -47,7 +47,10 @@ The repository now provides eight executable boundaries:
    distinguishes pass, test failure, and infrastructure error without importing
    TestCartographer or using an LLM,
 8. a minimal-context seed, local Ollama structured-output adapter, guided
-   interview plan, human-authoritative answers, and discovery-readiness report.
+   interview plan, human-authoritative answers, and discovery-readiness report,
+9. a bounded multi-element browser scan, deterministic target ranking,
+   ambiguity clarification, human element selection, and accepted process-map
+   application to the ContextBundle.
 
 The current workflow can:
 
@@ -94,13 +97,21 @@ The current workflow can:
 - use a loopback-only local Ollama model to order and rephrase the interview,
 - keep the LLM unable to answer questions or write context values,
 - retain human provision and confirmation as the only authority transition,
-- reach readiness for guided process discovery while full adaptation remains blocked.
+- reach readiness for guided process discovery while full adaptation remains blocked,
+- scan one authorized page for a bounded semantic candidate set,
+- discover three process targets and generate unique locator candidates,
+- detect equal candidates instead of silently choosing one,
+- use a local LLM only to phrase one ambiguity question,
+- keep the human authoritative for element selection and discovery acceptance,
+- replace the technical placeholder with an observed page, component, elements,
+  locators, test data, and process steps,
+- reach full existing ContextBundle readiness after accepted discovery.
 
-It still cannot discover a complete multi-element process, safely patch the
-user's original framework repository, handle arbitrary source edits, measure
-time savings, or prove that the first generation and placement conventions
-generalize to enterprise projects. Live LLM support is currently local Ollama
-only and is limited to interview planning.
+It still cannot crawl a complete application, safely patch the user's original
+framework repository, handle arbitrary source edits, measure time savings, or
+prove that the discovery, generation, and placement conventions generalize to
+enterprise projects. Live LLM support is currently local Ollama only and is
+limited to bounded interview and ambiguity-question phrasing.
 
 ## The problem
 
@@ -403,7 +414,7 @@ python -m pytest
 Expected Sprint 8 result after Chromium installation:
 
 ```text
-205 passed
+209 passed
 ```
 
 ### Start a reference intake
@@ -829,7 +840,7 @@ See:
 | 6 | First runnable framework test and creation-lifecycle evaluation | Done |
 | 7 | Framework execution-evidence contract | Done |
 | 8 | Live local-LLM guided intake from minimal context | Done |
-| 9 | Guided multi-element process discovery | Planned |
+| 9 | Guided multi-element process discovery | Done |
 | 10 | External-demo end-to-end creation flow and effort summary | Provisional |
 | 11–13 | Reactive maintenance, proactive maintenance, and expansion reuse | Parked |
 | 14–16 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
@@ -870,6 +881,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/context-contract.md`](docs/context-contract.md) | Semantic contract version `0.1` |
 | [`docs/intake-workflow.md`](docs/intake-workflow.md) | Deterministic question, answer, review, session, and CLI behaviour |
 | [`docs/guided-intake.md`](docs/guided-intake.md) | Sprint 8 minimal seed, local Ollama interview planning, authority boundary, and discovery readiness |
+| [`docs/process-discovery.md`](docs/process-discovery.md) | Sprint 9 bounded candidate scan, ranking, ambiguity question, human selection, and ContextBundle update |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
@@ -933,7 +945,7 @@ minimal request
 → discovery-ready context
 ```
 
-Expected normal Windows result: `205 passed`, followed by the deterministic
+Expected normal Windows result at final Sprint 8 closure: `209 passed`, followed by the deterministic
 replay verifier and two real local-Ollama planning calls. The run persists
 provider/model identity, hashes, sizes, latency, and question IDs, but not raw
 prompts, raw responses, the starting URL, or human answer values. Sprint 9 must
@@ -946,3 +958,29 @@ Live local calls are bounded independently by a 768-token generation ceiling,
 JSON-Schema text-length limits, a 900-second model keep-alive, and a maximum
 600-second HTTP timeout. The verifier preloads the model and reports progress at
 each planning phase.
+
+
+## Sprint 9 result
+
+The reviewed process brief can now become an evidence-backed multi-element UI
+map:
+
+```text
+discovery-ready context
+→ bounded Chromium candidate scan
+→ deterministic ranking
+→ two unique targets + one ambiguity
+→ local-LLM clarification question
+→ human element selection
+→ accepted page/component/elements/locators/steps
+→ full ContextBundle readiness
+```
+
+Expected normal Windows result: `235 passed`, followed by one real Chromium
+discovery run and one bounded local-Ollama ambiguity-question call. The
+reference page yields four visible candidates, three process targets, two
+deterministic selections, one human-resolved ambiguity, and no persisted input
+values, generic page text, HTML, screenshot, raw page, raw prompt, or raw model
+response. Sprint 10 can now connect the existing intake, discovery, synthesis,
+adaptation, delivery, execution, and effort-summary boundaries into the first
+external-demo creation flow.

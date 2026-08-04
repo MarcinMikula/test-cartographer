@@ -374,3 +374,19 @@ the selected generation profile rather than silently handled.
   not display partial tokens. Local runtime failures still require inspection of
   `%LOCALAPPDATA%\Ollama\server.log`. Tracked as a possible future diagnostics
   improvement, not a Sprint 8 blocker.
+
+## Sprint 9 discovery boundaries
+
+- Discovery scans one explicit page only; it is not a crawler.
+- The selector allowlist does not cover canvas, complex Shadow DOM, virtualized
+  grids, custom accessibility trees, or arbitrary framework components.
+- Semantic names are bounded values derived from specific accessibility and
+  form attributes. Generic page text is not collected.
+- Ranking is intentionally simple and has been validated only on the controlled
+  catalog fixture.
+- A `missing` target still requires a human to revise the discovery plan; the
+  local LLM does not invent a new action or selector.
+- One ambiguity is phrased by a local model, but the quality of that wording has
+  not been compared across models.
+- Authentication, multi-page navigation, destructive actions, and enterprise
+  systems remain outside the slice.

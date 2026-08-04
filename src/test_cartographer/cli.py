@@ -33,6 +33,8 @@ from test_cartographer.delivery.io import (
     save_code_patch,
 )
 from test_cartographer.delivery.review import review_code_patch
+from test_cartographer.discovery.assessment import assess_discovery
+from test_cartographer.discovery.io import load_discovery_run
 from test_cartographer.execution.assessment import assess_execution_evidence
 from test_cartographer.execution.io import load_execution_bundle
 from test_cartographer.guided_intake.engine import (
@@ -98,6 +100,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _dispatch_intake(parser, args)
     if args.command == "observe":
         return _dispatch_observation(parser, args)
+    if args.command == "discover":
+        return _dispatch_discovery(parser, args)
     if args.command == "synthesize":
         return _dispatch_synthesis(parser, args)
     if args.command == "adapt":
@@ -414,6 +418,22 @@ def _build_parser() -> argparse.ArgumentParser:
     review.add_argument("--context", type=Path)
     review.add_argument("--output-context", type=Path)
 
+    discover = commands.add_parser(
+        "discover",
+        help="inspect guided multi-element discovery status and readiness",
+    )
+    discover_commands = discover.add_subparsers(dest="discover_command")
+
+    discovery_status = discover_commands.add_parser(
+        "status", help="show one process-discovery run"
+    )
+    discovery_status.add_argument("--run", required=True, type=Path)
+
+    discovery_assess = discover_commands.add_parser(
+        "assess", help="assess readiness to apply discovery to context"
+    )
+    discovery_assess.add_argument("--run", required=True, type=Path)
+
     synthesize = commands.add_parser(
         "synthesize",
         help="build, replay, validate, and review one bounded POM proposal",
@@ -622,6 +642,18 @@ def _dispatch_observation(
     if args.observe_command == "review":
         return _review_command(parser, args)
     parser.error("an observe command is required")
+    return 2
+
+
+def _dispatch_discovery(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    if args.discover_command == "status":
+        return _discovery_status_command(args)
+    if args.discover_command == "assess":
+        return _discovery_assess_command(args)
+    parser.error("a discover command is required")
     return 2
 
 
@@ -1038,6 +1070,18 @@ def _deliver_apply_command(args: argparse.Namespace) -> int:
 
 
 
+def _discovery_status_command(args: argparse.Namespace) -> int:
+    print(_format_discovery_run(load_discovery_run(args.run)))
+    return 0
+
+
+def _discovery_assess_command(args: argparse.Namespace) -> int:
+    run = load_discovery_run(args.run)
+    print(_format_discovery_run(run))
+    print(_format_discovery_assessment(assess_discovery(run)))
+    return 0
+
+
 def _evidence_status_command(args: argparse.Namespace) -> int:
     bundle = load_execution_bundle(args.bundle)
     print(_format_execution_bundle(bundle))
@@ -1269,6 +1313,45 @@ def _format_observation_status(observation: BrowserObservation) -> str:
             "Input value persisted: false",
             "Text content persisted: false",
             "HTML persisted: false",
+        )
+    )
+
+
+def _format_discovery_run(run) -> str:
+    selected = sum(item.state.value == "selected" for item in run.targets)
+    unresolved = sum(item.selected_candidate_id is None for item in run.ambiguities)
+    return "\n".join(
+        (
+            f"Discovery run: {run.id}",
+            f"State: {run.state.value}",
+            f"Candidates: {len(run.candidates)}",
+            f"Targets: {len(run.targets)}",
+            f"Capture seconds: {run.capture_seconds:.3f}",
+            f"Selected targets: {selected}",
+            f"Ambiguities: {len(run.ambiguities)}",
+            f"Unresolved ambiguities: {unresolved}",
+            f"Guidance turns: {len(run.guidance_turns)}",
+            f"Live provider used: {str(run.live_provider_used).lower()}",
+            "Raw page persisted: false",
+            "Input values persisted: false",
+            "Generic page text persisted: false",
+            "Raw prompts persisted: false",
+            "Raw responses persisted: false",
+        )
+    )
+
+
+def _format_discovery_assessment(report) -> str:
+    return "\n".join(
+        (
+            f"Target count: {report.target_count}",
+            f"Selected target count: {report.selected_target_count}",
+            f"Human selections: {report.human_selection_count}",
+            f"Missing targets: {report.missing_target_count}",
+            f"Unresolved ambiguities: {report.unresolved_ambiguity_count}",
+            f"Accepted: {str(report.accepted).lower()}",
+            "Ready for context application: "
+            f"{str(report.ready_for_context_application).lower()}",
         )
     )
 

@@ -3616,3 +3616,40 @@ Operationally, cumulative CPU time from `Get-Process` is not proof that inferenc
 is currently progressing. The model state reported by `ollama ps` and the Ollama
 server log are more useful diagnostics. A runner left in `Stopping...` after an
 interrupted request should be cleaned up before starting another acceptance run.
+
+## Sprint 9 — bounded multi-element discovery and ambiguity authority
+
+Sprint 8 proved that a real local LLM can guide a human interview from a minimal
+request, but the resulting context still contained one technical placeholder.
+Sprint 9 tested whether browser discovery could replace that placeholder with a
+small process map without turning the tool into an unrestricted crawler.
+
+The reference page intentionally contains two visible `Search` buttons. Both
+have the same semantic role and accessible name, and both have unique test IDs.
+This matters because uniqueness alone does not prove process meaning. A locator
+can identify exactly one DOM node and still identify the wrong business
+control.
+
+The resulting design separates four authorities:
+
+1. Playwright supplies bounded browser facts.
+2. Deterministic scoring ranks candidates and detects ties.
+3. The local LLM phrases a clarification question over an immutable candidate
+   set.
+4. The human selects the intended element and separately accepts the discovery.
+
+The LLM never selects a candidate or writes a locator to context. This is a
+concrete application of the wider judge-authority principle already identified
+in other projects: a model may assist only where it has sufficient evidence and
+an explicitly bounded decision role.
+
+A second lesson is that Playwright Codegen-style uniqueness is only part of the
+costly discovery work. The human still needs to decide which control belongs to
+the process, which object owns it, which step uses it, and what observable state
+proves success. Sprint 9 begins to structure that work instead of reducing the
+problem to selector extraction.
+
+The controlled slice remains deliberately narrow: one page, one component,
+three targets, and one ambiguity. This is enough to prove the handoff into the
+existing readiness and synthesis pipeline, but not enough to claim broad
+application understanding or quantified effort reduction.

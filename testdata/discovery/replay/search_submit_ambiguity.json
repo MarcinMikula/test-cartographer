@@ -1,0 +1,10 @@
+{
+  "schema_version": "0.1",
+  "ambiguity_id": "amb_target_search_submit",
+  "candidate_ids": [
+    "cand_002",
+    "cand_003"
+  ],
+  "user_prompt": "Two visible Search buttons were found. Which candidate submits the catalog form: cand_002 or cand_003?",
+  "reason": "Both candidates have the same role and accessible name, so a human must confirm the intended process control."
+}

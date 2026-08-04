@@ -81,7 +81,7 @@ product framing
 | Sprint 6 | First runnable framework test and creation-lifecycle evaluation | Done |
 | Sprint 7 | Framework execution-evidence contract | Done |
 | Sprint 8 | Live local-LLM guided intake from minimal context | Done |
-| Sprint 9 | Guided multi-element process discovery | Planned |
+| Sprint 9 | Guided multi-element process discovery | Done |
 | Sprint 10 | External-demo end-to-end creation flow and effort summary | Provisional |
 | Sprint 11 | Reactive maintenance from execution evidence | Parked |
 | Sprint 12 | Proactive post-deployment frontend/context regression | Parked |
@@ -723,7 +723,7 @@ finish with a context ready for Sprint 9 guided process discovery.
 - `intake seed`, `intake guide`, and `intake guide-status` CLI commands,
 - deterministic replay verifier and mandatory live local-Ollama verifier,
 - three generated and tested JSON Schemas,
-- 203 tests expected with Chromium on the normal Windows environment.
+- 209 tests expected with Chromium on the normal Windows environment.
 
 ### Reference flow
 
@@ -778,25 +778,34 @@ when page, component, element, action, or locator interpretation is ambiguous.
 
 ## Sprint 9 — Guided multi-element process discovery
 
-**Status:** Planned
+**Status:** Done
 
-### Direction
-
-Guide one small real process across several elements and, when needed, several
-pages or components:
+### Delivered
 
 ```text
 human-reviewed process brief
-→ authorized browser session
-→ guided actions and observations
-→ several elements and locator candidates
-→ ambiguity questions
+→ one authorized local page
+→ four bounded semantic candidates
+→ three process targets
+→ two deterministic selections
+→ one ambiguity between equal Search buttons
+→ one local-LLM clarification question
+→ one human element selection
 → accepted evidence-backed process map
+→ full ContextBundle readiness
 ```
 
-The first slice must not become whole-application crawling. It should measure
-manual interventions, discovered elements, rejected candidates, and active
-discovery time.
+The slice remains bounded to one page, one component, three elements, four
+process steps, one symbolic test-data requirement, and one expected result.
+The model phrases but never resolves the ambiguity. See
+[`process-discovery.md`](process-discovery.md).
+
+### Gate to Sprint 10
+
+Sprint 10 may orchestrate only the already accepted boundaries. It must begin
+from a short request, retain human review points, finish with one runnable test,
+and report elapsed model time plus explicit human actions. It must not hide
+fixture data or claim measured savings before a comparison exists.
 
 ## Sprint 10 — External-demo end-to-end creation flow
 

@@ -1,0 +1,193 @@
+{
+  "$defs": {
+    "DiscoveryProviderKind": {
+      "enum": [
+        "replay",
+        "ollama"
+      ],
+      "title": "DiscoveryProviderKind",
+      "type": "string"
+    },
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "allowed_sensitivities": {
+      "default": [
+        "public",
+        "internal"
+      ],
+      "items": {
+        "$ref": "#/$defs/SensitivityLevel"
+      },
+      "title": "Allowed Sensitivities",
+      "type": "array"
+    },
+    "ambiguity_score_delta": {
+      "default": 3,
+      "maximum": 25,
+      "minimum": 0,
+      "title": "Ambiguity Score Delta",
+      "type": "integer"
+    },
+    "base_url": {
+      "minLength": 1,
+      "title": "Base Url",
+      "type": "string"
+    },
+    "cloud_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Cloud Allowed",
+      "type": "boolean"
+    },
+    "generic_page_text_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Generic Page Text Persisted",
+      "type": "boolean"
+    },
+    "html_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Html Persisted",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "input_values_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Input Values Persisted",
+      "type": "boolean"
+    },
+    "keep_alive_seconds": {
+      "default": 900,
+      "maximum": 3600,
+      "minimum": 60,
+      "title": "Keep Alive Seconds",
+      "type": "integer"
+    },
+    "max_candidates_per_target": {
+      "default": 4,
+      "maximum": 10,
+      "minimum": 2,
+      "title": "Max Candidates Per Target",
+      "type": "integer"
+    },
+    "max_elements_scanned": {
+      "default": 80,
+      "maximum": 500,
+      "minimum": 3,
+      "title": "Max Elements Scanned",
+      "type": "integer"
+    },
+    "max_output_tokens": {
+      "default": 256,
+      "maximum": 1024,
+      "minimum": 64,
+      "title": "Max Output Tokens",
+      "type": "integer"
+    },
+    "max_prompt_characters": {
+      "default": 6000,
+      "maximum": 30000,
+      "minimum": 500,
+      "title": "Max Prompt Characters",
+      "type": "integer"
+    },
+    "max_response_characters": {
+      "default": 2000,
+      "maximum": 10000,
+      "minimum": 200,
+      "title": "Max Response Characters",
+      "type": "integer"
+    },
+    "minimum_candidate_score": {
+      "default": 45,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Minimum Candidate Score",
+      "type": "integer"
+    },
+    "model": {
+      "minLength": 1,
+      "title": "Model",
+      "type": "string"
+    },
+    "provider": {
+      "$ref": "#/$defs/DiscoveryProviderKind"
+    },
+    "raw_page_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Page Persisted",
+      "type": "boolean"
+    },
+    "raw_prompts_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Prompts Persisted",
+      "type": "boolean"
+    },
+    "raw_responses_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Responses Persisted",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "screenshot_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Screenshot Persisted",
+      "type": "boolean"
+    },
+    "seed": {
+      "default": 42,
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "temperature": {
+      "default": 0.0,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Temperature",
+      "type": "number"
+    },
+    "timeout_seconds": {
+      "default": 300.0,
+      "exclusiveMinimum": 0.0,
+      "maximum": 600.0,
+      "title": "Timeout Seconds",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "provider",
+    "model",
+    "base_url"
+  ],
+  "title": "DiscoveryProfile",
+  "type": "object"
+}

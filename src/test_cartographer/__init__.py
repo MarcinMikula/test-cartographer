@@ -2,6 +2,12 @@
 
 from test_cartographer.adaptation.models import AdaptationPlan, FrameworkSnapshot, WorkspaceProfile
 from test_cartographer.context.models import ContextBundle
+from test_cartographer.discovery.models import (
+    DiscoveryProfile,
+    ProcessDiscoveryPlan,
+    ProcessDiscoveryRun,
+)
+from test_cartographer.discovery.assessment import assess_discovery
 from test_cartographer.delivery.models import (
     CodePatch,
     CreationEvaluation,
@@ -31,6 +37,9 @@ __all__ = [
     "CodePatch",
     "ContextBundle",
     "CreationEvaluation",
+    "DiscoveryProfile",
+    "ProcessDiscoveryPlan",
+    "ProcessDiscoveryRun",
     "ExecutionEvidenceBundle",
     "ExecutionEvidenceProfile",
     "FrameworkSnapshot",
@@ -42,9 +51,10 @@ __all__ = [
     "PomProposal",
     "SynthesisRun",
     "WorkspaceProfile",
+    "assess_discovery",
     "assess_execution_evidence",
     "assess_guided_intake",
     "assess_intake",
     "assess_readiness",
 ]
-__version__ = "0.8.0"
+__version__ = "0.9.0"

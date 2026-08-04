@@ -1,0 +1,660 @@
+{
+  "$defs": {
+    "CandidateAttribute": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "CandidateAttribute",
+      "type": "object"
+    },
+    "CandidateScore": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Candidate Id",
+          "type": "string"
+        },
+        "matched_tokens": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Matched Tokens",
+          "type": "array"
+        },
+        "score": {
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Score",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "candidate_id",
+        "score"
+      ],
+      "title": "CandidateScore",
+      "type": "object"
+    },
+    "DiscoveredLocator": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "match_count": {
+          "minimum": 0,
+          "title": "Match Count",
+          "type": "integer"
+        },
+        "priority": {
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Priority",
+          "type": "integer"
+        },
+        "strategy": {
+          "$ref": "#/$defs/LocatorStrategy"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "strategy",
+        "value",
+        "match_count",
+        "priority"
+      ],
+      "title": "DiscoveredLocator",
+      "type": "object"
+    },
+    "DiscoveryAmbiguity": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Candidate Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "question": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Question"
+        },
+        "resolution_reason": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolution Reason"
+        },
+        "resolved_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolved At"
+        },
+        "selected_candidate_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Selected Candidate Id"
+        },
+        "target_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Target Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "target_id",
+        "candidate_ids"
+      ],
+      "title": "DiscoveryAmbiguity",
+      "type": "object"
+    },
+    "DiscoveryDecision": {
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "title": "DiscoveryDecision",
+      "type": "string"
+    },
+    "DiscoveryGuidanceTurn": {
+      "additionalProperties": false,
+      "properties": {
+        "ambiguity_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Ambiguity Id",
+          "type": "string"
+        },
+        "candidate_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Candidate Ids",
+          "type": "array"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "latency_seconds": {
+          "minimum": 0.0,
+          "title": "Latency Seconds",
+          "type": "number"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "prompt_characters": {
+          "minimum": 1,
+          "title": "Prompt Characters",
+          "type": "integer"
+        },
+        "prompt_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Prompt Sha256",
+          "type": "string"
+        },
+        "provider": {
+          "$ref": "#/$defs/DiscoveryProviderKind"
+        },
+        "raw_prompt_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Prompt Persisted",
+          "type": "boolean"
+        },
+        "raw_response_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Response Persisted",
+          "type": "boolean"
+        },
+        "response_characters": {
+          "minimum": 1,
+          "title": "Response Characters",
+          "type": "integer"
+        },
+        "response_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Response Sha256",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sequence",
+        "ambiguity_id",
+        "provider",
+        "model",
+        "candidate_ids",
+        "started_at",
+        "completed_at",
+        "latency_seconds",
+        "prompt_sha256",
+        "response_sha256",
+        "prompt_characters",
+        "response_characters"
+      ],
+      "title": "DiscoveryGuidanceTurn",
+      "type": "object"
+    },
+    "DiscoveryProviderKind": {
+      "enum": [
+        "replay",
+        "ollama"
+      ],
+      "title": "DiscoveryProviderKind",
+      "type": "string"
+    },
+    "DiscoveryRunState": {
+      "enum": [
+        "captured",
+        "awaiting_resolution",
+        "resolved",
+        "accepted",
+        "rejected"
+      ],
+      "title": "DiscoveryRunState",
+      "type": "string"
+    },
+    "DiscoveryTargetResult": {
+      "additionalProperties": false,
+      "properties": {
+        "ranked_candidates": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/CandidateScore"
+          },
+          "title": "Ranked Candidates",
+          "type": "array"
+        },
+        "selected_candidate_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Selected Candidate Id"
+        },
+        "selection_authority": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SelectionAuthority"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "state": {
+          "$ref": "#/$defs/DiscoveryTargetState"
+        },
+        "target_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Target Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target_id",
+        "state"
+      ],
+      "title": "DiscoveryTargetResult",
+      "type": "object"
+    },
+    "DiscoveryTargetState": {
+      "enum": [
+        "selected",
+        "ambiguous",
+        "missing"
+      ],
+      "title": "DiscoveryTargetState",
+      "type": "string"
+    },
+    "ElementCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/CandidateAttribute"
+          },
+          "title": "Attributes",
+          "type": "array"
+        },
+        "editable": {
+          "title": "Editable",
+          "type": "boolean"
+        },
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "html_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Html Persisted",
+          "type": "boolean"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "input_value_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Input Value Persisted",
+          "type": "boolean"
+        },
+        "locator_candidates": {
+          "items": {
+            "$ref": "#/$defs/DiscoveredLocator"
+          },
+          "minItems": 1,
+          "title": "Locator Candidates",
+          "type": "array"
+        },
+        "ordinal": {
+          "minimum": 1,
+          "title": "Ordinal",
+          "type": "integer"
+        },
+        "raw_text_content_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Text Content Persisted",
+          "type": "boolean"
+        },
+        "semantic_name": {
+          "minLength": 1,
+          "title": "Semantic Name",
+          "type": "string"
+        },
+        "semantic_role": {
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "title": "Semantic Role",
+          "type": "string"
+        },
+        "tag_name": {
+          "pattern": "^[a-z][a-z0-9-]*$",
+          "title": "Tag Name",
+          "type": "string"
+        },
+        "visible": {
+          "const": true,
+          "default": true,
+          "title": "Visible",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "ordinal",
+        "tag_name",
+        "semantic_role",
+        "semantic_name",
+        "enabled",
+        "editable",
+        "locator_candidates"
+      ],
+      "title": "ElementCandidate",
+      "type": "object"
+    },
+    "LocatorStrategy": {
+      "description": "Supported locator candidate types in the first contract.",
+      "enum": [
+        "role",
+        "label",
+        "test_id",
+        "placeholder",
+        "text",
+        "css",
+        "xpath"
+      ],
+      "title": "LocatorStrategy",
+      "type": "string"
+    },
+    "SelectionAuthority": {
+      "enum": [
+        "deterministic",
+        "human"
+      ],
+      "title": "SelectionAuthority",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "ambiguities": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DiscoveryAmbiguity"
+      },
+      "title": "Ambiguities",
+      "type": "array"
+    },
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/ElementCandidate"
+      },
+      "minItems": 1,
+      "title": "Candidates",
+      "type": "array"
+    },
+    "capture_seconds": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Capture Seconds",
+      "type": "number"
+    },
+    "capture_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Capture Sha256",
+      "type": "string"
+    },
+    "captured_at": {
+      "format": "date-time",
+      "title": "Captured At",
+      "type": "string"
+    },
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/DiscoveryDecision",
+      "default": "pending"
+    },
+    "generic_page_text_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Generic Page Text Persisted",
+      "type": "boolean"
+    },
+    "guidance_turns": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DiscoveryGuidanceTurn"
+      },
+      "title": "Guidance Turns",
+      "type": "array"
+    },
+    "html_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Html Persisted",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "input_values_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Input Values Persisted",
+      "type": "boolean"
+    },
+    "live_provider_used": {
+      "default": false,
+      "title": "Live Provider Used",
+      "type": "boolean"
+    },
+    "plan_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "raw_page_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Page Persisted",
+      "type": "boolean"
+    },
+    "raw_prompts_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Prompts Persisted",
+      "type": "boolean"
+    },
+    "raw_responses_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Responses Persisted",
+      "type": "boolean"
+    },
+    "review_reason": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Review Reason"
+    },
+    "review_seconds": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Review Seconds",
+      "type": "number"
+    },
+    "reviewed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewed At"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "screenshot_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Screenshot Persisted",
+      "type": "boolean"
+    },
+    "source_url": {
+      "minLength": 1,
+      "title": "Source Url",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/DiscoveryRunState"
+    },
+    "targets": {
+      "items": {
+        "$ref": "#/$defs/DiscoveryTargetResult"
+      },
+      "minItems": 2,
+      "title": "Targets",
+      "type": "array"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "profile_id",
+    "plan_id",
+    "context_id",
+    "source_url",
+    "captured_at",
+    "updated_at",
+    "state",
+    "candidates",
+    "targets",
+    "capture_sha256"
+  ],
+  "title": "ProcessDiscoveryRun",
+  "type": "object"
+}
