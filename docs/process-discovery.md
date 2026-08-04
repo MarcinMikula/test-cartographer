@@ -202,7 +202,8 @@ The reference run is expected to show:
 - semantic correctness of every generated locator,
 - automatic interaction with destructive controls,
 - automatic resolution of missing targets,
-- external-demo end-to-end orchestration,
+- fixture-assisted end-to-end Creation Flow orchestration,
+- human-triggered interactive Creation Flow,
 - measured savings versus DevTools or Playwright Codegen,
 - Salesforce usefulness.
 

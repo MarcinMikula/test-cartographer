@@ -58,7 +58,8 @@ product framing
 → execution evidence
 → live LLM-guided intake from minimal context
 → guided multi-element process discovery
-→ external-demo end-to-end creation flow
+→ fixture-assisted integrated Creation Flow
+→ human-triggered interactive Creation Flow
 → reactive maintenance
 → proactive frontend/context regression
 → expansion using the existing map
@@ -82,13 +83,14 @@ product framing
 | Sprint 7 | Framework execution-evidence contract | Done |
 | Sprint 8 | Live local-LLM guided intake from minimal context | Done |
 | Sprint 9 | Guided multi-element process discovery | Done |
-| Sprint 10 | External-demo end-to-end creation flow and effort summary | Provisional |
-| Sprint 11 | Reactive maintenance from execution evidence | Parked |
-| Sprint 12 | Proactive post-deployment frontend/context regression | Parked |
-| Sprint 13 | Expansion using the existing application map | Parked |
-| Sprint 14 | External artefacts, authentication profiles, and enterprise safety | Parked |
-| Sprint 15 | Validation ladder culminating in a safe Salesforce flow | Parked |
-| Sprint 16 | Comparative usability, effort, quality, and v1.0 decision | Parked |
+| Sprint 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
+| Sprint 11 | Human-triggered interactive Creation Flow | Planned next |
+| Sprint 12 | Reactive maintenance from execution evidence | Parked |
+| Sprint 13 | Proactive post-deployment frontend/context regression | Parked |
+| Sprint 14 | Expansion using the existing application map | Parked |
+| Sprint 15 | External artefacts, authentication profiles, and enterprise safety | Parked |
+| Sprint 16 | Validation ladder culminating in a safe Salesforce flow | Parked |
+| Sprint 17 | Comparative usability, effort, quality, and v1.0 decision | Parked |
 
 ## Sprint 0 — Product framing
 
@@ -765,7 +767,7 @@ retain authority over every stored fact.
 - that one local model always asks the best question in the best order,
 - semantic understanding of arbitrary long or contradictory answers,
 - browser discovery of pages, elements, actions, and selectors,
-- a complete external-demo creation flow,
+- a complete human-operated Creation Flow,
 - time savings against manual discovery or Playwright Codegen,
 - prompt-injection resistance for arbitrary external content,
 - enterprise authentication or Salesforce usefulness.
@@ -807,31 +809,90 @@ from a short request, retain human review points, finish with one runnable test,
 and report elapsed model time plus explicit human actions. It must not hide
 fixture data or claim measured savings before a comparison exists.
 
-## Sprint 10 — External-demo end-to-end creation flow
+## Sprint 10 — Fixture-assisted integrated Creation Flow
 
-**Status:** Provisional
+**Status:** Done
 
-### Direction
-
-Combine the creation path into one demonstrable workflow:
+### Delivered
 
 ```text
 short human request
-→ live guided interview
-→ guided browser discovery
-→ ContextBundle
-→ POM proposal
-→ repository plan
-→ reviewed patch
-→ runnable test
-→ time and human-effort summary
+→ two live local-LLM intake plans
+→ fixture-supplied human answers and confirmations
+→ bounded Chromium discovery
+→ one live local-LLM ambiguity question
+→ fixture-supplied candidate selection
+→ fixture-supplied synthesis handoff
+→ strict deterministic POM proposal
+→ read-only repository plan
+→ fixture-supplied patch review
+→ snapshot-bounded sandbox
+→ one runnable Playwright test
+→ effort and human-action summary
 ```
 
-After this sprint the project should support an honest external demonstration
-as a working prototype. It must not claim a fixed percentage of saved work
-until comparative measurements exist.
+The flow records three live local-model turns, 23 represented human actions,
+browser and verification time, generated and modified files, and the passing
+test result. Fixture assistance is explicit. POM synthesis remains a
+deterministic reference template traversing the existing strict protocol; it is
+not mislabeled as a live model call.
 
-## Sprint 11 — Reactive maintenance
+Sprint 10 also closes an authority mismatch discovered during integration:
+general context readiness still allowed four synthesis-required `PROVIDED`
+values while the synthesis boundary requires `CONFIRMED` or `OBSERVED`. A
+separate human synthesis-handoff review confirms those values without weakening
+the synthesis contract. In the automated verifier, that human authority is
+represented by fixtures. See [`creation-flow.md`](creation-flow.md).
+
+Sprint 10 proves:
+
+```text
+Creation mechanics verified: true
+Ready for human-trigger integration: true
+Interactive human trigger used: false
+Ready for external user demonstration: false
+```
+
+It does not claim a fixed percentage of saved work until comparative
+measurements exist.
+
+## Sprint 11 — Human-triggered interactive Creation Flow
+
+**Status:** Planned next
+
+### Goal
+
+Connect a real operator to the existing Creation Flow engine without rebuilding
+its technical stages.
+
+```text
+real user enters a short automation request
+→ Cartographer displays missing-context questions and waits
+→ user answers and confirms
+→ visible browser discovery runs
+→ ambiguous candidates are shown to the user
+→ user selects the intended element
+→ ContextBundle, POM proposal, adaptation plan, and patch are shown for review
+→ the user accepts, rejects, or edits at each authority boundary
+→ the existing engine produces and runs the Playwright test
+```
+
+### Exit criteria
+
+- [ ] The initial request comes from the operator, not a fixture.
+- [ ] Intake questions are displayed and answered interactively.
+- [ ] The flow blocks until required human answers or confirmations are supplied.
+- [ ] Browser discovery is visible enough for the operator to understand the
+  observed process.
+- [ ] Ambiguous candidates are presented and selected by the operator.
+- [ ] POM, repository plan, and source patch are reviewable before acceptance.
+- [ ] The flow can resume without replacing missing human decisions with fixture
+  defaults.
+- [ ] The final report distinguishes human, LLM, browser, and deterministic work.
+- [ ] `Ready for external user demonstration` becomes true only after a real
+  human-operated acceptance run.
+
+## Sprint 12 — Reactive maintenance
 
 **Status:** Parked
 
@@ -847,7 +908,7 @@ Use validated failed-execution evidence to:
 - prepare a reviewable patch,
 - rerun the framework test after acceptance.
 
-## Sprint 12 — Proactive frontend/context regression
+## Sprint 13 — Proactive frontend/context regression
 
 **Status:** Parked
 
@@ -858,7 +919,7 @@ framework tests remain green, using an approved observation inventory,
 allowlisted actions, authentication and sensitivity profiles, budgets, and
 reviewable change-impact reports.
 
-## Sprint 13 — Expansion using the existing map
+## Sprint 14 — Expansion using the existing map
 
 **Status:** Parked
 
@@ -868,7 +929,7 @@ Add a second process and measure whether existing context reduces repeated
 human questions, browser discovery, duplicate objects, LLM input, review time,
 and implementation time.
 
-## Sprint 14 — External artefacts, authentication profiles, and enterprise safety
+## Sprint 15 — External artefacts, authentication profiles, and enterprise safety
 
 **Status:** Parked
 
@@ -888,7 +949,7 @@ Potential scope:
 No strategy is the default until exercised against a controlled credentialed
 application.
 
-## Sprint 15 — Validation ladder culminating in Salesforce
+## Sprint 16 — Validation ladder culminating in Salesforce
 
 **Status:** Parked
 
@@ -917,7 +978,7 @@ Salesforce is a deliberate final-level target because simple sites cannot
 validate enterprise authentication, component-driven UI, data restrictions,
 complex process state, or maintenance economics.
 
-## Sprint 16 — Comparative validation and v1.0 decision
+## Sprint 17 — Comparative validation and v1.0 decision
 
 **Status:** Parked
 

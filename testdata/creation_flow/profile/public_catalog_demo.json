@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1",
+  "id": "creation_demo_public_catalog",
+  "label": "Public catalog fixture-assisted integrated Creation Flow",
+  "minimal_request": "I want to automate searching for a product and verify that matching results are shown.",
+  "target_test": "tests/e2e/test_search_catalog.py",
+  "expected_answer_count": 9,
+  "expected_confirmation_count": 5,
+  "expected_handoff_confirmation_count": 4,
+  "expected_ambiguity_resolution_count": 1,
+  "expected_review_decision_count": 4,
+  "fixture_assisted_reference_demo": true,
+  "live_intake_required": true,
+  "live_discovery_guidance_required": true,
+  "deterministic_synthesis_template": true,
+  "measured_savings_claimed": false
+}

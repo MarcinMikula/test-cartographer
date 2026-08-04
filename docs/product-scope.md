@@ -752,9 +752,9 @@ minimal request
 ```
 
 It does not change the execution plane and does not make generated framework
-tests depend on Ollama. The first external-demo target remains Sprint 10, after
-guided multi-element discovery can feed the existing synthesis, planning, and
-delivery chain.
+tests depend on Ollama. Sprint 10 is the integrated-engine target: guided multi-element discovery feeds
+the existing synthesis, planning, and delivery chain under fixture-supplied
+human authority. The first human-operated external-demo target is Sprint 11.
 
 ## Sprint 9 scope increment
 
@@ -763,3 +763,20 @@ page. The product may propose and verify several locator candidates, detect an
 ambiguity, ask the human to choose, and apply an accepted process map to the
 existing context contract. Whole-application crawling and autonomous element
 selection remain explicitly outside product scope.
+
+## Sprint 10 scope increment
+
+TestCartographer now has one fixture-assisted integrated Creation Flow
+connecting minimal request intake, bounded discovery, context confirmation, POM
+proposal, repository planning, source delivery, and executable framework
+verification. The run proves the engine mechanics when explicit human inputs and
+decisions are supplied by controlled fixtures. It is not yet a human-operated
+external demo and may not claim a fixed percentage of saved work.
+
+## Sprint 11 scope target
+
+Connect a real operator to the existing entry and authority points through an
+interactive CLI and visible browser. The operator must provide the initial
+request, answer and confirm context, resolve ambiguity, and review artefacts. No
+fixture may silently substitute for a required human decision in the user-demo
+path.

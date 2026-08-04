@@ -470,15 +470,15 @@ the user through several actions, identify page/component boundaries, collect
 multiple elements, propose locator candidates, or ask an ambiguity question
 based on live browser evidence.
 
-## Gap 19 — External-demo creation orchestration and effort evidence
+## Gap 19 — Integrated creation orchestration and effort evidence
 
-**Status:** Open
+**Status:** CLOSED in Sprint 10 for fixture-assisted mechanics
 **Target:** Sprint 10
 
-The individual creation contracts exist, but there is no single user-facing
-workflow from short request through interview, browser discovery, proposal,
-repository plan, patch, runnable test, and effort summary. There is also no
-measured basis for claiming a percentage of saved work.
+The individual creation contracts now run as one traceable reference workflow
+from short request through interview, browser discovery, proposal, repository
+plan, patch, runnable test, and effort summary. Required human actions are
+represented by fixtures, and no percentage of saved work is claimed.
 
 ## Closed in Sprint 9
 
@@ -492,9 +492,28 @@ measured basis for claiming a percentage of saved work.
 - Accepted discovery can replace the technical placeholder and satisfy the
   existing full-readiness gate.
 
-## Next creation gap
+## Gap 22 — Human-triggered interactive Creation Flow
 
-The individual boundaries are still invoked through separate scripts and
-artefacts. Sprint 10 must orchestrate the complete path from a short request to
-a runnable framework test and report total elapsed time, model time, and human
-actions without concealing the review points.
+**Status:** OPEN
+**Target:** Sprint 11
+
+Sprint 10 verifies the complete engine with fixture-supplied human actions. It
+does not yet provide the user experience needed for an honest external demo.
+The missing layer must:
+
+- accept the initial request from the operator,
+- display generated questions and wait for answers,
+- require explicit confirmation at authority boundaries,
+- show a visible browser process and ambiguous candidates,
+- wait for the operator to select the intended element,
+- display ContextBundle, POM proposal, adaptation plan, and patch for review,
+- preserve resumability without silently applying fixture defaults.
+
+## Post-Sprint-11 validation gaps
+
+- Compare the same process through manual discovery, Playwright Codegen, a
+  general-purpose LLM, and TestCartographer.
+- Validate a second public application before making breadth claims.
+- Implement one approved authentication strategy before protected-system demos.
+- Decide whether live POM synthesis adds value over the deterministic template
+  without reducing reliability or authority clarity.

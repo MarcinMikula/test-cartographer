@@ -390,3 +390,30 @@ the selected generation profile rather than silently handled.
   not been compared across models.
 - Authentication, multi-page navigation, destructive actions, and enterprise
   systems remain outside the slice.
+
+## Sprint 10 integrated Creation Flow boundaries
+
+- **The verifier is fixture-assisted, not a human-operated flow.** Nine
+  answers, five intake confirmations, four synthesis-handoff confirmations,
+  one ambiguity choice, and four review decisions are explicit and counted, but
+  supplied from controlled reference data for repeatability. The person running
+  setup does not make those decisions.
+- **There is no real human trigger yet.** The tool does not currently stop at
+  each authority boundary and wait for the operator to enter the initial
+  request, answer questions, select an ambiguous element, or approve artefacts.
+  Sprint 11 is reserved for connecting that operator to the existing engine.
+- **`human acceptance` in verifier output describes a state transition, not a
+  click by the setup operator.** Until Sprint 11, fixture-supplied authority must
+  be named explicitly in logs and documentation.
+- **POM synthesis is deterministic in the reference flow.** It traverses the
+  strict proposal parser, semantic validation, and human review boundary, but it
+  is not a fourth live LLM call.
+- **The flow supports one controlled public catalog process.** It does not prove
+  arbitrary application discovery, multi-page flows, authentication, destructive
+  actions, or enterprise usefulness.
+- **No time-saving percentage is claimed.** The effort ledger is descriptive;
+  comparison against manual discovery and Playwright Codegen remains future
+  validation.
+- **The sandbox is the delivery target.** The original framework is inspected
+  read-only and remains unchanged. Production repository application remains a
+  separate explicit decision.

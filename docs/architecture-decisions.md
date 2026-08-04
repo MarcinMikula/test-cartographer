@@ -1052,12 +1052,13 @@ human ownership.
 
 **Status:** Accepted after Sprint 7.
 
-The next product sequence is Sprint 8 live intake, Sprint 9 guided process
-discovery, and Sprint 10 external-demo end-to-end creation. Reactive and
-proactive maintenance remain planned but move behind this block. The reason is
-product validation: the central promise is reducing expensive context discovery
-and creation work, so the first external demonstration should exercise that
-promise before the project expands its maintenance surface.
+The product sequence is Sprint 8 live intake, Sprint 9 guided process discovery,
+Sprint 10 fixture-assisted integrated Creation Flow, and Sprint 11
+human-triggered interactive Creation Flow. Reactive and proactive maintenance
+remain planned but move behind this block. The reason is product validation: the
+central promise is reducing expensive context discovery and creation work, so
+the first external demonstration must include a real operator trigger before the
+project expands its maintenance surface.
 
 ## ADR — Browser ranking, LLM phrasing, and human selection are separate authorities
 
@@ -1074,3 +1075,36 @@ This prevents three unsafe shortcuts:
 - treating a unique locator as proof of process meaning,
 - allowing an LLM to select a DOM element from a verbal description,
 - applying browser findings to context without review.
+
+## AD-S10-1 — keep synthesis authority strict during Creation Flow
+
+**Decision:** Add a separate human synthesis-handoff confirmation for remaining
+`PROVIDED` synthesis-required values instead of allowing the orchestrator to weaken or
+bypass the synthesis request contract.
+
+**Reason:** Module-local readiness and downstream provider authority are
+separate concerns. Silent status promotion would destroy provenance.
+
+## AD-S10-2 — label deterministic and live intelligence separately
+
+**Decision:** The Creation Flow records three live local-LLM calls and one
+separate deterministic synthesis-template call.
+
+**Reason:** Integration-proof credibility depends on distinguishing measured
+model activity from deterministic templates and replayable fixtures.
+
+
+## AD-S10-3 — separate engine verification from user-demo readiness
+
+**Decision:** A fixture-assisted Creation Flow may prove the complete engine but
+may not set external user-demo readiness to true. The deterministic assessment
+reports three separate states:
+
+- creation mechanics verified,
+- ready for human-trigger integration,
+- ready for external user demonstration.
+
+**Reason:** Fixtures are valid for repeatable integration testing, but they do
+not prove that a real operator can start the flow, understand the questions,
+resolve ambiguity, or review artefacts. Sprint 11 must connect the human to the
+existing entry and decision points instead of rebuilding the engine.

@@ -3434,7 +3434,8 @@ reactive and proactive maintenance behind three creation-focused increments:
 ```text
 Sprint 8 — live guided intake
 Sprint 9 — guided multi-element process discovery
-Sprint 10 — external-demo end-to-end creation flow
+Sprint 10 — fixture-assisted integrated Creation Flow
+Sprint 11 — human-triggered interactive Creation Flow
 ```
 
 This is not cancellation of maintenance. It is sequencing product proof around
@@ -3551,7 +3552,7 @@ chat calls. A replay pass cannot substitute for that gate.
 10. Define readiness for guided discovery separately from full adaptation
     readiness.
 11. Keep browser graph acquisition and ambiguity handling in Sprint 9.
-12. Reserve quantitative time-saving claims for Sprint 10 and later comparison.
+12. Reserve quantitative time-saving claims for post-Creation-Flow comparison.
 
 ## Open questions carried into Sprint 9
 
@@ -3653,3 +3654,48 @@ The controlled slice remains deliberately narrow: one page, one component,
 three targets, and one ambiguity. This is enough to prove the handoff into the
 existing readiness and synthesis pipeline, but not enough to claim broad
 application understanding or quantified effort reduction.
+
+## Sprint 10 — orchestration exposed a readiness-authority mismatch
+
+Connecting previously green vertical slices found a real contract mismatch.
+After accepted browser discovery, general `ContextBundle` readiness was green,
+but application name, environment, process name, and the inherited opening-step
+intent still had status `PROVIDED`. The synthesis request correctly accepts only
+`CONFIRMED` or `OBSERVED` facts.
+
+The wrong fix would have been to weaken the synthesis boundary or silently
+promote those values. Sprint 10 instead adds an explicit synthesis-handoff
+review that confirms exactly those four values and records separate human
+evidence. Integration readiness is not just the conjunction of module-local
+readiness flags; adjacent authority contracts must also agree.
+
+A second lesson is that an integrated Creation Flow needs an effort ledger, not
+only a passing test. The reproducible verifier therefore counts fixture-represented
+human answers, confirmations, ambiguity resolution, and review decisions. It
+separates three live local-model turns from one deterministic synthesis-template
+call and explicitly records that no comparative savings were measured.
+
+A third lesson is that orchestration should not expand model authority merely to
+look more impressive. Sprint 10 uses live LLM assistance where live boundaries
+were already validated (intake and ambiguity phrasing), while POM synthesis
+remains deterministic and transparently labeled. The integration proof is stronger because its claims match its evidence.
+
+A fourth and more important product lesson emerged during human review of the
+acceptance log: fixture-supplied human authority is not the same as a human
+trigger. The engine genuinely reached a passing test, but the setup operator did
+not answer the nine questions, confirm the five business facts, select the
+ambiguous candidate, or approve the POM, plan, and patch. Phrases such as
+`human acceptance` described state transitions executed with fixtures, not real
+operator actions.
+
+Therefore Sprint 10 proves a fixture-assisted integrated Creation Flow, not an
+external user demo. The next step is not to build another engine. It is to
+connect a real human to the existing entry and decision points through an
+interactive CLI and visible browser. Readiness must be split explicitly into:
+
+```text
+Creation mechanics verified: true
+Ready for human-trigger integration: true
+Interactive human trigger used: false
+Ready for external user demonstration: false
+```

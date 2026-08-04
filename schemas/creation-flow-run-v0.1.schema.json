@@ -1,0 +1,353 @@
+{
+  "$defs": {
+    "CreationFlowStatus": {
+      "enum": [
+        "running",
+        "passed",
+        "failed"
+      ],
+      "title": "CreationFlowStatus",
+      "type": "string"
+    },
+    "CreationStageKind": {
+      "enum": [
+        "guided_intake",
+        "browser_discovery",
+        "synthesis_handoff",
+        "pom_synthesis",
+        "adaptation_planning",
+        "source_delivery",
+        "framework_execution"
+      ],
+      "title": "CreationStageKind",
+      "type": "string"
+    },
+    "CreationStageRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Artifact Ids",
+          "type": "array"
+        },
+        "browser_operations": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Browser Operations",
+          "type": "integer"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "deterministic_operations": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Deterministic Operations",
+          "type": "integer"
+        },
+        "duration_seconds": {
+          "minimum": 0.0,
+          "title": "Duration Seconds",
+          "type": "number"
+        },
+        "human_actions": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Human Actions",
+          "type": "integer"
+        },
+        "kind": {
+          "$ref": "#/$defs/CreationStageKind"
+        },
+        "live_llm_calls": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Live Llm Calls",
+          "type": "integer"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/CreationStageStatus"
+        },
+        "summary": {
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "status",
+        "started_at",
+        "completed_at",
+        "duration_seconds",
+        "summary"
+      ],
+      "title": "CreationStageRecord",
+      "type": "object"
+    },
+    "CreationStageStatus": {
+      "enum": [
+        "passed",
+        "failed"
+      ],
+      "title": "CreationStageStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "ambiguity_resolution_count": {
+      "minimum": 0,
+      "title": "Ambiguity Resolution Count",
+      "type": "integer"
+    },
+    "browser_seconds": {
+      "minimum": 0.0,
+      "title": "Browser Seconds",
+      "type": "number"
+    },
+    "candidate_count": {
+      "minimum": 0,
+      "title": "Candidate Count",
+      "type": "integer"
+    },
+    "collected_test_count": {
+      "minimum": 0,
+      "title": "Collected Test Count",
+      "type": "integer"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "deterministic_synthesis_call_count": {
+      "minimum": 0,
+      "title": "Deterministic Synthesis Call Count",
+      "type": "integer"
+    },
+    "deterministic_synthesis_template_used": {
+      "const": true,
+      "default": true,
+      "title": "Deterministic Synthesis Template Used",
+      "type": "boolean"
+    },
+    "fixture_assisted_reference_demo": {
+      "const": true,
+      "default": true,
+      "title": "Fixture Assisted Reference Demo",
+      "type": "boolean"
+    },
+    "framework_execution_independent": {
+      "title": "Framework Execution Independent",
+      "type": "boolean"
+    },
+    "full_traceability": {
+      "title": "Full Traceability",
+      "type": "boolean"
+    },
+    "generated_file_count": {
+      "minimum": 0,
+      "title": "Generated File Count",
+      "type": "integer"
+    },
+    "handoff_confirmation_count": {
+      "minimum": 0,
+      "title": "Handoff Confirmation Count",
+      "type": "integer"
+    },
+    "human_active_seconds": {
+      "minimum": 0.0,
+      "title": "Human Active Seconds",
+      "type": "number"
+    },
+    "human_answer_count": {
+      "minimum": 0,
+      "title": "Human Answer Count",
+      "type": "integer"
+    },
+    "human_answer_values_persisted_in_run": {
+      "const": false,
+      "default": false,
+      "title": "Human Answer Values Persisted In Run",
+      "type": "boolean"
+    },
+    "human_confirmation_count": {
+      "minimum": 0,
+      "title": "Human Confirmation Count",
+      "type": "integer"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "interactive_human_used_during_verifier": {
+      "const": false,
+      "default": false,
+      "title": "Interactive Human Used During Verifier",
+      "type": "boolean"
+    },
+    "live_llm_call_count": {
+      "minimum": 0,
+      "title": "Live Llm Call Count",
+      "type": "integer"
+    },
+    "live_llm_used": {
+      "title": "Live Llm Used",
+      "type": "boolean"
+    },
+    "measured_savings_claimed": {
+      "const": false,
+      "default": false,
+      "title": "Measured Savings Claimed",
+      "type": "boolean"
+    },
+    "model_seconds": {
+      "minimum": 0.0,
+      "title": "Model Seconds",
+      "type": "number"
+    },
+    "modified_file_count": {
+      "minimum": 0,
+      "title": "Modified File Count",
+      "type": "integer"
+    },
+    "original_framework_unchanged": {
+      "title": "Original Framework Unchanged",
+      "type": "boolean"
+    },
+    "passed_test_count": {
+      "minimum": 0,
+      "title": "Passed Test Count",
+      "type": "integer"
+    },
+    "profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "raw_prompts_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Prompts Persisted",
+      "type": "boolean"
+    },
+    "raw_responses_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Responses Persisted",
+      "type": "boolean"
+    },
+    "reused_symbol_count": {
+      "minimum": 0,
+      "title": "Reused Symbol Count",
+      "type": "integer"
+    },
+    "review_decision_count": {
+      "minimum": 0,
+      "title": "Review Decision Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "stages": {
+      "items": {
+        "$ref": "#/$defs/CreationStageRecord"
+      },
+      "maxItems": 7,
+      "minItems": 7,
+      "title": "Stages",
+      "type": "array"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/CreationFlowStatus"
+    },
+    "target_count": {
+      "minimum": 0,
+      "title": "Target Count",
+      "type": "integer"
+    },
+    "target_test": {
+      "minLength": 1,
+      "title": "Target Test",
+      "type": "string"
+    },
+    "total_human_action_count": {
+      "minimum": 0,
+      "title": "Total Human Action Count",
+      "type": "integer"
+    },
+    "total_seconds": {
+      "minimum": 0.0,
+      "title": "Total Seconds",
+      "type": "number"
+    },
+    "verification_seconds": {
+      "minimum": 0.0,
+      "title": "Verification Seconds",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "profile_id",
+    "context_id",
+    "status",
+    "started_at",
+    "completed_at",
+    "target_test",
+    "stages",
+    "total_seconds",
+    "model_seconds",
+    "browser_seconds",
+    "verification_seconds",
+    "human_active_seconds",
+    "live_llm_call_count",
+    "deterministic_synthesis_call_count",
+    "human_answer_count",
+    "human_confirmation_count",
+    "handoff_confirmation_count",
+    "ambiguity_resolution_count",
+    "review_decision_count",
+    "total_human_action_count",
+    "candidate_count",
+    "target_count",
+    "generated_file_count",
+    "modified_file_count",
+    "reused_symbol_count",
+    "collected_test_count",
+    "passed_test_count",
+    "live_llm_used",
+    "framework_execution_independent",
+    "original_framework_unchanged",
+    "full_traceability"
+  ],
+  "title": "CreationFlowRun",
+  "type": "object"
+}

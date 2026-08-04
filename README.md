@@ -882,6 +882,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/intake-workflow.md`](docs/intake-workflow.md) | Deterministic question, answer, review, session, and CLI behaviour |
 | [`docs/guided-intake.md`](docs/guided-intake.md) | Sprint 8 minimal seed, local Ollama interview planning, authority boundary, and discovery readiness |
 | [`docs/process-discovery.md`](docs/process-discovery.md) | Sprint 9 bounded candidate scan, ranking, ambiguity question, human selection, and ContextBundle update |
+| [`docs/creation-flow.md`](docs/creation-flow.md) | Sprint 10 fixture-assisted integrated Creation Flow, human-effort ledger, and human-trigger boundary |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
@@ -982,5 +983,51 @@ reference page yields four visible candidates, three process targets, two
 deterministic selections, one human-resolved ambiguity, and no persisted input
 values, generic page text, HTML, screenshot, raw page, raw prompt, or raw model
 response. Sprint 10 can now connect the existing intake, discovery, synthesis,
-adaptation, delivery, execution, and effort-summary boundaries into the first
-external-demo creation flow.
+adaptation, delivery, execution, and effort-summary boundaries into one
+fixture-assisted integrated Creation Flow.
+
+## Sprint 10 result — fixture-assisted integrated Creation Flow
+
+The previously separate creation boundaries now run as one reference workflow:
+
+```text
+short request
+→ two live local-Ollama intake plans
+→ explicit human answers and confirmations
+→ bounded Chromium discovery
+→ one live ambiguity question
+→ human candidate selection
+→ synthesis handoff confirmation
+→ strict POM proposal
+→ repository plan
+→ reviewed source patch
+→ sandboxed framework execution
+→ one passing Playwright test
+→ effort and provenance summary
+```
+
+Expected normal Windows result: `247 passed`, followed by one complete Creation
+Flow with three live local-model turns. The run reports 23 fixture-represented
+human actions, four browser candidates, three process targets, generated and
+modified framework files, time spent in the model/browser/verifier, and the
+passing test result.
+
+The reference verifier is intentionally fixture-assisted: it does not pretend
+that a human typed answers during automated acceptance. It verifies that the
+Creation Flow engine works end to end when explicit human answers and decisions
+are supplied, but it does not yet exercise a real human trigger. POM synthesis
+uses a deterministic reference template through the existing strict parser and
+review boundary; it is not reported as a live LLM call. No percentage of saved
+work is claimed.
+
+Current maturity:
+
+```text
+Creation mechanics verified: true
+Ready for human-trigger integration: true
+Interactive human trigger used: false
+Ready for external user demonstration: false
+```
+
+Sprint 11 will connect a real operator to the existing entry and decision
+points. See [`docs/creation-flow.md`](docs/creation-flow.md).

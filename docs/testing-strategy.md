@@ -952,3 +952,41 @@ performs one local-Ollama structured-output call. This isolates model latency
 from browser collection and proves that the model can phrase a question without
 selecting a candidate. The real Windows gate is `235 passed`; preparation
 environments without usable Chromium may report `232 passed, 3 skipped`.
+
+## Sprint 10 Creation Flow gate
+
+The normal Windows gate requires:
+
+```text
+247 passed
+```
+
+The separate live verifier then requires:
+
+- two structured local-Ollama intake plans,
+- one real Chromium candidate capture,
+- one structured local-Ollama ambiguity question,
+- explicit human fixture decisions,
+- synthesis-handoff confirmation,
+- strict proposal parsing and semantic validation,
+- read-only framework inspection,
+- reviewed code patch,
+- snapshot-bounded sandbox application,
+- compile, exact test collection, and one passing Chromium execution,
+- a `CreationFlowRun` assessed as mechanically complete and ready for
+  human-trigger integration,
+- an explicit negative assertion that a fixture-assisted verifier is not ready
+  for an external user demonstration.
+
+CLI status and assessment are tested both through direct dispatch and the real
+`python -m test_cartographer.cli` entry point. The assessment must report:
+
+```text
+Creation mechanics verified: true
+Ready for human-trigger integration: true
+External user-demo blockers: interactive_human_trigger_missing
+Ready for external user demonstration: false
+```
+
+Sprint 11 acceptance must add a real interactive operator path rather than
+changing this fixture-assisted proof to `true` by configuration.

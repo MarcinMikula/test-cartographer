@@ -52,6 +52,8 @@ from test_cartographer.guided_intake.io import (
 from test_cartographer.guided_intake.provider import OllamaGuidanceProvider
 from test_cartographer.guided_intake.readiness import assess_guided_intake
 from test_cartographer.context.enums import SensitivityLevel
+from test_cartographer.creation_flow.assessment import assess_creation_flow
+from test_cartographer.creation_flow.io import load_creation_flow_run
 from test_cartographer.context.io import load_context, save_context
 from test_cartographer.context.readiness import assess_readiness
 from test_cartographer.intake.enums import IntakeAnswerAction, IntakeSessionState
@@ -110,6 +112,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _dispatch_delivery(parser, args)
     if args.command == "evidence":
         return _dispatch_evidence(parser, args)
+    if args.command == "creation":
+        return _dispatch_creation(parser, args)
 
     parser.error("a command is required")
     return 2
@@ -606,6 +610,20 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     evidence_assess.add_argument("--bundle", required=True, type=Path)
 
+    creation = commands.add_parser(
+        "creation",
+        help="inspect the integrated Creation Flow result",
+    )
+    creation_commands = creation.add_subparsers(dest="creation_command")
+    creation_status = creation_commands.add_parser(
+        "status", help="show effort, automation, and execution proof"
+    )
+    creation_status.add_argument("--run", required=True, type=Path)
+    creation_assess = creation_commands.add_parser(
+        "assess", help="assess mechanics, human-trigger integration, and user-demo readiness"
+    )
+    creation_assess.add_argument("--run", required=True, type=Path)
+
     return parser
 
 
@@ -717,6 +735,18 @@ def _dispatch_evidence(
     if args.evidence_command == "assess":
         return _evidence_assess_command(args)
     parser.error("an evidence command is required")
+    return 2
+
+
+def _dispatch_creation(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    if args.creation_command == "status":
+        return _creation_status_command(args)
+    if args.creation_command == "assess":
+        return _creation_assess_command(args)
+    parser.error("a creation command is required")
     return 2
 
 
@@ -1095,6 +1125,35 @@ def _evidence_assess_command(args: argparse.Namespace) -> int:
     return 0
 
 
+def _creation_status_command(args: argparse.Namespace) -> int:
+    run = load_creation_flow_run(args.run)
+    print(_format_creation_flow(run))
+    return 0
+
+
+def _creation_assess_command(args: argparse.Namespace) -> int:
+    run = load_creation_flow_run(args.run)
+    report = assess_creation_flow(run)
+    print(_format_creation_flow(run))
+    mechanics_blockers = ", ".join(report.mechanics_blockers) or "none"
+    external_blockers = ", ".join(report.external_demo_blockers) or "none"
+    print(f"Creation mechanics blockers: {mechanics_blockers}")
+    print(
+        "Creation mechanics verified: "
+        f"{str(report.creation_mechanics_verified).lower()}"
+    )
+    print(
+        "Ready for human-trigger integration: "
+        f"{str(report.ready_for_human_trigger_integration).lower()}"
+    )
+    print(f"External user-demo blockers: {external_blockers}")
+    print(
+        "Ready for external user demonstration: "
+        f"{str(report.ready_for_external_user_demo).lower()}"
+    )
+    return 0
+
+
 def _parse_answer(raw: str, question: IntakeQuestion) -> IntakeAnswer:
     if not raw:
         raise ValueError("enter a value or one of the displayed commands")
@@ -1352,6 +1411,29 @@ def _format_discovery_assessment(report) -> str:
             f"Accepted: {str(report.accepted).lower()}",
             "Ready for context application: "
             f"{str(report.ready_for_context_application).lower()}",
+        )
+    )
+
+
+def _format_creation_flow(run) -> str:
+    return "\n".join(
+        (
+            f"Creation flow: {run.id}",
+            f"Status: {run.status.value}",
+            f"Target test: {run.target_test}",
+            f"Total seconds: {run.total_seconds:.3f}",
+            f"Model seconds: {run.model_seconds:.3f}",
+            f"Live LLM calls: {run.live_llm_call_count}",
+            f"Human fixture actions: {run.total_human_action_count}",
+            f"Candidates / targets: {run.candidate_count}/{run.target_count}",
+            f"Generated / modified files: {run.generated_file_count}/{run.modified_file_count}",
+            f"Tests collected / passed: {run.collected_test_count}/{run.passed_test_count}",
+            f"Framework execution independent: {str(run.framework_execution_independent).lower()}",
+            f"Original framework unchanged: {str(run.original_framework_unchanged).lower()}",
+            "Fixture-assisted reference demo: true",
+            "Raw prompts persisted: false",
+            "Raw responses persisted: false",
+            "Measured savings claimed: false",
         )
     )
 

@@ -1,0 +1,99 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "deterministic_synthesis_template": {
+      "const": true,
+      "default": true,
+      "title": "Deterministic Synthesis Template",
+      "type": "boolean"
+    },
+    "expected_ambiguity_resolution_count": {
+      "minimum": 1,
+      "title": "Expected Ambiguity Resolution Count",
+      "type": "integer"
+    },
+    "expected_answer_count": {
+      "minimum": 1,
+      "title": "Expected Answer Count",
+      "type": "integer"
+    },
+    "expected_confirmation_count": {
+      "minimum": 1,
+      "title": "Expected Confirmation Count",
+      "type": "integer"
+    },
+    "expected_handoff_confirmation_count": {
+      "minimum": 1,
+      "title": "Expected Handoff Confirmation Count",
+      "type": "integer"
+    },
+    "expected_review_decision_count": {
+      "minimum": 1,
+      "title": "Expected Review Decision Count",
+      "type": "integer"
+    },
+    "fixture_assisted_reference_demo": {
+      "const": true,
+      "default": true,
+      "title": "Fixture Assisted Reference Demo",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "label": {
+      "minLength": 1,
+      "title": "Label",
+      "type": "string"
+    },
+    "live_discovery_guidance_required": {
+      "const": true,
+      "default": true,
+      "title": "Live Discovery Guidance Required",
+      "type": "boolean"
+    },
+    "live_intake_required": {
+      "const": true,
+      "default": true,
+      "title": "Live Intake Required",
+      "type": "boolean"
+    },
+    "measured_savings_claimed": {
+      "const": false,
+      "default": false,
+      "title": "Measured Savings Claimed",
+      "type": "boolean"
+    },
+    "minimal_request": {
+      "minLength": 1,
+      "title": "Minimal Request",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target_test": {
+      "minLength": 1,
+      "title": "Target Test",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "label",
+    "minimal_request",
+    "target_test",
+    "expected_answer_count",
+    "expected_confirmation_count",
+    "expected_handoff_confirmation_count",
+    "expected_ambiguity_resolution_count",
+    "expected_review_decision_count"
+  ],
+  "title": "CreationFlowProfile",
+  "type": "object"
+}
