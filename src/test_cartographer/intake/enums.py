@@ -6,6 +6,10 @@ from enum import StrEnum
 class IntakeQuestionKind(StrEnum):
     """Human-answerable context targets supported in Sprint 2."""
 
+    APPLICATION_NAME = "application_name"
+    APPLICATION_ENVIRONMENT = "application_environment"
+    APPLICATION_BASE_URL = "application_base_url"
+    PROCESS_NAME = "process_name"
     PROCESS_PURPOSE = "process_purpose"
     PROCESS_RISK = "process_risk"
     PROCESS_ROLE = "process_role"

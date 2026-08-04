@@ -1,0 +1,23 @@
+{
+  "schema_version": "0.1",
+  "id": "guided_local_qwen",
+  "provider": "ollama",
+  "model": "qwen2.5-coder:7b",
+  "base_url": "http://127.0.0.1:11434",
+  "timeout_seconds": 600.0,
+  "max_rounds": 4,
+  "max_prompt_characters": 12000,
+  "max_response_characters": 8000,
+  "allowed_sensitivities": [
+    "public",
+    "internal"
+  ],
+  "temperature": 0.0,
+  "seed": 42,
+  "cloud_allowed": false,
+  "structured_output_required": true,
+  "raw_prompts_persisted": false,
+  "raw_responses_persisted": false,
+  "max_output_tokens": 768,
+  "keep_alive_seconds": 900
+}

@@ -1,0 +1,351 @@
+{
+  "schema_version": "0.1",
+  "id": "ctx_product_search_minimal",
+  "title": "Minimal product-search automation request",
+  "created_at": "2026-08-03T18:00:00+02:00",
+  "updated_at": "2026-08-03T18:01:01Z",
+  "application": {
+    "id": "app_target",
+    "name": {
+      "value": "Public catalog reference application",
+      "status": "provided",
+      "evidence_ids": [
+        "ev_intake_009"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "environment": {
+      "value": "Controlled local reference environment",
+      "status": "provided",
+      "evidence_ids": [
+        "ev_intake_008"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "base_url": {
+      "value": "http://127.0.0.1:8765/public_catalog.html",
+      "status": "provided",
+      "evidence_ids": [
+        "ev_intake_007"
+      ],
+      "confidence": null,
+      "sensitivity": "confidential",
+      "notes": null
+    }
+  },
+  "process": {
+    "id": "proc_target",
+    "name": {
+      "value": "Search the public catalog",
+      "status": "provided",
+      "evidence_ids": [
+        "ev_intake_006"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "purpose": {
+      "value": "Allow a visitor to find matching catalog items.",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_intake_005",
+        "ev_intake_010"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "risk": {
+      "value": "Search failures can hide relevant items.",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_intake_004",
+        "ev_intake_011"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "role": {
+      "value": "Unauthenticated visitor",
+      "status": "confirmed",
+      "evidence_ids": [
+        "ev_intake_003",
+        "ev_intake_012"
+      ],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "preconditions": [
+      {
+        "value": "The catalog is available and contains indexed items.",
+        "status": "confirmed",
+        "evidence_ids": [
+          "ev_intake_002",
+          "ev_intake_013"
+        ],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      }
+    ],
+    "steps": [
+      {
+        "id": "step_begin_discovery",
+        "order": 1,
+        "page_id": "page_discovery_target",
+        "intent": {
+          "value": "I want to automate searching for a product and verify that matching results are shown.",
+          "status": "provided",
+          "evidence_ids": [
+            "ev_initial_request"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": "Initial request only; detailed process discovery is still required."
+        },
+        "action": {
+          "kind": "navigate",
+          "target_element_id": null,
+          "test_data_id": null
+        },
+        "expected_state": {
+          "value": null,
+          "status": "unknown",
+          "evidence_ids": [],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        }
+      }
+    ],
+    "expected_outcomes": [
+      {
+        "id": "outcome_target",
+        "statement": {
+          "value": "Matching product results are visible for the supplied query.",
+          "status": "confirmed",
+          "evidence_ids": [
+            "ev_intake_001",
+            "ev_intake_014"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        },
+        "related_element_ids": [
+          "el_discovery_target"
+        ]
+      }
+    ]
+  },
+  "pages": [
+    {
+      "id": "page_discovery_target",
+      "name": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "route": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "confidence": null,
+        "sensitivity": "confidential",
+        "notes": null
+      },
+      "component_ids": [],
+      "element_ids": [
+        "el_discovery_target"
+      ]
+    }
+  ],
+  "components": [],
+  "elements": [
+    {
+      "id": "el_discovery_target",
+      "owner_id": "page_discovery_target",
+      "name": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "semantic_role": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "locator_candidates": [
+        {
+          "id": "loc_discovery_target",
+          "strategy": "css",
+          "value": {
+            "value": null,
+            "status": "unknown",
+            "evidence_ids": [],
+            "confidence": null,
+            "sensitivity": "internal",
+            "notes": null
+          },
+          "primary": false
+        }
+      ]
+    }
+  ],
+  "test_data": [],
+  "evidence": [
+    {
+      "id": "ev_initial_request",
+      "source_type": "human",
+      "source_ref": "guided_intake_seed:seed_product_search",
+      "summary": "A human supplied the initial automation request.",
+      "captured_at": "2026-08-03T18:00:00+02:00",
+      "sensitivity": "internal",
+      "content_sha256": "ff46d134eaa7dc81283c0db66cc1217078e3d46e6f75025e6dc2834eb68a0841"
+    },
+    {
+      "id": "ev_intake_001",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_outcome_outcome_target",
+      "summary": "Human intake answer for process.expected_outcomes.outcome_target.statement.",
+      "captured_at": "2026-08-03T18:00:13Z",
+      "sensitivity": "internal",
+      "content_sha256": "5e81477a900e750577f88ec1bb379ceeb5879d3364b24ffc0a58e55f53f0a8fd"
+    },
+    {
+      "id": "ev_intake_002",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_precondition_1",
+      "summary": "Human intake answer for process.preconditions[0].",
+      "captured_at": "2026-08-03T18:00:15Z",
+      "sensitivity": "internal",
+      "content_sha256": "73470fda72783263ed917f32b6ff2996bfa3acfd6dd0f86d9e8e92bac5300330"
+    },
+    {
+      "id": "ev_intake_003",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_process_role",
+      "summary": "Human intake answer for process.role.",
+      "captured_at": "2026-08-03T18:00:17Z",
+      "sensitivity": "internal",
+      "content_sha256": "479eb47eeb35fae4633eb89c16f424a64dd4b2efff2808451e903a5fb4a708b4"
+    },
+    {
+      "id": "ev_intake_004",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_process_risk",
+      "summary": "Human intake answer for process.risk.",
+      "captured_at": "2026-08-03T18:00:19Z",
+      "sensitivity": "internal",
+      "content_sha256": "849e79087146816dbc6981bc8d7e36880f4e64e885c60af218d0c78c9f9fc399"
+    },
+    {
+      "id": "ev_intake_005",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_process_purpose",
+      "summary": "Human intake answer for process.purpose.",
+      "captured_at": "2026-08-03T18:00:21Z",
+      "sensitivity": "internal",
+      "content_sha256": "34e0b1b27dcd152713603f0c5edb1ae82469e3e64f82d847dc8f1b4574338479"
+    },
+    {
+      "id": "ev_intake_006",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_process_name",
+      "summary": "Human intake answer for process.name.",
+      "captured_at": "2026-08-03T18:00:23Z",
+      "sensitivity": "internal",
+      "content_sha256": "fe8ba87be66687c83f6e5cff923c87870d53889c2b5e975b5453d4d826534abe"
+    },
+    {
+      "id": "ev_intake_007",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_application_base_url",
+      "summary": "Human intake answer for application.base_url.",
+      "captured_at": "2026-08-03T18:00:25Z",
+      "sensitivity": "confidential",
+      "content_sha256": "ceb434737cd7d4f5035bc52ff241ed7f54f7b8fbc14efafc44964942eec33c58"
+    },
+    {
+      "id": "ev_intake_008",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_application_environment",
+      "summary": "Human intake answer for application.environment.",
+      "captured_at": "2026-08-03T18:00:27Z",
+      "sensitivity": "internal",
+      "content_sha256": "44da1fb35cada661a3adf5ed9f33db753efb15c45f886d05faa3001d86c4c269"
+    },
+    {
+      "id": "ev_intake_009",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_application_name",
+      "summary": "Human intake answer for application.name.",
+      "captured_at": "2026-08-03T18:00:29Z",
+      "sensitivity": "internal",
+      "content_sha256": "a8b0c039b889481e6add9eff5792b42d3672a2737d778819100568307624d942"
+    },
+    {
+      "id": "ev_intake_010",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_process_purpose",
+      "summary": "Human intake answer for process.purpose.",
+      "captured_at": "2026-08-03T18:00:53Z",
+      "sensitivity": "internal",
+      "content_sha256": "34e0b1b27dcd152713603f0c5edb1ae82469e3e64f82d847dc8f1b4574338479"
+    },
+    {
+      "id": "ev_intake_011",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_process_risk",
+      "summary": "Human intake answer for process.risk.",
+      "captured_at": "2026-08-03T18:00:55Z",
+      "sensitivity": "internal",
+      "content_sha256": "849e79087146816dbc6981bc8d7e36880f4e64e885c60af218d0c78c9f9fc399"
+    },
+    {
+      "id": "ev_intake_012",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_process_role",
+      "summary": "Human intake answer for process.role.",
+      "captured_at": "2026-08-03T18:00:57Z",
+      "sensitivity": "internal",
+      "content_sha256": "479eb47eeb35fae4633eb89c16f424a64dd4b2efff2808451e903a5fb4a708b4"
+    },
+    {
+      "id": "ev_intake_013",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_precondition_1",
+      "summary": "Human intake answer for process.preconditions[0].",
+      "captured_at": "2026-08-03T18:00:59Z",
+      "sensitivity": "internal",
+      "content_sha256": "73470fda72783263ed917f32b6ff2996bfa3acfd6dd0f86d9e8e92bac5300330"
+    },
+    {
+      "id": "ev_intake_014",
+      "source_type": "human",
+      "source_ref": "intake:intake_guided_replay:q_outcome_outcome_target",
+      "summary": "Human intake answer for process.expected_outcomes.outcome_target.statement.",
+      "captured_at": "2026-08-03T18:01:01Z",
+      "sensitivity": "internal",
+      "content_sha256": "5e81477a900e750577f88ec1bb379ceeb5879d3364b24ffc0a58e55f53f0a8fd"
+    }
+  ],
+  "open_questions": [],
+  "conflicts": []
+}

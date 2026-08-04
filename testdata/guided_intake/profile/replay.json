@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "id": "guided_replay",
+  "provider": "replay",
+  "model": "replay-guidance",
+  "base_url": "replay://local",
+  "timeout_seconds": 10.0,
+  "max_rounds": 4,
+  "max_prompt_characters": 12000,
+  "max_response_characters": 8000,
+  "allowed_sensitivities": [
+    "public",
+    "internal"
+  ],
+  "temperature": 0.0,
+  "seed": 42,
+  "cloud_allowed": false,
+  "structured_output_required": true,
+  "raw_prompts_persisted": false,
+  "raw_responses_persisted": false
+}

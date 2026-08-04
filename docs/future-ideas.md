@@ -434,3 +434,19 @@ improve proposals.
 
 Safeguards are required to prevent stale or project-specific decisions from
 being treated as universal truth.
+
+
+## Additional guided-intake providers
+
+After the local Ollama path is validated, consider LM Studio, OpenAI-compatible
+local endpoints, Anthropic, or OpenAI adapters behind the same question-plan
+contract. External providers require a separate authorization and redaction
+policy; they must not be enabled merely because the adapter interface exists.
+
+## Verbatim authorized conversation archive
+
+Sprint 8 intentionally stores only hashes and metrics for prompts and model
+responses. A future opt-in diagnostic archive could retain exact conversations
+under explicit sensitivity, encryption, retention, and deletion rules. This is
+not required for the external demo and should not weaken the default minimal
+persistence boundary.

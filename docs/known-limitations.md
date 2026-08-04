@@ -160,17 +160,24 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## LLM use
 
-- **No live LLM provider is integrated.** Sprint 4 implements a provider-neutral
-  adapter boundary and deterministic replay only.
+- **Live LLM support is narrow and local-only.** Sprint 8 integrates Ollama on a
+  loopback HTTP endpoint for interview ordering and wording only. Synthesis,
+  code generation, maintenance, and other providers still use deterministic
+  logic or replay.
 - **Protocol correctness is implemented.** The project has a bounded request,
   deterministic prompt, strict parser, exact raw-output preservation,
   deterministic proposal validator, run persistence, and human review.
 - **Semantic model quality is unproven.** The committed proposal is a controlled
   fixture, not evidence that a live model creates maintainable POM boundaries.
-- **No timeout, retry, token, latency, or cost policy exists.**
+- **Guided-run resume is identity-bound, not migration-aware.** A persisted run can resume only with the same profile, seed, session, and context IDs; there is no migration or merge workflow.
+- **Only basic live-call bounds exist.** Sprint 8 has timeout, prompt/response
+  character budgets, temperature, seed, and round limits. It has no automatic
+  retry, token-budget accounting, model benchmark, or adaptive fallback.
 - **Prompt injection and malicious context are not handled.** The request is
   minimized but not proven safe for arbitrary external or enterprise content.
-- **Local-model support is not promised.** Provider strategy remains open.
+- **One local model path is implemented, not generally validated.** The default
+  acceptance profile uses `qwen2.5-coder:7b`, but no claim is made that this is
+  the best interview model or that every Ollama model follows the schema well.
 - **Accepted means review-approved proposal, not correct code or successful
   execution.**
 
@@ -224,8 +231,9 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 - **The three authentication strategies are parked, not supported.** Shared
   storage state, declarative login recipe, and interactive SSO/MFA login remain
   future directions.
-- **No execution-evidence contract exists between repositories.** The framework
-  cannot yet provide bounded failure context to Cartographer.
+- **The execution-evidence contract is still a reference integration.** Sprint 7
+  proves the provider-neutral bundle and standalone collector, but production
+  `qa-automation-framework` installation and CI retention remain future work.
 
 ## Maintenance and change support
 
@@ -332,3 +340,37 @@ the selected generation profile rather than silently handled.
   still primarily tested through direct dispatch and do not yet all have an
   equivalent `python -m` regression test. Tracked as future hardening rather
   than a Sprint 7 blocker.
+
+
+## Sprint 8 guided-intake limitations
+
+- **The LLM plans questions; it does not interpret answers.** Human text is
+  stored as provided and later confirmed through deterministic rules.
+- **The initial context is structurally minimal, not literally empty.** Context
+  schema `0.1` requires one page, element, locator candidate, step, and outcome,
+  so the seed builder creates explicit unknown placeholders.
+- **The application URL is collected locally but never sent to the model.** This
+  reduces exposure but does not make the session file non-sensitive.
+- **Raw prompts and responses are intentionally absent.** Hashes support
+  consistency and metrics, but exact forensic replay requires an independently
+  retained authorized artefact that does not yet exist.
+- **Only loopback Ollama is accepted.** There is no cloud fallback, OpenAI,
+  Anthropic, LM Studio, or remote Ollama provider.
+- **Question quality is unmeasured.** The model may produce awkward wording or
+  suboptimal order while still satisfying the structural contract.
+- **Prompt injection is only weakly exposed in this sprint.** The prompt contains
+  a human initial request and known local context, but no arbitrary page or
+  document content yet. Full hostile-content handling remains open.
+- **Discovery readiness is not adaptation readiness.** Browser evidence, real
+  pages, actions, elements, states, and locators are intentionally deferred to
+  Sprint 9.
+
+- **Local structured-output latency is hardware-dependent.** The Sprint 8 live gate permits up to 600 seconds per planning call. A model can answer a trivial prompt quickly and still require several minutes for the constrained nine-question JSON response. The current flow has no streaming progress or automatic fallback to a smaller model.
+
+
+- **Live local-LLM progress is phase-level, not token-level.** Structured output
+  remains non-streaming so the complete JSON document can be validated. The
+  verifier now reports preload, collection, and review boundaries, but it does
+  not display partial tokens. Local runtime failures still require inspection of
+  `%LOCALAPPDATA%\Ollama\server.log`. Tracked as a possible future diagnostics
+  improvement, not a Sprint 8 blocker.

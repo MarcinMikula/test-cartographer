@@ -22,6 +22,10 @@ from test_cartographer.intake.models import IntakeQuestion
 
 _HUMAN_INTAKE_CODES = frozenset(
     {
+        "application_name_unusable",
+        "application_environment_unusable",
+        "application_base_url_unusable",
+        "process_name_unusable",
         "purpose_not_confirmed",
         "risk_not_confirmed",
         "role_not_confirmed",
@@ -96,6 +100,43 @@ def list_questions(context: ContextBundle) -> tuple[IntakeQuestion, ...]:
                     allowed_actions=_allowed_actions(conflict.resolution),
                 )
             )
+
+    _append_required_question(
+        required,
+        value=context.application.name,
+        question_id="q_application_name",
+        kind=IntakeQuestionKind.APPLICATION_NAME,
+        prompt="What application are we preparing to automate?",
+        target_path="application.name",
+        subject_id=context.application.id,
+    )
+    _append_required_question(
+        required,
+        value=context.application.environment,
+        question_id="q_application_environment",
+        kind=IntakeQuestionKind.APPLICATION_ENVIRONMENT,
+        prompt="Which environment will discovery use?",
+        target_path="application.environment",
+        subject_id=context.application.id,
+    )
+    _append_required_question(
+        required,
+        value=context.application.base_url,
+        question_id="q_application_base_url",
+        kind=IntakeQuestionKind.APPLICATION_BASE_URL,
+        prompt="What starting application URL should discovery use?",
+        target_path="application.base_url",
+        subject_id=context.application.id,
+    )
+    _append_required_question(
+        required,
+        value=context.process.name,
+        question_id="q_process_name",
+        kind=IntakeQuestionKind.PROCESS_NAME,
+        prompt="What short name should identify this process?",
+        target_path="process.name",
+        subject_id=context.process.id,
+    )
 
     _append_required_question(
         required,

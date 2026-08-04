@@ -1018,3 +1018,43 @@ default.
 - equality and replay checks remain possible through redacted hashes,
 - some diagnoses will require a separately reviewed artefact policy,
 - the contract cannot silently expand by adding arbitrary raw strings.
+
+
+## ADR-021 — Use a local LLM as an interview planner, not a fact authority
+
+**Status:** Accepted for Sprint 8.
+
+### Decision
+
+The first live provider is a loopback-only Ollama adapter. It receives an
+allowlisted deterministic question set and may only order and rephrase those
+questions. Human answers continue through the existing intake evidence and
+confirmation transitions.
+
+### Rationale
+
+A free-form agent that can create fields or fill answers would combine model
+fluency with factual authority before the project has evidence that the model is
+competent or the input is safe. Restricting the model to conversational planning
+gives immediate usability value while preserving deterministic coverage and
+human ownership.
+
+### Consequences
+
+- the LLM cannot omit, duplicate, or invent question IDs,
+- the starting URL is never included in model input,
+- raw prompts and responses are not persisted,
+- a replay provider remains mandatory for deterministic tests,
+- live acceptance requires an installed local model,
+- guided-discovery readiness remains separate from adaptation readiness.
+
+## ADR-022 — Make creation-demo readiness precede maintenance implementation
+
+**Status:** Accepted after Sprint 7.
+
+The next product sequence is Sprint 8 live intake, Sprint 9 guided process
+discovery, and Sprint 10 external-demo end-to-end creation. Reactive and
+proactive maintenance remain planned but move behind this block. The reason is
+product validation: the central promise is reducing expensive context discovery
+and creation work, so the first external demonstration should exercise that
+promise before the project expands its maintenance surface.

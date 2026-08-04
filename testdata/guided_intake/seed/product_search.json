@@ -1,0 +1,9 @@
+{
+  "schema_version": "0.1",
+  "id": "seed_product_search",
+  "context_id": "ctx_product_search_minimal",
+  "title": "Minimal product-search automation request",
+  "initial_request": "I want to automate searching for a product and verify that matching results are shown.",
+  "created_at": "2026-08-03T18:00:00+02:00",
+  "sensitivity": "internal"
+}

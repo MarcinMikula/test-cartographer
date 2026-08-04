@@ -137,6 +137,14 @@ def _current_knowledge(
     question: IntakeQuestion,
 ) -> KnowledgeText:
     process = context.process
+    if question.kind is IntakeQuestionKind.APPLICATION_NAME:
+        return context.application.name
+    if question.kind is IntakeQuestionKind.APPLICATION_ENVIRONMENT:
+        return context.application.environment
+    if question.kind is IntakeQuestionKind.APPLICATION_BASE_URL:
+        return context.application.base_url
+    if question.kind is IntakeQuestionKind.PROCESS_NAME:
+        return process.name
     if question.kind is IntakeQuestionKind.PROCESS_PURPOSE:
         return process.purpose
     if question.kind is IntakeQuestionKind.PROCESS_RISK:
@@ -169,10 +177,19 @@ def _replace_knowledge(
     *,
     evidence: Evidence | None = None,
 ) -> ContextBundle:
+    application = context.application
     process = context.process
     conflicts = context.conflicts
 
-    if question.kind is IntakeQuestionKind.PROCESS_PURPOSE:
+    if question.kind is IntakeQuestionKind.APPLICATION_NAME:
+        application = application.model_copy(update={"name": replacement})
+    elif question.kind is IntakeQuestionKind.APPLICATION_ENVIRONMENT:
+        application = application.model_copy(update={"environment": replacement})
+    elif question.kind is IntakeQuestionKind.APPLICATION_BASE_URL:
+        application = application.model_copy(update={"base_url": replacement})
+    elif question.kind is IntakeQuestionKind.PROCESS_NAME:
+        process = process.model_copy(update={"name": replacement})
+    elif question.kind is IntakeQuestionKind.PROCESS_PURPOSE:
         process = process.model_copy(update={"purpose": replacement})
     elif question.kind is IntakeQuestionKind.PROCESS_RISK:
         process = process.model_copy(update={"risk": replacement})
@@ -209,6 +226,7 @@ def _replace_knowledge(
 
     updated = context.model_copy(
         update={
+            "application": application,
             "process": ProcessContext.model_validate(process.model_dump(mode="python")),
             "conflicts": conflicts,
             "updated_at": updated_at,

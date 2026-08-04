@@ -1,0 +1,202 @@
+{
+  "schema_version": "0.1",
+  "id": "ctx_product_search_minimal",
+  "title": "Minimal product-search automation request",
+  "created_at": "2026-08-03T18:00:00+02:00",
+  "updated_at": "2026-08-03T18:00:00+02:00",
+  "application": {
+    "id": "app_target",
+    "name": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "environment": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "base_url": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "confidence": null,
+      "sensitivity": "confidential",
+      "notes": null
+    }
+  },
+  "process": {
+    "id": "proc_target",
+    "name": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "purpose": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "risk": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "role": {
+      "value": null,
+      "status": "unknown",
+      "evidence_ids": [],
+      "confidence": null,
+      "sensitivity": "internal",
+      "notes": null
+    },
+    "preconditions": [
+      {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      }
+    ],
+    "steps": [
+      {
+        "id": "step_begin_discovery",
+        "order": 1,
+        "page_id": "page_discovery_target",
+        "intent": {
+          "value": "I want to automate searching for a product and verify that matching results are shown.",
+          "status": "provided",
+          "evidence_ids": [
+            "ev_initial_request"
+          ],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": "Initial request only; detailed process discovery is still required."
+        },
+        "action": {
+          "kind": "navigate",
+          "target_element_id": null,
+          "test_data_id": null
+        },
+        "expected_state": {
+          "value": null,
+          "status": "unknown",
+          "evidence_ids": [],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        }
+      }
+    ],
+    "expected_outcomes": [
+      {
+        "id": "outcome_target",
+        "statement": {
+          "value": null,
+          "status": "unknown",
+          "evidence_ids": [],
+          "confidence": null,
+          "sensitivity": "internal",
+          "notes": null
+        },
+        "related_element_ids": [
+          "el_discovery_target"
+        ]
+      }
+    ]
+  },
+  "pages": [
+    {
+      "id": "page_discovery_target",
+      "name": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "route": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "confidence": null,
+        "sensitivity": "confidential",
+        "notes": null
+      },
+      "component_ids": [],
+      "element_ids": [
+        "el_discovery_target"
+      ]
+    }
+  ],
+  "components": [],
+  "elements": [
+    {
+      "id": "el_discovery_target",
+      "owner_id": "page_discovery_target",
+      "name": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "semantic_role": {
+        "value": null,
+        "status": "unknown",
+        "evidence_ids": [],
+        "confidence": null,
+        "sensitivity": "internal",
+        "notes": null
+      },
+      "locator_candidates": [
+        {
+          "id": "loc_discovery_target",
+          "strategy": "css",
+          "value": {
+            "value": null,
+            "status": "unknown",
+            "evidence_ids": [],
+            "confidence": null,
+            "sensitivity": "internal",
+            "notes": null
+          },
+          "primary": false
+        }
+      ]
+    }
+  ],
+  "test_data": [],
+  "evidence": [
+    {
+      "id": "ev_initial_request",
+      "source_type": "human",
+      "source_ref": "guided_intake_seed:seed_product_search",
+      "summary": "A human supplied the initial automation request.",
+      "captured_at": "2026-08-03T18:00:00+02:00",
+      "sensitivity": "internal",
+      "content_sha256": "ff46d134eaa7dc81283c0db66cc1217078e3d46e6f75025e6dc2834eb68a0841"
+    }
+  ],
+  "open_questions": [],
+  "conflicts": []
+}

@@ -10,6 +10,11 @@ from test_cartographer.delivery.models import (
 )
 from test_cartographer.context.readiness import assess_readiness
 from test_cartographer.execution.assessment import assess_execution_evidence
+from test_cartographer.guided_intake.models import (
+    GuidedIntakeProfile,
+    GuidedIntakeRun,
+)
+from test_cartographer.guided_intake.readiness import assess_guided_intake
 from test_cartographer.execution.models import (
     ExecutionEvidenceBundle,
     ExecutionEvidenceProfile,
@@ -30,13 +35,16 @@ __all__ = [
     "ExecutionEvidenceProfile",
     "FrameworkSnapshot",
     "GenerationProfile",
+    "GuidedIntakeProfile",
+    "GuidedIntakeRun",
     "IntakeSession",
     "PatchApplicationReport",
     "PomProposal",
     "SynthesisRun",
     "WorkspaceProfile",
     "assess_execution_evidence",
+    "assess_guided_intake",
     "assess_intake",
     "assess_readiness",
 ]
-__version__ = "0.7.0"
+__version__ = "0.8.0"

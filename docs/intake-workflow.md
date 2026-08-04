@@ -470,3 +470,23 @@ It does not prove:
 - LLM assistance,
 - POM generation,
 - time savings or usability advantage.
+
+
+## Sprint 8 extension — live guided intake
+
+The deterministic Sprint 2 engine remains the authority for gaps, answers,
+evidence, state transitions, and completion. Sprint 8 wraps it with two local
+LLM planning rounds:
+
+```text
+collection candidates → LLM order/wording → human answers
+review candidates → LLM order/wording → human confirmation
+```
+
+A `MinimalContextSeed` can now create the starting session. The new application
+and process metadata questions are application name, environment, starting URL,
+and process name. Purpose, risk, role, preconditions, and outcomes retain the
+explicit confirmation gate.
+
+Use `intake guide` only with a local profile. The model output never directly
+updates the context; every update still passes through `record_answer()`.

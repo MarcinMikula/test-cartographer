@@ -35,12 +35,27 @@ from test_cartographer.delivery.io import (
 from test_cartographer.delivery.review import review_code_patch
 from test_cartographer.execution.assessment import assess_execution_evidence
 from test_cartographer.execution.io import load_execution_bundle
+from test_cartographer.guided_intake.engine import (
+    available_questions,
+    create_guided_run,
+    finish_guided_run,
+    plan_next_phase,
+)
+from test_cartographer.guided_intake.io import (
+    load_guided_profile,
+    load_guided_run,
+    load_minimal_seed,
+    save_guided_run,
+)
+from test_cartographer.guided_intake.provider import OllamaGuidanceProvider
+from test_cartographer.guided_intake.readiness import assess_guided_intake
 from test_cartographer.context.enums import SensitivityLevel
 from test_cartographer.context.io import load_context, save_context
 from test_cartographer.context.readiness import assess_readiness
 from test_cartographer.intake.enums import IntakeAnswerAction, IntakeSessionState
 from test_cartographer.intake.io import load_session, save_session
 from test_cartographer.intake.models import IntakeAnswer, IntakeQuestion, IntakeSession
+from test_cartographer.intake.seed import build_minimal_context
 from test_cartographer.intake.rules import assess_intake, select_next_question
 from test_cartographer.intake.session import (
     create_session,
@@ -163,6 +178,148 @@ def run_intake_loop(
         output_fn(f"Saved: {question.target_path} ({answer.action.value}).")
 
 
+def run_guided_intake_loop(
+    session_path: str | Path,
+    seed_path: str | Path,
+    profile_path: str | Path,
+    run_path: str | Path,
+    *,
+    input_fn: InputFn = input,
+    output_fn: OutputFn = print,
+    now_fn: NowFn = lambda: datetime.now(timezone.utc),
+    timer_fn: TimerFn = time.perf_counter,
+) -> tuple[IntakeSession, object]:
+    """Run a local-LLM planned interview while the human remains authoritative."""
+
+    session_file = Path(session_path)
+    run_file = Path(run_path)
+    session = load_session(session_file)
+    seed = load_minimal_seed(seed_path)
+    profile = load_guided_profile(profile_path)
+    if run_file.exists():
+        guided_run = load_guided_run(run_file)
+        expected_ids = (profile.id, seed.id, session.id, session.context.id)
+        actual_ids = (
+            guided_run.profile_id,
+            guided_run.seed_id,
+            guided_run.session_id,
+            guided_run.context_id,
+        )
+        if actual_ids != expected_ids:
+            raise ValueError(
+                "guided run does not belong to the supplied profile, seed, session, and context"
+            )
+    else:
+        guided_run = create_guided_run(
+            session,
+            seed,
+            profile,
+            run_id=f"guided_{uuid.uuid4().hex[:12]}",
+            started_at=now_fn(),
+        )
+        save_guided_run(guided_run, run_file)
+
+    with OllamaGuidanceProvider(profile) as provider:
+        version = provider.preflight()
+        output_fn(
+            f"Local Ollama ready: version={version}, model={profile.model}, "
+            f"base_url={profile.base_url}"
+        )
+        while True:
+            questions = available_questions(session)
+            if not questions:
+                guided_run = finish_guided_run(
+                    guided_run, session, updated_at=now_fn()
+                )
+                save_guided_run(guided_run, run_file)
+                output_fn(_format_guided_intake_status(session, guided_run))
+                return session, guided_run
+
+            started_at = now_fn()
+            plan, guided_run = plan_next_phase(
+                session,
+                guided_run,
+                seed,
+                profile,
+                provider,
+                started_at=started_at,
+            )
+            save_guided_run(guided_run, run_file)
+            output_fn(
+                f"LLM planned {len(plan.questions)} {plan.phase.value} questions."
+            )
+
+            for planned in plan.questions:
+                current = {item.id: item for item in available_questions(session)}
+                question = current.get(planned.question_id)
+                if question is None:
+                    continue
+                output_fn("")
+                output_fn(planned.user_prompt)
+                output_fn(f"Why this matters: {planned.reason}")
+                output_fn(f"Expected answer shape: {planned.answer_shape.value}")
+                if question.current_value is not None:
+                    output_fn(f"Current value: {question.current_value}")
+                commands = [":unknown", ":skip", ":quit"]
+                if IntakeAnswerAction.CONFIRM in question.allowed_actions:
+                    commands.insert(0, ":confirm")
+                output_fn(f"Commands: {', '.join(commands)}")
+
+                asked_at = now_fn()
+                started = timer_fn()
+                try:
+                    raw = input_fn("> ").strip()
+                except (EOFError, KeyboardInterrupt):
+                    raw = ":quit"
+                active_seconds = max(0.0, timer_fn() - started)
+                answered_at = now_fn()
+
+                if raw == ":quit":
+                    session = pause_session(session, updated_at=answered_at)
+                    save_session(session, session_file)
+                    guided_run = finish_guided_run(
+                        guided_run, session, updated_at=answered_at
+                    )
+                    save_guided_run(guided_run, run_file)
+                    output_fn("Guided intake paused. The session can be resumed later.")
+                    return session, guided_run
+                try:
+                    answer = _parse_answer(raw, question)
+                except ValueError as exc:
+                    output_fn(f"Invalid answer: {exc}")
+                    continue
+
+                session = record_answer(
+                    session,
+                    question=question,
+                    answer=answer,
+                    asked_at=asked_at,
+                    answered_at=answered_at,
+                    active_seconds=active_seconds,
+                    allow_reordering=True,
+                )
+                save_session(session, session_file)
+                output_fn(f"Saved: {question.target_path} ({answer.action.value}).")
+
+
+def _format_guided_intake_status(session, guided_run) -> str:
+    report = assess_guided_intake(session, guided_run)
+    return "\n".join(
+        (
+            f"Guided run: {guided_run.id}",
+            f"State: {guided_run.state.value}",
+            f"Provider turns: {len(guided_run.turns)}",
+            f"Live provider used: {str(guided_run.live_provider_used).lower()}",
+            f"Remaining questions: {report.remaining_question_count}",
+            f"Human intake complete: {str(report.human_intake_complete).lower()}",
+            f"Ready for guided discovery: {str(report.ready_for_guided_discovery).lower()}",
+            f"Full adaptation blockers: {report.full_adaptation_blocker_count}",
+            "Raw prompts persisted: false",
+            "Raw responses persisted: false",
+        )
+    )
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="test-cartographer")
     commands = parser.add_subparsers(dest="command")
@@ -189,6 +346,28 @@ def _build_parser() -> argparse.ArgumentParser:
     export = intake_commands.add_parser("export", help="export current context")
     export.add_argument("--session", required=True, type=Path)
     export.add_argument("--context", required=True, type=Path)
+
+    seed = intake_commands.add_parser(
+        "seed", help="create minimal context and intake session from one request"
+    )
+    seed.add_argument("--seed", required=True, type=Path)
+    seed.add_argument("--context", required=True, type=Path)
+    seed.add_argument("--session", required=True, type=Path)
+    seed.add_argument("--session-id")
+
+    guide = intake_commands.add_parser(
+        "guide", help="run a local-LLM planned human intake interview"
+    )
+    guide.add_argument("--seed", required=True, type=Path)
+    guide.add_argument("--session", required=True, type=Path)
+    guide.add_argument("--profile", required=True, type=Path)
+    guide.add_argument("--run", required=True, type=Path)
+
+    guide_status = intake_commands.add_parser(
+        "guide-status", help="show guided-intake and discovery readiness"
+    )
+    guide_status.add_argument("--session", required=True, type=Path)
+    guide_status.add_argument("--run", required=True, type=Path)
 
     observe = commands.add_parser(
         "observe",
@@ -422,6 +601,12 @@ def _dispatch_intake(
         return _intake_status_command(args)
     if args.intake_command == "export":
         return _export_command(args)
+    if args.intake_command == "seed":
+        return _intake_seed_command(args)
+    if args.intake_command == "guide":
+        return _intake_guide_command(args)
+    if args.intake_command == "guide-status":
+        return _intake_guide_status_command(args)
     parser.error("an intake command is required")
     return 2
 
@@ -532,6 +717,41 @@ def _export_command(args: argparse.Namespace) -> int:
     save_context(session.context, args.context)
     print(f"Exported context: {args.context}")
     print(_format_intake_status(session))
+    return 0
+
+
+
+def _intake_seed_command(args: argparse.Namespace) -> int:
+    seed = load_minimal_seed(args.seed)
+    context = build_minimal_context(seed)
+    session_id = args.session_id or f"intake_{uuid.uuid4().hex[:12]}"
+    session = create_session(
+        context,
+        session_id=session_id,
+        started_at=datetime.now(timezone.utc),
+    )
+    save_context(context, args.context)
+    save_session(session, args.session)
+    print(f"Created minimal context: {args.context}")
+    print(f"Created intake session: {args.session}")
+    print(_format_intake_status(session))
+    return 0
+
+
+def _intake_guide_command(args: argparse.Namespace) -> int:
+    run_guided_intake_loop(
+        args.session,
+        args.seed,
+        args.profile,
+        args.run,
+    )
+    return 0
+
+
+def _intake_guide_status_command(args: argparse.Namespace) -> int:
+    session = load_session(args.session)
+    guided_run = load_guided_run(args.run)
+    print(_format_guided_intake_status(session, guided_run))
     return 0
 
 

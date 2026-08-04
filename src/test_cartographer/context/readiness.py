@@ -56,6 +56,35 @@ def assess_readiness(context: ContextBundle) -> ContextReadinessReport:
 
     issues: list[ReadinessIssue] = []
 
+    _check_usable_value(
+        issues,
+        context.application.name,
+        path="application.name",
+        code="application_name_unusable",
+        related_id=context.application.id,
+    )
+    _check_usable_value(
+        issues,
+        context.application.environment,
+        path="application.environment",
+        code="application_environment_unusable",
+        related_id=context.application.id,
+    )
+    _check_usable_value(
+        issues,
+        context.application.base_url,
+        path="application.base_url",
+        code="application_base_url_unusable",
+        related_id=context.application.id,
+    )
+    _check_usable_value(
+        issues,
+        context.process.name,
+        path="process.name",
+        code="process_name_unusable",
+        related_id=context.process.id,
+    )
+
     _check_business_value(
         issues,
         context.process.purpose,

@@ -56,6 +56,9 @@ product framing
 → first runnable test
 → creation-lifecycle evaluation
 → execution evidence
+→ live LLM-guided intake from minimal context
+→ guided multi-element process discovery
+→ external-demo end-to-end creation flow
 → reactive maintenance
 → proactive frontend/context regression
 → expansion using the existing map
@@ -77,12 +80,15 @@ product framing
 | Sprint 5 | Project workspace, framework mapping, and first reviewable adaptation plan | Done |
 | Sprint 6 | First runnable framework test and creation-lifecycle evaluation | Done |
 | Sprint 7 | Framework execution-evidence contract | Done |
-| Sprint 8 | Reactive maintenance from execution evidence | Planned |
-| Sprint 9 | Proactive post-deployment frontend/context regression | Parked |
-| Sprint 10 | Expansion using the existing application map | Parked |
-| Sprint 11 | External artefacts, authentication profiles, and enterprise safety | Parked |
-| Sprint 12 | Validation ladder culminating in a safe Salesforce flow | Parked |
-| Sprint 13 | Comparative usability, effort, quality, and v1.0 decision | Parked |
+| Sprint 8 | Live local-LLM guided intake from minimal context | Done |
+| Sprint 9 | Guided multi-element process discovery | Planned |
+| Sprint 10 | External-demo end-to-end creation flow and effort summary | Provisional |
+| Sprint 11 | Reactive maintenance from execution evidence | Parked |
+| Sprint 12 | Proactive post-deployment frontend/context regression | Parked |
+| Sprint 13 | Expansion using the existing application map | Parked |
+| Sprint 14 | External artefacts, authentication profiles, and enterprise safety | Parked |
+| Sprint 15 | Validation ladder culminating in a safe Salesforce flow | Parked |
+| Sprint 16 | Comparative usability, effort, quality, and v1.0 decision | Parked |
 
 ## Sprint 0 — Product framing
 
@@ -636,13 +642,13 @@ framework depend on TestCartographer or a live LLM.
 - explicit non-persistence of input values, credentials, raw messages, raw
   tracebacks, stdout/stderr, HTML, screenshots, traces, and host names,
 - record and step budgets,
-- deterministic `assess_execution_evidence()` readiness report for Sprint 8,
+- deterministic `assess_execution_evidence()` readiness report for later reactive maintenance,
 - `evidence status` and `evidence assess` CLI commands,
 - committed replay profile and three-outcome bundle,
 - live subprocess verifier that intentionally produces one pass, one test
   failure, and one infrastructure error,
 - two generated and tested JSON Schemas,
-- 183 tests expected with Chromium on the normal Windows environment.
+- 185 tests expected with Chromium on the normal Windows environment.
 
 ### Exit criteria
 
@@ -658,7 +664,7 @@ framework depend on TestCartographer or a live LLM.
 - [x] Missing traceability or last-step context remains explicit.
 - [x] Static replay and live subprocess collection both validate.
 - [x] Deterministic assessment marks the reference failure bundle ready for
-  Sprint 8 intake.
+  future reactive-maintenance intake.
 - [x] No live LLM is used.
 
 ### What Sprint 7 proves
@@ -680,63 +686,180 @@ execution has completed.
 
 ### Gate to Sprint 8
 
-Sprint 8 may consume only validated evidence records. It must keep technical
-classification separate from root-cause conclusions and must support REVIEW or
-INSUFFICIENT_EVIDENCE rather than forcing every failure into an application,
-automation, data, or environment verdict.
+Sprint 8 may use a live model only through a local, provider-bounded adapter.
+The LLM may order and rephrase an allowlisted deterministic question set, but it
+must not answer questions, create context facts, request secrets, or bypass
+human confirmation. Raw prompts and raw responses must remain unpersisted.
 
-## Sprint 8 — Reactive maintenance
+## Sprint 8 — Live local-LLM guided intake from minimal context
+
+**Status:** Done
+
+### Goal
+
+Start from one minimal human automation request, use a real local Ollama model to
+plan a concise interview, keep the human authoritative for every fact, and
+finish with a context ready for Sprint 9 guided process discovery.
+
+### Delivered
+
+- strict `MinimalContextSeed` version `0.1`,
+- deterministic construction of a structurally valid unknown-heavy
+  `ContextBundle`,
+- new human-intake questions for application name, environment, starting URL,
+  and process name,
+- strict `GuidedIntakeProfile` and `GuidedIntakeRun` contracts version `0.1`,
+- provider abstraction with replay and local Ollama adapters,
+- loopback-only Ollama base URL and explicit rejection of cloud model names,
+- local model preflight through version and installed-model endpoints,
+- two structured-output interview phases: collection and confirmation,
+- exact candidate-set validation with no invented, omitted, or duplicated
+  question IDs,
+- LLM authority limited to ordering and rephrasing questions,
+- human answers applied through the existing evidence-producing intake engine,
+- separate discovery-readiness assessment that does not claim full adaptation
+  readiness,
+- prompt/response hashes and latency without persisted raw prompts or responses,
+- `intake seed`, `intake guide`, and `intake guide-status` CLI commands,
+- deterministic replay verifier and mandatory live local-Ollama verifier,
+- three generated and tested JSON Schemas,
+- 203 tests expected with Chromium on the normal Windows environment.
+
+### Reference flow
+
+```text
+one-sentence automation request
+→ unknown-heavy ContextBundle
+→ nine deterministic context gaps
+→ local LLM orders and rephrases the interview
+→ human supplies application and process facts
+→ local LLM plans the confirmation pass
+→ human confirms business-critical facts
+→ ready for guided process discovery
+→ full adaptation still blocked by missing browser evidence
+```
+
+### Exit criteria
+
+- [x] A one-sentence seed creates a valid context without invented app facts.
+- [x] Application, environment, URL, process, purpose, risk, role, precondition,
+  and outcome gaps remain explicit.
+- [x] A real local Ollama call uses structured JSON output.
+- [x] The model receives an allowlisted question set and must return it exactly.
+- [x] The model cannot write answers into `ContextBundle`.
+- [x] Human answers remain `PROVIDED` until separately confirmed.
+- [x] Confidential URL values are not included in model prompts or run records.
+- [x] Raw prompts and raw model responses are not persisted.
+- [x] Cloud endpoints and cloud model names are rejected.
+- [x] Replay tests cover the same contract without requiring a model.
+- [x] The final state is ready for guided discovery, not falsely adaptation-ready.
+
+### What Sprint 8 proves
+
+A local model can make the deterministic intake workflow conversational and
+context-aware while the existing rules, evidence model, and human confirmation
+retain authority over every stored fact.
+
+### What Sprint 8 does not prove
+
+- that one local model always asks the best question in the best order,
+- semantic understanding of arbitrary long or contradictory answers,
+- browser discovery of pages, elements, actions, and selectors,
+- a complete external-demo creation flow,
+- time savings against manual discovery or Playwright Codegen,
+- prompt-injection resistance for arbitrary external content,
+- enterprise authentication or Salesforce usefulness.
+
+### Gate to Sprint 9
+
+Sprint 9 may consume only human-reviewed context from Sprint 8. Browser
+discovery must remain bounded to one authorized process and must ask the human
+when page, component, element, action, or locator interpretation is ambiguous.
+
+## Sprint 9 — Guided multi-element process discovery
 
 **Status:** Planned
 
 ### Direction
 
-Use failed-execution evidence to:
+Guide one small real process across several elements and, when needed, several
+pages or components:
+
+```text
+human-reviewed process brief
+→ authorized browser session
+→ guided actions and observations
+→ several elements and locator candidates
+→ ambiguity questions
+→ accepted evidence-backed process map
+```
+
+The first slice must not become whole-application crawling. It should measure
+manual interventions, discovered elements, rejected candidates, and active
+discovery time.
+
+## Sprint 10 — External-demo end-to-end creation flow
+
+**Status:** Provisional
+
+### Direction
+
+Combine the creation path into one demonstrable workflow:
+
+```text
+short human request
+→ live guided interview
+→ guided browser discovery
+→ ContextBundle
+→ POM proposal
+→ repository plan
+→ reviewed patch
+→ runnable test
+→ time and human-effort summary
+```
+
+After this sprint the project should support an honest external demonstration
+as a working prototype. It must not claim a fixed percentage of saved work
+until comparative measurements exist.
+
+## Sprint 11 — Reactive maintenance
+
+**Status:** Parked
+
+### Direction
+
+Use validated failed-execution evidence to:
 
 - distinguish likely application, automation, data, environment, and context
-  problems,
+  problems without forcing a verdict,
 - re-observe the affected application area,
 - mark context stale or conflicting,
 - identify affected automation artefacts,
 - prepare a reviewable patch,
 - rerun the framework test after acceptance.
 
-## Sprint 9 — Proactive frontend/context regression
+## Sprint 12 — Proactive frontend/context regression
 
 **Status:** Parked
 
 ### Direction
 
 Support bounded scheduled or post-deployment re-observation even when current
-framework tests remain green.
+framework tests remain green, using an approved observation inventory,
+allowlisted actions, authentication and sensitivity profiles, budgets, and
+reviewable change-impact reports.
 
-The first version should use:
-
-- an approved observation inventory,
-- selected application areas,
-- read-only or allowlisted actions,
-- explicit authentication and sensitivity profiles,
-- time/page/cost budgets,
-- change and impact reports rather than silent repairs.
-
-## Sprint 10 — Expansion using the existing map
+## Sprint 13 — Expansion using the existing map
 
 **Status:** Parked
 
 ### Direction
 
-Add a second process and measure whether existing context reduces:
+Add a second process and measure whether existing context reduces repeated
+human questions, browser discovery, duplicate objects, LLM input, review time,
+and implementation time.
 
-- repeated human questions,
-- repeated browser discovery,
-- duplicate pages and components,
-- LLM input size and cost,
-- review and implementation time.
-
-This is the first direct validation of the application's reusable map as a
-product asset rather than a one-process document.
-
-## Sprint 11 — External artefacts, authentication profiles, and enterprise safety
+## Sprint 14 — External artefacts, authentication profiles, and enterprise safety
 
 **Status:** Parked
 
@@ -756,7 +879,7 @@ Potential scope:
 No strategy is the default until exercised against a controlled credentialed
 application.
 
-## Sprint 12 — Validation ladder culminating in Salesforce
+## Sprint 15 — Validation ladder culminating in Salesforce
 
 **Status:** Parked
 
@@ -785,7 +908,7 @@ Salesforce is a deliberate final-level target because simple sites cannot
 validate enterprise authentication, component-driven UI, data restrictions,
 complex process state, or maintenance economics.
 
-## Sprint 13 — Comparative validation and v1.0 decision
+## Sprint 16 — Comparative validation and v1.0 decision
 
 **Status:** Parked
 

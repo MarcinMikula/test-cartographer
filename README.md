@@ -15,22 +15,23 @@ and expansion.
 
 ## Status
 
-**Sprint 7 — framework execution-evidence contract: complete**
+**Sprint 8 — live local-LLM guided intake from minimal context: complete**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
 Current evidence:
 
 ```text
-183 tests expected with Playwright Chromium
+203 tests expected with Playwright Chromium
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
 controlled source review, patch application, and first runnable test verified end to end
 framework-side execution-evidence collection and maintenance-readiness verified end to end
+live local-Ollama interview planning from a minimal request verified end to end
 ```
 
-The repository now provides seven executable boundaries:
+The repository now provides eight executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -44,7 +45,9 @@ The repository now provides seven executable boundaries:
    application to a snapshot-bounded framework sandbox, and creation-lifecycle evaluation,
 7. a framework-side pytest collector and strict execution-evidence bundle that
    distinguishes pass, test failure, and infrastructure error without importing
-   TestCartographer or using an LLM.
+   TestCartographer or using an LLM,
+8. a minimal-context seed, local Ollama structured-output adapter, guided
+   interview plan, human-authoritative answers, and discovery-readiness report.
 
 The current workflow can:
 
@@ -85,12 +88,19 @@ The current workflow can:
 - link execution records to context, process, synthesis, plan, patch, and source IDs,
 - retain a bounded structural step without input values or method arguments,
 - minimize application URLs to origin and path,
-- assess whether failure evidence is sufficient for future reactive-maintenance intake.
+- assess whether failure evidence is sufficient for future reactive-maintenance intake,
+- start from one short automation request instead of a prepared context fixture,
+- expose nine explicit application and process gaps without inventing facts,
+- use a loopback-only local Ollama model to order and rephrase the interview,
+- keep the LLM unable to answer questions or write context values,
+- retain human provision and confirmation as the only authority transition,
+- reach readiness for guided process discovery while full adaptation remains blocked.
 
-It still cannot autonomously explore an application, call a live LLM provider,
-safely patch the user's original framework repository, handle arbitrary source
-edits, or prove that the first generation and placement conventions generalize
-to enterprise projects.
+It still cannot discover a complete multi-element process, safely patch the
+user's original framework repository, handle arbitrary source edits, measure
+time savings, or prove that the first generation and placement conventions
+generalize to enterprise projects. Live LLM support is currently local Ollama
+only and is limited to interview planning.
 
 ## The problem
 
@@ -184,7 +194,8 @@ Question selection is rule-based. It does not use a free-form LLM interviewer.
 
 The current human-answerable targets are:
 
-- process purpose,
+- application name, environment, and starting URL,
+- process name and purpose,
 - business risk,
 - user role,
 - preconditions,
@@ -196,6 +207,28 @@ Browser-only issues such as an inferred or missing primary locator remain full
 adaptation blockers but do not become questions for the human intake.
 
 See [`docs/intake-workflow.md`](docs/intake-workflow.md).
+
+### Live local-LLM guided intake
+
+Sprint 8 adds a greenfield entry point before browser discovery:
+
+```text
+one-sentence MinimalContextSeed
+→ unknown-heavy ContextBundle
+→ deterministic candidate questions
+→ local Ollama structured-output interview plan
+→ human answers
+→ separate confirmation pass
+→ ready for guided process discovery
+```
+
+The model may order and rephrase only the supplied question IDs. It cannot
+answer them, add fields, write context values, request secrets, or declare the
+context adaptation-ready. The provider profile accepts only a loopback HTTP
+Ollama endpoint and rejects cloud model names. Raw prompts and raw responses are
+represented by hashes and metrics rather than stored text.
+
+See [`docs/guided-intake.md`](docs/guided-intake.md).
 
 ### Bounded browser observation
 
@@ -349,6 +382,7 @@ been observed. Sprint 3 resolves this only through accepted browser evidence.
 
 - Python 3.11 or newer
 - PowerShell commands below assume Windows
+- Sprint 8 live verification: local Ollama with `qwen2.5-coder:7b` or an explicitly configured local model
 
 ### Install
 
@@ -366,10 +400,10 @@ python -m playwright install chromium
 python -m pytest
 ```
 
-Expected Sprint 7 result after Chromium installation:
+Expected Sprint 8 result after Chromium installation:
 
 ```text
-183 passed
+205 passed
 ```
 
 ### Start a reference intake
@@ -435,6 +469,38 @@ test-cartographer intake export `
     --context .test-cartographer/public-search-context.json
 ```
 
+
+### Start from a minimal request and run live guided intake
+
+Create the minimal context and session:
+
+```powershell
+test-cartographer intake seed `
+    --seed testdata/guided_intake/seed/product_search.json `
+    --context .test-cartographer/sprint-8/context.json `
+    --session .test-cartographer/sprint-8/session.json `
+    --session-id intake_product_search
+```
+
+Run the real local-Ollama interview:
+
+```powershell
+test-cartographer intake guide `
+    --seed testdata/guided_intake/seed/product_search.json `
+    --session .test-cartographer/sprint-8/session.json `
+    --profile testdata/guided_intake/profile/ollama_local_qwen.json `
+    --run .test-cartographer/sprint-8/run.json
+```
+
+The model plans collection and confirmation questions. The human still enters
+every value and explicitly confirms business-critical context. Check the
+handoff state with:
+
+```powershell
+test-cartographer intake guide-status `
+    --session .test-cartographer/sprint-8/session.json `
+    --run .test-cartographer/sprint-8/run.json
+```
 
 ### Verify the controlled browser boundary
 
@@ -746,6 +812,7 @@ TestCartographer during ordinary execution.
 See:
 
 - [`docs/system-lifecycle.md`](docs/system-lifecycle.md),
+- [`docs/guided-intake.md`](docs/guided-intake.md),
 - [`docs/authentication-strategies.md`](docs/authentication-strategies.md).
 
 ## Roadmap
@@ -761,9 +828,11 @@ See:
 | 5 | Project workspace and framework adaptation plan | Done |
 | 6 | First runnable framework test and creation-lifecycle evaluation | Done |
 | 7 | Framework execution-evidence contract | Done |
-| 8 | Reactive maintenance from execution evidence | Planned |
-| 9–10 | Proactive maintenance and expansion reuse | Parked |
-| 11–13 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
+| 8 | Live local-LLM guided intake from minimal context | Done |
+| 9 | Guided multi-element process discovery | Planned |
+| 10 | External-demo end-to-end creation flow and effort summary | Provisional |
+| 11–13 | Reactive maintenance, proactive maintenance, and expansion reuse | Parked |
+| 14–16 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
 
@@ -799,7 +868,8 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`LEARNINGS.md`](LEARNINGS.md) | Chronological reasoning, experiments, decisions, and conclusions |
 | [`docs/product-scope.md`](docs/product-scope.md) | Product responsibility, boundaries, and success criteria |
 | [`docs/context-contract.md`](docs/context-contract.md) | Semantic contract version `0.1` |
-| [`docs/intake-workflow.md`](docs/intake-workflow.md) | Sprint 2 question, answer, review, session, and CLI behaviour |
+| [`docs/intake-workflow.md`](docs/intake-workflow.md) | Deterministic question, answer, review, session, and CLI behaviour |
+| [`docs/guided-intake.md`](docs/guided-intake.md) | Sprint 8 minimal seed, local Ollama interview planning, authority boundary, and discovery readiness |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
@@ -843,8 +913,36 @@ accepted application evidence
 → deterministic maintenance-readiness assessment
 ```
 
-Expected normal Windows result: `183 passed`. The Sprint 7 reference run
+Expected normal Windows result at Sprint 7 closure: `185 passed`. The Sprint 7 reference run
 contains one pass, one intentional call-phase failure, and one intentional
 setup-phase infrastructure error. The framework-side collector requires neither
 TestCartographer nor a live LLM, and the persisted bundle excludes raw failure
 text and browser artefacts by default.
+
+
+## Sprint 8 result
+
+The creation path can now begin from one short human request instead of a
+prepared `ContextBundle`:
+
+```text
+minimal request
+→ nine explicit unknowns
+→ two local-Ollama structured interview plans
+→ human-provided and human-confirmed facts
+→ discovery-ready context
+```
+
+Expected normal Windows result: `205 passed`, followed by the deterministic
+replay verifier and two real local-Ollama planning calls. The run persists
+provider/model identity, hashes, sizes, latency, and question IDs, but not raw
+prompts, raw responses, the starting URL, or human answer values. Sprint 9 must
+now turn that reviewed process brief into a bounded multi-element browser map.
+
+
+The provider does not persist raw prompts or raw model responses.
+
+Live local calls are bounded independently by a 768-token generation ceiling,
+JSON-Schema text-length limits, a 900-second model keep-alive, and a maximum
+600-second HTTP timeout. The verifier preloads the model and reports progress at
+each planning phase.

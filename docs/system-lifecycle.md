@@ -318,3 +318,19 @@ It does not yet implement:
 - reactive or proactive maintenance,
 - expansion reuse,
 - enterprise validation.
+
+
+## Creation-demo sequence after Sprint 7
+
+The creation plane is now deliberately prioritized before maintenance:
+
+```text
+Sprint 8: minimal request + local-LLM guided human intake
+→ Sprint 9: bounded multi-element browser discovery
+→ Sprint 10: one external-demo end-to-end creation flow
+→ later: reactive and proactive maintenance
+```
+
+Ollama participates only while Cartographer is collecting creation context. The
+accepted generated test remains independent of both TestCartographer and a live
+model during normal framework execution.

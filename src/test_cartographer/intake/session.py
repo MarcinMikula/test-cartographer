@@ -42,15 +42,27 @@ def record_answer(
     asked_at: datetime,
     answered_at: datetime,
     active_seconds: float,
+    allow_reordering: bool = False,
 ) -> IntakeSession:
     """Apply one answer, record effort, and deterministically refresh state."""
 
-    expected = select_next_question(
-        session.context,
-        excluded_question_ids=session.deferred_question_ids,
-    )
-    if expected is None or expected != question:
-        raise ValueError("question is not the current deterministic intake question")
+    if allow_reordering:
+        from test_cartographer.intake.rules import list_questions
+
+        available = tuple(
+            item
+            for item in list_questions(session.context)
+            if item.id not in set(session.deferred_question_ids)
+        )
+        if question not in available:
+            raise ValueError("question is not available in the current intake phase")
+    else:
+        expected = select_next_question(
+            session.context,
+            excluded_question_ids=session.deferred_question_ids,
+        )
+        if expected is None or expected != question:
+            raise ValueError("question is not the current deterministic intake question")
 
     updated_context = apply_answer(
         session.context,

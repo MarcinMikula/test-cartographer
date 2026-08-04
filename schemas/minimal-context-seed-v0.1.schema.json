@@ -1,0 +1,63 @@
+{
+  "$defs": {
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "The smallest persisted input accepted before guided intake begins.",
+  "properties": {
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "initial_request": {
+      "minLength": 1,
+      "title": "Initial Request",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sensitivity": {
+      "$ref": "#/$defs/SensitivityLevel",
+      "default": "internal"
+    },
+    "title": {
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "context_id",
+    "title",
+    "initial_request",
+    "created_at"
+  ],
+  "title": "MinimalContextSeed",
+  "type": "object"
+}

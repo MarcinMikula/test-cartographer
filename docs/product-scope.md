@@ -733,3 +733,25 @@ authentication, secret, authorization, data, and retention boundary.
 - automatic Jira ingestion before a data-safety policy exists,
 - merging TestCartographer and PhoenixQA,
 - claiming time savings before controlled comparison.
+
+
+## Live guided creation entry point
+
+Sprint 8 adds a creation entry point before browser acquisition. The user can
+start from a short automation request rather than a prepared context fixture. A
+local LLM plans the interview over deterministic context gaps, while the human
+remains the only source of application and business facts.
+
+This capability belongs to the engineering plane:
+
+```text
+minimal request
+→ guided interview
+→ human-reviewed process brief
+→ Sprint 9 browser discovery
+```
+
+It does not change the execution plane and does not make generated framework
+tests depend on Ollama. The first external-demo target remains Sprint 10, after
+guided multi-element discovery can feed the existing synthesis, planning, and
+delivery chain.

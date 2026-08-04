@@ -1,0 +1,217 @@
+{
+  "$defs": {
+    "GuidanceProviderKind": {
+      "enum": [
+        "replay",
+        "ollama"
+      ],
+      "title": "GuidanceProviderKind",
+      "type": "string"
+    },
+    "GuidedIntakePhase": {
+      "enum": [
+        "collection",
+        "review"
+      ],
+      "title": "GuidedIntakePhase",
+      "type": "string"
+    },
+    "GuidedIntakeRunState": {
+      "enum": [
+        "active",
+        "complete",
+        "blocked",
+        "failed"
+      ],
+      "title": "GuidedIntakeRunState",
+      "type": "string"
+    },
+    "GuidedIntakeTurn": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_question_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Candidate Question Ids",
+          "type": "array"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "latency_seconds": {
+          "minimum": 0.0,
+          "title": "Latency Seconds",
+          "type": "number"
+        },
+        "model": {
+          "minLength": 1,
+          "title": "Model",
+          "type": "string"
+        },
+        "phase": {
+          "$ref": "#/$defs/GuidedIntakePhase"
+        },
+        "planned_question_ids": {
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Planned Question Ids",
+          "type": "array"
+        },
+        "prompt_characters": {
+          "minimum": 1,
+          "title": "Prompt Characters",
+          "type": "integer"
+        },
+        "prompt_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Prompt Sha256",
+          "type": "string"
+        },
+        "provider": {
+          "$ref": "#/$defs/GuidanceProviderKind"
+        },
+        "raw_prompt_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Prompt Persisted",
+          "type": "boolean"
+        },
+        "raw_response_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Response Persisted",
+          "type": "boolean"
+        },
+        "response_characters": {
+          "minimum": 1,
+          "title": "Response Characters",
+          "type": "integer"
+        },
+        "response_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Response Sha256",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sequence",
+        "phase",
+        "provider",
+        "model",
+        "candidate_question_ids",
+        "planned_question_ids",
+        "started_at",
+        "completed_at",
+        "latency_seconds",
+        "prompt_sha256",
+        "response_sha256",
+        "prompt_characters",
+        "response_characters"
+      ],
+      "title": "GuidedIntakeTurn",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Id",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "live_provider_used": {
+      "default": false,
+      "title": "Live Provider Used",
+      "type": "boolean"
+    },
+    "profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "raw_prompts_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Prompts Persisted",
+      "type": "boolean"
+    },
+    "raw_responses_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Responses Persisted",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "seed_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Seed Id",
+      "type": "string"
+    },
+    "session_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Session Id",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/GuidedIntakeRunState"
+    },
+    "turns": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/GuidedIntakeTurn"
+      },
+      "title": "Turns",
+      "type": "array"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "profile_id",
+    "seed_id",
+    "session_id",
+    "context_id",
+    "state",
+    "started_at",
+    "updated_at"
+  ],
+  "title": "GuidedIntakeRun",
+  "type": "object"
+}

@@ -387,6 +387,10 @@
     "IntakeQuestionKind": {
       "description": "Human-answerable context targets supported in Sprint 2.",
       "enum": [
+        "application_name",
+        "application_environment",
+        "application_base_url",
+        "process_name",
         "process_purpose",
         "process_risk",
         "process_role",

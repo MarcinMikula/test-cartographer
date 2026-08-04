@@ -181,7 +181,7 @@ The API does not accept:
 - page HTML,
 - arbitrary dictionaries.
 
-The reference profile retains at most eight steps per test. Sprint 8 can use
+The reference profile retains at most eight steps per test. future reactive-maintenance sprint can use
 the last safe step to narrow re-observation without reconstructing the whole
 session.
 
@@ -259,7 +259,7 @@ failure while serializing two.
 
 `assess_execution_evidence()` is deterministic.
 
-A failure record is actionable for Sprint 8 only when it contains:
+A failure record is actionable for future reactive-maintenance sprint only when it contains:
 
 - failure details,
 - complete high-level traceability,
@@ -298,7 +298,7 @@ It then loads the resulting JSON through TestCartographer and verifies:
 - URL credentials/query/fragment are absent,
 - secret values are absent,
 - raw failure text and output are absent,
-- the failure bundle is ready for Sprint 8 intake,
+- the failure bundle is ready for future reactive-maintenance sprint intake,
 - pytest execution did not require TestCartographer or an LLM.
 
 ## CLI
@@ -331,7 +331,7 @@ test-cartographer evidence assess `
 - [x] Record and step budgets are explicit.
 - [x] Static replay and a live subprocess verifier both validate the contract.
 - [x] Deterministic readiness identifies whether failure evidence is sufficient
-  for Sprint 8 intake.
+  for future reactive-maintenance sprint intake.
 - [x] No live LLM is used.
 
 ## What Sprint 7 proves

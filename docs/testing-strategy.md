@@ -873,7 +873,7 @@ python scripts/verify_execution_evidence_contract.py
 The verifier repeats the subprocess run, validates all three counts, checks
 leakage exclusions, and requires deterministic readiness for Sprint 8.
 
-Expected normal Windows result after Sprint 7: `183 passed`.
+Expected normal Windows result at Sprint 7 closure: `185 passed`.
 
 The preparation environment reports `181 passed, 2 skipped` because its
 administrator policy blocks the existing two loopback Chromium gates. The
@@ -898,3 +898,41 @@ a subprocess in addition to direct `main([...])` tests. Direct imports do not
 prove that module-level definition order and the `__main__` entry point are
 correct. Sprint 7 added subprocess coverage for `evidence status` and
 `evidence assess` after the Windows acceptance run exposed this difference.
+
+
+## Sprint 8 live guided-intake validation
+
+Sprint 8 uses three complementary layers:
+
+1. **Pure contract tests** validate local-only profiles, exact candidate sets,
+   strict parsing, prompt minimization, seed construction, and readiness.
+2. **Replay end-to-end verification** plans collection and review with stored
+   structured outputs, applies controlled human answers, and proves discovery
+   readiness without a model.
+3. **Mandatory Windows live-provider verification** checks Ollama version and
+   model availability, performs two `/api/chat` structured-output calls, prints
+   the generated interview, applies controlled human answers, and verifies that
+   raw prompt/response text and the URL are absent from `GuidedIntakeRun`.
+
+The complete normal Windows test gate after Sprint 8 is `205 passed`. The live
+Ollama verifier is an additional acceptance gate and is not replaced by a skip.
+The preparation environment uses HTTP mock transport and replay because it has
+no local Ollama daemon.
+
+Subprocess coverage includes the actual `python -m test_cartographer.cli intake
+seed` entry point. Interactive human input remains tested through the underlying
+engine rather than automated terminal driving.
+
+### Real local-provider latency
+
+The live guided-intake gate uses a configurable per-call timeout and must report the configured value on timeout. A one-token Ollama smoke test is insufficient evidence for the bounded structured-output workload. Regression coverage therefore includes the timeout error contract, while real Windows acceptance exercises the full two-call provider flow.
+
+
+### Local structured-output liveness regression
+
+The Sprint 8 live gate must verify more than provider reachability. The request
+payload is regression-tested for an explicit generated-token ceiling, model
+keep-alive, bounded JSON-Schema text fields, preload behavior, and timeout-specific
+errors. The real verifier must print progress before and after both provider
+turns so a long non-streaming call is not silently confused with a completed or
+idle process.

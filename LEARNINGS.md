@@ -3420,3 +3420,199 @@ The correction moves the entry-point block to the physical end of `cli.py` and
 adds subprocess regression tests for both `evidence status` and
 `evidence assess`. A CLI contract is not fully tested when only its Python
 function is invoked; at least one test must execute the shipped module boundary.
+
+
+# Sprint 8 — live local-LLM guided intake from minimal context
+
+## Product priority changed after Sprint 7
+
+Execution evidence made reactive maintenance technically possible, but the
+central product promise is reducing the expensive discovery and creation work
+that happens before a maintainable test exists. The roadmap therefore moved
+reactive and proactive maintenance behind three creation-focused increments:
+
+```text
+Sprint 8 — live guided intake
+Sprint 9 — guided multi-element process discovery
+Sprint 10 — external-demo end-to-end creation flow
+```
+
+This is not cancellation of maintenance. It is sequencing product proof around
+the capability that a future external user should see first.
+
+## Starting from nothing still requires a structural shell
+
+`ContextBundle` version `0.1` requires at least one page, element, locator
+candidate, process step, outcome, and evidence item. A literally empty bundle is
+therefore invalid by design. Sprint 8 introduces `MinimalContextSeed` and a
+deterministic builder that creates explicit unknown placeholders rather than
+loosening the graph contract or inventing application facts.
+
+The seed contains one short human automation request. The generated context
+knows that the request exists, but it does not know the application name,
+environment, URL, process name, purpose, risk, role, precondition, or result.
+
+## The LLM should improve conversation without receiving factual authority
+
+The first live-model design question was whether the model should generate
+questions freely, infer answers, or only operate on deterministic gaps. Free
+question generation would make coverage, traceability, and authority difficult
+to prove. Direct inference would recreate the false-certainty problem already
+identified in `llm-qa-toolkit`.
+
+The accepted boundary is narrower:
+
+```text
+deterministic candidate set
+→ LLM orders and rephrases every candidate
+→ human answers
+→ deterministic intake records evidence
+→ human confirms business-critical values
+```
+
+The model cannot omit, duplicate, or invent IDs and cannot call context-update
+code. This gives the user a conversational interviewer while preserving the
+existing deterministic completeness guarantee.
+
+## Two model calls are enough for the first useful slice
+
+Calling the model for every single question would add latency, cost, and more
+protocol failure points without proving additional product value. Sprint 8 asks
+the model for one complete collection plan and one complete confirmation plan.
+The human still sees and answers one question at a time.
+
+This creates a useful compromise:
+
+- the model can prioritize the interview globally,
+- structured output validates one exact plan,
+- the local 7B model performs only two short generations,
+- the deterministic engine can replay the flow without a provider.
+
+## Application metadata and business authority need different review rules
+
+The first implementation attempted to add explicit confirmation questions for
+application name and starting URL. That caused previously valid Sprint 2
+fixtures to reopen unnecessary review questions. The correction keeps
+application name, environment, URL, and process name usable as human-provided
+metadata, while retaining confirmation for purpose, risk, role, preconditions,
+and expected outcomes.
+
+This preserves backward compatibility and reflects the stronger authority
+requirement of business meaning versus discovery configuration.
+
+## Local-only means more than using a localhost default
+
+The profile contract enforces:
+
+- HTTP only,
+- loopback host only,
+- no URL credentials, query, or fragment,
+- no model name containing `cloud`,
+- no automatic cloud fallback.
+
+The adapter disables environment proxy inheritance and uses Ollama's native
+structured-output chat endpoint. The application URL is collected from the
+human but excluded from model input even during the confirmation phase.
+
+## Raw prompt persistence conflicts with minimization
+
+A full prompt log would make debugging easier, but it would duplicate the
+initial request and selected context values into another artefact. Sprint 8
+stores only provider/model identity, phases, candidate and planned IDs, hashes,
+character counts, and latency. Exact generated wording is shown to the human but
+not retained in `GuidedIntakeRun`.
+
+The trade-off is explicit: the run proves which contract and question set were
+used, but not a verbatim forensic replay of the model conversation.
+
+## Preparation and acceptance evidence
+
+The preparation environment has no local Ollama daemon. The provider contract
+was exercised through `httpx.MockTransport`, and the complete live verifier was
+run against a local fake server implementing Ollama's version, tags, and chat
+response shapes. Deterministic replay completed the full collection and review
+workflow.
+
+The normal Windows acceptance gate additionally requires a real local Ollama
+installation and the configured model. It performs two real structured-output
+chat calls. A replay pass cannot substitute for that gate.
+
+## Sprint 8 decisions
+
+1. Keep the Sprint 2 deterministic intake engine as the authority.
+2. Add a minimal seed instead of weakening `ContextBundle` structure.
+3. Use local Ollama as the first and only live provider.
+4. Default acceptance to the already used `qwen2.5-coder:7b` model.
+5. Reject remote endpoints and cloud model names.
+6. Let the model order and rephrase only an exact allowlisted question set.
+7. Use one collection-plan call and one review-plan call.
+8. Never send the starting URL value to the model.
+9. Persist hashes and metrics, not raw prompts or responses.
+10. Define readiness for guided discovery separately from full adaptation
+    readiness.
+11. Keep browser graph acquisition and ambiguity handling in Sprint 9.
+12. Reserve quantitative time-saving claims for Sprint 10 and later comparison.
+
+## Open questions carried into Sprint 9
+
+- How should the human authorize and start one multi-step browser process?
+- Should the tool observe actions performed by the user, guide the user through
+  planned actions, or support both modes?
+- How will it identify page and component boundaries without whole-page dumping?
+- How should several locator candidates be ranked and presented for review?
+- What ambiguity should trigger a human question rather than an LLM inference?
+- How will authenticated sessions plug into discovery without implementing the
+  full enterprise auth roadmap early?
+- Which effort metrics best capture manual discovery saved or added?
+- What is the smallest real process that is impressive enough for Sprint 10 but
+  still bounded enough for trustworthy acceptance?
+
+### Final Sprint 8 hardening before delivery
+
+The delivery review tightened four boundaries after the first complete implementation:
+
+1. The Ollama URL must point to the loopback API root, not an arbitrary nested path.
+2. A persisted guided run may resume only against the same profile, seed, session, and context identifiers.
+3. Secret-request detection covers both the user-facing question and the model-provided reason.
+4. Turn completion timestamps are captured after the provider response instead of before the live call.
+
+Two regression tests were added, raising the normal Windows gate to `205 passed`.
+
+## Sprint 8 acceptance correction — local structured output needs an environment-aware timeout
+
+The first real Windows run proved that a warm `qwen2.5-coder:7b` model could answer a tiny prompt immediately while the bounded nine-question JSON-Schema request still exceeded the original 180-second HTTP read timeout. The model was visible in `ollama ps` and split across CPU/GPU, so this was not a missing-model or cold-start failure.
+
+The acceptance boundary now exposes a per-call timeout, defaults the real verifier to 600 seconds, and reports the exact exceeded limit. The contract remains bounded: the profile still rejects values above 600 seconds. A local model being reachable is not the same as the full structured-output workload being fast enough for a fixed short gate.
+
+
+## Sprint 8 acceptance correction — timeout is not an output budget
+
+A second real Windows run showed that extending the HTTP read timeout from 180
+seconds to 600 seconds did not solve the underlying problem. The model answered
+a one-token CLI prompt immediately, but the real non-streaming structured-output
+request remained silent while `ollama ps` moved the runner into `Stopping...`.
+
+The request contract had two missing bounds:
+
+1. `/api/chat` did not set `options.num_predict`, so generation had no explicit
+   token ceiling.
+2. `user_prompt` and `reason` had `minLength` but no JSON-Schema `maxLength`.
+
+A timeout limits how long the caller waits; it does not limit how much output the
+model attempts to generate. For local models, especially when split across CPU
+and GPU, an unconstrained non-streaming response can look indistinguishable from
+a hung process.
+
+The corrected boundary now:
+
+- preloads the selected model through the local API,
+- keeps it loaded for 900 seconds across both planning turns,
+- caps each response at 768 generated tokens,
+- caps `user_prompt` at 180 characters and `reason` at 240 characters,
+- prints progress before and after both real provider calls,
+- retains the independent 600-second HTTP timeout as a final stop condition.
+
+Operationally, cumulative CPU time from `Get-Process` is not proof that inference
+is currently progressing. The model state reported by `ollama ps` and the Ollama
+server log are more useful diagnostics. A runner left in `Stopping...` after an
+interrupted request should be cleaned up before starting another acceptance run.

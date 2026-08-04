@@ -1,0 +1,149 @@
+{
+  "$defs": {
+    "GuidanceProviderKind": {
+      "enum": [
+        "replay",
+        "ollama"
+      ],
+      "title": "GuidanceProviderKind",
+      "type": "string"
+    },
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Local provider configuration and data-boundary policy.",
+  "properties": {
+    "allowed_sensitivities": {
+      "default": [
+        "public",
+        "internal"
+      ],
+      "items": {
+        "$ref": "#/$defs/SensitivityLevel"
+      },
+      "title": "Allowed Sensitivities",
+      "type": "array"
+    },
+    "base_url": {
+      "minLength": 1,
+      "title": "Base Url",
+      "type": "string"
+    },
+    "cloud_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Cloud Allowed",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "keep_alive_seconds": {
+      "default": 900,
+      "maximum": 3600,
+      "minimum": 60,
+      "title": "Keep Alive Seconds",
+      "type": "integer"
+    },
+    "max_output_tokens": {
+      "default": 768,
+      "maximum": 2048,
+      "minimum": 128,
+      "title": "Max Output Tokens",
+      "type": "integer"
+    },
+    "max_prompt_characters": {
+      "default": 12000,
+      "maximum": 100000,
+      "minimum": 1000,
+      "title": "Max Prompt Characters",
+      "type": "integer"
+    },
+    "max_response_characters": {
+      "default": 8000,
+      "maximum": 50000,
+      "minimum": 500,
+      "title": "Max Response Characters",
+      "type": "integer"
+    },
+    "max_rounds": {
+      "default": 4,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Max Rounds",
+      "type": "integer"
+    },
+    "model": {
+      "minLength": 1,
+      "title": "Model",
+      "type": "string"
+    },
+    "provider": {
+      "$ref": "#/$defs/GuidanceProviderKind"
+    },
+    "raw_prompts_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Prompts Persisted",
+      "type": "boolean"
+    },
+    "raw_responses_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Responses Persisted",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "seed": {
+      "default": 42,
+      "minimum": 0,
+      "title": "Seed",
+      "type": "integer"
+    },
+    "structured_output_required": {
+      "const": true,
+      "default": true,
+      "title": "Structured Output Required",
+      "type": "boolean"
+    },
+    "temperature": {
+      "default": 0.0,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Temperature",
+      "type": "number"
+    },
+    "timeout_seconds": {
+      "default": 120.0,
+      "exclusiveMinimum": 0.0,
+      "maximum": 600.0,
+      "title": "Timeout Seconds",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "provider",
+    "model",
+    "base_url"
+  ],
+  "title": "GuidedIntakeProfile",
+  "type": "object"
+}

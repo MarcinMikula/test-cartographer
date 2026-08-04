@@ -1,0 +1,82 @@
+{
+  "schema_version": "0.1",
+  "id": "guided_replay_reference",
+  "profile_id": "guided_replay",
+  "seed_id": "seed_product_search",
+  "session_id": "intake_guided_replay",
+  "context_id": "ctx_product_search_minimal",
+  "state": "complete",
+  "started_at": "2026-08-03T18:00:00Z",
+  "updated_at": "2026-08-03T18:01:30Z",
+  "turns": [
+    {
+      "sequence": 1,
+      "phase": "collection",
+      "provider": "replay",
+      "model": "replay-guidance",
+      "candidate_question_ids": [
+        "q_application_name",
+        "q_application_environment",
+        "q_application_base_url",
+        "q_process_name",
+        "q_process_purpose",
+        "q_process_risk",
+        "q_process_role",
+        "q_precondition_1",
+        "q_outcome_outcome_target"
+      ],
+      "planned_question_ids": [
+        "q_outcome_outcome_target",
+        "q_precondition_1",
+        "q_process_role",
+        "q_process_risk",
+        "q_process_purpose",
+        "q_process_name",
+        "q_application_base_url",
+        "q_application_environment",
+        "q_application_name"
+      ],
+      "started_at": "2026-08-03T18:00:00Z",
+      "completed_at": "2026-08-03T18:00:01Z",
+      "latency_seconds": 0.0,
+      "prompt_sha256": "e5d3e66c826ce5d8a82e7716cd6ea08fc895662b616c16891b52be0694dbe38f",
+      "response_sha256": "4b7515a549574c4d88ffdb51f3374cc8e6f1fd035bc8c94c745eee40dd8d3095",
+      "prompt_characters": 2764,
+      "response_characters": 1597,
+      "raw_prompt_persisted": false,
+      "raw_response_persisted": false
+    },
+    {
+      "sequence": 2,
+      "phase": "review",
+      "provider": "replay",
+      "model": "replay-guidance",
+      "candidate_question_ids": [
+        "q_process_purpose",
+        "q_process_risk",
+        "q_process_role",
+        "q_precondition_1",
+        "q_outcome_outcome_target"
+      ],
+      "planned_question_ids": [
+        "q_process_purpose",
+        "q_process_risk",
+        "q_process_role",
+        "q_precondition_1",
+        "q_outcome_outcome_target"
+      ],
+      "started_at": "2026-08-03T18:00:40Z",
+      "completed_at": "2026-08-03T18:00:41Z",
+      "latency_seconds": 0.0,
+      "prompt_sha256": "52df95cedaa4ae234e9bced5b2456cdbe9846b7d02287562a90abc09b0b86e0d",
+      "response_sha256": "cc37ecfa39297636db8d50a9cc891896e046c3f147aa2d2acaeca11e0213ce1d",
+      "prompt_characters": 2376,
+      "response_characters": 919,
+      "raw_prompt_persisted": false,
+      "raw_response_persisted": false
+    }
+  ],
+  "live_provider_used": false,
+  "raw_prompts_persisted": false,
+  "raw_responses_persisted": false
+}

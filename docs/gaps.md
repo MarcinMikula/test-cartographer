@@ -369,7 +369,7 @@ evolution remain TestCartographer responsibilities.
 
 **Status:** OPEN
 
-**Target:** Sprint 8
+**Target:** Sprint 11
 
 The product cannot yet:
 
@@ -457,3 +457,25 @@ Future adaptation must distinguish:
 - a stale or incomplete checkout,
 - a compatible framework with different conventions,
 - a genuinely unsupported architecture.
+
+
+## Gap 18 — Guided multi-element browser discovery
+
+**Status:** Open
+**Target:** Sprint 9
+
+Sprint 8 can turn a minimal request into a human-reviewed process brief, but the
+technical graph still contains explicit placeholders. The tool cannot yet guide
+the user through several actions, identify page/component boundaries, collect
+multiple elements, propose locator candidates, or ask an ambiguity question
+based on live browser evidence.
+
+## Gap 19 — External-demo creation orchestration and effort evidence
+
+**Status:** Open
+**Target:** Sprint 10
+
+The individual creation contracts exist, but there is no single user-facing
+workflow from short request through interview, browser discovery, proposal,
+repository plan, patch, runnable test, and effort summary. There is also no
+measured basis for claiming a percentage of saved work.
