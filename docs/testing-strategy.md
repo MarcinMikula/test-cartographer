@@ -532,20 +532,20 @@ Before credentialed validation, tests must cover:
 
 ## What current tests do not cover
 
-- a real terminal operated by a real tester,
-- subjective clarity of question wording,
-- actual setup time outside the measured prompt window,
+- usability for an unbriefed external participant,
+- subjective clarity of all question and review wording,
+- actual setup time outside measured flow windows,
 - concurrent session editing,
-- session corruption recovery,
-- authorization of who may confirm facts,
+- session corruption recovery and arbitrary-stage resume,
+- authorization of who may confirm facts or approve patches,
 - arbitrary external, dynamic, credentialed, iframe, or Shadow DOM applications,
 - cross-browser execution beyond Chromium,
-- redaction and secret handling,
-- live LLM provider requests, latency, cost, or semantic quality,
-- generated source code,
-- `qa-automation-framework` adaptation or independent execution,
-- framework-side execution-evidence collection,
-- reactive or proactive maintenance,
+- production-grade redaction, secret handling, CI retention, and access control,
+- cloud LLM providers or broad model-quality comparison,
+- general generated-source quality across frameworks and architectures,
+- production installation of the execution-evidence collector,
+- reactive maintenance beyond one controlled locator drift,
+- proactive maintenance,
 - expansion using an existing application map,
 - credentialed enterprise or Salesforce validation,
 - comparative usability, maintenance economics, or time savings.
@@ -1048,3 +1048,58 @@ every source line without ellipses, obtain one new operator decision, apply to a
 fresh snapshot-bounded sandbox, and pass compile, collection, and execution.
 It must also verify the bounded LLM-role disclosure and deterministic synthesis
 disclosure. Intake, Ollama planning, and browser discovery are not repeated.
+
+
+## Sprint 12 reactive-maintenance acceptance gate
+
+Automated coverage must verify:
+
+- strict model and schema invariants,
+- infrastructure errors remain blocked,
+- a target call-phase failure with complete traceability becomes only
+  `reobservation_required`,
+- mismatched target path, last step, element, locator, or action blocks the flow,
+- the old locator must be absent before a repair candidate exists,
+- exactly one source occurrence is replaced,
+- source hashes and Python compilation match the reviewed patch,
+- sandbox materialization uses the accepted workspace snapshot,
+- one test fails before and passes after,
+- the original framework remains unchanged,
+- CLI status and assessment work through direct and `python -m` entry points.
+
+The scripted verifier covers all five prompt boundaries but must print that it is
+not the real-operator acceptance artefact. The Windows setup gate then requires a
+separate human-triggered run with headed Chromium, five real actions, no fixture
+decisions, full exact source review, one failure before, one pass after, and
+`controlled_demo_ready=true`.
+
+Expected corrected Windows suite result for Sprint 12: `284 passed`.
+
+
+### Sprint 12 nested pytest correction gate
+
+The pre-repair verifier must classify the nested run from the bounded execution
+evidence rather than requiring one exact OS/process exit code. Regression tests
+prove that a non-zero wrapper code can be accepted only when the bundle contains
+exactly one `test_failure`, no pass, no infrastructure error, and one record. A
+zero process code or semantic-count mismatch must fail with bounded diagnostics.
+The nested environment must not inherit `PYTEST_ADDOPTS`, `PYTEST_CURRENT_TEST`,
+or `PYTEST_PLUGINS`.
+
+### Sprint 12 framework-config isolation gate
+
+Nested framework execution must pass `-c <framework>/pytest.ini` as well as
+`--rootdir <framework>`. The regression test verifies both arguments and the
+nested working directory. This ensures that marker registration and other pytest
+policy come from the accepted framework snapshot rather than the parent
+TestCartographer repository.
+
+
+### Machine-readable full-suite acceptance
+
+Sprint delivery scripts must not infer pass counts from pytest console wording.
+Verbosity flags, pytest versions, plugins, and terminal handling can suppress or
+change the summary while preserving a successful test run. The Sprint 12 setup
+and commit gates therefore validate a generated JUnit report and require exactly
+285 tests, zero failures, zero errors, and zero skipped tests on the Windows
+acceptance environment.

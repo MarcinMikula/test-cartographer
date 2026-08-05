@@ -37,6 +37,16 @@ from test_cartographer.discovery.assessment import assess_discovery
 from test_cartographer.discovery.io import load_discovery_run
 from test_cartographer.execution.assessment import assess_execution_evidence
 from test_cartographer.execution.io import load_execution_bundle
+from test_cartographer.reactive_maintenance.assessment import (
+    assess_reactive_maintenance_run,
+)
+from test_cartographer.reactive_maintenance.io import (
+    load_maintenance_run,
+)
+from test_cartographer.reactive_maintenance.runner import (
+    MaintenanceRejected,
+    run_human_triggered_reactive_maintenance,
+)
 from test_cartographer.guided_intake.engine import (
     available_questions,
     create_guided_run,
@@ -127,6 +137,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _dispatch_evidence(parser, args)
     if args.command == "creation":
         return _dispatch_creation(parser, args)
+    if args.command == "maintenance":
+        return _dispatch_maintenance(parser, args)
 
     parser.error("a command is required")
     return 2
@@ -672,6 +684,34 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     creation_patch_rereview_status.add_argument("--report", required=True, type=Path)
 
+    maintenance = commands.add_parser(
+        "maintenance",
+        help="run and inspect bounded reactive maintenance",
+    )
+    maintenance_commands = maintenance.add_subparsers(dest="maintenance_command")
+
+    maintenance_interactive = maintenance_commands.add_parser(
+        "interactive",
+        help="run the human-triggered controlled reactive-maintenance flow",
+    )
+    maintenance_interactive.add_argument("--profile", required=True, type=Path)
+    maintenance_interactive.add_argument("--execution-profile", required=True, type=Path)
+    maintenance_interactive.add_argument("--workspace-profile", required=True, type=Path)
+    maintenance_interactive.add_argument("--framework-root", required=True, type=Path)
+    maintenance_interactive.add_argument("--application-root", required=True, type=Path)
+    maintenance_interactive.add_argument("--output-dir", required=True, type=Path)
+    maintenance_interactive.add_argument("--executable-path")
+
+    maintenance_status = maintenance_commands.add_parser(
+        "status", help="show one reactive-maintenance run"
+    )
+    maintenance_status.add_argument("--run", required=True, type=Path)
+
+    maintenance_assess = maintenance_commands.add_parser(
+        "assess", help="assess controlled reactive-maintenance proof"
+    )
+    maintenance_assess.add_argument("--run", required=True, type=Path)
+
     return parser
 
 
@@ -803,6 +843,20 @@ def _dispatch_creation(
     if args.creation_command == "patch-rereview-status":
         return _creation_patch_rereview_status_command(args)
     parser.error("a creation command is required")
+    return 2
+
+
+def _dispatch_maintenance(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    if args.maintenance_command == "interactive":
+        return _maintenance_interactive_command(args)
+    if args.maintenance_command == "status":
+        return _maintenance_status_command(args)
+    if args.maintenance_command == "assess":
+        return _maintenance_assess_command(args)
+    parser.error("a maintenance command is required")
     return 2
 
 
@@ -1279,6 +1333,46 @@ def _creation_interactive_status_command(args: argparse.Namespace) -> int:
     return 0
 
 
+def _maintenance_interactive_command(args: argparse.Namespace) -> int:
+    try:
+        run_human_triggered_reactive_maintenance(
+            maintenance_profile_path=args.profile,
+            execution_profile_path=args.execution_profile,
+            workspace_profile_path=args.workspace_profile,
+            framework_root=args.framework_root,
+            application_root=args.application_root,
+            output_dir=args.output_dir,
+            executable_path=args.executable_path,
+        )
+    except MaintenanceRejected as exc:
+        print(f"Reactive Maintenance Flow stopped: {exc}")
+        return 2
+    return 0
+
+
+def _maintenance_status_command(args: argparse.Namespace) -> int:
+    run = load_maintenance_run(args.run)
+    print(_format_reactive_maintenance_run(run))
+    return 0
+
+
+def _maintenance_assess_command(args: argparse.Namespace) -> int:
+    run = load_maintenance_run(args.run)
+    report = assess_reactive_maintenance_run(run)
+    print(_format_reactive_maintenance_run(run))
+    blockers = ", ".join(report.blockers) or "none"
+    print(f"Reactive-maintenance blockers: {blockers}")
+    print(
+        "Reactive maintenance verified: "
+        f"{str(report.reactive_maintenance_verified).lower()}"
+    )
+    print(
+        "Ready for controlled maintenance demonstration: "
+        f"{str(report.controlled_demo_ready).lower()}"
+    )
+    return 0
+
+
 def _parse_answer(raw: str, question: IntakeQuestion) -> IntakeAnswer:
     if not raw:
         raise ValueError("enter a value or one of the displayed commands")
@@ -1589,6 +1683,34 @@ def _format_operator_session(session) -> str:
             "Fixture answers used: false",
             f"Headed browser used: {str(session.headed_browser_used).lower()}",
             "Raw operator values persisted in ledger: false",
+        )
+    )
+
+
+def _format_reactive_maintenance_run(run) -> str:
+    return "\n".join(
+        (
+            f"Reactive maintenance run: {run.id}",
+            f"Status: {run.status.value}",
+            f"Operator actions: {run.operator_action_count}",
+            f"Candidate count: {run.candidate_count}",
+            f"Selected candidate: {run.selected_candidate_id}",
+            f"Failures before: {run.failed_test_count_before}",
+            f"Infrastructure errors before: {run.infrastructure_error_count_before}",
+            f"Tests collected / passed after: {run.collected_test_count_after}/{run.passed_test_count_after}",
+            "Failed test treated as evidence, not diagnosis: true",
+            "Application bug claimed: false",
+            "Interactive human trigger used: true",
+            "Fixture decisions used: false",
+            "Headed browser used: true",
+            "Exact full patch reviewed: true",
+            "Patch applied only to sandbox: true",
+            "Original framework unchanged: true",
+            "Framework execution independent: true",
+            "Live LLM used: false",
+            "Raw failure text persisted: false",
+            "Raw page persisted: false",
+            "Measured savings claimed: false",
         )
     )
 

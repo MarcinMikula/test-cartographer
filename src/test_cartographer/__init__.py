@@ -30,6 +30,17 @@ from test_cartographer.execution.models import (
 from test_cartographer.intake.models import IntakeSession
 from test_cartographer.intake.rules import assess_intake
 from test_cartographer.observation.models import BrowserObservation
+from test_cartographer.reactive_maintenance.assessment import (
+    assess_failure_for_maintenance,
+    assess_reactive_maintenance_run,
+)
+from test_cartographer.reactive_maintenance.models import (
+    MaintenanceDiagnosis,
+    MaintenanceEvidenceAssessment,
+    MaintenanceSourcePatch,
+    ReactiveMaintenanceProfile,
+    ReactiveMaintenanceRun,
+)
 from test_cartographer.synthesis.models import BoundedSynthesisRequest, PomProposal, SynthesisRun
 
 __all__ = [
@@ -44,6 +55,8 @@ __all__ = [
     "DiscoveryProfile",
     "ProcessDiscoveryPlan",
     "ProcessDiscoveryRun",
+    "ReactiveMaintenanceProfile",
+    "ReactiveMaintenanceRun",
     "ExecutionEvidenceBundle",
     "ExecutionEvidenceProfile",
     "FrameworkSnapshot",
@@ -51,6 +64,9 @@ __all__ = [
     "GuidedIntakeProfile",
     "GuidedIntakeRun",
     "IntakeSession",
+    "MaintenanceDiagnosis",
+    "MaintenanceEvidenceAssessment",
+    "MaintenanceSourcePatch",
     "PatchApplicationReport",
     "PomProposal",
     "SynthesisRun",
@@ -58,8 +74,10 @@ __all__ = [
     "assess_creation_flow",
     "assess_discovery",
     "assess_execution_evidence",
+    "assess_failure_for_maintenance",
     "assess_guided_intake",
     "assess_intake",
     "assess_readiness",
+    "assess_reactive_maintenance_run",
 ]
-__version__ = "0.11.0"
+__version__ = "0.12.0"

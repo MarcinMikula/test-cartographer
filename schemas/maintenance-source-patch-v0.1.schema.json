@@ -1,0 +1,165 @@
+{
+  "$defs": {
+    "MaintenanceDecision": {
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "title": "MaintenanceDecision",
+      "type": "string"
+    },
+    "MaintenanceStatus": {
+      "enum": [
+        "pending",
+        "passed",
+        "rejected",
+        "blocked"
+      ],
+      "title": "MaintenanceStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/MaintenanceDecision",
+      "default": "pending"
+    },
+    "diagnosis_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Diagnosis Id",
+      "type": "string"
+    },
+    "exact_source_displayed": {
+      "default": false,
+      "title": "Exact Source Displayed",
+      "type": "boolean"
+    },
+    "expected_after_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Expected After Sha256",
+      "type": "string"
+    },
+    "expected_before_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Expected Before Sha256",
+      "type": "string"
+    },
+    "full_source": {
+      "minLength": 1,
+      "title": "Full Source",
+      "type": "string"
+    },
+    "full_source_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Full Source Sha256",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "live_llm_used": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Used",
+      "type": "boolean"
+    },
+    "new_locator_value": {
+      "minLength": 1,
+      "title": "New Locator Value",
+      "type": "string"
+    },
+    "old_locator_value": {
+      "minLength": 1,
+      "title": "Old Locator Value",
+      "type": "string"
+    },
+    "omitted_source_lines": {
+      "const": false,
+      "default": false,
+      "title": "Omitted Source Lines",
+      "type": "boolean"
+    },
+    "original_repository_modified": {
+      "const": false,
+      "default": false,
+      "title": "Original Repository Modified",
+      "type": "boolean"
+    },
+    "profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "raw_operator_value_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Operator Value Persisted",
+      "type": "boolean"
+    },
+    "review_seconds": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Review Seconds",
+      "type": "number"
+    },
+    "reviewed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewed At"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/MaintenanceStatus",
+      "default": "pending"
+    },
+    "symbol_name": {
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+      "title": "Symbol Name",
+      "type": "string"
+    },
+    "target_path": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+      "title": "Target Path",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "diagnosis_id",
+    "profile_id",
+    "created_at",
+    "target_path",
+    "symbol_name",
+    "expected_before_sha256",
+    "old_locator_value",
+    "new_locator_value",
+    "full_source",
+    "full_source_sha256",
+    "expected_after_sha256"
+  ],
+  "title": "MaintenanceSourcePatch",
+  "type": "object"
+}

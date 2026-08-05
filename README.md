@@ -15,23 +15,25 @@ and expansion.
 
 ## Status
 
-**Sprint 11 — human-triggered interactive Creation Flow: implemented; manual operator acceptance required**
+**Sprint 12 — human-triggered Reactive Maintenance Flow: implemented; real operator acceptance required**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
 Current evidence:
 
 ```text
-266 tests expected with Playwright Chromium
+282 tests expected with Playwright Chromium
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
 controlled source review, patch application, and first runnable test verified end to end
 framework-side execution-evidence collection and maintenance-readiness verified end to end
+human-triggered Creation Flow with headed review and exact patch acceptance verified end to end
+human-triggered reactive locator maintenance with fail-before/pass-after sandbox proof implemented
 live local-Ollama interview planning from a minimal request verified end to end
 ```
 
-The repository now provides eleven executable boundaries:
+The repository now provides twelve executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -54,7 +56,9 @@ The repository now provides eleven executable boundaries:
 10. a fixture-assisted integrated Creation Flow joining the accepted engine
     boundaries from short request to one passing Playwright test,
 11. a human-triggered interactive CLI with blocking answers, headed-browser
-    ambiguity review, artefact review decisions, and an explicit execution trigger.
+    ambiguity review, artefact review decisions, and an explicit execution trigger,
+12. a human-triggered reactive-maintenance flow from bounded failed-run evidence
+    through headed re-observation, exact patch review, sandbox repair, and a passing retest.
 
 The current workflow can:
 
@@ -95,7 +99,13 @@ The current workflow can:
 - link execution records to context, process, synthesis, plan, patch, and source IDs,
 - retain a bounded structural step without input values or method arguments,
 - minimize application URLs to origin and path,
-- assess whether failure evidence is sufficient for future reactive-maintenance intake,
+- assess whether failure evidence is sufficient for bounded reactive-maintenance intake,
+- keep failed-test evidence separate from application-bug and stale-locator claims,
+- require a real operator before current-page re-observation,
+- show current locator candidates in headed Chromium,
+- generate and display one exact deterministic locator patch,
+- apply an accepted patch only to a snapshot-bounded sandbox,
+- prove one controlled failure before and one passing retest after repair,
 - start from one short automation request instead of a prepared context fixture,
 - expose nine explicit application and process gaps without inventing facts,
 - use a loopback-only local Ollama model to order and rephrase the interview,
@@ -846,8 +856,9 @@ See:
 | 8 | Live local-LLM guided intake from minimal context | Done |
 | 9 | Guided multi-element process discovery | Done |
 | 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
-| 11 | Human-triggered interactive Creation Flow | Done in implementation; manual acceptance is the setup gate |
-| 12–14 | Reactive maintenance, proactive maintenance, and expansion reuse | Parked |
+| 11 | Human-triggered interactive Creation Flow | Done |
+| 12 | Human-triggered reactive maintenance from bounded execution evidence | Implemented; real operator acceptance is the setup gate |
+| 13–14 | Proactive maintenance and expansion reuse | Parked |
 | 15–17 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
@@ -889,6 +900,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/process-discovery.md`](docs/process-discovery.md) | Sprint 9 bounded candidate scan, ranking, ambiguity question, human selection, and ContextBundle update |
 | [`docs/creation-flow.md`](docs/creation-flow.md) | Sprint 10 fixture-assisted integrated Creation Flow and engine proof |
 | [`docs/interactive-creation-flow.md`](docs/interactive-creation-flow.md) | Sprint 11 real operator trigger, blocking decisions, headed browser, and operator audit ledger |
+| [`docs/reactive-maintenance-flow.md`](docs/reactive-maintenance-flow.md) | Sprint 12 failed-run evidence, headed re-observation, exact patch review, sandbox-only repair, and retest |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
@@ -1081,3 +1093,28 @@ A successful manual reference run may support the narrow statement that the
 controlled prototype can be demonstrated by a real operator. It still does not
 prove arbitrary-application support, general usability, enterprise readiness,
 or a measured percentage of saved work.
+
+
+## Sprint 12 result — human-triggered Reactive Maintenance Flow
+
+Sprint 12 reuses the accepted project/process context and the Sprint 7
+framework-side evidence contract. It deliberately asks no bootstrap questions.
+One controlled locator drift produces a real framework test failure; bounded
+evidence authorizes only current-page re-observation. A real operator then
+selects the current candidate in headed Chromium, reviews every line of one
+deterministic source patch, and authorizes a sandbox retest.
+
+```text
+failed test evidence
+→ deterministic re-observation readiness
+→ headed current-page candidates
+→ human candidate selection
+→ deterministic one-file patch
+→ full-source human review
+→ snapshot-bounded sandbox
+→ passing independent framework retest
+```
+
+The flow uses no LLM, makes no application-bug claim, never changes the original
+framework, and does not claim measured savings. See
+[`docs/reactive-maintenance-flow.md`](docs/reactive-maintenance-flow.md).

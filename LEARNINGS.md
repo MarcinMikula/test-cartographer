@@ -3800,3 +3800,17 @@ The same correction established three rules:
 
 Incomplete local-model ambiguity wording is now closed deterministically with
 the same candidate set and no automatic selection.
+
+
+## Sprint 12 acceptance — console text is not a machine contract
+
+The full Windows suite reached 100% and exited successfully, but the acceptance
+script still failed because pytest received `-q` from `pyproject.toml` and a
+second `-q` from the script. At effective `-qq`, pytest omitted the textual
+`285 passed` summary that the PowerShell gate expected.
+
+The lesson is the same as with execution-evidence classification: presentation
+output is not a stable machine contract. Sprint 12 now writes a JUnit report and
+validates exact structural counts (`tests`, `failures`, `errors`, and `skipped`)
+instead of parsing terminal wording. The console remains human-readable evidence;
+the JUnit document is the acceptance source of truth.

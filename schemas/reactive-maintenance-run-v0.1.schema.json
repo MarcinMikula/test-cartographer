@@ -1,0 +1,274 @@
+{
+  "$defs": {
+    "MaintenanceActionKind": {
+      "enum": [
+        "initial_trigger",
+        "evidence_review",
+        "candidate_selection",
+        "patch_review",
+        "execution_trigger"
+      ],
+      "title": "MaintenanceActionKind",
+      "type": "string"
+    },
+    "MaintenanceActionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "active_seconds": {
+          "minimum": 0.0,
+          "title": "Active Seconds",
+          "type": "number"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "decision": {
+          "minLength": 1,
+          "title": "Decision",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/MaintenanceActionKind"
+        },
+        "raw_value_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Value Persisted",
+          "type": "boolean"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "target_id": {
+          "minLength": 1,
+          "title": "Target Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sequence",
+        "kind",
+        "target_id",
+        "decision",
+        "started_at",
+        "completed_at",
+        "active_seconds"
+      ],
+      "title": "MaintenanceActionRecord",
+      "type": "object"
+    },
+    "MaintenanceStatus": {
+      "enum": [
+        "pending",
+        "passed",
+        "rejected",
+        "blocked"
+      ],
+      "title": "MaintenanceStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "actions": {
+      "items": {
+        "$ref": "#/$defs/MaintenanceActionRecord"
+      },
+      "minItems": 1,
+      "title": "Actions",
+      "type": "array"
+    },
+    "after_execution_bundle_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "After Execution Bundle Id",
+      "type": "string"
+    },
+    "application_bug_claimed": {
+      "const": false,
+      "default": false,
+      "title": "Application Bug Claimed",
+      "type": "boolean"
+    },
+    "before_execution_bundle_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Before Execution Bundle Id",
+      "type": "string"
+    },
+    "candidate_count": {
+      "minimum": 1,
+      "title": "Candidate Count",
+      "type": "integer"
+    },
+    "collected_test_count_after": {
+      "minimum": 1,
+      "title": "Collected Test Count After",
+      "type": "integer"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "diagnosis_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Diagnosis Id",
+      "type": "string"
+    },
+    "exact_patch_reviewed": {
+      "const": true,
+      "default": true,
+      "title": "Exact Patch Reviewed",
+      "type": "boolean"
+    },
+    "failed_test_count_before": {
+      "minimum": 1,
+      "title": "Failed Test Count Before",
+      "type": "integer"
+    },
+    "fixture_decisions_used": {
+      "const": false,
+      "default": false,
+      "title": "Fixture Decisions Used",
+      "type": "boolean"
+    },
+    "framework_execution_independent": {
+      "const": true,
+      "default": true,
+      "title": "Framework Execution Independent",
+      "type": "boolean"
+    },
+    "headed_browser_used": {
+      "const": true,
+      "default": true,
+      "title": "Headed Browser Used",
+      "type": "boolean"
+    },
+    "human_trigger_used": {
+      "const": true,
+      "default": true,
+      "title": "Human Trigger Used",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "infrastructure_error_count_before": {
+      "minimum": 0,
+      "title": "Infrastructure Error Count Before",
+      "type": "integer"
+    },
+    "live_llm_used": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Used",
+      "type": "boolean"
+    },
+    "original_framework_unchanged": {
+      "const": true,
+      "default": true,
+      "title": "Original Framework Unchanged",
+      "type": "boolean"
+    },
+    "passed_test_count_after": {
+      "minimum": 1,
+      "title": "Passed Test Count After",
+      "type": "integer"
+    },
+    "patch_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Patch Id",
+      "type": "string"
+    },
+    "profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "raw_failure_text_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Failure Text Persisted",
+      "type": "boolean"
+    },
+    "raw_operator_values_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Operator Values Persisted",
+      "type": "boolean"
+    },
+    "raw_page_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Page Persisted",
+      "type": "boolean"
+    },
+    "sandbox_only_application": {
+      "const": true,
+      "default": true,
+      "title": "Sandbox Only Application",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "selected_candidate_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Selected Candidate Id",
+      "type": "string"
+    },
+    "source_execution_bundle_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Source Execution Bundle Id",
+      "type": "string"
+    },
+    "source_failure_record_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Source Failure Record Id",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/MaintenanceStatus"
+    }
+  },
+  "required": [
+    "id",
+    "profile_id",
+    "status",
+    "started_at",
+    "completed_at",
+    "source_execution_bundle_id",
+    "source_failure_record_id",
+    "diagnosis_id",
+    "patch_id",
+    "before_execution_bundle_id",
+    "after_execution_bundle_id",
+    "actions",
+    "candidate_count",
+    "selected_candidate_id",
+    "failed_test_count_before",
+    "infrastructure_error_count_before",
+    "collected_test_count_after",
+    "passed_test_count_after"
+  ],
+  "title": "ReactiveMaintenanceRun",
+  "type": "object"
+}

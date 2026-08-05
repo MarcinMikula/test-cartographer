@@ -290,34 +290,29 @@ are implemented and approved.
 
 ## Current implementation boundary
 
-After Sprint 6, TestCartographer implements:
+After Sprint 12, TestCartographer implements controlled reference slices for:
 
-- one-process context modelling,
-- deterministic human intake,
-- one bounded human-reviewed Playwright observation,
-- one minimized provider-neutral synthesis request,
-- strict replayed POM proposal parsing and validation,
-- explicit human review of a logical proposal,
-- one non-secret workspace inspection profile,
-- bounded read-only framework inspection,
-- one minimized repository snapshot and fingerprint,
-- one exact file/symbol adaptation plan,
-- one exact source patch with separate review,
-- atomic application to a clean framework copy,
-- one independently runnable browser test,
-- one persisted creation-lifecycle evaluation,
-- separate human review of repository placement.
+- one-process context modelling and deterministic human intake,
+- local-LLM-guided intake from a short request with human factual authority,
+- bounded browser observation and multi-element process discovery,
+- strict POM proposal, repository plan, exact patch, and sandbox delivery,
+- fixture-assisted and real-operator Creation Flows,
+- independent framework execution and bounded evidence collection,
+- one human-triggered reactive locator-maintenance flow,
+- fail-before/pass-after verification in a fresh snapshot-bounded sandbox.
 
 It does not yet implement:
 
-- a live LLM provider,
-- general source editing or direct writes to the original framework,
-- enterprise-ready generated automation,
-- shared environment or authentication profiles,
-- execution evidence collection,
-- reactive or proactive maintenance,
-- expansion reuse,
-- enterprise validation.
+- direct writes to the original framework or pull-request integration,
+- general source editing or arbitrary root-cause diagnosis,
+- reactive maintenance beyond one controlled locator drift,
+- automatic context staleness/conflict propagation and broad impact analysis,
+- proactive maintenance,
+- persistent cross-run bootstrap/profile reuse with invalidation semantics,
+- expansion reuse across a second process,
+- shared production authentication and secret profiles,
+- enterprise validation or Salesforce acceptance,
+- comparative usability, quality, or maintenance-economics evidence.
 
 
 ## Creation-demo sequence after Sprint 7
@@ -335,3 +330,26 @@ Sprint 8: minimal request + local-LLM guided human intake
 Ollama participates only while Cartographer is collecting creation context. The
 accepted generated test remains independent of both TestCartographer and a live
 model during normal framework execution.
+
+
+## Sprint 12 reactive-maintenance increment
+
+The execution and maintenance planes now reconnect through one bounded, real-
+operator reference flow:
+
+```text
+independent framework failure
+→ bounded execution bundle
+→ deterministic re-observation readiness
+→ headed current-page evidence
+→ human candidate selection
+→ exact deterministic locator patch
+→ human full-source review
+→ snapshot-bounded sandbox retest
+```
+
+The framework still runs normally without TestCartographer. TestCartographer does
+not call an LLM, claim an application bug, or modify the original repository.
+The increment proves only one controlled locator drift; proactive observation,
+context evolution, impact analysis, general diagnosis, and enterprise
+maintenance remain later lifecycle work.

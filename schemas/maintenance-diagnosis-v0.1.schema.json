@@ -1,0 +1,215 @@
+{
+  "$defs": {
+    "LocatorStrategy": {
+      "description": "Supported locator candidate types in the first contract.",
+      "enum": [
+        "role",
+        "label",
+        "test_id",
+        "placeholder",
+        "text",
+        "css",
+        "xpath"
+      ],
+      "title": "LocatorStrategy",
+      "type": "string"
+    },
+    "MaintenanceCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "default": [],
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": "Attributes",
+          "type": "array"
+        },
+        "deterministic_match": {
+          "title": "Deterministic Match",
+          "type": "boolean"
+        },
+        "enabled": {
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "human_selection_required": {
+          "const": true,
+          "default": true,
+          "title": "Human Selection Required",
+          "type": "boolean"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "locator_strategy": {
+          "$ref": "#/$defs/LocatorStrategy"
+        },
+        "locator_value": {
+          "minLength": 1,
+          "title": "Locator Value",
+          "type": "string"
+        },
+        "match_count": {
+          "minimum": 1,
+          "title": "Match Count",
+          "type": "integer"
+        },
+        "old_locator_absent": {
+          "title": "Old Locator Absent",
+          "type": "boolean"
+        },
+        "semantic_name": {
+          "minLength": 1,
+          "title": "Semantic Name",
+          "type": "string"
+        },
+        "semantic_role": {
+          "minLength": 1,
+          "title": "Semantic Role",
+          "type": "string"
+        },
+        "source_record_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Source Record Id",
+          "type": "string"
+        },
+        "visible": {
+          "const": true,
+          "default": true,
+          "title": "Visible",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "semantic_role",
+        "semantic_name",
+        "locator_strategy",
+        "locator_value",
+        "match_count",
+        "enabled",
+        "source_record_id",
+        "old_locator_absent",
+        "deterministic_match"
+      ],
+      "title": "MaintenanceCandidate",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "application_bug_claimed": {
+      "const": false,
+      "default": false,
+      "title": "Application Bug Claimed",
+      "type": "boolean"
+    },
+    "bundle_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Bundle Id",
+      "type": "string"
+    },
+    "candidate_count": {
+      "minimum": 1,
+      "title": "Candidate Count",
+      "type": "integer"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "disposition": {
+      "const": "repair_candidate",
+      "default": "repair_candidate",
+      "title": "Disposition",
+      "type": "string"
+    },
+    "human_selected_candidate": {
+      "const": true,
+      "default": true,
+      "title": "Human Selected Candidate",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "live_llm_used": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Used",
+      "type": "boolean"
+    },
+    "locator_repair_proposed": {
+      "const": true,
+      "default": true,
+      "title": "Locator Repair Proposed",
+      "type": "boolean"
+    },
+    "old_locator_strategy": {
+      "$ref": "#/$defs/LocatorStrategy"
+    },
+    "old_locator_value": {
+      "minLength": 1,
+      "title": "Old Locator Value",
+      "type": "string"
+    },
+    "profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "raw_page_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Page Persisted",
+      "type": "boolean"
+    },
+    "record_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Record Id",
+      "type": "string"
+    },
+    "screenshots_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Screenshots Persisted",
+      "type": "boolean"
+    },
+    "selected_candidate": {
+      "$ref": "#/$defs/MaintenanceCandidate"
+    },
+    "target_source_path": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+      "title": "Target Source Path",
+      "type": "string"
+    },
+    "target_symbol": {
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+      "title": "Target Symbol",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "profile_id",
+    "bundle_id",
+    "record_id",
+    "created_at",
+    "target_source_path",
+    "target_symbol",
+    "old_locator_strategy",
+    "old_locator_value",
+    "selected_candidate",
+    "candidate_count"
+  ],
+  "title": "MaintenanceDiagnosis",
+  "type": "object"
+}

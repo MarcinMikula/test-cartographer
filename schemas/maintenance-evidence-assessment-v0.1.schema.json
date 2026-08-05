@@ -1,0 +1,90 @@
+{
+  "$defs": {
+    "MaintenanceDisposition": {
+      "enum": [
+        "infrastructure_blocked",
+        "insufficient_evidence",
+        "reobservation_required",
+        "repair_candidate"
+      ],
+      "title": "MaintenanceDisposition",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "application_bug_claimed": {
+      "const": false,
+      "default": false,
+      "title": "Application Bug Claimed",
+      "type": "boolean"
+    },
+    "bundle_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Bundle Id",
+      "type": "string"
+    },
+    "complete_traceability": {
+      "default": false,
+      "title": "Complete Traceability",
+      "type": "boolean"
+    },
+    "disposition": {
+      "$ref": "#/$defs/MaintenanceDisposition"
+    },
+    "failure_is_evidence_not_diagnosis": {
+      "const": true,
+      "default": true,
+      "title": "Failure Is Evidence Not Diagnosis",
+      "type": "boolean"
+    },
+    "infrastructure_error_excluded": {
+      "default": false,
+      "title": "Infrastructure Error Excluded",
+      "type": "boolean"
+    },
+    "issue_codes": {
+      "default": [],
+      "items": {
+        "pattern": "^[a-z][a-z0-9_]{2,63}$",
+        "type": "string"
+      },
+      "title": "Issue Codes",
+      "type": "array"
+    },
+    "matching_last_step": {
+      "default": false,
+      "title": "Matching Last Step",
+      "type": "boolean"
+    },
+    "ready_for_reobservation": {
+      "default": false,
+      "title": "Ready For Reobservation",
+      "type": "boolean"
+    },
+    "record_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Record Id"
+    },
+    "stale_locator_claimed": {
+      "default": false,
+      "title": "Stale Locator Claimed",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "bundle_id",
+    "disposition"
+  ],
+  "title": "MaintenanceEvidenceAssessment",
+  "type": "object"
+}

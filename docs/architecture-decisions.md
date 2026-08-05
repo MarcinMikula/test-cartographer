@@ -1205,3 +1205,42 @@ separate patch re-review over persisted accepted artefacts. This avoids
 repeating context collection or local-model calls while preserving a real human
 authority boundary. The corrected patch is applied only to a new sandbox and is
 executed again.
+
+
+## AD-S12-1 — failed-test evidence grants re-observation, not diagnosis
+
+**Decision:** A traced call-phase failure may authorize only bounded current-page
+re-observation. It may not by itself create a stale-locator verdict, an
+application-bug claim, or a source patch.
+
+**Reason:** Pytest reports where execution failed, not why the system is wrong.
+Keeping evidence assessment separate from diagnosis prevents false certainty and
+preserves infrastructure, data, environment, application, and automation causes.
+
+## AD-S12-2 — repair candidacy requires current evidence and human selection
+
+**Decision:** Sprint 12 creates `repair_candidate` only after headed re-observation
+shows that the old locator is absent and the operator selects one current unique
+candidate with the expected role and name.
+
+**Reason:** A unique DOM match is not proof of process meaning. Browser facts and
+human intent are separate authorities.
+
+## AD-S12-3 — begin maintenance without an LLM
+
+**Decision:** Evidence assessment, candidate filtering, one-occurrence locator
+replacement, and verification are deterministic. Sprint 12 uses no LLM.
+
+**Reason:** The first maintenance slice should establish whether evidence and
+current-page observation are sufficient for one narrow repair before expanding
+model authority into root-cause analysis or source generation.
+
+## AD-S12-4 — accepted maintenance patches remain sandbox-only
+
+**Decision:** The exact full source and before/after hashes are shown to the
+operator, but acceptance permits application only to a fresh snapshot-bounded
+sandbox. The original framework target hash and repository fingerprint must stay
+unchanged.
+
+**Reason:** Fail-before/pass-after is useful repair evidence without yet granting
+TestCartographer production-repository write authority.

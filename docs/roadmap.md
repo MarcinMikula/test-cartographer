@@ -84,8 +84,8 @@ product framing
 | Sprint 8 | Live local-LLM guided intake from minimal context | Done |
 | Sprint 9 | Guided multi-element process discovery | Done |
 | Sprint 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
-| Sprint 11 | Human-triggered interactive Creation Flow | Done in implementation; real operator run is the acceptance gate |
-| Sprint 12 | Reactive maintenance from execution evidence | Parked |
+| Sprint 11 | Human-triggered interactive Creation Flow | Done |
+| Sprint 12 | Human-triggered reactive maintenance from bounded execution evidence | Implemented; real operator run is the acceptance gate |
 | Sprint 13 | Proactive post-deployment frontend/context regression | Parked |
 | Sprint 14 | Expansion using the existing application map | Parked |
 | Sprint 15 | External artefacts, authentication profiles, and enterprise safety | Parked |
@@ -858,7 +858,7 @@ measurements exist.
 
 ## Sprint 11 — Human-triggered interactive Creation Flow
 
-**Status:** Real operator run passed; exact full-patch re-review required before commit
+**Status:** Done
 
 ### Goal
 
@@ -934,21 +934,88 @@ decisions to one passing test.
 
 See [`interactive-creation-flow.md`](interactive-creation-flow.md).
 
-## Sprint 12 — Reactive maintenance
+## Sprint 12 — Human-triggered Reactive Maintenance Flow
 
-**Status:** Parked
+**Status:** Implemented; real operator run is the acceptance gate
 
-### Direction
+### Goal
 
-Use validated failed-execution evidence to:
+Prove one bounded reactive-maintenance path without treating a failed test as a
+diagnosis.
 
-- distinguish likely application, automation, data, environment, and context
-  problems without forcing a verdict,
-- re-observe the affected application area,
-- mark context stale or conflicting,
-- identify affected automation artefacts,
-- prepare a reviewable patch,
-- rerun the framework test after acceptance.
+```text
+one existing framework test
+→ controlled locator drift
+→ one call-phase test failure
+→ bounded framework execution evidence
+→ deterministic re-observation readiness
+→ real operator authorizes headed re-observation
+→ real operator selects the current control
+→ deterministic one-file locator patch
+→ every source line reviewed
+→ fresh snapshot-bounded sandbox
+→ one passing framework retest
+```
+
+### Delivered
+
+- strict reactive-maintenance profile, evidence-assessment, diagnosis, patch,
+  action-ledger, run, and assessment contracts,
+- five generated and tested JSON Schemas,
+- independent framework execution before and after repair through the Sprint 7
+  standalone pytest collector,
+- explicit infrastructure-error exclusion,
+- evidence disposition `reobservation_required` rather than an automatic stale-
+  locator verdict,
+- headed Chromium current-page candidate review,
+- real operator candidate selection,
+- deterministic one-occurrence locator patch with before/after hashes,
+- full exact source rendering before acceptance,
+- snapshot-bounded sandbox materialization and hash preflight,
+- one controlled test failure before repair and one clean pass after repair,
+- original-framework fingerprint and target-hash preservation,
+- `maintenance interactive`, `maintenance status`, and `maintenance assess` CLI
+  commands,
+- scripted mechanics verifier that explicitly does not replace the real-
+  operator gate,
+- 282 tests expected with Chromium in the normal Windows environment.
+
+### Exit criteria
+
+- [x] Framework execution remains independent of TestCartographer and an LLM.
+- [x] Exactly one target call-phase failure is captured before repair.
+- [x] Infrastructure errors block maintenance rather than becoming repair candidates.
+- [x] Failed-test evidence does not claim an application bug.
+- [x] Evidence grants only bounded re-observation.
+- [x] The old locator must be absent from current-page evidence.
+- [x] A real operator selects the current candidate in headed Chromium.
+- [x] Repair-candidate status appears only after current-page evidence and human selection.
+- [x] Every source line and hash is shown before patch acceptance.
+- [x] The accepted patch changes one controlled locator occurrence.
+- [x] Patch application is limited to a fresh snapshot-bounded sandbox.
+- [x] The original framework remains byte-for-byte unchanged at the target and fingerprint levels.
+- [x] The same test passes after repair with no infrastructure error.
+- [x] No live LLM or fixture decision is used in the real-operator path.
+- [ ] Arbitrary failure classes, multi-file repairs, and context staleness propagation are supported.
+
+### What Sprint 12 proves
+
+One real failed framework test can feed a bounded maintenance handoff, obtain
+current browser evidence and human authority, produce one exact sandbox-only
+repair, and pass on retest without mislabelling the original failure.
+
+### What Sprint 12 does not prove
+
+- general root-cause diagnosis,
+- application-defect detection,
+- data, environment, timing, workflow, assertion, or authentication repair,
+- automatic stale/conflicting context updates or impact analysis,
+- multi-file or LLM-generated repairs,
+- writes to the original repository,
+- authenticated, enterprise, or Salesforce maintenance,
+- measured time savings or broad usability.
+
+See [`reactive-maintenance-flow.md`](reactive-maintenance-flow.md).
 
 ## Sprint 13 — Proactive frontend/context regression
 

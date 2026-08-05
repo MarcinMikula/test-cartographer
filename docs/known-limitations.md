@@ -237,9 +237,19 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 
 ## Maintenance and change support
 
-- **No reactive maintenance workflow exists.** Failed framework runs cannot be
-  classified, re-observed, mapped to context, or converted into a reviewable
-  patch.
+- **Reactive maintenance is limited to one controlled locator drift.** Sprint 12
+  consumes one traced call-phase failure, re-observes one authorized local page,
+  lets the human select one current control, replaces exactly one test-id locator,
+  and verifies the repair only in a snapshot-bounded sandbox. It does not diagnose
+  arbitrary failures, detect application defects, update stale/conflicting
+  context, calculate broad impact, or repair data, environment, timing, workflow,
+  assertion, authentication, or multi-file problems.
+- **The original framework is never patched.** Sprint 12 proves reviewed sandbox
+  repair and retest only; production repository application and change-request
+  integration remain out of scope.
+- **Reactive maintenance uses no LLM.** Candidate filtering and the reference
+  locator replacement are deterministic. No model-assisted diagnosis or source
+  repair has been validated.
 - **No proactive maintenance exists.** Cartographer cannot run bounded
   post-deployment frontend/context regression against an approved observation
   inventory.

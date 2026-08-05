@@ -1,0 +1,11 @@
+{
+  "schema_version": "0.1",
+  "id": "workspace_maintenance_reference",
+  "repository_kind": "qa_automation_framework",
+  "repository_label": "qa-automation-framework maintenance reference",
+  "root_marker_files": ["README.md", "requirements.txt"],
+  "allowed_roots": ["README.md", "requirements.txt", "pytest.ini", "pages", "components", "tests/e2e", "testdata"],
+  "ignored_names": [".git", ".venv", "__pycache__", ".pytest_cache", "allure-results"],
+  "max_files": 100,
+  "max_file_bytes": 50000
+}

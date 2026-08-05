@@ -61,15 +61,17 @@ Sprint 7 implements:
 - deterministic readiness assessment for reactive maintenance,
 - CLI evidence status and assessment commands.
 
-The current package cannot:
+The current package still cannot:
 
-- create the context shell from an empty project,
-- discover an unknown page, element, or locator,
-- call a live LLM provider,
-- safely modify the user's original `qa-automation-framework` repository without a separate acceptance path,
-- diagnose root cause from execution evidence,
-- perform reactive or proactive maintenance,
-- prove that the first mapping and evidence conventions fit every project.
+- generalize discovery and generation beyond controlled reference applications,
+- safely modify the user's original `qa-automation-framework` repository,
+- diagnose arbitrary root causes from execution evidence,
+- perform reactive maintenance beyond one controlled locator drift,
+- perform proactive maintenance,
+- reuse a persistent bootstrap/project profile across separate runs with full
+  invalidation semantics,
+- prove that the mapping, generation, and maintenance conventions fit every
+  project.
 
 Implementation details are documented in:
 
@@ -788,3 +790,17 @@ artefact reviews, and an explicit sandbox-execution trigger. The current scope
 remains one controlled public-catalog process. Persistent reuse of bootstrap
 context across separate runs, arbitrary apps, authentication, downstream
 editing, and resume from every review boundary are not included.
+
+
+## Sprint 12 scope increment
+
+TestCartographer now supports one human-triggered reactive-maintenance reference
+flow. It can consume bounded evidence from one independently failed framework
+test, authorize current-page re-observation without forcing a diagnosis, let the
+operator select a current candidate, show one exact deterministic source repair,
+and prove the accepted change in an isolated sandbox.
+
+The scope remains one public local page, one changed test-id locator, one source
+file, one test, no authentication, no LLM, and no original-repository write. It
+does not add general failure diagnosis, application-defect classification,
+context staleness propagation, multi-file repair, or proactive maintenance.

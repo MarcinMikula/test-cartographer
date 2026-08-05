@@ -367,20 +367,39 @@ evolution remain TestCartographer responsibilities.
 
 ## Gap 17 — Reactive maintenance workflow
 
-**Status:** OPEN
+**Status:** PARTIALLY CLOSED by Sprint 12 for one controlled locator drift
 
-**Target:** Sprint 12
+**Implemented:**
 
-The product cannot yet:
+- consumption of a failed-run `ExecutionEvidenceBundle`,
+- explicit infrastructure-error exclusion,
+- deterministic readiness for re-observation without an application-bug or stale-
+  locator claim,
+- headed current-page re-observation,
+- real operator candidate selection,
+- one deterministic exact locator patch with full-source review,
+- snapshot-bounded sandbox application,
+- fail-before/pass-after framework retest,
+- original-framework preservation,
+- provider-neutral contracts, schemas, CLI, scripted regression, and real-
+  operator acceptance gate.
 
-- consume a failed-run evidence package,
-- distinguish likely application, automation, data, environment, and stale-
-  context failures,
-- target a re-observation,
-- mark affected knowledge stale or conflicting,
-- calculate change impact,
-- prepare a reviewable patch,
-- trigger or guide a framework retest after acceptance.
+**Still open:**
+
+- arbitrary failure classification across application, automation, data,
+  environment, timing, assertion, workflow, authentication, and context causes,
+- automatic stale/conflicting knowledge transitions,
+- impact analysis across shared components and tests,
+- multi-file and semantic source repairs,
+- in-flow editing and alternative candidate comparison,
+- production repository application and pull-request integration,
+- LLM-assisted diagnosis or repair,
+- authenticated, multi-page, enterprise, and Salesforce validation,
+- comparative maintenance effort and usability evidence.
+
+The closed slice establishes a safe authority sequence: evidence permits
+re-observation; current-page evidence plus human selection permits a repair
+candidate; full-source human review permits sandbox application.
 
 ## Gap 18 — Proactive frontend/context regression
 

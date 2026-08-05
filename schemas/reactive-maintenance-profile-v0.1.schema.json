@@ -1,0 +1,147 @@
+{
+  "additionalProperties": false,
+  "description": "Non-secret policy for one controlled maintenance slice.",
+  "properties": {
+    "automatic_original_repository_write_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Automatic Original Repository Write Allowed",
+      "type": "boolean"
+    },
+    "expected_action": {
+      "const": "click",
+      "default": "click",
+      "title": "Expected Action",
+      "type": "string"
+    },
+    "expected_semantic_name": {
+      "minLength": 1,
+      "title": "Expected Semantic Name",
+      "type": "string"
+    },
+    "expected_semantic_role": {
+      "minLength": 1,
+      "title": "Expected Semantic Role",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "label": {
+      "minLength": 1,
+      "title": "Label",
+      "type": "string"
+    },
+    "live_llm_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Allowed",
+      "type": "boolean"
+    },
+    "old_locator_strategy": {
+      "const": "test_id",
+      "default": "test_id",
+      "title": "Old Locator Strategy",
+      "type": "string"
+    },
+    "old_locator_value": {
+      "minLength": 1,
+      "title": "Old Locator Value",
+      "type": "string"
+    },
+    "raw_failure_text_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Failure Text Persisted",
+      "type": "boolean"
+    },
+    "raw_page_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Page Persisted",
+      "type": "boolean"
+    },
+    "require_complete_traceability": {
+      "const": true,
+      "default": true,
+      "title": "Require Complete Traceability",
+      "type": "boolean"
+    },
+    "require_exact_patch_review": {
+      "const": true,
+      "default": true,
+      "title": "Require Exact Patch Review",
+      "type": "boolean"
+    },
+    "require_headed_browser": {
+      "const": true,
+      "default": true,
+      "title": "Require Headed Browser",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "screenshots_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Screenshots Persisted",
+      "type": "boolean"
+    },
+    "sensitivity": {
+      "default": "internal",
+      "enum": [
+        "public",
+        "internal"
+      ],
+      "title": "Sensitivity",
+      "type": "string"
+    },
+    "target_element_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Target Element Id",
+      "type": "string"
+    },
+    "target_locator_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Target Locator Id",
+      "type": "string"
+    },
+    "target_source_path": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+      "title": "Target Source Path",
+      "type": "string"
+    },
+    "target_symbol": {
+      "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+      "title": "Target Symbol",
+      "type": "string"
+    },
+    "target_test": {
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+      "title": "Target Test",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "label",
+    "target_test",
+    "target_source_path",
+    "target_symbol",
+    "target_element_id",
+    "target_locator_id",
+    "old_locator_value",
+    "expected_semantic_role",
+    "expected_semantic_name"
+  ],
+  "title": "ReactiveMaintenanceProfile",
+  "type": "object"
+}
