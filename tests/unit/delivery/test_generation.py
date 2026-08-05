@@ -186,3 +186,55 @@ def test_generation_rejects_snapshot_from_another_profile(
             other,
             framework,
         )
+
+
+def test_navigation_docstring_describes_method_not_raw_operator_request(
+    tmp_path,
+    accepted_run,
+    accepted_plan,
+    workspace_profile,
+    generation_profile,
+    framework_snapshot,
+):
+    framework = tmp_path / "framework"
+    shutil.copytree(ROOT / "testdata/framework/reference", framework)
+    proposal = accepted_run.proposal
+    methods = tuple(
+        method.model_copy(
+            update={
+                "intent": "I want to automate searching for a product and verify results."
+            }
+        )
+        if method.name == "open_catalog"
+        else method
+        for method in proposal.methods
+    )
+    updated_proposal = proposal.model_copy(update={"methods": methods})
+    updated_run = accepted_run.model_copy(update={"proposal": updated_proposal})
+    patch = _build(
+        updated_run,
+        accepted_plan,
+        workspace_profile,
+        generation_profile,
+        framework_snapshot,
+        framework,
+    )
+    page_source = next(
+        change.content
+        for change in patch.changes
+        if change.target_path == "pages/catalog_page.py"
+    )
+    assert '"""Open the mapped page through the framework navigation boundary."""' in page_source
+    assert "I want to automate searching" not in page_source
+
+
+def test_exact_patch_formatter_includes_every_source_line(pending_patch) -> None:
+    from test_cartographer.interactive_creation.runner import _format_code_patch
+
+    rendered = _format_code_patch(pending_patch)
+    assert "Exact source follows. No lines are omitted." in rendered
+    assert "End of exact code patch." in rendered
+    assert "      ..." not in rendered
+    for change in pending_patch.changes:
+        assert change.content.rstrip("\n") in rendered
+        assert change.content_sha256 in rendered

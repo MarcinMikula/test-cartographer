@@ -84,7 +84,7 @@ product framing
 | Sprint 8 | Live local-LLM guided intake from minimal context | Done |
 | Sprint 9 | Guided multi-element process discovery | Done |
 | Sprint 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
-| Sprint 11 | Human-triggered interactive Creation Flow | Planned next |
+| Sprint 11 | Human-triggered interactive Creation Flow | Done in implementation; real operator run is the acceptance gate |
 | Sprint 12 | Reactive maintenance from execution evidence | Parked |
 | Sprint 13 | Proactive post-deployment frontend/context regression | Parked |
 | Sprint 14 | Expansion using the existing application map | Parked |
@@ -858,7 +858,7 @@ measurements exist.
 
 ## Sprint 11 — Human-triggered interactive Creation Flow
 
-**Status:** Planned next
+**Status:** Real operator run passed; exact full-patch re-review required before commit
 
 ### Goal
 
@@ -867,8 +867,9 @@ its technical stages.
 
 ```text
 real user enters a short automation request
-→ Cartographer displays missing-context questions and waits
-→ user answers and confirms
+→ Cartographer asks bootstrap context once at the start of the run
+→ Cartographer asks process-specific context once
+→ one aggregate context summary is confirmed or a numbered field is edited
 → visible browser discovery runs
 → ambiguous candidates are shown to the user
 → user selects the intended element
@@ -877,20 +878,61 @@ real user enters a short automation request
 → the existing engine produces and runs the Playwright test
 ```
 
+### Delivered
+
+- interactive `creation interactive` CLI entry point,
+- real operator-provided initial request,
+- blocking intake answers plus one aggregate context-summary confirmation,
+- headed Chromium candidate review with visible bounded labels,
+- real ambiguity selection,
+- separate discovery, synthesis-handoff, POM, repository-plan, source-patch,
+  and execution decisions,
+- `InteractiveOperatorSession` audit contract without raw answer values,
+- separate interactive readiness assessment,
+- generated JSON Schemas,
+- direct CLI and `python -m` tests,
+- scripted 18-prompt mechanics verifier that explicitly does not replace the
+  manual operator gate,
+- safe full-word `CONFIRM`, `EDIT`, `QUIT`, and `CANCEL` commands that cannot be
+  stored accidentally as business context.
+
 ### Exit criteria
 
-- [ ] The initial request comes from the operator, not a fixture.
-- [ ] Intake questions are displayed and answered interactively.
-- [ ] The flow blocks until required human answers or confirmations are supplied.
-- [ ] Browser discovery is visible enough for the operator to understand the
-  observed process.
-- [ ] Ambiguous candidates are presented and selected by the operator.
-- [ ] POM, repository plan, and source patch are reviewable before acceptance.
-- [ ] The flow can resume without replacing missing human decisions with fixture
-  defaults.
-- [ ] The final report distinguishes human, LLM, browser, and deterministic work.
-- [ ] `Ready for external user demonstration` becomes true only after a real
-  human-operated acceptance run.
+- [x] The initial request comes from the operator, not a fixture.
+- [x] Bootstrap and process-specific questions are displayed and answered interactively.
+- [x] The flow blocks until required answers and one aggregate context confirmation are supplied.
+- [x] Browser discovery is headed and labels bounded candidates for review.
+- [x] Ambiguous candidates are presented and selected by the operator.
+- [x] POM and repository plan are shown before acceptance.
+- [x] Every source line and content hash is shown before exact patch acceptance.
+- [x] No fixture silently replaces a missing human decision.
+- [x] The final report distinguishes human, LLM, browser, and deterministic work.
+- [x] Incomplete local-model ambiguity wording is closed deterministically without selecting a candidate.
+- [x] Navigation docstrings describe method responsibility rather than copying the raw operator request.
+- [x] `Ready for external user demonstration` is true only for a completed real
+  operator session linked to a non-fixture CreationFlowRun.
+- [ ] Resume from an arbitrary downstream review boundary is supported.
+- [ ] Generated POM, plan, or patch can be edited in-flow instead of accepting or
+  rejecting and starting a new controlled run.
+- [ ] Confirmed bootstrap context is persisted and reused across separate runs
+  until the operator requests a change or staleness/conflict invalidates it.
+
+### What Sprint 11 proves
+
+The existing Creation Flow engine can be operated from a real terminal trigger,
+can stop at every required human authority boundary, can keep browser evidence
+visible during ambiguity resolution, and can continue from real operator
+decisions to one passing test.
+
+### What Sprint 11 does not prove
+
+- usability for an unbriefed external participant,
+- generalization beyond the controlled one-page catalog,
+- multi-page or authenticated workflows,
+- downstream edit/resume ergonomics,
+- measured savings versus manual work or Playwright Codegen.
+
+See [`interactive-creation-flow.md`](interactive-creation-flow.md).
 
 ## Sprint 12 — Reactive maintenance
 

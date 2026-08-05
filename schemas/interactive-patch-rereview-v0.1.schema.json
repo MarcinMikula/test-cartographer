@@ -1,0 +1,129 @@
+{
+  "additionalProperties": false,
+  "description": "Audit proof for a post-run exact patch re-review.",
+  "properties": {
+    "ambiguity_question_deterministically_completed": {
+      "title": "Ambiguity Question Deterministically Completed",
+      "type": "boolean"
+    },
+    "change_count": {
+      "minimum": 1,
+      "title": "Change Count",
+      "type": "integer"
+    },
+    "collected_test_count": {
+      "minimum": 1,
+      "title": "Collected Test Count",
+      "type": "integer"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "corrected_patch_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Corrected Patch Id",
+      "type": "string"
+    },
+    "creation_flow_run_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Creation Flow Run Id",
+      "type": "string"
+    },
+    "decision": {
+      "const": "accepted",
+      "title": "Decision",
+      "type": "string"
+    },
+    "deterministic_navigation_docstring_used": {
+      "const": true,
+      "default": true,
+      "title": "Deterministic Navigation Docstring Used",
+      "type": "boolean"
+    },
+    "deterministic_synthesis_disclosed": {
+      "const": true,
+      "default": true,
+      "title": "Deterministic Synthesis Disclosed",
+      "type": "boolean"
+    },
+    "exact_source_displayed": {
+      "const": true,
+      "default": true,
+      "title": "Exact Source Displayed",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "llm_role_disclosed": {
+      "const": true,
+      "default": true,
+      "title": "Llm Role Disclosed",
+      "type": "boolean"
+    },
+    "omitted_source_lines": {
+      "const": false,
+      "default": false,
+      "title": "Omitted Source Lines",
+      "type": "boolean"
+    },
+    "operator_review_seconds": {
+      "minimum": 0.0,
+      "title": "Operator Review Seconds",
+      "type": "number"
+    },
+    "original_framework_unchanged": {
+      "const": true,
+      "default": true,
+      "title": "Original Framework Unchanged",
+      "type": "boolean"
+    },
+    "original_patch_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Original Patch Id",
+      "type": "string"
+    },
+    "passed_test_count": {
+      "minimum": 1,
+      "title": "Passed Test Count",
+      "type": "integer"
+    },
+    "raw_operator_values_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Operator Values Persisted",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "creation_flow_run_id",
+    "original_patch_id",
+    "corrected_patch_id",
+    "started_at",
+    "completed_at",
+    "decision",
+    "ambiguity_question_deterministically_completed",
+    "change_count",
+    "operator_review_seconds",
+    "collected_test_count",
+    "passed_test_count"
+  ],
+  "title": "ExactPatchRereviewReport",
+  "type": "object"
+}

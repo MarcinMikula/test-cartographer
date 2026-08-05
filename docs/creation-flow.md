@@ -99,9 +99,9 @@ therefore adds a separate human handoff review that confirms only these four
 values and records one non-secret evidence item. The synthesis contract was not
 weakened. In the reference verifier, these confirmations are fixture-supplied.
 
-## Human trigger required for the next maturity level
+## Human trigger delivered in Sprint 11
 
-Sprint 11 must connect a real user to the already implemented entry and decision
+Sprint 11 connects a real user to the already implemented entry and decision
 points:
 
 ```text
@@ -115,9 +115,11 @@ user enters the short request
 → the existing engine continues to the passing test
 ```
 
-A rich GUI is not required for this milestone. An interactive CLI with a visible
-browser and real blocking prompts is sufficient, provided it preserves the same
-contracts, resumability, and authority boundaries.
+The delivered interface is an interactive CLI with a visible browser and real
+blocking prompts. It preserves the same contracts and authority boundaries.
+It does not yet support resume from every downstream review stage or in-flow
+editing of generated artefacts. See
+[`interactive-creation-flow.md`](interactive-creation-flow.md).
 
 ## Privacy and claims
 
@@ -137,8 +139,9 @@ The project can currently be presented as:
 > assistance, browser discovery, context mapping, repository planning, reviewed
 > source delivery, and a passing Playwright test in one traceable workflow.
 
-It should not yet be presented as a human-operated external demo. That claim
-requires the Sprint 11 human trigger.
+The Sprint 10 artefact itself must not be presented as a human-operated demo.
+Sprint 11 adds a separate operator-driven acceptance path; only a completed
+Sprint 11 operator session may make the narrow controlled-demo claim.
 
 The central conclusion is:
 

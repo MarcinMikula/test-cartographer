@@ -773,10 +773,18 @@ verification. The run proves the engine mechanics when explicit human inputs and
 decisions are supplied by controlled fixtures. It is not yet a human-operated
 external demo and may not claim a fixed percentage of saved work.
 
-## Sprint 11 scope target
+## Sprint 11 scope increment
 
-Connect a real operator to the existing entry and authority points through an
-interactive CLI and visible browser. The operator must provide the initial
-request, answer and confirm context, resolve ambiguity, and review artefacts. No
-fixture may silently substitute for a required human decision in the user-demo
-path.
+TestCartographer now connects a real operator to the existing entry and authority
+points through an interactive CLI and visible browser. The operator must provide
+the initial request, answer bootstrap and process-specific questions, confirm
+one aggregate process-context summary, resolve ambiguity, and review artefacts.
+No fixture may silently substitute for a required human decision in the
+user-demo path. Later stages consume already collected context instead of
+reopening it because the pipeline advanced.
+
+The operator path uses an interactive CLI, a headed controlled browser, separate
+artefact reviews, and an explicit sandbox-execution trigger. The current scope
+remains one controlled public-catalog process. Persistent reuse of bootstrap
+context across separate runs, arbitrary apps, authentication, downstream
+editing, and resume from every review boundary are not included.

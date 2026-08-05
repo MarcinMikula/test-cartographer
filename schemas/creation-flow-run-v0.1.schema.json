@@ -148,8 +148,13 @@
       "title": "Deterministic Synthesis Template Used",
       "type": "boolean"
     },
+    "execution_trigger_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Execution Trigger Count",
+      "type": "integer"
+    },
     "fixture_assisted_reference_demo": {
-      "const": true,
       "default": true,
       "title": "Fixture Assisted Reference Demo",
       "type": "boolean"
@@ -193,13 +198,18 @@
       "title": "Human Confirmation Count",
       "type": "integer"
     },
+    "human_trigger_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Human Trigger Count",
+      "type": "integer"
+    },
     "id": {
       "pattern": "^[a-z][a-z0-9_]{2,63}$",
       "title": "Id",
       "type": "string"
     },
     "interactive_human_used_during_verifier": {
-      "const": false,
       "default": false,
       "title": "Interactive Human Used During Verifier",
       "type": "boolean"

@@ -15,14 +15,14 @@ and expansion.
 
 ## Status
 
-**Sprint 9 — guided multi-element process discovery: complete**
+**Sprint 11 — human-triggered interactive Creation Flow: implemented; manual operator acceptance required**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
 Current evidence:
 
 ```text
-235 tests expected with Playwright Chromium
+266 tests expected with Playwright Chromium
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
@@ -31,7 +31,7 @@ framework-side execution-evidence collection and maintenance-readiness verified 
 live local-Ollama interview planning from a minimal request verified end to end
 ```
 
-The repository now provides nine executable boundaries:
+The repository now provides eleven executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -51,6 +51,10 @@ The repository now provides nine executable boundaries:
 9. a bounded multi-element browser scan, deterministic target ranking,
    ambiguity clarification, human element selection, and accepted process-map
    application to the ContextBundle.
+10. a fixture-assisted integrated Creation Flow joining the accepted engine
+    boundaries from short request to one passing Playwright test,
+11. a human-triggered interactive CLI with blocking answers, headed-browser
+    ambiguity review, artefact review decisions, and an explicit execution trigger.
 
 The current workflow can:
 
@@ -841,9 +845,10 @@ See:
 | 7 | Framework execution-evidence contract | Done |
 | 8 | Live local-LLM guided intake from minimal context | Done |
 | 9 | Guided multi-element process discovery | Done |
-| 10 | External-demo end-to-end creation flow and effort summary | Provisional |
-| 11–13 | Reactive maintenance, proactive maintenance, and expansion reuse | Parked |
-| 14–16 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
+| 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
+| 11 | Human-triggered interactive Creation Flow | Done in implementation; manual acceptance is the setup gate |
+| 12–14 | Reactive maintenance, proactive maintenance, and expansion reuse | Parked |
+| 15–17 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
 
@@ -882,7 +887,8 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/intake-workflow.md`](docs/intake-workflow.md) | Deterministic question, answer, review, session, and CLI behaviour |
 | [`docs/guided-intake.md`](docs/guided-intake.md) | Sprint 8 minimal seed, local Ollama interview planning, authority boundary, and discovery readiness |
 | [`docs/process-discovery.md`](docs/process-discovery.md) | Sprint 9 bounded candidate scan, ranking, ambiguity question, human selection, and ContextBundle update |
-| [`docs/creation-flow.md`](docs/creation-flow.md) | Sprint 10 fixture-assisted integrated Creation Flow, human-effort ledger, and human-trigger boundary |
+| [`docs/creation-flow.md`](docs/creation-flow.md) | Sprint 10 fixture-assisted integrated Creation Flow and engine proof |
+| [`docs/interactive-creation-flow.md`](docs/interactive-creation-flow.md) | Sprint 11 real operator trigger, blocking decisions, headed browser, and operator audit ledger |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
@@ -1029,5 +1035,49 @@ Interactive human trigger used: false
 Ready for external user demonstration: false
 ```
 
-Sprint 11 will connect a real operator to the existing entry and decision
-points. See [`docs/creation-flow.md`](docs/creation-flow.md).
+Sprint 11 connects a real operator to those existing entry and decision points.
+The corrected interactive path requires a real initial request, 17 subsequent
+blocking answers or decisions, a headed Chromium review, and an explicit
+execution trigger. Bootstrap context is asked once at the beginning of the run;
+five repeated process-review prompts are replaced by one aggregate context
+summary. See [`docs/interactive-creation-flow.md`](docs/interactive-creation-flow.md).
+
+
+## Sprint 11 result — human-triggered interactive Creation Flow
+
+The existing engine now has a real operator path:
+
+```text
+real short request
+→ one local-LLM-planned collection phase
+→ bootstrap and process context entered once
+→ one aggregate context-summary confirmation or numbered edit
+→ headed browser with candidate labels
+→ real ambiguity selection
+→ real discovery, handoff, POM, and plan decisions
+→ full exact source rendering and real patch decision
+→ real execution trigger
+→ one passing Playwright test
+```
+
+The deterministic test suite contains 271 tests on the normal Windows gate. A
+scripted verifier proves all 18 blocking prompt boundaries without claiming that
+a user was present. The interactive Creation Flow uses two live local-model
+turns: one collection plan and one browser-ambiguity question. Sprint 11
+acceptance additionally requires an operator-driven run
+that writes `operator-session.json` with `fixture_answers_used=false`,
+`headed_browser_used=true`, and a completed Creation Flow marked interactive.
+
+The reference run records 18 operator actions: one initial request, nine intake
+answers, one aggregate context-summary confirmation, one synthesis-handoff
+confirmation, one ambiguity selection, four artefact reviews, and one execution
+trigger. Single-letter review commands are rejected so that values such as `C`
+cannot be stored accidentally as business context. The patch gate displays all
+source lines with no preview ellipsis. The final summary states that the local
+LLM only plans intake questions and phrases ambiguity, while the POM and source
+come from deterministic reviewed reference templates.
+
+A successful manual reference run may support the narrow statement that the
+controlled prototype can be demonstrated by a real operator. It still does not
+prove arbitrary-application support, general usability, enterprise readiness,
+or a measured percentage of saved work.

@@ -3699,3 +3699,104 @@ Ready for human-trigger integration: true
 Interactive human trigger used: false
 Ready for external user demonstration: false
 ```
+
+## Sprint 11 — human trigger is a separate product proof
+
+Sprint 10 established that the complete Creation Flow engine can move from a
+short request to a passing Playwright test. The acceptance discussion exposed a
+critical distinction: a fixture can validly exercise a human-authority state
+transition, but it cannot prove that a user saw the question, understood the
+choice, or triggered the transition.
+
+Sprint 11 therefore did not add another creation engine. It connected a real
+operator to the existing entry and authority points through blocking CLI input
+and a headed browser.
+
+### What changed
+
+- the operator types the initial request,
+- nine intake answers are real terminal actions, followed by one aggregate
+  process-context confirmation,
+- the browser remains visible while candidate IDs are reviewed,
+- the operator resolves the ambiguity,
+- discovery, synthesis handoff, POM, repository plan, and patch all block for
+  decisions,
+- execution has its own trigger,
+- a separate `InteractiveOperatorSession` audits action categories and timing
+  without persisting raw values.
+
+### Important testing distinction
+
+The corrected scripted verifier covers all 18 blocking prompts and the whole downstream chain.
+It is deliberately labelled as mechanics verification, not manual acceptance.
+External-demo readiness requires a separate operator-generated session with no
+fixture answers and a headed browser.
+
+
+### Human review exposed prompt multiplication and an unsafe edit interaction
+
+The first manual Sprint 11 run showed that connecting a human is not complete
+when every internal state transition becomes a separate prompt. After nine
+collection answers, the operator was asked five near-duplicate review questions.
+Worse, entering `E` and then `C` caused `C` to be interpreted as a replacement
+business value. The tool had preserved authority boundaries but exposed them
+through an error-prone interface.
+
+The correction separates three kinds of questions:
+
+1. bootstrap context needed to start the run,
+2. process-specific context needed for the current scenario,
+3. runtime ambiguity or review questions that exist only at a real authority
+   boundary.
+
+The LLM now plans only the collection phase. The five process facts are rendered
+as one deterministic summary. One operator confirmation authorizes five
+underlying `CONFIRM` transitions, so the context contract remains unchanged
+while the operator ledger records the truth: one human decision. Full-word
+`CONFIRM`, `EDIT`, `QUIT`, and `CANCEL` commands replace ambiguous single-letter
+review shortcuts, and reserved control words cannot be stored as context.
+
+A further product rule is parked: confirmed project bootstrap context should be
+asked once and reused across later Creation Flows until the operator requests a
+change or evidence marks it stale, conflicting, or invalid after a relevant
+configuration change. Sprint 11 enforces non-repetition inside one run; durable
+cross-run reuse remains future work.
+
+### New limitations surfaced
+
+- accept/reject exists for downstream artefacts, but in-flow editing does not,
+- pause does not yet resume from every downstream boundary,
+- one controlled flow does not establish usability or generalization,
+- an operator ledger proves participation, not the correctness of the supplied
+  business facts.
+
+The architectural conclusion remains:
+
+> The Creation Flow engine works. Sprint 11 connects the real human trigger; the
+> next product questions concern usability, breadth, maintenance, and measured
+> value rather than basic orchestration.
+
+### Exact authority requires exact display, not a preview label
+
+The first successful real-operator run exposed a second authority mismatch.
+The terminal called the gate an `exact code patch` review, but rendered only the
+first six lines of each change followed by an ellipsis. The operator had proved
+participation, but not acceptance of every generated source line.
+
+Sprint 11 therefore adds a separate post-run re-review gate that reuses the
+already accepted intake, discovery, synthesis, and repository plan. It
+regenerates the corrected deterministic patch, renders every source line and
+content hash, waits for one real acceptance, applies only to a fresh snapshot-
+bounded sandbox, and reruns collection and execution. The nine intake answers
+and two local-model calls are not repeated.
+
+The same correction established three rules:
+
+- a review label must match what the operator could actually inspect,
+- the operator's raw initial request belongs in traceability, not as a method
+  docstring,
+- the summary must disclose that the LLM plans intake and phrases ambiguity,
+  while POM and source generation remain deterministic reference templates.
+
+Incomplete local-model ambiguity wording is now closed deterministically with
+the same candidate set and no automatic selection.

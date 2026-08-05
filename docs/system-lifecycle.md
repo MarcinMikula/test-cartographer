@@ -327,7 +327,8 @@ The creation plane is now deliberately prioritized before maintenance:
 ```text
 Sprint 8: minimal request + local-LLM guided human intake
 → Sprint 9: bounded multi-element browser discovery
-→ Sprint 10: one external-demo end-to-end creation flow
+→ Sprint 10: fixture-assisted integrated Creation Flow
+→ Sprint 11: human-triggered interactive Creation Flow
 → later: reactive and proactive maintenance
 ```
 

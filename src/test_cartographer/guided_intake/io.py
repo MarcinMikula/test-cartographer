@@ -36,6 +36,10 @@ def load_minimal_seed(path: str | Path) -> MinimalContextSeed:
     return _load(MinimalContextSeed, path)
 
 
+def save_minimal_seed(seed: MinimalContextSeed, path: str | Path) -> None:
+    _save(seed, path)
+
+
 def export_guided_schemas(root: str | Path) -> None:
     target_root = Path(root)
     target_root.mkdir(parents=True, exist_ok=True)

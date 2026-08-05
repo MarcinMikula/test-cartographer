@@ -369,7 +369,7 @@ evolution remain TestCartographer responsibilities.
 
 **Status:** OPEN
 
-**Target:** Sprint 11
+**Target:** Sprint 12
 
 The product cannot yet:
 
@@ -494,20 +494,33 @@ represented by fixtures, and no percentage of saved work is claimed.
 
 ## Gap 22 — Human-triggered interactive Creation Flow
 
-**Status:** OPEN
+**Status:** CLOSED in Sprint 11 for the controlled reference process
 **Target:** Sprint 11
 
-Sprint 10 verifies the complete engine with fixture-supplied human actions. It
-does not yet provide the user experience needed for an honest external demo.
-The missing layer must:
+Sprint 11 now:
 
-- accept the initial request from the operator,
-- display generated questions and wait for answers,
-- require explicit confirmation at authority boundaries,
-- show a visible browser process and ambiguous candidates,
-- wait for the operator to select the intended element,
-- display ContextBundle, POM proposal, adaptation plan, and patch for review,
-- preserve resumability without silently applying fixture defaults.
+- accepts the initial request from the operator,
+- separates one-time run bootstrap questions from process-specific questions,
+- displays generated collection questions and waits for answers,
+- replaces five repeated process reviews with one aggregate context summary,
+- requires explicit confirmation at authority boundaries,
+- opens a headed browser and labels ambiguous candidates,
+- waits for the operator to select the intended element,
+- displays discovery, POM proposal, and adaptation plan for review,
+- renders every exact patch source line and hash before patch acceptance,
+- requires a separate operator trigger before sandbox execution,
+- persists an operator-action ledger without raw answer values,
+- refuses to treat scripted fixture input as the manual acceptance artefact.
+
+Still open beneath this closed slice:
+
+- persistent reuse of confirmed bootstrap context across separate runs, with
+  explicit invalidation on operator request, staleness, conflict, or relevant
+  configuration change,
+- resume from arbitrary downstream stages,
+- in-flow editing of POM, plan, and patch,
+- validation with an unbriefed external participant,
+- arbitrary, multi-page, authenticated, and enterprise applications.
 
 ## Post-Sprint-11 validation gaps
 

@@ -1,0 +1,75 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "fixture_answers_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Fixture Answers Allowed",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "label": {
+      "minLength": 1,
+      "title": "Label",
+      "type": "string"
+    },
+    "minimum_intake_answers": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Minimum Intake Answers",
+      "type": "integer"
+    },
+    "minimum_intake_confirmations": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Minimum Intake Confirmations",
+      "type": "integer"
+    },
+    "minimum_review_decisions": {
+      "default": 4,
+      "minimum": 1,
+      "title": "Minimum Review Decisions",
+      "type": "integer"
+    },
+    "raw_operator_values_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Operator Values Persisted",
+      "type": "boolean"
+    },
+    "require_headed_browser": {
+      "const": true,
+      "default": true,
+      "title": "Require Headed Browser",
+      "type": "boolean"
+    },
+    "require_live_local_llm": {
+      "const": true,
+      "default": true,
+      "title": "Require Live Local Llm",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target_test": {
+      "minLength": 1,
+      "title": "Target Test",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "label",
+    "target_test"
+  ],
+  "title": "InteractiveCreationProfile",
+  "type": "object"
+}

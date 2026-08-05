@@ -44,6 +44,7 @@ def phrase_ambiguity(
     result = provider.phrase(ambiguity, prompt)
     actual_completed_at = completed_at or datetime.now(timezone.utc)
     plan = parse_ambiguity_question(result.raw_output, ambiguity)
+    plan = _ensure_complete_ambiguity_question(plan, ambiguity)
     provider_kind = (
         DiscoveryProviderKind.OLLAMA
         if profile.provider is DiscoveryProviderKind.OLLAMA
@@ -157,3 +158,59 @@ def review_discovery(
         }
     )
     return ProcessDiscoveryRun.model_validate(updated.model_dump(mode="python"))
+
+
+def complete_ambiguity_prompt(
+    prompt: str, candidate_ids: tuple[str, ...]
+) -> tuple[str, bool]:
+    """Return one complete bounded prompt and whether deterministic repair was used."""
+
+    rendered = prompt.strip()
+    lowered = rendered.casefold().rstrip()
+    dangling_suffixes = (
+        ",",
+        ":",
+        ";",
+        " and",
+        " or",
+        " but",
+        " while",
+        " because",
+        " whereas",
+        " although",
+        " with",
+    )
+    complete = rendered.endswith(("?", ".", "!")) and not any(
+        lowered.endswith(suffix) for suffix in dangling_suffixes
+    )
+    if complete:
+        return rendered, False
+    candidates = " or ".join(candidate_ids)
+    return (
+        "Which visible candidate performs the intended action: "
+        f"{candidates}? Compare the candidate attributes shown below "
+        "and choose one candidate ID.",
+        True,
+    )
+
+
+def _ensure_complete_ambiguity_question(
+    plan: AmbiguityQuestionPlan,
+    ambiguity,
+) -> AmbiguityQuestionPlan:
+    """Replace visibly truncated model wording with one bounded complete question."""
+
+    prompt, repaired = complete_ambiguity_prompt(
+        plan.user_prompt, ambiguity.candidate_ids
+    )
+    if not repaired:
+        return plan
+    return plan.model_copy(
+        update={
+            "user_prompt": prompt,
+            "reason": (
+                "The local-model wording was incomplete, so TestCartographer "
+                "used a deterministic bounded clarification without selecting a candidate."
+            ),
+        }
+    )

@@ -450,3 +450,25 @@ responses. A future opt-in diagnostic archive could retain exact conversations
 under explicit sensitivity, encryption, retention, and deletion rules. This is
 not required for the external demo and should not weaken the default minimal
 persistence boundary.
+
+## Persistent project bootstrap profile
+
+Persist context and configuration that TestCartographer and its LLM provider
+need before work can begin, such as application identity, environment, starting
+URL, framework profile, provider/model selection, authentication strategy, and
+data-sensitivity policy.
+
+The profile should be collected once, then reused across later Creation Flows.
+Questions should reopen only when:
+
+- the operator explicitly requests a change,
+- evidence marks a value stale or conflicting,
+- the application or environment changes,
+- the framework, provider, model, authentication, or sensitivity policy changes
+  in a way that can affect correctness.
+
+A pipeline stage must not ask again merely because it received control from a
+previous module. Later stages should consume confirmed profile data and evidence.
+The profile needs explicit versioning, provenance, review, invalidation, and a
+clear distinction between project-wide configuration and process-specific
+context.

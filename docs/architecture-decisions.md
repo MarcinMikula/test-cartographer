@@ -1108,3 +1108,100 @@ reports three separate states:
 not prove that a real operator can start the flow, understand the questions,
 resolve ambiguity, or review artefacts. Sprint 11 must connect the human to the
 existing entry and decision points instead of rebuilding the engine.
+
+
+## AD-S11-1 — connect the operator without rebuilding the engine
+
+**Decision:** Sprint 11 wraps the accepted Sprint 10 engine with blocking CLI
+prompts, a headed browser review, and an operator-action ledger. It does not
+create a second creation pipeline.
+
+**Reason:** The missing product evidence was human participation, not another
+generation mechanism. Reusing the existing contracts keeps fixture-assisted and
+interactive runs comparable.
+
+## AD-S11-2 — separate scripted prompt coverage from manual acceptance
+
+**Decision:** Automated tests may use scripted input to cover all prompt paths,
+but only a completed live `InteractiveOperatorSession` with
+`fixture_answers_used=false` and `headed_browser_used=true` satisfies the
+external-demo readiness gate.
+
+**Reason:** Automated input is valuable regression evidence but cannot prove
+that a real operator saw, understood, and answered the interface.
+
+## AD-S11-3 — audit operator actions without duplicating raw context
+
+**Decision:** The operator ledger records action kind, target, decision category,
+timestamps, and active duration. Raw answer values remain in the existing local
+intake/context artefacts and are not copied into the ledger.
+
+**Reason:** The product needs evidence that human authority was exercised without
+creating another sensitive-data store.
+
+## AD-S11-4 — headed browser is mandatory for the controlled demo gate
+
+**Decision:** The interactive reference profile requires headed Chromium and
+keeps candidate labels visible during ambiguity selection and discovery review.
+
+**Reason:** A terminal-only candidate ID is insufficient evidence that the
+operator could inspect the application state behind the decision.
+
+## AD-S11-5 — separate bootstrap, process context, and runtime authority questions
+
+**Decision:** The interactive Creation Flow classifies questions into three
+scopes:
+
+1. bootstrap context required to start the run,
+2. process-specific context required for the selected scenario,
+3. runtime ambiguity or review questions justified by an unresolved authority
+   boundary.
+
+Confirmed values must be consumed by later modules rather than asked again only
+because the pipeline advanced. Sprint 11 replaces five individual process-review
+prompts with one aggregate summary. One operator confirmation authorizes the
+five deterministic `CONFIRM` transitions required by the existing context
+contract.
+
+**Reason:** Internal state transitions are not automatically separate user
+interactions. Repeating known facts increases cognitive load and creates the
+appearance that modules do not share context.
+
+**Consequence:** The interactive reference run uses one LLM collection-planning
+turn instead of separate collection and review turns. The expected operator
+action count falls from 22 to 18 without weakening evidence, provenance, or
+human authority.
+
+## AD-S11-6 — control commands cannot be accepted as context values
+
+**Decision:** Aggregate review uses full-word `CONFIRM`, `EDIT`, `QUIT`, and
+`CANCEL` commands. Exact control tokens, including their former single-letter
+forms, are rejected when a context value is expected.
+
+**Reason:** The first manual run demonstrated that `E` followed by `C` could
+store `C` as a replacement business value. A command grammar must not overlap
+silently with the value grammar.
+
+## AD-S11-7 — persistent bootstrap reuse is a separate future contract
+
+**Decision:** Sprint 11 guarantees that bootstrap values are asked once within a
+single Creation Flow and reused by later stages. Reuse across separate runs is
+parked until a project-profile contract defines ownership, explicit edits,
+staleness, conflict, environment changes, framework/provider/model changes, and
+authentication changes.
+
+**Reason:** Reusing configuration can reduce repeated questioning, but stale
+bootstrap data can make discovery and generated tests wrong with high
+confidence. Persistence therefore needs invalidation semantics, not only a cache.
+
+### ADR: exact acceptance requires full source visibility
+
+**Decision:** a source patch may be described as `exact` only when every source
+line in every change is rendered to the operator before the decision. A six-
+line preview plus ellipsis can support preview approval, not exact acceptance.
+
+For the already completed Sprint 11 intake, correction is performed by a
+separate patch re-review over persisted accepted artefacts. This avoids
+repeating context collection or local-model calls while preserving a real human
+authority boundary. The corrected patch is applied only to a new sandbox and is
+executed again.

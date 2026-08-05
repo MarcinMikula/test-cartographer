@@ -77,11 +77,13 @@ class CreationFlowRun(ContractModel):
     human_active_seconds: float = Field(ge=0.0)
     live_llm_call_count: int = Field(ge=0)
     deterministic_synthesis_call_count: int = Field(ge=0)
+    human_trigger_count: int = Field(default=0, ge=0)
     human_answer_count: int = Field(ge=0)
     human_confirmation_count: int = Field(ge=0)
     handoff_confirmation_count: int = Field(ge=0)
     ambiguity_resolution_count: int = Field(ge=0)
     review_decision_count: int = Field(ge=0)
+    execution_trigger_count: int = Field(default=0, ge=0)
     total_human_action_count: int = Field(ge=0)
     candidate_count: int = Field(ge=0)
     target_count: int = Field(ge=0)
@@ -90,8 +92,8 @@ class CreationFlowRun(ContractModel):
     reused_symbol_count: int = Field(ge=0)
     collected_test_count: int = Field(ge=0)
     passed_test_count: int = Field(ge=0)
-    fixture_assisted_reference_demo: Literal[True] = True
-    interactive_human_used_during_verifier: Literal[False] = False
+    fixture_assisted_reference_demo: bool = True
+    interactive_human_used_during_verifier: bool = False
     live_llm_used: bool
     deterministic_synthesis_template_used: Literal[True] = True
     raw_prompts_persisted: Literal[False] = False
@@ -118,19 +120,23 @@ class CreationFlowRun(ContractModel):
         if self.completed_at < self.started_at:
             raise ValueError("creation flow completed_at precedes started_at")
         summed = (
-            self.human_answer_count
+            self.human_trigger_count
+            + self.human_answer_count
             + self.human_confirmation_count
             + self.handoff_confirmation_count
             + self.ambiguity_resolution_count
             + self.review_decision_count
+            + self.execution_trigger_count
         )
         if self.total_human_action_count != summed:
             raise ValueError("total_human_action_count does not match its components")
+        if self.fixture_assisted_reference_demo and self.interactive_human_used_during_verifier:
+            raise ValueError("creation flow cannot be fixture-assisted and interactive at once")
         if self.status is CreationFlowStatus.PASSED:
             checks = (
                 all(stage.status is CreationStageStatus.PASSED for stage in self.stages),
                 self.live_llm_used,
-                self.live_llm_call_count >= 3,
+                self.live_llm_call_count >= 2,
                 self.deterministic_synthesis_call_count == 1,
                 self.candidate_count >= 3,
                 self.target_count >= 3,

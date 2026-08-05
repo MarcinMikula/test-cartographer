@@ -990,3 +990,61 @@ Ready for external user demonstration: false
 
 Sprint 11 acceptance must add a real interactive operator path rather than
 changing this fixture-assisted proof to `true` by configuration.
+
+
+## Sprint 11 human-triggered Creation Flow gate
+
+The normal Windows suite contains 266 tests. Four integration gates require a
+usable Playwright environment, including the new headed-browser review.
+
+Automated coverage has two purposes:
+
+1. unit and CLI tests validate the interactive contracts, action ledger, schema,
+   prompt parsing, and readiness assessment;
+2. `scripts/verify_human_triggered_creation_flow.py` drives all 18 blocking
+   prompts with scripted input, a deterministic browser replay, an
+   Ollama-compatible local stub, and a fake execution runner.
+
+The scripted verifier must print that it is **not** the real-operator acceptance
+artefact. It proves orchestration mechanics only.
+
+The interactive intake has one live collection-planning turn. Five deterministic
+review transitions are authorized through one aggregate operator confirmation,
+not five separate prompts. Unit tests also prove that single-letter control
+words such as `C` are rejected and cannot be stored as context values.
+
+The Sprint 11 setup then performs a separate manual gate through:
+
+```text
+python -m test_cartographer.cli creation interactive
+```
+
+Acceptance requires all of the following from the resulting live artefacts:
+
+```text
+Operator session state: complete
+Interactive human trigger used: true
+Fixture answers used: false
+Headed browser used: true
+Intake answers: at least 9
+Context-summary confirmations: at least 1
+Synthesis handoff confirmations: at least 1
+Ambiguity selections: at least 1
+Review decisions: at least 4
+Execution triggers: at least 1
+Human-trigger blockers: none
+Ready for external user demonstration: true
+```
+
+The manual gate does not prove broad usability. It proves only that a real
+operator can traverse the controlled reference flow without fixture substitution.
+
+### Sprint 11 exact patch re-review gate
+
+A successful real-operator run is not committable when the patch was shown only
+as a truncated preview. The correction gate must reuse the existing live
+artefacts, regenerate the patch with the current deterministic generator, show
+every source line without ellipses, obtain one new operator decision, apply to a
+fresh snapshot-bounded sandbox, and pass compile, collection, and execution.
+It must also verify the bounded LLM-role disclosure and deterministic synthesis
+disclosure. Intake, Ollama planning, and browser discovery are not repeated.

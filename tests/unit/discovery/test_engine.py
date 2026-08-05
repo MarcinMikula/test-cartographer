@@ -84,3 +84,32 @@ def test_cannot_accept_unresolved_run(plan, candidates, profile) -> None:
             decision=DiscoveryDecision.ACCEPTED,
             reviewed_at=run.captured_at + timedelta(seconds=1),
         )
+
+
+def test_truncated_llm_question_is_deterministically_completed(
+    plan, candidates, profile
+) -> None:
+    run = _run(plan, candidates, profile)
+    now = run.captured_at
+    output = json.dumps(
+        {
+            "schema_version": "0.1",
+            "ambiguity_id": run.ambiguities[0].id,
+            "candidate_ids": list(run.ambiguities[0].candidate_ids),
+            "user_prompt": "cand_002 has data-testid=search-submit, while",
+            "reason": "The tied controls need human confirmation.",
+        }
+    )
+    question, updated = phrase_ambiguity(
+        run,
+        plan.targets,
+        profile,
+        ReplayDiscoveryProvider([output]),
+        ambiguity_id=run.ambiguities[0].id,
+        started_at=now,
+        completed_at=now + timedelta(seconds=1),
+    )
+    assert question.user_prompt.endswith("choose one candidate ID.")
+    assert "cand_002 or cand_003" in question.user_prompt
+    assert updated.ambiguities[0].question == question.user_prompt
+    assert "incomplete" in question.reason

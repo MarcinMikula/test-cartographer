@@ -8,7 +8,7 @@ def assess_creation_flow(run: CreationFlowRun) -> CreationFlowAssessment:
     mechanics_blockers: list[str] = []
     if run.status is not CreationFlowStatus.PASSED:
         mechanics_blockers.append("flow_not_passed")
-    if run.live_llm_call_count < 3:
+    if run.live_llm_call_count < 2:
         mechanics_blockers.append("live_llm_boundary_missing")
     if run.passed_test_count < 1:
         mechanics_blockers.append("runnable_test_missing")
@@ -35,10 +35,18 @@ def assess_creation_flow(run: CreationFlowRun) -> CreationFlowAssessment:
         external_demo_blockers=tuple(external_demo_blockers),
         evidence_statements=(
             "The integrated engine begins from one short request.",
-            "Three local-LLM turns assist intake and ambiguity phrasing.",
-            "Human answers and decisions are represented by explicit fixtures.",
+            "Bounded local-LLM turns assist collection planning and ambiguity phrasing.",
+            (
+                "A real operator supplied answers and decisions through blocking prompts."
+                if run.interactive_human_used_during_verifier
+                else "Human answers and decisions are represented by explicit fixtures."
+            ),
             "The accepted context produces one reviewed patch and one passing test.",
-            "The verifier does not include an interactive human trigger.",
+            (
+                "The run includes an interactive human trigger."
+                if run.interactive_human_used_during_verifier
+                else "The verifier does not include an interactive human trigger."
+            ),
             "No percentage of saved work is claimed.",
         ),
     )

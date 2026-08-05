@@ -1,0 +1,167 @@
+{
+  "$defs": {
+    "InteractiveSessionState": {
+      "enum": [
+        "active",
+        "paused",
+        "aborted",
+        "complete"
+      ],
+      "title": "InteractiveSessionState",
+      "type": "string"
+    },
+    "OperatorActionKind": {
+      "enum": [
+        "initial_request",
+        "intake_answer",
+        "intake_confirmation",
+        "synthesis_handoff_confirmation",
+        "ambiguity_selection",
+        "review_decision",
+        "execution_trigger"
+      ],
+      "title": "OperatorActionKind",
+      "type": "string"
+    },
+    "OperatorActionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "active_seconds": {
+          "minimum": 0.0,
+          "title": "Active Seconds",
+          "type": "number"
+        },
+        "completed_at": {
+          "format": "date-time",
+          "title": "Completed At",
+          "type": "string"
+        },
+        "decision": {
+          "minLength": 1,
+          "title": "Decision",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/OperatorActionKind"
+        },
+        "raw_value_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Value Persisted",
+          "type": "boolean"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        },
+        "started_at": {
+          "format": "date-time",
+          "title": "Started At",
+          "type": "string"
+        },
+        "target_id": {
+          "minLength": 1,
+          "title": "Target Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "sequence",
+        "kind",
+        "target_id",
+        "decision",
+        "started_at",
+        "completed_at",
+        "active_seconds"
+      ],
+      "title": "OperatorActionRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "actions": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/OperatorActionRecord"
+      },
+      "title": "Actions",
+      "type": "array"
+    },
+    "creation_flow_run_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Creation Flow Run Id"
+    },
+    "fixture_answers_used": {
+      "const": false,
+      "default": false,
+      "title": "Fixture Answers Used",
+      "type": "boolean"
+    },
+    "headed_browser_used": {
+      "default": false,
+      "title": "Headed Browser Used",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "interactive_human_trigger_used": {
+      "const": true,
+      "default": true,
+      "title": "Interactive Human Trigger Used",
+      "type": "boolean"
+    },
+    "profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "raw_operator_values_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Operator Values Persisted",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/InteractiveSessionState"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "profile_id",
+    "state",
+    "started_at",
+    "updated_at"
+  ],
+  "title": "InteractiveOperatorSession",
+  "type": "object"
+}

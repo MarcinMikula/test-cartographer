@@ -501,7 +501,12 @@ def _render_method(method: ProposedMethod, run: SynthesisRun, *, indent: str) ->
     else:
         signature = "(self) -> None:"
     lines[-1] += signature
-    lines.append(f"{indent}    \"\"\"{_safe_docstring(method.intent)}\"\"\"")
+    docstring = (
+        "Open the mapped page through the framework navigation boundary."
+        if action.kind is ActionKind.NAVIGATE
+        else _safe_docstring(method.intent)
+    )
+    lines.append(f"{indent}    \"\"\"{docstring}\"\"\"")
     if action.kind is ActionKind.NAVIGATE:
         lines.append(f"{indent}    self.open()")
     else:

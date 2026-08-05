@@ -417,3 +417,47 @@ the selected generation profile rather than silently handled.
 - **The sandbox is the delivery target.** The original framework is inspected
   read-only and remains unchanged. Production repository application remains a
   separate explicit decision.
+
+## Sprint 11 interactive Creation Flow boundaries
+
+- **The human-operated path is a controlled CLI demo, not a general product
+  interface.** It supports one known public-catalog process and assumes the
+  operator understands the review prompts.
+- **Headed Chromium is required for the interactive acceptance gate.** Remote,
+  headless, CI-only, or display-less environments cannot prove the visible
+  browser boundary.
+- **Downstream artefacts support accept or reject, not in-flow editing.** The
+  aggregate process-context summary supports numbered field editing, but POM,
+  plan, and patch changes require rejection and a fresh controlled run.
+- **Bootstrap context is only one-time within the current run.** Application,
+  environment, and starting URL are not repeated by later stages, but Sprint 11
+  does not yet persist a reusable project profile across separate runs. Reuse
+  must eventually be invalidated by operator request, staleness, conflict, or a
+  relevant configuration change.
+- **Resume is incomplete.** Intake can pause, and all state is persisted, but the
+  current orchestrator does not resume automatically from arbitrary discovery,
+  handoff, proposal, plan, patch, or execution boundaries.
+- **The operator ledger intentionally excludes raw answer values.** It proves
+  action kind, timing, and decision category, not the semantic quality of what
+  the operator entered.
+- **A completed operator session proves controlled operability only.** It does
+  not prove usability for an unbriefed participant, accessibility, low cognitive
+  load, or time savings.
+- **The POM proposal remains deterministic.** Sprint 11 connects the human to
+  review, but it does not add live-LLM POM synthesis.
+- **The source patch still targets an isolated sandbox.** The original framework
+  remains read-only and production application is not part of the interactive
+  demo.
+- **Scripted operator verification is not manual acceptance.** The automated
+  18-prompt verifier checks mechanics with replayed browser evidence and a local
+  Ollama-compatible stub. The real setup must separately create a completed
+  `operator-session.json` through terminal input and headed Chromium.
+
+- **Exact patch review is terminal-based and can be verbose.** Sprint 11 now
+  renders every source line and hash before acceptance, but it does not yet
+  provide a side-by-side diff viewer, syntax highlighting, folding, or in-flow
+  editing. Rejecting still requires a later correction path.
+- **LLM authority remains intentionally narrow.** The local model plans intake
+  questions and phrases ambiguity. POM and source generation use deterministic
+  reviewed reference templates; the controlled demo must not imply live-LLM
+  code generation.

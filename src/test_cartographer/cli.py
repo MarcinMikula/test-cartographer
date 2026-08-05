@@ -54,6 +54,19 @@ from test_cartographer.guided_intake.readiness import assess_guided_intake
 from test_cartographer.context.enums import SensitivityLevel
 from test_cartographer.creation_flow.assessment import assess_creation_flow
 from test_cartographer.creation_flow.io import load_creation_flow_run
+from test_cartographer.interactive_creation.assessment import assess_interactive_creation
+from test_cartographer.interactive_creation.io import (
+    load_interactive_profile,
+    load_operator_session,
+    load_patch_rereview_report,
+)
+from test_cartographer.interactive_creation.runner import (
+    InteractiveFlowStopped,
+    run_human_triggered_creation_flow,
+)
+from test_cartographer.interactive_creation.rereview import (
+    rereview_existing_sprint_11_patch,
+)
 from test_cartographer.context.io import load_context, save_context
 from test_cartographer.context.readiness import assess_readiness
 from test_cartographer.intake.enums import IntakeAnswerAction, IntakeSessionState
@@ -624,6 +637,41 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     creation_assess.add_argument("--run", required=True, type=Path)
 
+    creation_interactive = creation_commands.add_parser(
+        "interactive",
+        help="run the human-triggered controlled Creation Flow",
+    )
+    creation_interactive.add_argument("--profile", required=True, type=Path)
+    creation_interactive.add_argument("--output-dir", required=True, type=Path)
+    creation_interactive.add_argument("--framework-root", type=Path)
+    creation_interactive.add_argument(
+        "--ollama-base-url", default="http://127.0.0.1:11434"
+    )
+    creation_interactive.add_argument("--ollama-model", default="qwen2.5-coder:7b")
+    creation_interactive.add_argument("--ollama-timeout-seconds", type=float, default=600.0)
+    creation_interactive.add_argument("--executable-path")
+
+    creation_interactive_status = creation_commands.add_parser(
+        "interactive-status",
+        help="show human-trigger and external-demo readiness",
+    )
+    creation_interactive_status.add_argument("--profile", required=True, type=Path)
+    creation_interactive_status.add_argument("--session", required=True, type=Path)
+    creation_interactive_status.add_argument("--run", required=True, type=Path)
+
+    creation_patch_rereview = creation_commands.add_parser(
+        "patch-rereview",
+        help="regenerate and fully re-review the existing Sprint 11 source patch",
+    )
+    creation_patch_rereview.add_argument("--artifact-dir", required=True, type=Path)
+    creation_patch_rereview.add_argument("--framework-root", type=Path)
+
+    creation_patch_rereview_status = creation_commands.add_parser(
+        "patch-rereview-status",
+        help="show the exact patch re-review proof",
+    )
+    creation_patch_rereview_status.add_argument("--report", required=True, type=Path)
+
     return parser
 
 
@@ -746,6 +794,14 @@ def _dispatch_creation(
         return _creation_status_command(args)
     if args.creation_command == "assess":
         return _creation_assess_command(args)
+    if args.creation_command == "interactive":
+        return _creation_interactive_command(args)
+    if args.creation_command == "interactive-status":
+        return _creation_interactive_status_command(args)
+    if args.creation_command == "patch-rereview":
+        return _creation_patch_rereview_command(args)
+    if args.creation_command == "patch-rereview-status":
+        return _creation_patch_rereview_status_command(args)
     parser.error("a creation command is required")
     return 2
 
@@ -1154,6 +1210,75 @@ def _creation_assess_command(args: argparse.Namespace) -> int:
     return 0
 
 
+def _creation_interactive_command(args: argparse.Namespace) -> int:
+    profile = load_interactive_profile(args.profile)
+    try:
+        run_human_triggered_creation_flow(
+            project_root=Path(__file__).resolve().parents[2],
+            output_dir=args.output_dir,
+            framework_root=args.framework_root,
+            interactive_profile=profile,
+            ollama_base_url=args.ollama_base_url,
+            ollama_model=args.ollama_model,
+            timeout_seconds=args.ollama_timeout_seconds,
+            executable_path=args.executable_path,
+        )
+    except InteractiveFlowStopped as exc:
+        print(f"Interactive Creation Flow stopped: {exc}")
+        return 2
+    return 0
+
+
+def _creation_patch_rereview_command(args: argparse.Namespace) -> int:
+    rereview_existing_sprint_11_patch(
+        project_root=Path(__file__).resolve().parents[2],
+        artifact_dir=args.artifact_dir,
+        framework_root=args.framework_root,
+    )
+    return 0
+
+
+def _creation_patch_rereview_status_command(args: argparse.Namespace) -> int:
+    report = load_patch_rereview_report(args.report)
+    print(f"Patch re-review: {report.id}")
+    print(f"Creation flow: {report.creation_flow_run_id}")
+    print(f"Decision: {report.decision}")
+    print(f"Original patch: {report.original_patch_id}")
+    print(f"Corrected patch: {report.corrected_patch_id}")
+    print("Exact source displayed: true")
+    print("Omitted source lines: false")
+    print("Navigation docstring corrected: true")
+    print(
+        "Ambiguity question deterministically completed: "
+        f"{str(report.ambiguity_question_deterministically_completed).lower()}"
+    )
+    print("LLM role disclosed: true")
+    print("Deterministic synthesis disclosed: true")
+    print(
+        f"Tests collected / passed: {report.collected_test_count}/{report.passed_test_count}"
+    )
+    print("Original framework unchanged: true")
+    print("Exact patch re-review verified: true")
+    return 0
+
+
+def _creation_interactive_status_command(args: argparse.Namespace) -> int:
+    profile = load_interactive_profile(args.profile)
+    session = load_operator_session(args.session)
+    run = load_creation_flow_run(args.run)
+    report = assess_interactive_creation(session, run, profile)
+    print(_format_creation_flow(run))
+    print(_format_operator_session(session))
+    blockers = ", ".join(report.blockers) or "none"
+    print(f"Human-trigger blockers: {blockers}")
+    print(f"Human trigger verified: {str(report.human_trigger_verified).lower()}")
+    print(
+        "Ready for external user demonstration: "
+        f"{str(report.external_user_demo_ready).lower()}"
+    )
+    return 0
+
+
 def _parse_answer(raw: str, question: IntakeQuestion) -> IntakeAnswer:
     if not raw:
         raise ValueError("enter a value or one of the displayed commands")
@@ -1416,6 +1541,11 @@ def _format_discovery_assessment(report) -> str:
 
 
 def _format_creation_flow(run) -> str:
+    action_label = (
+        "Human fixture actions"
+        if run.fixture_assisted_reference_demo
+        else "Real operator actions"
+    )
     return "\n".join(
         (
             f"Creation flow: {run.id}",
@@ -1424,16 +1554,41 @@ def _format_creation_flow(run) -> str:
             f"Total seconds: {run.total_seconds:.3f}",
             f"Model seconds: {run.model_seconds:.3f}",
             f"Live LLM calls: {run.live_llm_call_count}",
-            f"Human fixture actions: {run.total_human_action_count}",
+            f"{action_label}: {run.total_human_action_count}",
             f"Candidates / targets: {run.candidate_count}/{run.target_count}",
             f"Generated / modified files: {run.generated_file_count}/{run.modified_file_count}",
             f"Tests collected / passed: {run.collected_test_count}/{run.passed_test_count}",
             f"Framework execution independent: {str(run.framework_execution_independent).lower()}",
             f"Original framework unchanged: {str(run.original_framework_unchanged).lower()}",
-            "Fixture-assisted reference demo: true",
+            "Fixture-assisted reference flow: "
+            f"{str(run.fixture_assisted_reference_demo).lower()}",
+            "Interactive human trigger used: "
+            f"{str(run.interactive_human_used_during_verifier).lower()}",
             "Raw prompts persisted: false",
             "Raw responses persisted: false",
             "Measured savings claimed: false",
+        )
+    )
+
+
+def _format_operator_session(session) -> str:
+    return "\n".join(
+        (
+            f"Operator session: {session.id}",
+            f"State: {session.state.value}",
+            f"Actions: {len(session.actions)}",
+            f"Initial triggers: {session.initial_trigger_count}",
+            f"Intake answers: {session.answer_count}",
+            f"Context-summary confirmations: {session.confirmation_count}",
+            f"Synthesis handoff confirmations: {session.handoff_confirmation_count}",
+            f"Ambiguity selections: {session.ambiguity_selection_count}",
+            f"Review decisions: {session.review_decision_count}",
+            f"Execution triggers: {session.execution_trigger_count}",
+            f"Active seconds: {session.active_seconds:.3f}",
+            "Interactive human trigger used: true",
+            "Fixture answers used: false",
+            f"Headed browser used: {str(session.headed_browser_used).lower()}",
+            "Raw operator values persisted in ledger: false",
         )
     )
 
