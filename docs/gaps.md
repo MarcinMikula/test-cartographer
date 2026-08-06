@@ -549,3 +549,16 @@ Still open beneath this closed slice:
 - Implement one approved authentication strategy before protected-system demos.
 - Decide whether live POM synthesis adds value over the deterministic template
   without reducing reliability or authority clarity.
+
+## Sprint 13 follow-up gaps
+
+- No scheduler, deployment webhook, or recurring run policy exists.
+- The approved inventory covers one page and two public elements only.
+- Authentication, storage-state reuse, SSO/MFA, and protected routes remain
+  unimplemented.
+- Detection does not yet update knowledge status to STALE or create a
+  human-reviewed maintenance handoff.
+- Semantic, visual, state, network, and cross-page regressions are not covered.
+- Inventory reconciliation after application expansion is not implemented.
+- No false-positive/false-negative benchmark or operational-value comparison
+  has been run.

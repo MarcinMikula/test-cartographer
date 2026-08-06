@@ -1,0 +1,125 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "allow_automatic_patch": {
+      "const": false,
+      "default": false,
+      "title": "Allow Automatic Patch",
+      "type": "boolean"
+    },
+    "allow_context_write": {
+      "const": false,
+      "default": false,
+      "title": "Allow Context Write",
+      "type": "boolean"
+    },
+    "allowed_origin": {
+      "minLength": 1,
+      "title": "Allowed Origin",
+      "type": "string"
+    },
+    "baseline_document": {
+      "pattern": "^[A-Za-z0-9_.\\-/]+$",
+      "title": "Baseline Document",
+      "type": "string"
+    },
+    "current_document": {
+      "pattern": "^[A-Za-z0-9_.\\-/]+$",
+      "title": "Current Document",
+      "type": "string"
+    },
+    "expected_drift_count": {
+      "maximum": 50,
+      "minimum": 1,
+      "title": "Expected Drift Count",
+      "type": "integer"
+    },
+    "expected_stable_count": {
+      "maximum": 50,
+      "minimum": 1,
+      "title": "Expected Stable Count",
+      "type": "integer"
+    },
+    "framework_probe_timeout_seconds": {
+      "maximum": 120.0,
+      "minimum": 1.0,
+      "title": "Framework Probe Timeout Seconds",
+      "type": "number"
+    },
+    "framework_test_path": {
+      "pattern": "^[A-Za-z0-9_.\\-/]+$",
+      "title": "Framework Test Path",
+      "type": "string"
+    },
+    "framework_url_environment_variable": {
+      "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+      "title": "Framework Url Environment Variable",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "inventory_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Inventory Id",
+      "type": "string"
+    },
+    "live_llm_enabled": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Enabled",
+      "type": "boolean"
+    },
+    "max_operator_actions": {
+      "const": 3,
+      "default": 3,
+      "title": "Max Operator Actions",
+      "type": "integer"
+    },
+    "persist_html": {
+      "const": false,
+      "default": false,
+      "title": "Persist Html",
+      "type": "boolean"
+    },
+    "persist_raw_page": {
+      "const": false,
+      "default": false,
+      "title": "Persist Raw Page",
+      "type": "boolean"
+    },
+    "persist_screenshot": {
+      "const": false,
+      "default": false,
+      "title": "Persist Screenshot",
+      "type": "boolean"
+    },
+    "require_headed_browser_for_real_operator": {
+      "default": true,
+      "title": "Require Headed Browser For Real Operator",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "inventory_id",
+    "allowed_origin",
+    "baseline_document",
+    "current_document",
+    "framework_test_path",
+    "framework_url_environment_variable",
+    "framework_probe_timeout_seconds",
+    "expected_stable_count",
+    "expected_drift_count"
+  ],
+  "title": "ProactiveRegressionProfile",
+  "type": "object"
+}

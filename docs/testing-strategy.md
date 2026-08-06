@@ -1073,7 +1073,7 @@ separate human-triggered run with headed Chromium, five real actions, no fixture
 decisions, full exact source review, one failure before, one pass after, and
 `controlled_demo_ready=true`.
 
-Expected corrected Windows suite result for Sprint 12: `284 passed`.
+Expected corrected Windows suite result for Sprint 12: `285 passed`.
 
 
 ### Sprint 12 nested pytest correction gate
@@ -1103,3 +1103,52 @@ change the summary while preserving a successful test run. The Sprint 12 setup
 and commit gates therefore validate a generated JUnit report and require exactly
 285 tests, zero failures, zero errors, and zero skipped tests on the Windows
 acceptance environment.
+
+## Sprint 13 test strategy — green-test / changed-map proof
+
+The controlled acceptance fixture has one framework test and two approved
+mapped elements. The Search element is covered and remains stable. The Sort
+element is mapped but uncovered and changes locator after a deployment-like
+page replacement.
+
+Acceptance requires:
+
+- the same framework test passes on baseline and current pages,
+- one mapped element is reported unchanged,
+- one uncovered mapped element is reported as locator drift and stale context,
+- no application-bug claim, context write, patch, LLM call, or raw-page
+  persistence occurs,
+- the scripted verifier proves mechanics but only a real three-action operator
+  run proves controlled-demo readiness.
+
+The Sprint 13 Windows gate expects exactly 305 collected tests, 305 passed,
+zero failed, zero errors, and zero skipped, followed by both the scripted
+mechanics verifier and the real-operator assessment.
+
+### Headed Windows navigation gate
+
+The real-operator acceptance inventory uses a 30-second bounded navigation
+limit and a 2-second locator limit. The CLI must display both values before the
+operator authorizes the inventory. The browser navigation gate waits for the
+response commit and an attached document body within the same total navigation
+deadline; it does not add an unbounded retry or a second hidden navigation.
+
+### Recorded Sprint 13 Windows acceptance
+
+The final acceptance run on 2026-08-06 satisfied the gate:
+
+```text
+collected: 305
+passed: 305
+failed: 0
+errors: 0
+skipped: 0
+real operator actions: 3
+headed browser used: true
+fixture decisions used: false
+proactive-regression blockers: none
+```
+
+The scripted and real runs produced identical observation hashes for the stable
+Search control and the drifted Sort control. Only the real run counts as the
+operator-acceptance artefact.

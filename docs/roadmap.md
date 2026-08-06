@@ -86,7 +86,7 @@ product framing
 | Sprint 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
 | Sprint 11 | Human-triggered interactive Creation Flow | Done |
 | Sprint 12 | Human-triggered reactive maintenance from bounded execution evidence | Done — real operator acceptance verified |
-| Sprint 13 | Proactive post-deployment frontend/context regression | Parked |
+| Sprint 13 | Proactive post-deployment frontend/context regression | Implemented; real operator acceptance required |
 | Sprint 14 | Expansion using the existing application map | Parked |
 | Sprint 15 | External artefacts, authentication profiles, and enterprise safety | Parked |
 | Sprint 16 | Validation ladder culminating in a safe Salesforce flow | Parked |
@@ -1033,14 +1033,42 @@ See [`reactive-maintenance-flow.md`](reactive-maintenance-flow.md).
 
 ## Sprint 13 — Proactive frontend/context regression
 
-**Status:** Parked
+**Status:** Done — real operator acceptance verified
 
-### Direction
+### Goal
 
-Support bounded scheduled or post-deployment re-observation even when current
-framework tests remain green, using an approved observation inventory,
-allowlisted actions, authentication and sensitivity profiles, budgets, and
-reviewable change-impact reports.
+Prove one bounded proactive-maintenance distinction: a current independent
+framework test may remain green while an approved mapped frontend element outside
+that test pool has drifted.
+
+### Implemented vertical slice
+
+- one human-accepted public/no-auth observation inventory,
+- one logical page, two controlled baseline/current routes, and two approved mapped elements,
+- one framework Search test executed independently on baseline and current pages,
+- one covered Search element that remains stable,
+- one mapped but uncovered Sort element whose locator changes,
+- deterministic unchanged/locator-drift/missing/ambiguous dispositions,
+- current-test-risk versus mapped-context-stale impact classification,
+- one full review-only impact report,
+- exactly three real operator decisions,
+- no bootstrap re-intake, LLM, raw page, bug claim, patch, or context mutation.
+
+### Acceptance gate
+
+Closed on 2026-08-06. The Windows acceptance run collected and passed all 305
+tests, then completed the headed flow with three real operator actions. The
+persisted assessment reported no blockers, one stable mapped element, one
+uncovered locator drift, unchanged framework fingerprints, and no automatic
+patch, context mutation, application-bug claim, live LLM call, or raw-page
+persistence.
+
+### Deferred from the original direction
+
+Scheduling, deployment hooks, authentication profiles, protected applications,
+large inventories, automatic context-status transitions, maintenance handoff, and
+enterprise validation remain later hypotheses. This is an intentional small
+vertical slice, not a claim that the full parked direction is complete.
 
 ## Sprint 14 — Expansion using the existing map
 

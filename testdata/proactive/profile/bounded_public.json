@@ -1,0 +1,21 @@
+{
+  "schema_version": "0.1",
+  "id": "proactive_profile_public",
+  "inventory_id": "inventory_public_catalog",
+  "allowed_origin": "http://127.0.0.1",
+  "baseline_document": "public_catalog_baseline.html",
+  "current_document": "public_catalog_deployed.html",
+  "framework_test_path": "tests/e2e/test_search_catalog.py",
+  "framework_url_environment_variable": "TEST_CARTOGRAPHER_CATALOG_URL",
+  "framework_probe_timeout_seconds": 30.0,
+  "require_headed_browser_for_real_operator": true,
+  "max_operator_actions": 3,
+  "expected_stable_count": 1,
+  "expected_drift_count": 1,
+  "persist_raw_page": false,
+  "persist_html": false,
+  "persist_screenshot": false,
+  "allow_automatic_patch": false,
+  "allow_context_write": false,
+  "live_llm_enabled": false
+}

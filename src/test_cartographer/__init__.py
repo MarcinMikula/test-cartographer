@@ -30,6 +30,13 @@ from test_cartographer.execution.models import (
 from test_cartographer.intake.models import IntakeSession
 from test_cartographer.intake.rules import assess_intake
 from test_cartographer.observation.models import BrowserObservation
+from test_cartographer.proactive_regression.assessment import assess_proactive_regression_run
+from test_cartographer.proactive_regression.models import (
+    FrontendChangeReport,
+    ObservationInventory,
+    ProactiveRegressionProfile,
+    ProactiveRegressionRun,
+)
 from test_cartographer.reactive_maintenance.assessment import (
     assess_failure_for_maintenance,
     assess_reactive_maintenance_run,
@@ -67,6 +74,10 @@ __all__ = [
     "MaintenanceDiagnosis",
     "MaintenanceEvidenceAssessment",
     "MaintenanceSourcePatch",
+    "ObservationInventory",
+    "FrontendChangeReport",
+    "ProactiveRegressionProfile",
+    "ProactiveRegressionRun",
     "PatchApplicationReport",
     "PomProposal",
     "SynthesisRun",
@@ -77,7 +88,8 @@ __all__ = [
     "assess_failure_for_maintenance",
     "assess_guided_intake",
     "assess_intake",
+    "assess_proactive_regression_run",
     "assess_readiness",
     "assess_reactive_maintenance_run",
 ]
-__version__ = "0.12.0"
+__version__ = "0.13.0"

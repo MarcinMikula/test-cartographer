@@ -471,3 +471,18 @@ the selected generation profile rather than silently handled.
   questions and phrases ambiguity. POM and source generation use deterministic
   reviewed reference templates; the controlled demo must not imply live-LLM
   code generation.
+
+## Sprint 13 — proactive regression limitations
+
+- The real flow is human-triggered and headed; it is not proof of unattended
+  scheduled operation.
+- Only public, no-auth, loopback-served reference pages are accepted.
+- Current detection supports bounded locator/semantic presence evidence for
+  allowlisted elements, not arbitrary frontend correctness.
+- One changed locator is deliberately outside the current test pool. This
+  proves that green tests can miss mapped drift, but not how the mechanism
+  scales across a real application.
+- The run creates no patch and changes no ContextBundle. Human review is the
+  terminal Sprint 13 state.
+- No LLM participates, so this sprint neither validates nor constrains Ollama,
+  cloud models, or future provider selection.

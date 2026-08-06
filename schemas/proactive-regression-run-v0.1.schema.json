@@ -1,0 +1,509 @@
+{
+  "$defs": {
+    "AutomationImpact": {
+      "enum": [
+        "none_detected",
+        "current_test_risk",
+        "mapped_context_stale",
+        "human_review_required"
+      ],
+      "title": "AutomationImpact",
+      "type": "string"
+    },
+    "ChangeDisposition": {
+      "enum": [
+        "unchanged",
+        "locator_drift",
+        "missing",
+        "ambiguous"
+      ],
+      "title": "ChangeDisposition",
+      "type": "string"
+    },
+    "ElementRegressionObservation": {
+      "additionalProperties": false,
+      "properties": {
+        "automation_impact": {
+          "$ref": "#/$defs/AutomationImpact"
+        },
+        "covered_by_current_framework_test": {
+          "title": "Covered By Current Framework Test",
+          "type": "boolean"
+        },
+        "current_locator_strategy": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LocatorStrategy"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "current_locator_value": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Current Locator Value"
+        },
+        "disposition": {
+          "$ref": "#/$defs/ChangeDisposition"
+        },
+        "element_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Element Id",
+          "type": "string"
+        },
+        "expected_locator_strategy": {
+          "$ref": "#/$defs/LocatorStrategy"
+        },
+        "expected_locator_value": {
+          "minLength": 1,
+          "title": "Expected Locator Value",
+          "type": "string"
+        },
+        "expected_locator_visible_count": {
+          "maximum": 50,
+          "minimum": 0,
+          "title": "Expected Locator Visible Count",
+          "type": "integer"
+        },
+        "item_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Item Id",
+          "type": "string"
+        },
+        "observation_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Observation Sha256",
+          "type": "string"
+        },
+        "observed_attributes": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ObservedAttribute"
+          },
+          "title": "Observed Attributes",
+          "type": "array"
+        },
+        "semantic_visible_count": {
+          "maximum": 50,
+          "minimum": 0,
+          "title": "Semantic Visible Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "item_id",
+        "element_id",
+        "disposition",
+        "automation_impact",
+        "covered_by_current_framework_test",
+        "expected_locator_strategy",
+        "expected_locator_value",
+        "expected_locator_visible_count",
+        "semantic_visible_count",
+        "observation_sha256"
+      ],
+      "title": "ElementRegressionObservation",
+      "type": "object"
+    },
+    "FrameworkProbeResult": {
+      "additionalProperties": false,
+      "properties": {
+        "collected_test_count": {
+          "minimum": 1,
+          "title": "Collected Test Count",
+          "type": "integer"
+        },
+        "failed_test_count": {
+          "minimum": 0,
+          "title": "Failed Test Count",
+          "type": "integer"
+        },
+        "infrastructure_error_count": {
+          "minimum": 0,
+          "title": "Infrastructure Error Count",
+          "type": "integer"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "passed_test_count": {
+          "minimum": 0,
+          "title": "Passed Test Count",
+          "type": "integer"
+        },
+        "phase": {
+          "enum": [
+            "baseline",
+            "current"
+          ],
+          "title": "Phase",
+          "type": "string"
+        }
+      },
+      "required": [
+        "phase",
+        "collected_test_count",
+        "passed_test_count",
+        "failed_test_count",
+        "infrastructure_error_count",
+        "passed"
+      ],
+      "title": "FrameworkProbeResult",
+      "type": "object"
+    },
+    "FrontendChangeReport": {
+      "additionalProperties": false,
+      "properties": {
+        "ambiguous_count": {
+          "minimum": 0,
+          "title": "Ambiguous Count",
+          "type": "integer"
+        },
+        "application_bug_claimed": {
+          "const": false,
+          "default": false,
+          "title": "Application Bug Claimed",
+          "type": "boolean"
+        },
+        "automatic_patch_created": {
+          "const": false,
+          "default": false,
+          "title": "Automatic Patch Created",
+          "type": "boolean"
+        },
+        "context_automatically_modified": {
+          "const": false,
+          "default": false,
+          "title": "Context Automatically Modified",
+          "type": "boolean"
+        },
+        "current_test_risk_count": {
+          "minimum": 0,
+          "title": "Current Test Risk Count",
+          "type": "integer"
+        },
+        "decision": {
+          "$ref": "#/$defs/ReportReviewDecision"
+        },
+        "generated_at": {
+          "format": "date-time",
+          "title": "Generated At",
+          "type": "string"
+        },
+        "html_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Html Persisted",
+          "type": "boolean"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "inventory_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Inventory Id",
+          "type": "string"
+        },
+        "live_llm_used": {
+          "const": false,
+          "default": false,
+          "title": "Live Llm Used",
+          "type": "boolean"
+        },
+        "locator_drift_count": {
+          "minimum": 0,
+          "title": "Locator Drift Count",
+          "type": "integer"
+        },
+        "mapped_context_stale_count": {
+          "minimum": 0,
+          "title": "Mapped Context Stale Count",
+          "type": "integer"
+        },
+        "missing_count": {
+          "minimum": 0,
+          "title": "Missing Count",
+          "type": "integer"
+        },
+        "observations": {
+          "items": {
+            "$ref": "#/$defs/ElementRegressionObservation"
+          },
+          "minItems": 1,
+          "title": "Observations",
+          "type": "array"
+        },
+        "raw_page_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Page Persisted",
+          "type": "boolean"
+        },
+        "run_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Run Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "0.1",
+          "default": "0.1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "screenshot_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Screenshot Persisted",
+          "type": "boolean"
+        },
+        "stable_count": {
+          "minimum": 0,
+          "title": "Stable Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "run_id",
+        "inventory_id",
+        "generated_at",
+        "decision",
+        "observations",
+        "stable_count",
+        "locator_drift_count",
+        "missing_count",
+        "ambiguous_count",
+        "current_test_risk_count",
+        "mapped_context_stale_count"
+      ],
+      "title": "FrontendChangeReport",
+      "type": "object"
+    },
+    "LocatorStrategy": {
+      "description": "Supported locator candidate types in the first contract.",
+      "enum": [
+        "role",
+        "label",
+        "test_id",
+        "placeholder",
+        "text",
+        "css",
+        "xpath"
+      ],
+      "title": "LocatorStrategy",
+      "type": "string"
+    },
+    "ObservedAttribute": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "enum": [
+            "data-testid",
+            "id",
+            "name",
+            "type",
+            "aria-label"
+          ],
+          "title": "Name",
+          "type": "string"
+        },
+        "value": {
+          "minLength": 1,
+          "title": "Value",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "ObservedAttribute",
+      "type": "object"
+    },
+    "ProactiveRunStatus": {
+      "enum": [
+        "pending",
+        "passed",
+        "rejected",
+        "blocked"
+      ],
+      "title": "ProactiveRunStatus",
+      "type": "string"
+    },
+    "ReportReviewDecision": {
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "title": "ReportReviewDecision",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "accepted_inventory_reused": {
+      "title": "Accepted Inventory Reused",
+      "type": "boolean"
+    },
+    "application_bug_claimed": {
+      "const": false,
+      "default": false,
+      "title": "Application Bug Claimed",
+      "type": "boolean"
+    },
+    "automatic_patch_created": {
+      "const": false,
+      "default": false,
+      "title": "Automatic Patch Created",
+      "type": "boolean"
+    },
+    "baseline_probe": {
+      "$ref": "#/$defs/FrameworkProbeResult"
+    },
+    "bootstrap_questions_repeated": {
+      "const": false,
+      "default": false,
+      "title": "Bootstrap Questions Repeated",
+      "type": "boolean"
+    },
+    "context_automatically_modified": {
+      "const": false,
+      "default": false,
+      "title": "Context Automatically Modified",
+      "type": "boolean"
+    },
+    "current_probe": {
+      "$ref": "#/$defs/FrameworkProbeResult"
+    },
+    "finished_at": {
+      "format": "date-time",
+      "title": "Finished At",
+      "type": "string"
+    },
+    "fixture_decisions_used": {
+      "title": "Fixture Decisions Used",
+      "type": "boolean"
+    },
+    "framework_execution_independent": {
+      "const": true,
+      "default": true,
+      "title": "Framework Execution Independent",
+      "type": "boolean"
+    },
+    "framework_source_fingerprint_after": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Framework Source Fingerprint After",
+      "type": "string"
+    },
+    "framework_source_fingerprint_before": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Framework Source Fingerprint Before",
+      "type": "string"
+    },
+    "headed_browser_used": {
+      "title": "Headed Browser Used",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "interactive_human_trigger_used": {
+      "title": "Interactive Human Trigger Used",
+      "type": "boolean"
+    },
+    "inventory_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Inventory Id",
+      "type": "string"
+    },
+    "live_llm_used": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Used",
+      "type": "boolean"
+    },
+    "measured_savings_claimed": {
+      "const": false,
+      "default": false,
+      "title": "Measured Savings Claimed",
+      "type": "boolean"
+    },
+    "operator_action_count": {
+      "maximum": 3,
+      "minimum": 0,
+      "title": "Operator Action Count",
+      "type": "integer"
+    },
+    "original_framework_unchanged": {
+      "const": true,
+      "default": true,
+      "title": "Original Framework Unchanged",
+      "type": "boolean"
+    },
+    "profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Profile Id",
+      "type": "string"
+    },
+    "raw_page_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Page Persisted",
+      "type": "boolean"
+    },
+    "report": {
+      "$ref": "#/$defs/FrontendChangeReport"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/ProactiveRunStatus"
+    }
+  },
+  "required": [
+    "id",
+    "profile_id",
+    "inventory_id",
+    "started_at",
+    "finished_at",
+    "status",
+    "operator_action_count",
+    "interactive_human_trigger_used",
+    "fixture_decisions_used",
+    "headed_browser_used",
+    "accepted_inventory_reused",
+    "baseline_probe",
+    "current_probe",
+    "report",
+    "framework_source_fingerprint_before",
+    "framework_source_fingerprint_after"
+  ],
+  "title": "ProactiveRegressionRun",
+  "type": "object"
+}

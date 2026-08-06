@@ -15,6 +15,8 @@ and expansion.
 
 ## Status
 
+**Sprint 13 — human-triggered Proactive Frontend Regression: complete — real operator acceptance verified**
+
 **Sprint 12 — human-triggered Reactive Maintenance Flow: complete**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
@@ -22,7 +24,7 @@ and expansion.
 Current evidence:
 
 ```text
-285 tests passed with Playwright Chromium
+305 tests passed with Playwright Chromium in the Sprint 13 Windows acceptance run
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
@@ -30,10 +32,11 @@ controlled source review, patch application, and first runnable test verified en
 framework-side execution-evidence collection and maintenance-readiness verified end to end
 human-triggered Creation Flow with headed review and exact patch acceptance verified end to end
 human-triggered reactive locator maintenance with real-operator fail-before/pass-after sandbox proof verified
+human-triggered proactive frontend/context regression with green-test / mapped-drift proof verified
 live local-Ollama interview planning from a minimal request verified end to end
 ```
 
-The repository now provides twelve executable boundaries:
+The repository now provides thirteen executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -59,6 +62,7 @@ The repository now provides twelve executable boundaries:
     ambiguity review, artefact review decisions, and an explicit execution trigger,
 12. a human-triggered reactive-maintenance flow from bounded failed-run evidence
     through headed re-observation, exact patch review, sandbox repair, and a passing retest.
+13. a human-triggered proactive-regression flow that keeps the framework test green while detecting locator drift on an approved mapped element outside the current test pool.
 
 The current workflow can:
 
@@ -858,7 +862,8 @@ See:
 | 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
 | 11 | Human-triggered interactive Creation Flow | Done |
 | 12 | Human-triggered reactive maintenance from bounded execution evidence | Done — real operator acceptance verified |
-| 13–14 | Proactive maintenance and expansion reuse | Parked |
+| 13 | Proactive frontend/context regression | Done — real operator acceptance verified |
+| 14 | Expansion using the existing map | Parked |
 | 15–17 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
@@ -901,6 +906,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/creation-flow.md`](docs/creation-flow.md) | Sprint 10 fixture-assisted integrated Creation Flow and engine proof |
 | [`docs/interactive-creation-flow.md`](docs/interactive-creation-flow.md) | Sprint 11 real operator trigger, blocking decisions, headed browser, and operator audit ledger |
 | [`docs/reactive-maintenance-flow.md`](docs/reactive-maintenance-flow.md) | Sprint 12 failed-run evidence, headed re-observation, exact patch review, sandbox-only repair, and retest |
+| [`docs/proactive-regression-flow.md`](docs/proactive-regression-flow.md) | Sprint 13 approved-inventory re-observation, green-test/drift proof, and review-only impact reporting |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
@@ -1118,3 +1124,19 @@ failed test evidence
 The flow uses no LLM, makes no application-bug claim, never changes the original
 framework, and does not claim measured savings. See
 [`docs/reactive-maintenance-flow.md`](docs/reactive-maintenance-flow.md).
+
+
+## Sprint 13 result — proactive frontend/context regression
+
+Sprint 13 adds the first controlled proof that TestCartographer can detect a
+mapped frontend change before an existing automated test fails. The same
+independent Search test passes on a baseline page and a deployment-like changed
+page. A separate approved Sort element is not exercised by that test; its
+`data-testid` changes and the proactive scan reports mapped-context staleness.
+
+The flow reuses accepted project/process context and one explicit observation
+inventory. A real operator authorizes the run, authorizes the exact scope and
+budget, and accepts the full report. No LLM, application-bug claim, automatic
+context update, code patch, or raw-page persistence is involved.
+
+See [`docs/proactive-regression-flow.md`](docs/proactive-regression-flow.md).

@@ -37,6 +37,14 @@ from test_cartographer.discovery.assessment import assess_discovery
 from test_cartographer.discovery.io import load_discovery_run
 from test_cartographer.execution.assessment import assess_execution_evidence
 from test_cartographer.execution.io import load_execution_bundle
+from test_cartographer.proactive_regression.assessment import (
+    assess_proactive_regression_run,
+)
+from test_cartographer.proactive_regression.io import load_proactive_run
+from test_cartographer.proactive_regression.runner import (
+    ProactiveRegressionRejected,
+    run_human_triggered_proactive_regression,
+)
 from test_cartographer.reactive_maintenance.assessment import (
     assess_reactive_maintenance_run,
 )
@@ -139,6 +147,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         return _dispatch_creation(parser, args)
     if args.command == "maintenance":
         return _dispatch_maintenance(parser, args)
+    if args.command == "regression":
+        return _dispatch_regression(parser, args)
 
     parser.error("a command is required")
     return 2
@@ -712,6 +722,35 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     maintenance_assess.add_argument("--run", required=True, type=Path)
 
+
+    regression = commands.add_parser(
+        "regression",
+        help="run and inspect bounded proactive frontend/context regression",
+        description="run and inspect bounded proactive frontend/context regression",
+    )
+    regression_commands = regression.add_subparsers(dest="regression_command")
+
+    regression_interactive = regression_commands.add_parser(
+        "interactive",
+        help="run the human-triggered controlled proactive-regression flow",
+    )
+    regression_interactive.add_argument("--inventory", required=True, type=Path)
+    regression_interactive.add_argument("--profile", required=True, type=Path)
+    regression_interactive.add_argument("--framework-root", required=True, type=Path)
+    regression_interactive.add_argument("--application-root", required=True, type=Path)
+    regression_interactive.add_argument("--output-dir", required=True, type=Path)
+    regression_interactive.add_argument("--executable-path")
+
+    regression_status = regression_commands.add_parser(
+        "status", help="show one proactive-regression run"
+    )
+    regression_status.add_argument("--run", required=True, type=Path)
+
+    regression_assess = regression_commands.add_parser(
+        "assess", help="assess controlled proactive-regression proof"
+    )
+    regression_assess.add_argument("--run", required=True, type=Path)
+
     return parser
 
 
@@ -857,6 +896,21 @@ def _dispatch_maintenance(
     if args.maintenance_command == "assess":
         return _maintenance_assess_command(args)
     parser.error("a maintenance command is required")
+    return 2
+
+
+
+def _dispatch_regression(
+    parser: argparse.ArgumentParser,
+    args: argparse.Namespace,
+) -> int:
+    if args.regression_command == "interactive":
+        return _regression_interactive_command(args)
+    if args.regression_command == "status":
+        return _regression_status_command(args)
+    if args.regression_command == "assess":
+        return _regression_assess_command(args)
+    parser.error("a regression command is required")
     return 2
 
 
@@ -1709,6 +1763,72 @@ def _format_reactive_maintenance_run(run) -> str:
             "Framework execution independent: true",
             "Live LLM used: false",
             "Raw failure text persisted: false",
+            "Raw page persisted: false",
+            "Measured savings claimed: false",
+        )
+    )
+
+
+
+def _regression_interactive_command(args: argparse.Namespace) -> int:
+    try:
+        run_human_triggered_proactive_regression(
+            inventory_path=args.inventory,
+            profile_path=args.profile,
+            framework_root=args.framework_root,
+            application_root=args.application_root,
+            output_dir=args.output_dir,
+            executable_path=args.executable_path,
+        )
+    except ProactiveRegressionRejected as exc:
+        print(f"Proactive Frontend Regression stopped: {exc}")
+        return 2
+    return 0
+
+
+def _regression_status_command(args: argparse.Namespace) -> int:
+    run = load_proactive_run(args.run)
+    print(_format_proactive_regression_run(run))
+    return 0
+
+
+def _regression_assess_command(args: argparse.Namespace) -> int:
+    run = load_proactive_run(args.run)
+    report = assess_proactive_regression_run(run)
+    print(_format_proactive_regression_run(run))
+    blockers = ", ".join(report.blockers) or "none"
+    print(f"Proactive-regression blockers: {blockers}")
+    print(
+        "Proactive regression verified: "
+        f"{str(report.proactive_regression_verified).lower()}"
+    )
+    print(
+        "Ready for controlled proactive-regression demonstration: "
+        f"{str(report.controlled_demo_ready).lower()}"
+    )
+    return 0
+
+
+
+def _format_proactive_regression_run(run) -> str:
+    return "\n".join(
+        (
+            f"Proactive regression run: {run.id}",
+            f"Status: {run.status.value}",
+            f"Operator actions: {run.operator_action_count}",
+            f"Framework green before / after: {str(run.baseline_probe.passed).lower()}/{str(run.current_probe.passed).lower()}",
+            f"Stable mapped elements: {run.report.stable_count}",
+            f"Locator drift: {run.report.locator_drift_count}",
+            f"Missing / ambiguous: {run.report.missing_count}/{run.report.ambiguous_count}",
+            f"Mapped-context stale candidates: {run.report.mapped_context_stale_count}",
+            "Accepted inventory reused: true",
+            "Bootstrap questions repeated: false",
+            "Application bug claimed: false",
+            "Automatic patch created: false",
+            "Context automatically modified: false",
+            "Original framework unchanged: true",
+            "Framework execution independent: true",
+            "Live LLM used: false",
             "Raw page persisted: false",
             "Measured savings claimed: false",
         )

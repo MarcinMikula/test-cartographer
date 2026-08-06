@@ -1244,3 +1244,23 @@ unchanged.
 
 **Reason:** Fail-before/pass-after is useful repair evidence without yet granting
 TestCartographer production-repository write authority.
+
+## Sprint 13 decisions — proactive regression remains review-only
+
+1. A green current test suite is not evidence that every approved mapped
+   frontend element remains current.
+2. Proactive regression starts from an explicit, human-accepted observation
+   inventory; it does not crawl or silently widen scope.
+3. The first slice is human-triggered post-deployment observation, not a
+   scheduler or CI webhook integration.
+4. Public no-auth pages are the only supported authentication boundary in
+   Sprint 13; enterprise profiles remain parked.
+5. Locator drift on an uncovered mapped element is classified as stale map
+   context, not as a failed test or an application defect.
+6. The report is review-only: no context write, code patch, or PhoenixQA
+   recovery is triggered automatically.
+7. The reference framework test must remain independently green on both
+   baseline and deployed pages to prove the distinct value of proactive
+   observation.
+8. Ollama and every other LLM provider remain outside this deterministic
+   slice; model choice is not a product constraint.

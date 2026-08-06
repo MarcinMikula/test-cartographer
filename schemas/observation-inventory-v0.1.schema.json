@@ -1,0 +1,241 @@
+{
+  "$defs": {
+    "ApprovedObservationItem": {
+      "additionalProperties": false,
+      "properties": {
+        "accessible_name": {
+          "minLength": 1,
+          "title": "Accessible Name",
+          "type": "string"
+        },
+        "covered_by_current_framework_test": {
+          "title": "Covered By Current Framework Test",
+          "type": "boolean"
+        },
+        "element_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Element Id",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "page_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Page Id",
+          "type": "string"
+        },
+        "primary_locator_strategy": {
+          "$ref": "#/$defs/LocatorStrategy"
+        },
+        "primary_locator_value": {
+          "minLength": 1,
+          "title": "Primary Locator Value",
+          "type": "string"
+        },
+        "route": {
+          "minLength": 1,
+          "title": "Route",
+          "type": "string"
+        },
+        "semantic_role": {
+          "minLength": 1,
+          "title": "Semantic Role",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "page_id",
+        "element_id",
+        "route",
+        "semantic_role",
+        "accessible_name",
+        "primary_locator_strategy",
+        "primary_locator_value",
+        "covered_by_current_framework_test"
+      ],
+      "title": "ApprovedObservationItem",
+      "type": "object"
+    },
+    "AuthenticationMode": {
+      "description": "Authentication boundary supported by the first proactive slice.",
+      "enum": [
+        "none"
+      ],
+      "title": "AuthenticationMode",
+      "type": "string"
+    },
+    "InventoryReviewDecision": {
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "title": "InventoryReviewDecision",
+      "type": "string"
+    },
+    "LocatorStrategy": {
+      "description": "Supported locator candidate types in the first contract.",
+      "enum": [
+        "role",
+        "label",
+        "test_id",
+        "placeholder",
+        "text",
+        "css",
+        "xpath"
+      ],
+      "title": "LocatorStrategy",
+      "type": "string"
+    },
+    "ObservationBudget": {
+      "additionalProperties": false,
+      "properties": {
+        "locator_timeout_ms": {
+          "maximum": 10000,
+          "minimum": 100,
+          "title": "Locator Timeout Ms",
+          "type": "integer"
+        },
+        "max_elements": {
+          "maximum": 50,
+          "minimum": 1,
+          "title": "Max Elements",
+          "type": "integer"
+        },
+        "max_pages": {
+          "maximum": 5,
+          "minimum": 1,
+          "title": "Max Pages",
+          "type": "integer"
+        },
+        "navigation_timeout_ms": {
+          "maximum": 60000,
+          "minimum": 100,
+          "title": "Navigation Timeout Ms",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "max_pages",
+        "max_elements",
+        "navigation_timeout_ms",
+        "locator_timeout_ms"
+      ],
+      "title": "ObservationBudget",
+      "type": "object"
+    },
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "accepted_at": {
+      "format": "date-time",
+      "title": "Accepted At",
+      "type": "string"
+    },
+    "allowed_actions": {
+      "items": {
+        "enum": [
+          "navigate",
+          "observe"
+        ],
+        "type": "string"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "title": "Allowed Actions",
+      "type": "array"
+    },
+    "allowed_routes": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "maxItems": 5,
+      "minItems": 1,
+      "title": "Allowed Routes",
+      "type": "array"
+    },
+    "authentication_mode": {
+      "$ref": "#/$defs/AuthenticationMode"
+    },
+    "base_origin": {
+      "minLength": 1,
+      "title": "Base Origin",
+      "type": "string"
+    },
+    "budget": {
+      "$ref": "#/$defs/ObservationBudget"
+    },
+    "context_bundle_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Context Bundle Id",
+      "type": "string"
+    },
+    "human_approved": {
+      "title": "Human Approved",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ApprovedObservationItem"
+      },
+      "minItems": 1,
+      "title": "Items",
+      "type": "array"
+    },
+    "process_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Process Id",
+      "type": "string"
+    },
+    "review_decision": {
+      "$ref": "#/$defs/InventoryReviewDecision"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sensitivity": {
+      "$ref": "#/$defs/SensitivityLevel"
+    }
+  },
+  "required": [
+    "id",
+    "context_bundle_id",
+    "process_id",
+    "base_origin",
+    "allowed_routes",
+    "allowed_actions",
+    "authentication_mode",
+    "sensitivity",
+    "budget",
+    "review_decision",
+    "human_approved",
+    "accepted_at",
+    "items"
+  ],
+  "title": "ObservationInventory",
+  "type": "object"
+}

@@ -804,3 +804,14 @@ The scope remains one public local page, one changed test-id locator, one source
 file, one test, no authentication, no LLM, and no original-repository write. It
 does not add general failure diagnosis, application-defect classification,
 context staleness propagation, multi-file repair, or proactive maintenance.
+
+## Sprint 13 implemented scope — proactive maintenance evidence
+
+TestCartographer now owns one executable proactive-maintenance boundary in
+addition to creation and reactive maintenance. It can reuse a human-approved
+inventory, run an independent green framework probe on two frontend versions,
+re-observe approved mapped elements, and produce a reviewable impact report.
+
+This does not turn TestCartographer into the normal test runner. The framework
+still owns ordinary execution. Cartographer performs a separately authorized
+engineering/maintenance activity against approved map scope.

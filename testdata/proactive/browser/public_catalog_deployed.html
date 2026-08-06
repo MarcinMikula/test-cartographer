@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8"><title>Catalog deployed</title></head>
+  <body>
+    <main>
+      <h1>Public catalog</h1>
+      <form id="catalog-form">
+        <label for="catalog-query">Search catalog</label>
+        <input id="catalog-query" data-testid="search-query" />
+        <button type="submit" data-testid="search-submit">Search</button>
+      </form>
+      <button type="button" data-testid="catalog-sort-control">Sort results</button>
+      <h2 data-testid="results-heading">Matching results</h2>
+      <p data-testid="results-text">No query yet</p>
+    </main>
+    <script>
+      document.querySelector('#catalog-form').addEventListener('submit', event => {
+        event.preventDefault();
+        const query = document.querySelector('#catalog-query').value;
+        document.querySelector('[data-testid="results-text"]').textContent = `Results for ${query}`;
+      });
+    </script>
+  </body>
+</html>

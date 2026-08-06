@@ -3847,3 +3847,89 @@ real operator through one controlled reactive locator-maintenance path from
 bounded failed-run evidence to a passing sandbox retest. It still cannot
 diagnose arbitrary failures, patch the original repository automatically, or
 claim general maintenance effectiveness.
+
+## Sprint 13 implementation — green tests and current maps answer different questions
+
+The next maintenance proof must not simply repeat Sprint 12 with a different
+trigger. Reactive maintenance starts from failed execution evidence. Proactive
+regression must demonstrate value while the current framework test is still
+green.
+
+The controlled reference deployment therefore keeps the tested Search flow
+unchanged and changes the locator of a separately mapped Sort control. The
+framework test passes before and after. TestCartographer reuses an accepted
+two-element inventory and detects one stable item plus one locator drift.
+
+### Decision
+
+Implement the first proactive slice as a human-triggered, review-only
+post-deployment scan. Do not add a scheduler, authentication abstraction, LLM,
+context mutation, or repair handoff before the core distinction is accepted by
+a real operator.
+
+### What the evidence can prove
+
+- green automated tests do not establish freshness of the wider application map,
+- approved mapped scope can be re-observed independently from ordinary test execution,
+- uncovered locator drift can be surfaced as stale context without calling it an application bug,
+- accepted project/process/bootstrap context can be reused without repeating intake.
+
+### What remains open
+
+Real scheduling, authenticated applications, map reconciliation, semantic and
+visual changes, maintenance handoff, false-positive rates, scale, and operational
+economics remain unproven. The roadmap and number of future sprints remain
+explicitly pivotable as this evidence arrives.
+
+### Windows headed acceptance exposed a navigation-budget detail
+
+The first real Sprint 13 acceptance attempt passed all 305 automated tests and
+the scripted verifier, then timed out only when headed Chromium navigated to
+the current controlled page under a 10-second limit. The same local server and
+page had already passed both headless framework probes, so the failure was
+classified as a demonstration-runtime timing problem, not a proactive-change
+classification failure.
+
+The controlled inventory now grants a still-bounded 30-second navigation
+timeout for the Windows headed path. The operator-facing inventory summary also
+prints navigation and locator timeouts, because an "exact budget" is not truly
+reviewable when only page and element counts are shown. Navigation waits for an
+HTTP commit and an attached body within one total deadline instead of coupling
+the whole budget to a DOMContentLoaded event.
+
+## Sprint 13 final acceptance — proactive drift detection works before test failure
+
+The corrected Windows acceptance run completed with `305 passed`, zero
+failures, zero errors, and zero skipped tests. The scripted mechanics run and
+the real headed run produced the same two observation hashes and the same
+classification result: one stable covered Search element and one uncovered
+Sort locator drift classified as `mapped_context_stale`.
+
+The authoritative acceptance artefact records:
+
+```text
+fixture_decisions_used: false
+headed_browser_used: true
+interactive_human_trigger_used: true
+operator_action_count: 3
+framework green before / after: true / true
+stable mapped elements: 1
+locator drift: 1
+mapped-context stale candidates: 1
+proactive-regression blockers: none
+```
+
+The framework source fingerprint was identical before and after the run.
+Accepted project/process context and inventory were reused without repeating
+bootstrap questions. The operator authorized the run, the exact inventory and
+timeouts, and the complete review-only report. No application defect was
+claimed; no patch or context mutation was generated; no live LLM or raw-page
+persistence was used.
+
+The product conclusion remains narrow: TestCartographer can guide a real
+operator through one controlled proactive frontend/context regression slice
+and surface approved mapped locator drift even while the current independent
+framework test remains green. This does not yet prove scheduling, authenticated
+or enterprise coverage, broad change detection, false-positive performance,
+automatic map reconciliation, maintenance handoff, usability, or measured
+savings.
