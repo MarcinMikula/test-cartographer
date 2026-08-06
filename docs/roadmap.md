@@ -85,7 +85,7 @@ product framing
 | Sprint 9 | Guided multi-element process discovery | Done |
 | Sprint 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
 | Sprint 11 | Human-triggered interactive Creation Flow | Done |
-| Sprint 12 | Human-triggered reactive maintenance from bounded execution evidence | Implemented; real operator run is the acceptance gate |
+| Sprint 12 | Human-triggered reactive maintenance from bounded execution evidence | Done — real operator acceptance verified |
 | Sprint 13 | Proactive post-deployment frontend/context regression | Parked |
 | Sprint 14 | Expansion using the existing application map | Parked |
 | Sprint 15 | External artefacts, authentication profiles, and enterprise safety | Parked |
@@ -978,7 +978,7 @@ one existing framework test
   commands,
 - scripted mechanics verifier that explicitly does not replace the real-
   operator gate,
-- 282 tests expected with Chromium in the normal Windows environment.
+- 285 tests passed with Chromium in the Windows acceptance environment.
 
 ### Exit criteria
 
@@ -997,6 +997,20 @@ one existing framework test
 - [x] The same test passes after repair with no infrastructure error.
 - [x] No live LLM or fixture decision is used in the real-operator path.
 - [ ] Arbitrary failure classes, multi-file repairs, and context staleness propagation are supported.
+
+### Final acceptance evidence
+
+The Windows acceptance run completed with:
+
+```text
+285 passed
+real operator actions: 5
+failure before / pass after: 1 / 1
+application bug claimed: false
+live LLM used: false
+original framework unchanged: true
+reactive-maintenance blockers: none
+```
 
 ### What Sprint 12 proves
 

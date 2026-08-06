@@ -15,21 +15,21 @@ and expansion.
 
 ## Status
 
-**Sprint 12 — human-triggered Reactive Maintenance Flow: implemented; real operator acceptance required**
+**Sprint 12 — human-triggered Reactive Maintenance Flow: complete**
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
 Current evidence:
 
 ```text
-282 tests expected with Playwright Chromium
+285 tests passed with Playwright Chromium
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
 controlled source review, patch application, and first runnable test verified end to end
 framework-side execution-evidence collection and maintenance-readiness verified end to end
 human-triggered Creation Flow with headed review and exact patch acceptance verified end to end
-human-triggered reactive locator maintenance with fail-before/pass-after sandbox proof implemented
+human-triggered reactive locator maintenance with real-operator fail-before/pass-after sandbox proof verified
 live local-Ollama interview planning from a minimal request verified end to end
 ```
 
@@ -857,7 +857,7 @@ See:
 | 9 | Guided multi-element process discovery | Done |
 | 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
 | 11 | Human-triggered interactive Creation Flow | Done |
-| 12 | Human-triggered reactive maintenance from bounded execution evidence | Implemented; real operator acceptance is the setup gate |
+| 12 | Human-triggered reactive maintenance from bounded execution evidence | Done — real operator acceptance verified |
 | 13–14 | Proactive maintenance and expansion reuse | Parked |
 | 15–17 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 

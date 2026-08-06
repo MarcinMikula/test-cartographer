@@ -3814,3 +3814,36 @@ output is not a stable machine contract. Sprint 12 now writes a JUnit report and
 validates exact structural counts (`tests`, `failures`, `errors`, and `skipped`)
 instead of parsing terminal wording. The console remains human-readable evidence;
 the JUnit document is the acceptance source of truth.
+
+
+## Sprint 12 final acceptance — the bounded maintenance chain is real
+
+The corrected Windows acceptance run completed with `285 passed` and then
+executed the manual Reactive Maintenance Flow with five real operator actions.
+One existing framework test failed before repair and passed after the reviewed
+sandbox-only locator change. The pre-repair bundle contained one
+`test_failure` and zero `infrastructure_error` records.
+
+The operator reviewed the current page in headed Chromium, selected
+`cand_002` (`data-testid=catalog-search-submit`), reviewed every line of the
+resulting source file, and separately triggered sandbox application and retest.
+The original framework remained unchanged. No fixture decision or live LLM was
+used, and the flow did not claim that the application contained a defect.
+
+Final evidence:
+
+```text
+285 passed
+real operator actions: 5
+failure before / pass after: 1 / 1
+application bug claimed: false
+live LLM used: false
+original framework unchanged: true
+reactive-maintenance blockers: none
+```
+
+The product conclusion is deliberately narrow: TestCartographer can guide one
+real operator through one controlled reactive locator-maintenance path from
+bounded failed-run evidence to a passing sandbox retest. It still cannot
+diagnose arbitrary failures, patch the original repository automatically, or
+claim general maintenance effectiveness.
