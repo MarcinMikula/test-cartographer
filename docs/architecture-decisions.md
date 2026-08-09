@@ -1298,3 +1298,39 @@ TestCartographer production-repository write authority.
     tokens cross an authority boundary; typos and control characters re-prompt.
 14. **Green execution does not end review.** Acceptance also reviews whether the
     generated oracle and failure message match the claimed process outcome.
+## Checkpoint 14.5 decisions — validation-first after the controlled lifecycle
+
+1. **Current-state documentation is replace-in-place truth.** `known-limitations`
+   and `gaps` must not preserve obsolete implementation claims for historical
+   completeness; history belongs in Git and `LEARNINGS.md`.
+2. **Persistent `ProjectProfile` is the next P0 core boundary.** Bootstrap facts
+   must be reusable across runs and selectively invalidated when evidence or
+   relevant configuration changes.
+3. **TestCartographer remains frontend/UI/POM focused.** API automation and
+   Service Object Model adaptation are outside this product roadmap.
+4. **The primary user baseline is the AI-assisted testing professional.**
+   Deterministic rules are internal guardrails, not a competing developer
+   workflow.
+5. **Validation increases difficulty and decreases control independently.**
+   External targets matter because the project cannot reshape them to fit its
+   assumptions.
+6. **External validation drives generalization.** Once the campaign begins, a
+   major new abstraction requires a concrete observed failure, friction point,
+   or missing capability.
+7. **Do not pre-build a complete maintenance taxonomy.** Extend timing, state,
+   data, authentication, workflow, assertion, and other support from real
+   failures.
+8. **Do not pre-build a general application graph.** Introduce richer graph
+   infrastructure only if real impact/reuse cases exceed the current model.
+9. **Repository delivery remains explicit.** A verified sandbox must eventually
+   have a safe handoff to a real automation repository, but the mechanism is
+   selected from real workflow evidence; unattended production-branch writes
+   are not a default goal.
+10. **Human authority is an architectural feature.** Business truth, risk,
+    expected outcomes, ambiguity, sensitive access, and consequential review
+    remain human/source-authoritative where evidence requires it.
+11. **UI is postponed until after core-value validation.** A GUI/IDE can reduce
+    friction only after the underlying workflow proves useful.
+12. **v1.0 is an economic as well as technical decision.** A feature-complete
+    tool that materially slows or complicates testing work without compensating
+    quality gains does not satisfy the product goal.

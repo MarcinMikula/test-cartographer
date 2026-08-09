@@ -4098,3 +4098,112 @@ an existing automation structure through the same reviewed creation pipeline.
 It does not prove that expansion is faster in general, that eight reused items
 translate into business savings, that arbitrary existing classes can be edited
 safely, or that this flow scales to authenticated enterprise systems.
+## Checkpoint 14.5 — stop expanding theory faster than evidence
+
+Sprint 14 completed the first controlled incremental-expansion proof and exposed
+a strategic risk: the architecture was becoming broader faster than the project
+was accumulating evidence from applications it does not control.
+
+The checkpoint therefore changes the default development mode.
+
+### Documentation truth
+
+Several current-state documents still described much older implementation
+boundaries. This matters in a project whose core model distinguishes current,
+stale, conflicting, and unknown knowledge.
+
+The documentation ownership rule is now:
+
+```text
+LEARNINGS
+→ chronological reasoning
+
+architecture-decisions
+→ durable accepted decisions
+
+product-scope
+→ current product boundary
+
+known-limitations
+→ current limitations only
+
+gaps
+→ prioritized missing capability/evidence
+
+future-ideas
+→ parked ideas only
+
+roadmap
+→ current/provisional delivery direction
+```
+
+Historical statements must not remain in current-state indexes merely to
+preserve chronology.
+
+### Product focus
+
+TestCartographer remains frontend/UI/POM focused. API/SOM adaptation is removed
+from the product roadmap rather than carried as a future expansion obligation.
+
+The primary comparison user is an AI-assisted testing professional, not an
+expert application developer. Deterministic rules are safety and structure
+inside TestCartographer, not a competing user persona.
+
+### Core priority
+
+Persistent project/bootstrap knowledge is promoted from a parked idea to the
+highest-priority core gap.
+
+Sprint 14 proved that reuse can occur, but not that project-wide bootstrap facts
+survive correctly across runs with explicit invalidation.
+
+The next core slice should therefore establish a versioned non-secret
+`ProjectProfile` with project-wide/process-specific separation and selective
+reopening after stale/conflicting/configuration-changing evidence.
+
+### Validation-first rule
+
+From the external-validation campaign onward, major abstractions require a
+concrete observed need.
+
+```text
+real target
+→ current product attempt
+→ failure/friction evidence
+→ smallest justified design change
+→ repeat
+```
+
+This intentionally rejects a theory-first path where maintenance taxonomies,
+application graphs, broad adapters, or evidence stores are built because they
+might someday be useful.
+
+The project has enough controlled architecture. Practice must now increasingly
+shape theory.
+
+### Validation ladder
+
+The reset roadmap evaluates targets along two independent dimensions:
+
+1. technical difficulty,
+2. decreasing control over the target application.
+
+A public application the project cannot modify is valuable even when its
+business flow is simple, because it can expose assumptions hidden by controlled
+fixtures.
+
+### Human work and product economics
+
+Human authority remains intentional for business truth, risk, expected outcome,
+semantic ambiguity, access authorization, and consequential review.
+
+The product should reduce low-value repetition, not eliminate every human
+decision.
+
+v1.0 requires evidence that the workflow is operationally worthwhile. If the
+tool is materially slower, harder to learn, correction-heavy, or dominated by
+review without compensating quality/traceability benefits, the correct response
+is simplification, narrowing, or stopping.
+
+A GUI/IDE layer remains post-v1 evaluation: it may improve usability after core
+value exists, but it must not hide an inefficient workflow.

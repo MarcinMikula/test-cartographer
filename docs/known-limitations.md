@@ -1,509 +1,251 @@
-# Known limitations — thematic index
+# Known limitations — current-state index
 
-Things known to be incomplete, unverified, fragile, or outside the current
-scope.
+This file describes what is **true now** after Sprint 14 and Checkpoint 14.5.
+Chronological history belongs in `LEARNINGS.md`; implementation gaps belong in
+`gaps.md`.
 
-These are current project boundaries, not hidden bugs. Full reasoning lives in
-`LEARNINGS.md`; this file is a quick map, not a copy.
+Do not append obsolete sprint-era statements here. When a limitation closes,
+replace or remove it so this document remains a current-state map.
 
-## Current implementation state
+## Current evidence boundary
 
-- **The repository implements context, deterministic human intake, one bounded
-  browser-observation path, and one bounded synthesis replay path.** It has a
-  logical POM proposal contract but no live provider, framework adapter, or
-  runnable generated test.
-- **The expected normal Windows result is 104 passing tests with Playwright
-  Chromium.** The preparation environment runs 103 tests and skips one browser
-  test because administrator policy blocks loopback navigation. No real-user or
-  external-application evaluation has occurred.
-- **The CLI is local and single-user.** It has no authentication, authorization,
-  remote service, or team workflow.
-- **No CI workflow is configured.** Verification is currently local.
+The current Windows closure baseline is:
 
-## Context-shell boundary
+```text
+339 tests passed
+Search before expansion: PASS
+Search after expansion: PASS
+Sort after expansion: PASS
+```
 
-- **Intake does not start from an empty project.** It requires a structurally
-  valid `ContextBundle` containing an application, process, pages, elements,
-  steps, and evidence shell.
-- **The shell is currently authored as controlled fixture data.** The product
-  cannot derive it from a browser, repository, requirement, or questionnaire.
-- **Version `0.1` models one process.** Cross-process reuse and shared
-  application graphs are unsupported.
-- **No schema migration exists.** Only context version `0.1` and session version
-  `0.1` are accepted.
+The repository has controlled executable evidence for creation, independent
+framework execution, reactive maintenance, proactive regression, and
+incremental expansion.
 
-## Human intake
+However:
 
-- **Question selection is deterministic but narrow.** Only process purpose,
-  risk, role, preconditions, expected outcomes, open questions, and conflict
-  resolutions are supported.
-- **The question catalogue is not configurable.** Rules and wording are coded
-  in Python.
-- **A free-form LLM interviewer is not implemented.** Long answers are stored as
-  supplied text rather than semantically decomposed.
-- **Question quality is unvalidated.** The prompts work for controlled fixtures
-  but have not been evaluated with real testers or domain experts.
-- **`UNKNOWN` and `SKIP` are session-local deferrals.** They prevent immediate
-  loops but do not create assignments, reminders, owners, or deadlines.
-- **A blocked session requires explicit retry.** There is no guided explanation
-  of who should provide the missing information.
-- **Review is field-level and single-user.** There is no separation between
-  collector, domain reviewer, automation reviewer, and approver.
-- **Confirmation records an action, not authority.** The tool does not verify
-  identity or permission to confirm a business fact.
-- **No undo command exists.** Corrections are made by answering a review
-  question with replacement text or by editing/restarting outside the current
-  CLI.
+- the application targets are still controlled local reference applications,
+- no external public application has completed the full validation lifecycle,
+- no authenticated/enterprise application has completed it,
+- no productivity or usability advantage has been demonstrated.
 
-## Open-question resolution
+## CORE limitations
 
-- **`OpenQuestion` has no structured answer field.** Sprint 2 stores a supplied
-  answer in human evidence, removes the active question, and preserves the
-  prompt/action in session history.
-- **The answer is not automatically mapped to a business rule or domain
-  object.** A future contract version may be needed after real examples.
-- **Open-question evidence summaries may contain supplied text.** They remain
-  local but can still be sensitive and must not be assumed safe for external
-  processing.
+### No persistent cross-run ProjectProfile
 
-## Session persistence
+Bootstrap/project knowledge can be reused inside controlled flows, but there is
+no durable project profile with versioning, provenance, review, and selective
+invalidation.
 
-- **Sessions embed a full context copy.** This is convenient and self-contained
-  but duplicates data across sessions.
-- **Concurrent editing is unsupported.** There is no locking, merge, or conflict
-  detection between two session files.
-- **Crash recovery is limited to the last successful save.** There is no journal
-  or transactional file replacement strategy.
-- **No session retention policy exists.** `.test-cartographer/` is ignored by
-  Git, but deletion and archival remain user responsibilities.
-- **Metrics are derived from recorded interactions.** They are not persisted as
-  independent authoritative fields.
+The product cannot yet reliably answer across separate runs:
 
-## Metrics and usability
+- which application/environment/framework facts remain current,
+- which bootstrap questions must not be repeated,
+- which configuration change invalidates which accepted knowledge,
+- whether provider/model/authentication/policy changes require review.
 
-- **Active seconds measure prompt-response time only.** They do not include
-  setup, documentation reading, external research, JSON inspection, or later
-  code review.
-- **Piped or automated input may report near-zero active time.** The metric is
-  meaningful only for real interactive use.
-- **No subjective usability data is collected.** Difficulty, confidence, trust,
-  and willingness to reuse remain unmeasured.
-- **No baseline exists.** There is no comparison with manual adaptation,
-  Playwright Codegen, DevTools, or a general LLM.
-- **Question count is not automatically a quality metric.** Fewer questions may
-  mean efficient intake or missing context.
+This is the highest-priority missing core capability.
 
-## Context model
+### Application-map persistence remains process-oriented
 
-- **Only text knowledge is authority-aware.** Typed business rules, assertion
-  operators, state machines, and structured expected values are not modelled.
-- **`UNKNOWN` does not mean not applicable.** There is no separate
-  `NOT_APPLICABLE` state.
-- **Confidence is not calibrated.** It is stored metadata only.
-- **Conflict handling is simple.** One subject, evidence set, and one resolution
-  value are supported.
-- **Validation checks structure, not truth.** A confirmed false or vague
-  statement can still pass.
-- **Readiness rules are provisional.** They are not proven sufficient for real
-  POM adaptation.
+`ContextBundle` version `0.1` is still centered on one process. Sprint 14 proves
+reuse between an accepted Search context and a candidate Sort context, but it
+does not yet provide a persistent whole-project graph of multiple processes,
+pages, components, tests, and accepted changes.
 
-## Evidence and provenance
+A larger graph must not be introduced until real validation demonstrates that
+the simpler representation is insufficient.
 
-- **Evidence stores metadata and summaries, not replayable raw sources.** No DOM
-  snapshot, screenshot, trace, document, or attachment store exists.
-- **Evidence authenticity is unverified.** A SHA-256 digest records content
-  consistency but not source trust.
-- **Source freshness is not calculated.** Values can be marked stale only by an
-  external decision.
-- **Conflicts are not discovered automatically.** They must be present in the
-  input context or introduced by future acquisition logic.
+### Real repository handoff is not implemented
 
-## Application observation
+Accepted source changes are applied only to fresh snapshot-bounded sandboxes.
 
-- **Observation verifies an existing locator only.** It does not discover an
-  unknown page, component, element, process, or locator.
-- **The user selects the URL and existing context element ID through CLI
-  arguments.** There is no in-browser picker or guided multi-step navigation.
-- **Only one top-level selected target is captured.** Iframes, Shadow DOM,
-  multiple tabs, dynamic waits, and credentialed sessions are unsupported.
-- **The snapshot is deliberately narrow.** It stores tag, visibility,
-  enabled/editable state, and allowlisted attributes; it does not store page
-  text, element text, input values, HTML, screenshot, trace, or network data.
-- **Editability is queried only for element semantics supported by Playwright.**
-  Native input controls, contenteditable elements, and supported ARIA roles use
-  Playwright's check; elements such as buttons are recorded as non-editable
-  instead of invoking an unsupported API state.
-- **Minimization is not proof of privacy.** Allowlisted attributes and URL paths
-  can still contain confidential information.
-- **Only exact uniqueness and visibility are verified.** Locator stability,
-  semantic quality, future resilience, and business correctness are not proven.
-- **Acceptance is single-user and local.** Identity and authority are not
+The product does not yet provide a production-project delivery workflow such as:
+
+- export/apply patch,
+- explicit working-copy application,
+- branch creation,
+- pull-request handoff.
+
+Direct unattended writes to a production branch are not planned as a default.
+
+## VALIDATION limitations
+
+### External validity is intentionally open
+
+No simple public, dynamic public, low-control public, credentialed, or
+enterprise application has yet completed the end-to-end lifecycle.
+
+Controlled fixtures prove mechanisms, not generality.
+
+### Usability and economics are unproven
+
+The project records selected interaction and active-time metrics, but there is
+no controlled baseline for:
+
+- setup time,
+- learning effort,
+- correction effort,
+- total operator time,
+- perceived difficulty,
+- confidence/trust,
+- willingness to reuse,
+- time to first runnable test,
+- maintenance effort,
+- second-process expansion effort.
+
+Fewer questions are not automatically better, and more automation is not
+automatically more efficient.
+
+### LLM semantic value is narrow and unproven
+
+A local Ollama path is implemented for bounded interview/ambiguity phrasing.
+Critical synthesis and source-generation acceptance remains heavily
+deterministic/replay-driven.
+
+The project has not demonstrated across external applications that a live LLM:
+
+- proposes consistently maintainable POM boundaries,
+- reduces human effort,
+- improves context interpretation,
+- diagnoses real failures safely.
+
+The relevant comparison is between testing-professional workflows, not between
+TestCartographer and an expert application developer.
+
+### Maintenance generalization is deliberately unimplemented
+
+Reactive maintenance currently proves one controlled locator drift.
+
+Proactive regression currently proves one bounded mapped-element locator drift.
+
+The product does not yet generalize to timing, state, data, authentication,
+workflow, assertion, environment, or multi-file failure classes.
+
+These should be discovered from real validation failures rather than invented
+laboratorily in advance.
+
+### Impact analysis is not implemented
+
+The product can detect bounded changes but cannot yet calculate reliable
+transitive impact across shared components, processes, Page Objects, fixtures,
+tests, and context knowledge.
+
+Whether a graph model is needed remains an empirical question.
+
+### Expansion evidence is one controlled second process
+
+Sprint 14 proves that reuse occurred for Search → Sort.
+
+It does not prove:
+
+- repeated expansion across many processes,
+- reuse across genuinely new application areas,
+- lower effort/cost than alternatives,
+- authenticated expansion,
+- enterprise-scale conflict handling.
+
+## ENTERPRISE limitations
+
+### No shared production authentication profile
+
+`EnvironmentProfile`, `AuthProfile`, and `SecretProvider` contracts are design
+directions, not implemented product boundaries.
+
+There is no supported:
+
+- shared storage-state lifecycle,
+- declarative login recipe,
+- secret-manager integration,
+- session expiry/refresh,
+- role verification,
+- account rotation.
+
+### SSO/MFA remains a policy-constrained boundary
+
+Some enterprise flows may require headed interactive login. The product must
+support this possibility rather than assuming every login is automatable.
+
+### Security controls are incomplete
+
+Current minimization and sensitivity metadata are not a complete enterprise
+security system.
+
+Still missing or unvalidated:
+
+- external-processing authorization,
+- robust secret detection,
+- retention/deletion policies,
+- access control,
+- encryption at rest,
+- prompt-injection handling,
+- malicious DOM/document handling,
+- enterprise audit requirements.
+
+### No Salesforce acceptance
+
+Salesforce remains a deliberate later validation target.
+
+No production/confidential Salesforce system should be used without an approved
+non-production environment, account policy, authentication strategy, data
+policy, allowed-action policy, cleanup strategy, and external-LLM boundary.
+
+## PLATFORM limitations
+
+- The package is experimental and not published as a supported product release.
+- Development and acceptance are local-first; no project CI pipeline is the
+  source of truth.
+- Python + Playwright + pytest is the only supported implementation stack.
+- Dependencies are version-ranged rather than locked into a supported-platform
+  matrix.
+- The CLI is single-user and local; identity/authorization of reviewers is not
   verified.
-- **The local reference page is not a realistic modern application.** It proves
-  the browser boundary, not production readiness.
-- **Autonomous exploration remains out of scope.**
+- There is no team approval workflow.
+- Schema migration/version-upgrade workflows remain minimal.
+- Concurrent editing and merge of local project state are unsupported.
 
-## Security and privacy
+## PARKED, not current requirements
 
-- **Sensitivity labels do not enforce policy.** They are descriptive metadata.
-- **No redaction or minimization engine exists.** Context and evidence may still
-  contain confidential descriptions or URLs.
-- **Only the Sprint 4 reference projection is authorized.** The bounded request
-  includes confirmed/observed public or internal values and excludes selected
-  URLs, routes, raw provenance, notes, hashes, and repository data. This is not
-  a complete enterprise authorization or redaction policy.
-- **No threat model exists.** Prompt injection, malicious DOM content, poisoned
-  artefacts, and unsafe attachments remain future concerns.
-- **No encryption, access control, retention, or deletion workflow exists.**
-- **Real enterprise systems must not be used yet.** Salesforce and Jira remain
-  deferred until safe handling rules exist.
+The following may be reconsidered only after core validation demonstrates a
+need:
 
-## LLM use
+- web/desktop/IDE review interfaces,
+- Jira and documentation connectors,
+- accepted-change history/retrieval,
+- broader change-impact graph,
+- additional live LLM providers,
+- PhoenixQA interoperability,
+- visual/multimodal context,
+- team review roles,
+- domain packs,
+- richer test-design assistance,
+- economics dashboards.
 
-- **Live LLM support is narrow and local-only.** Sprint 8 integrates Ollama on a
-  loopback HTTP endpoint for interview ordering and wording only. Synthesis,
-  code generation, maintenance, and other providers still use deterministic
-  logic or replay.
-- **Protocol correctness is implemented.** The project has a bounded request,
-  deterministic prompt, strict parser, exact raw-output preservation,
-  deterministic proposal validator, run persistence, and human review.
-- **Semantic model quality is unproven.** The committed proposal is a controlled
-  fixture, not evidence that a live model creates maintainable POM boundaries.
-- **Guided-run resume is identity-bound, not migration-aware.** A persisted run can resume only with the same profile, seed, session, and context IDs; there is no migration or merge workflow.
-- **Only basic live-call bounds exist.** Sprint 8 has timeout, prompt/response
-  character budgets, temperature, seed, and round limits. It has no automatic
-  retry, token-budget accounting, model benchmark, or adaptive fallback.
-- **Prompt injection and malicious context are not handled.** The request is
-  minimized but not proven safe for arbitrary external or enterprise content.
-- **One local model path is implemented, not generally validated.** The default
-  acceptance profile uses `qwen2.5-coder:7b`, but no claim is made that this is
-  the best interview model or that every Ollama model follows the schema well.
-- **Accepted means review-approved proposal, not correct code or successful
-  execution.**
+## Explicitly OUT OF SCOPE
 
-## Framework adaptation
+For TestCartographer v1 and current product direction:
 
-- **A logical POM proposal and repository-aware plan now exist.** Sprint 5 maps
-  one accepted proposal to exact Page Object, component, fixture, and E2E test
-  targets.
-- **The first mapping convention is intentionally narrow.** Page Objects map to
-  `pages/`, components to `components/`, fixtures to `tests/e2e/conftest.py`, and
-  E2E tests to `tests/e2e/`. This is not proven universal.
-- **The inspector persists metadata, not source code.** It records relative
-  paths, hashes, sizes, and top-level Python symbols. It cannot understand full
-  runtime behaviour, decorators, fixture scopes, or indirect imports.
-- **Allowlisting is not secret detection.** The profile owner must exclude
-  secret-bearing files. The current inspector has no credential or malicious
-  source scanner.
-- **The controlled framework fixture is not the full repository.** It mirrors
-  relevant layers for deterministic replay but does not prove full-repository
-  usefulness.
-- **No generated code or repository diff exists.** Plan acceptance changes only
-  the plan state and leaves framework files unchanged.
-- **No test has been generated, collected, or executed.**
+- API automation / Service Object Model adaptation,
+- a general multi-language/multi-framework automation platform,
+- unrestricted autonomous whole-application crawling,
+- autonomous business-truth authority,
+- automatic application-defect verdicts from failed tests,
+- a general-purpose software-development coding assistant.
 
-## Scope boundaries
+## Human limits that are intentional
 
-- **Initial scope is UI/POM only.** API and Service Object Model adaptation are
-  parked.
-- **Playwright, Python, and pytest are the only implemented browser stack.**
-  Other languages and automation frameworks are unsupported.
-- **One process at a time is the current unit.** Whole-application modelling is
-  unsupported.
-- **The tool does not own business correctness.** Human confirmation can still
-  confirm a wrong assumption.
-- **The tool is not a test-management system.**
-- **The tool is not a full model-based automation platform.**
-- **The tool is not a PhoenixQA replacement.** Runtime healing and initial
-  adaptation remain separate concerns.
+Not every human dependency should be automated away.
 
-## Two-module lifecycle integration
+A human or authoritative external source remains necessary when the system lacks
+evidence for:
 
-- **The first workspace and repository-planning contracts exist.** They cover
-  a non-secret inspection profile, minimized snapshot, and adaptation plan, but
-  not a full project/authentication profile or executable cross-repository flow.
-- **Normal framework execution independence is a design requirement.** No
-  generated framework project exists yet to demonstrate it.
-- **No shared environment or authentication profile exists.** Framework fixtures
-  and Cartographer browser sessions cannot yet consume one logical profile.
-- **One-source/two-consumer secret handling is not implemented.** No secret
-  provider, rotation, expiry, or audit boundary exists.
-- **The three authentication strategies are parked, not supported.** Shared
-  storage state, declarative login recipe, and interactive SSO/MFA login remain
-  future directions.
-- **The execution-evidence contract is still a reference integration.** Sprint 7
-  proves the provider-neutral bundle and standalone collector, but production
-  `qa-automation-framework` installation and CI retention remain future work.
+- business rules,
+- risk,
+- expected business outcomes,
+- intended user role,
+- ambiguity between equally plausible UI meanings,
+- authorization to access sensitive systems,
+- final acceptance of high-impact changes.
 
-## Maintenance and change support
-
-- **Reactive maintenance is limited to one controlled locator drift.** Sprint 12
-  consumes one traced call-phase failure, re-observes one authorized local page,
-  lets the human select one current control, replaces exactly one test-id locator,
-  and verifies the repair only in a snapshot-bounded sandbox. It does not diagnose
-  arbitrary failures, detect application defects, update stale/conflicting
-  context, calculate broad impact, or repair data, environment, timing, workflow,
-  assertion, authentication, or multi-file problems.
-- **The original framework is never patched.** Sprint 12 proves reviewed sandbox
-  repair and retest only; production repository application and change-request
-  integration remain out of scope.
-- **Reactive maintenance uses no LLM.** Candidate filtering and the reference
-  locator replacement are deterministic. No model-assisted diagnosis or source
-  repair has been validated.
-- **Proactive regression remains bounded.** Sprint 13 proves one human-triggered
-  public/no-auth approved-inventory scan; scheduling, protected applications,
-  large inventories, broad change classes, and automatic handoff remain unsupported.
-- **Change detection is narrow.** Locator drift is demonstrated for one bounded proactive inventory; semantic, visual, workflow, data, network, and broad state drift remain unsupported.
-- **No impact analysis exists.**
-- **No selector or workflow repair exists.**
-- **No accepted-change history beyond current intake and observation evidence
-  exists.**
-- **Expansion evidence is one controlled second process only.** Sprint 14 proves concrete reuse for Search → Sort, but not general efficiency, arbitrary application-area expansion, persistent cross-run profile reuse, or enterprise scale.
-
-## Validation and claims
-
-- **Only a controlled local HTML reference page has been exercised.** No simple
-  public, dynamic public, controlled multi-page, credentialed, or enterprise
-  application has been validated.
-- **No controlled baseline has been run.**
-- **No claim of time savings, easier operation, higher code quality, cheaper
-  maintenance, or faster expansion is justified.**
-- **Human-intake completion is not adaptation readiness.** The reference flow
-  reaches readiness only after accepted browser evidence observes the final
-  primary locator.
-- **Adaptation readiness and external synthesis authorization are separate.** A
-  ready local context may still contain supplied or sensitive values that the
-  bounded request refuses.
-- **An accepted POM proposal does not prove a correct test.** Framework mapping,
-  source generation, meaningful assertions, execution, and maintenance still
-  require evidence.
-
-- **Salesforce is a future acceptance target, not current support.** A safe
-  environment, authentication strategy, secret policy, data policy, cleanup,
-  and external-LLM boundary must exist first.
-- **Public pages are stepping stones only.** They cannot validate enterprise
-  authentication, data restrictions, complex business state, or maintenance
-  economics.
-
-## Packaging and production readiness
-
-- **The project is experimental.**
-- **The package is not published.** Editable local installation is documented.
-- **Dependencies are version-ranged, not locked.**
-- **There is no release, installer, compatibility matrix, support policy,
-  telemetry policy, or production-readiness claim.**
-- **The MIT license does not imply fitness for a particular purpose.**
-
-## Sprint 7 execution-evidence limitations
-
-- **The collector is a reference implementation, not yet installed in the
-  production framework repository.** It proves the contract and independent
-  runtime boundary in a controlled pytest subprocess.
-- **`test_failure` is not an application-bug verdict.** Version `0.1` classifies
-  by pytest phase only. Sprint 8 must preserve uncertainty and support
-  insufficient-evidence outcomes.
-- **Raw failure text is intentionally absent.** The contract stores exception
-  type, safe summary, relative location, and redacted hashes. Some diagnoses
-  will require a separately authorized artefact policy.
-- **No screenshots, traces, network bodies, DOM, HTML, stdout, or stderr are
-  persisted.** Their future usefulness does not override the current privacy
-  boundary.
-- **The bounded step probe requires explicit instrumentation.** Tests without a
-  probe may be valid evidence records but are not ready for automatic Sprint 8
-  handoff.
-- **Forced process termination may lose the bundle.** Version `0.1` writes the
-  final bundle at pytest session finish; it is not crash-safe streaming.
-- **No xdist, retry, rerun, or flaky-run correlation exists.** One record maps to
-  one normal single-process pytest execution.
-- **Profile defaults are suitable only for a bounded run.** Mixed suites will
-  need per-test or generated traceability metadata.
-
-## Next boundary to resolve
-
-Sprint 8 should consume validated failure records without forcing a premature
-root-cause verdict. It should target re-observation, mark context stale or
-conflicting when justified, calculate impact, and keep diagnosis separate from
-patch acceptance.
-
-- **The Sprint 6 sandbox contains only accepted snapshot entries.** This prevents
-  uninspected files such as a parent `tests/conftest.py` from influencing the
-  generated-test acceptance gate. It also means the gate does not yet prove
-  compatibility with every file and plugin in the full framework repository.
-  Full-repository integration remains a later acceptance concern.
-
-## Deterministic templates require declared framework primitives
-
-Sprint 6 generation currently requires the selected snapshot to expose:
-
-- `pages/base_page.py::BasePage` as a class,
-- `components/base_component.py::BaseComponent` as a class.
-
-The requirements are now explicit and validated before plan review. The tool
-does not yet adapt its inheritance strategy automatically when a project uses
-different base abstractions. Such a repository is reported as incompatible with
-the selected generation profile rather than silently handled.
-
-- **CLI entry-point coverage is intentionally selective.** Sprint 7 adds real
-  subprocess coverage for the new execution-evidence commands after direct
-  `main()` tests missed a module-definition-order defect. Older CLI commands are
-  still primarily tested through direct dispatch and do not yet all have an
-  equivalent `python -m` regression test. Tracked as future hardening rather
-  than a Sprint 7 blocker.
-
-
-## Sprint 8 guided-intake limitations
-
-- **The LLM plans questions; it does not interpret answers.** Human text is
-  stored as provided and later confirmed through deterministic rules.
-- **The initial context is structurally minimal, not literally empty.** Context
-  schema `0.1` requires one page, element, locator candidate, step, and outcome,
-  so the seed builder creates explicit unknown placeholders.
-- **The application URL is collected locally but never sent to the model.** This
-  reduces exposure but does not make the session file non-sensitive.
-- **Raw prompts and responses are intentionally absent.** Hashes support
-  consistency and metrics, but exact forensic replay requires an independently
-  retained authorized artefact that does not yet exist.
-- **Only loopback Ollama is accepted.** There is no cloud fallback, OpenAI,
-  Anthropic, LM Studio, or remote Ollama provider.
-- **Question quality is unmeasured.** The model may produce awkward wording or
-  suboptimal order while still satisfying the structural contract.
-- **Prompt injection is only weakly exposed in this sprint.** The prompt contains
-  a human initial request and known local context, but no arbitrary page or
-  document content yet. Full hostile-content handling remains open.
-- **Discovery readiness is not adaptation readiness.** Browser evidence, real
-  pages, actions, elements, states, and locators are intentionally deferred to
-  Sprint 9.
-
-- **Local structured-output latency is hardware-dependent.** The Sprint 8 live gate permits up to 600 seconds per planning call. A model can answer a trivial prompt quickly and still require several minutes for the constrained nine-question JSON response. The current flow has no streaming progress or automatic fallback to a smaller model.
-
-
-- **Live local-LLM progress is phase-level, not token-level.** Structured output
-  remains non-streaming so the complete JSON document can be validated. The
-  verifier now reports preload, collection, and review boundaries, but it does
-  not display partial tokens. Local runtime failures still require inspection of
-  `%LOCALAPPDATA%\Ollama\server.log`. Tracked as a possible future diagnostics
-  improvement, not a Sprint 8 blocker.
-
-## Sprint 9 discovery boundaries
-
-- Discovery scans one explicit page only; it is not a crawler.
-- The selector allowlist does not cover canvas, complex Shadow DOM, virtualized
-  grids, custom accessibility trees, or arbitrary framework components.
-- Semantic names are bounded values derived from specific accessibility and
-  form attributes. Generic page text is not collected.
-- Ranking is intentionally simple and has been validated only on the controlled
-  catalog fixture.
-- A `missing` target still requires a human to revise the discovery plan; the
-  local LLM does not invent a new action or selector.
-- One ambiguity is phrased by a local model, but the quality of that wording has
-  not been compared across models.
-- Authentication, multi-page navigation, destructive actions, and enterprise
-  systems remain outside the slice.
-
-## Sprint 10 integrated Creation Flow boundaries
-
-- **The verifier is fixture-assisted, not a human-operated flow.** Nine
-  answers, five intake confirmations, four synthesis-handoff confirmations,
-  one ambiguity choice, and four review decisions are explicit and counted, but
-  supplied from controlled reference data for repeatability. The person running
-  setup does not make those decisions.
-- **There is no real human trigger yet.** The tool does not currently stop at
-  each authority boundary and wait for the operator to enter the initial
-  request, answer questions, select an ambiguous element, or approve artefacts.
-  Sprint 11 is reserved for connecting that operator to the existing engine.
-- **`human acceptance` in verifier output describes a state transition, not a
-  click by the setup operator.** Until Sprint 11, fixture-supplied authority must
-  be named explicitly in logs and documentation.
-- **POM synthesis is deterministic in the reference flow.** It traverses the
-  strict proposal parser, semantic validation, and human review boundary, but it
-  is not a fourth live LLM call.
-- **The flow supports one controlled public catalog process.** It does not prove
-  arbitrary application discovery, multi-page flows, authentication, destructive
-  actions, or enterprise usefulness.
-- **No time-saving percentage is claimed.** The effort ledger is descriptive;
-  comparison against manual discovery and Playwright Codegen remains future
-  validation.
-- **The sandbox is the delivery target.** The original framework is inspected
-  read-only and remains unchanged. Production repository application remains a
-  separate explicit decision.
-
-## Sprint 11 interactive Creation Flow boundaries
-
-- **The human-operated path is a controlled CLI demo, not a general product
-  interface.** It supports one known public-catalog process and assumes the
-  operator understands the review prompts.
-- **Headed Chromium is required for the interactive acceptance gate.** Remote,
-  headless, CI-only, or display-less environments cannot prove the visible
-  browser boundary.
-- **Downstream artefacts support accept or reject, not in-flow editing.** The
-  aggregate process-context summary supports numbered field editing, but POM,
-  plan, and patch changes require rejection and a fresh controlled run.
-- **Bootstrap context is only one-time within the current run.** Application,
-  environment, and starting URL are not repeated by later stages, but Sprint 11
-  does not yet persist a reusable project profile across separate runs. Reuse
-  must eventually be invalidated by operator request, staleness, conflict, or a
-  relevant configuration change.
-- **Resume is incomplete.** Intake can pause, and all state is persisted, but the
-  current orchestrator does not resume automatically from arbitrary discovery,
-  handoff, proposal, plan, patch, or execution boundaries.
-- **The operator ledger intentionally excludes raw answer values.** It proves
-  action kind, timing, and decision category, not the semantic quality of what
-  the operator entered.
-- **A completed operator session proves controlled operability only.** It does
-  not prove usability for an unbriefed participant, accessibility, low cognitive
-  load, or time savings.
-- **The POM proposal remains deterministic.** Sprint 11 connects the human to
-  review, but it does not add live-LLM POM synthesis.
-- **The source patch still targets an isolated sandbox.** The original framework
-  remains read-only and production application is not part of the interactive
-  demo.
-- **Scripted operator verification is not manual acceptance.** The automated
-  18-prompt verifier checks mechanics with replayed browser evidence and a local
-  Ollama-compatible stub. The real setup must separately create a completed
-  `operator-session.json` through terminal input and headed Chromium.
-
-- **Exact patch review is terminal-based and can be verbose.** Sprint 11 now
-  renders every source line and hash before acceptance, but it does not yet
-  provide a side-by-side diff viewer, syntax highlighting, folding, or in-flow
-  editing. Rejecting still requires a later correction path.
-- **LLM authority remains intentionally narrow.** The local model plans intake
-  questions and phrases ambiguity. POM and source generation use deterministic
-  reviewed reference templates; the controlled demo must not imply live-LLM
-  code generation.
-
-## Sprint 13 — proactive regression limitations
-
-- The real flow is human-triggered and headed; it is not proof of unattended
-  scheduled operation.
-- Only public, no-auth, loopback-served reference pages are accepted.
-- Current detection supports bounded locator/semantic presence evidence for
-  allowlisted elements, not arbitrary frontend correctness.
-- One changed locator is deliberately outside the current test pool. This
-  proves that green tests can miss mapped drift, but not how the mechanism
-  scales across a real application.
-- The run creates no patch and changes no ContextBundle. Human review is the
-  terminal Sprint 13 state.
-- No LLM participates, so this sprint neither validates nor constrains Ollama,
-  cloud models, or future provider selection.
-
-
-## Sprint 14 — incremental expansion limitations
-
-- The accepted expansion covers one public/no-auth page and one second process.
-- Eight reused knowledge items demonstrate reuse mechanics, not a measured
-  productivity or cost saving.
-- Cross-run bootstrap/project-profile persistence and invalidation semantics are
-  still not implemented.
-- `EXTEND_SYMBOL` is validated for one existing Page Object with one missing
-  method and one missing property; arbitrary class editing is unsupported.
-- `REPLACE_FILE` is deterministic and source-hash-bound, not a general-purpose
-  source rewrite facility.
-- The controlled Sort oracle binds the complete expected visible result, but
-  generated code still uses containment and the synthesis proposal still calls
-  the value a fragment. This is not a general sorting validator.
-- Expansion applies accepted source only to a fresh sandbox. The original
-  framework repository is not modified and no pull request is created.
-- No live LLM participates in Sprint 14 acceptance, so the sprint proves reuse
-  mechanics rather than live-model quality, cost, or provider behavior.
-- PhoenixQA is not invoked. Runtime recovery remains a separate module boundary.
-- No authenticated, dynamic external, or Salesforce expansion has been tested.
+`REVIEW`, `BLOCKED`, `UNKNOWN`, and insufficient evidence are legitimate
+outcomes, not failures of ambition.

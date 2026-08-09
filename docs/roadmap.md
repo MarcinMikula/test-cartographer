@@ -63,8 +63,13 @@ product framing
 → reactive maintenance
 → proactive frontend/context regression
 → expansion using the existing map
-→ enterprise authentication and validation
-→ comparative validation
+→ Checkpoint 14.5 documentation truth and roadmap reset
+→ persistent ProjectProfile and bootstrap reuse
+→ external-validation protocol
+→ external public validation with increasing difficulty and decreasing control
+→ credentialed validation and minimum authentication profiles
+→ enterprise/Salesforce validation
+→ comparative usability/economics
 → v1.0 decision
 ```
 
@@ -88,9 +93,14 @@ product framing
 | Sprint 12 | Human-triggered reactive maintenance from bounded execution evidence | Done — real operator acceptance verified |
 | Sprint 13 | Proactive post-deployment frontend/context regression | Done — real operator acceptance verified |
 | Sprint 14 | Expansion using the existing application map | Done — real operator acceptance verified |
-| Sprint 15 | External artefacts, authentication profiles, and enterprise safety | Parked |
-| Sprint 16 | Validation ladder culminating in a safe Salesforce flow | Parked |
-| Sprint 17 | Comparative usability, effort, quality, and v1.0 decision | Parked |
+| Checkpoint 14.5 | Documentation truth cleanup and validation-first roadmap reset | Done in documentation |
+| Sprint 15 | Persistent ProjectProfile and bootstrap reuse/invalidation | Next |
+| Sprint 16 | External-validation protocol and repeatable evidence package | Planned |
+| Sprint 17 | External validation I — simple and dynamic public applications | Planned |
+| Sprint 18 | External validation II — multi-page and difficult low-control public applications | Provisional |
+| Sprint 19 | Authentication profiles and credentialed validation | Provisional |
+| Sprint 20 | Enterprise/Salesforce validation | Provisional |
+| Sprint 21 | Comparative usability/economics and v1.0 decision | Provisional |
 
 ## Sprint 0 — Product framing
 
@@ -1138,42 +1148,181 @@ reviewed creation pipeline, and execute beside the preserved first process.
 
 See [`expansion-flow.md`](expansion-flow.md).
 
-## Sprint 15 — External artefacts, authentication profiles, and enterprise safety
+## Checkpoint 14.5 — Documentation truth cleanup and validation-first reset
 
-**Status:** Parked
+**Status:** Done in documentation
 
-### Direction
+### Goal
 
-Potential scope:
+Synchronize current-state documentation with the actual Sprint 14 capability
+and change the roadmap from speculative feature expansion to validation-first
+learning.
 
-- Jira and documentation ingestion,
-- non-secret `EnvironmentProfile` and `AuthProfile`,
-- secret-provider references,
-- one or more of the parked authentication strategies,
-- allowed-origin and action policy,
-- retention, deletion, and session-expiry rules,
-- SSO/MFA constraints,
-- safe credentialed browser observation.
+### Decisions
 
-No strategy is the default until exercised against a controlled credentialed
-application.
+- current-state indexes are rewritten rather than accumulating obsolete claims,
+- gaps use `CORE / VALIDATION / ENTERPRISE / PARKED / OUT-OF-SCOPE`,
+- persistent `ProjectProfile` becomes the next P0 core capability,
+- API/SOM is removed from TestCartographer product scope,
+- user-interface work is postponed until after core v1 value is evaluated,
+- validation targets increase both technical difficulty and lack of project
+  control,
+- once external validation begins, major abstractions require concrete observed
+  evidence.
 
-## Sprint 16 — Validation ladder culminating in Salesforce
+See [`checkpoint-14.5.md`](checkpoint-14.5.md).
 
-**Status:** Parked
+## Sprint 15 — Persistent ProjectProfile and bootstrap reuse
 
-### Direction
+**Status:** Next
 
-Progress through increasingly realistic targets:
+### Goal
 
-1. controlled local page,
-2. simple public application,
-3. modern dynamic public frontend,
-4. controlled multi-page application,
-5. credentialed enterprise-style reference system,
-6. safe Salesforce environment.
+Implement the missing project-wide persistence boundary that allows bootstrap
+facts and configuration to be collected once, reused across later flows, and
+selectively invalidated.
 
-A candidate Salesforce acceptance flow is:
+### Target slice
+
+The first slice should cover non-secret project-wide facts such as:
+
+- application identity,
+- environment,
+- framework/workspace mapping,
+- provider/model configuration,
+- sensitivity/external-processing policy,
+- authentication strategy/reference metadata without secret values.
+
+Required behavior:
+
+- versioning and provenance,
+- explicit human review,
+- reuse without repeated bootstrap questions,
+- selective reopening after explicit change, staleness, conflict, or relevant
+  configuration change,
+- clear project-wide vs process-specific separation.
+
+### Non-goals
+
+- full authentication implementation,
+- secret-manager integration,
+- team profile management,
+- Jira/document ingestion,
+- application graph redesign.
+
+## Sprint 16 — External-validation protocol and evidence package
+
+**Status:** Planned
+
+### Goal
+
+Prepare a repeatable validation method before challenging the product on
+applications it does not control.
+
+This sprint should be mostly validation infrastructure/protocol, not a new
+feature bundle.
+
+### Required outputs
+
+- target classification by technical difficulty and degree of control,
+- repeatable operator instructions,
+- comparable evidence bundle,
+- setup/active/correction/review timing definitions,
+- failure/friction log,
+- stop conditions,
+- baseline procedure for later comparison,
+- rule that a validation failure is recorded before its fix is designed.
+
+### Non-goals
+
+- speculative generalization for every expected external-app problem,
+- enterprise authentication,
+- GUI.
+
+## Sprint 17 — External validation I: public applications
+
+**Status:** Planned
+
+### Goal
+
+Run the existing product on external applications that were not built for
+TestCartographer.
+
+### Suggested levels
+
+1. simple public application with conventional frontend semantics,
+2. dynamic/script-heavy public frontend with asynchronous behavior.
+
+The important evidence is whether existing assumptions survive when the project
+cannot change the target page to accommodate them.
+
+### Development rule
+
+When a failure occurs:
+
+```text
+record evidence
+→ classify limitation
+→ design smallest justified change
+→ rerun the same target
+```
+
+Do not hide the initial failure by immediately changing both product and target.
+
+## Sprint 18 — External validation II: lower-control and more complex public targets
+
+**Status:** Provisional
+
+### Goal
+
+Increase difficulty and decrease control further.
+
+Potential characteristics:
+
+- multi-page/component state,
+- dynamic navigation,
+- difficult synchronization,
+- unstable or changing markup,
+- scraping-resistant frontend behavior,
+- process expansion across a new application area.
+
+Use findings to drive maintenance generalization and impact-analysis scope.
+
+## Sprint 19 — Authentication profiles and credentialed validation
+
+**Status:** Provisional
+
+### Goal
+
+Implement only the minimum authentication/project-security boundary required by
+a selected credentialed validation target.
+
+Potential contracts:
+
+```text
+EnvironmentProfile
+AuthProfile
+SecretProvider references
+```
+
+Select the first authentication strategy from actual target requirements:
+
+1. sensitive Playwright storage state,
+2. declarative login recipe with in-memory secrets,
+3. interactive human login for SSO/MFA.
+
+Do not implement all three pre-emptively.
+
+## Sprint 20 — Enterprise and Salesforce validation
+
+**Status:** Provisional
+
+### Goal
+
+Challenge the validated product on an enterprise-style target and, when the
+security/authentication boundary is ready, a safe Salesforce environment.
+
+Candidate Salesforce flow:
 
 ```text
 login
@@ -1183,41 +1332,53 @@ login
 → verify the created record
 ```
 
-Salesforce is a deliberate final-level target because simple sites cannot
-validate enterprise authentication, component-driven UI, data restrictions,
-complex process state, or maintenance economics.
+Use only an approved non-production environment and bounded test data.
 
-## Sprint 17 — Comparative validation and v1.0 decision
+The purpose is validation, not Salesforce-specific product design.
 
-**Status:** Parked
+## Sprint 21 — Comparative usability, economics, and v1.0 decision
 
-### Direction
+**Status:** Provisional
 
-Compare the same process and quality gates across:
+### Goal
+
+Decide whether TestCartographer is operationally useful, not merely technically
+interesting.
+
+Compare realistic testing-professional workflows:
 
 ```text
-manual framework adaptation
+normal manual automation aids
 vs.
-DevTools + Playwright Codegen + general LLM
+DevTools/Playwright Codegen + general-purpose LLM
 vs.
-TestCartographer-assisted adaptation
+TestCartographer-assisted workflow
 ```
 
 Measure:
 
-- functional and assertion correctness,
-- POM and component quality,
+- functional/assertion correctness,
+- POM/component quality,
 - unsupported assumptions,
 - human corrections,
 - setup and active user time,
+- learning effort,
 - time to first runnable test,
-- maintenance time after a controlled change,
-- effort to add a second process,
-- LLM usage and cost,
+- maintenance effort after a real or controlled change,
+- second-process expansion effort,
+- LLM usage/cost,
 - perceived difficulty, confidence, and willingness to reuse.
 
-v1.0 should be declared only if the system demonstrates useful quality and
-operational economics, not merely a completed feature list.
+### v1.0 decision
+
+v1.0 requires evidence that quality and operational economics justify the
+workflow.
+
+If the tool consistently increases work or complexity without compensating
+benefit, simplify, narrow, or stop rather than declaring v1.0 from feature
+count.
+
+A GUI/IDE layer is evaluated only after this decision.
 
 ## Roadmap change policy
 

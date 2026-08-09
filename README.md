@@ -15,6 +15,8 @@ and expansion.
 
 ## Status
 
+**Checkpoint 14.5 — documentation truth cleanup and validation-first roadmap reset: complete in documentation**
+
 **Sprint 14 — human-triggered incremental expansion using the existing map: complete — real operator acceptance verified**
 
 **Sprint 13 — human-triggered Proactive Frontend Regression: complete — real operator acceptance verified**
@@ -874,7 +876,14 @@ See:
 | 12 | Human-triggered reactive maintenance from bounded execution evidence | Done — real operator acceptance verified |
 | 13 | Proactive frontend/context regression | Done — real operator acceptance verified |
 | 14 | Expansion using the existing map | Done — real operator acceptance verified |
-| 15–17 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
+| Checkpoint 14.5 | Documentation truth cleanup and validation-first roadmap reset | Done in documentation |
+| 15 | Persistent ProjectProfile and bootstrap reuse/invalidation | Next |
+| 16 | External-validation protocol and repeatable evidence package | Planned |
+| 17 | External validation I — simple and dynamic public applications | Planned |
+| 18 | External validation II — multi-page and difficult low-control public applications | Provisional |
+| 19 | Authentication profiles and credentialed validation | Provisional |
+| 20 | Enterprise/Salesforce validation | Provisional |
+| 21 | Comparative usability/economics and v1.0 decision | Provisional |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
 

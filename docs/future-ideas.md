@@ -1,101 +1,74 @@
-# Future ideas
+# Future ideas — parked after Checkpoint 14.5
 
-Ideas that may become useful later but are intentionally outside the active
-scope.
+This file stores ideas that are **not active roadmap commitments**.
 
-This file prevents ideas from being lost without turning them into implied
-commitments. An idea should move into the roadmap only when earlier evidence
-shows a concrete need.
+Checkpoint 14.5 intentionally reduces speculative breadth. Ideas should move
+into active work only when external validation or an explicit post-v1 product
+decision demonstrates a need.
 
-Full reasoning and the point at which an idea appeared belong in
-`LEARNINGS.md`.
+Chronological history remains in `LEARNINGS.md`.
 
-## Jira and test-management ingestion
+## Post-v1 user interface evaluation
 
-Import selected:
+A local web/desktop/IDE review interface may eventually visualize:
 
-- issues,
+- project/profile status,
+- process context,
+- evidence and freshness,
+- unresolved questions,
+- ambiguity choices,
+- POM/adaptation proposals,
+- exact source diffs,
+- validation/maintenance history.
+
+Do not build it before v1 value is known.
+
+The question after v1 is not "would a GUI look better?" but:
+
+> would a UI materially reduce learning cost, operator errors, cognitive load,
+> or review time for a workflow that already demonstrates value?
+
+Possible surfaces include a local web UI, VS Code, or Cursor integration.
+
+## Jira and documentation evidence connectors
+
+Potential evidence sources:
+
+- Jira issues/defects,
+- test-management cases,
 - acceptance criteria,
-- defects,
-- test cases,
-- links and attachments,
-- project metadata.
-
-Before implementation, define:
-
-- authorization,
-- data minimization,
-- redaction,
-- provenance,
-- retention,
-- stale-content handling,
-- conflict handling,
-- whether cloud LLM processing is permitted.
-
-Do not treat Jira as the automatic source of truth.
-
-## Documentation and knowledge connectors
-
-Possible sources:
-
 - Confluence or other knowledge bases,
-- OpenAPI specifications,
-- architecture diagrams,
 - requirements repositories,
-- test evidence stores.
+- diagrams,
+- architecture notes.
 
-The product should retrieve only the context required by the active process,
-not create an uncontrolled enterprise-data mirror.
+Imported content must remain evidence, not automatic truth.
 
-## API and Service Object Model adaptation
+Any connector needs authorization, minimization, provenance, freshness,
+retention, conflict handling, and external-processing policy.
 
-Extend the context model and framework adapter to support:
+Do not build connectors before real validation demonstrates that manual/project
+context acquisition is a material bottleneck.
 
-- endpoints and operations,
-- authentication,
-- request and response contracts,
-- service dependencies,
-- test-data setup,
-- Service Object boundaries,
-- API and integration test proposals.
+## Accepted-change history and retrieval
 
-This should reuse the same evidence and human-review principles without forcing
-UI and API concepts into one abstraction.
+Potentially store and retrieve:
 
-## Autonomous application exploration
+- accepted proposal,
+- supporting evidence,
+- human review decision,
+- final diff,
+- execution result,
+- later maintenance outcome.
 
-Allow the tool to propose and execute navigation beyond explicit human steps.
+This may become better retrieval material than raw model output.
 
-Possible safeguards:
+Build only after repeated real adaptations show which historical decisions are
+actually reusable.
 
-- approved domains and routes,
-- read-only mode,
-- action allowlist,
-- destructive-action denylist,
-- page and time budgets,
-- loop detection,
-- data-entry restrictions,
-- human approval gates.
+## Application and impact graph
 
-Build only if guided exploration proves valuable but too labor-intensive.
-
-## Visual and multimodal context
-
-Use screenshots or visual models when DOM and accessibility information are
-insufficient, for example:
-
-- overlays,
-- visual hierarchy,
-- off-screen or occluded elements,
-- canvas-based interfaces,
-- layout-dependent workflows.
-
-Multimodal input increases privacy exposure and cost. It should not be included
-only because the provider supports images.
-
-## Application graph
-
-Represent relationships among:
+A richer graph could connect:
 
 - processes,
 - pages,
@@ -105,61 +78,32 @@ Represent relationships among:
 - data,
 - risks,
 - tests,
-- automation artefacts.
+- automation symbols,
+- accepted changes.
 
-A graph may improve impact analysis and context retrieval. It is not required
-until simpler representations demonstrate a concrete limitation.
+It may improve change-impact analysis and retrieval.
 
-## Change-impact analysis
+Do not introduce graph infrastructure before real validation demonstrates a
+problem that the current bundle/reference model cannot solve economically.
 
-Compare stored and current context to identify:
+## Additional LLM providers
 
-- changed locators,
-- moved components,
-- new required fields,
-- changed states,
-- changed process order,
-- stale tests,
-- affected fixtures and data.
+Possible later adapters:
 
-The first form should produce a reviewable impact proposal rather than rewrite
-the repository automatically.
+- other local OpenAI-compatible endpoints,
+- LM Studio,
+- approved enterprise model endpoints,
+- Anthropic,
+- OpenAI.
 
-## PhoenixQA interoperability
+External providers require explicit minimization and authorization.
 
-Possible future relationship:
-
-```text
-TestCartographer
-→ stores application and automation context
-
-PhoenixQA
-→ detects or recovers from runtime action failure
-
-shared evidence
-→ improves diagnosis and maintenance proposals
-```
-
-Do not merge the projects or create a shared runtime dependency until both
-boundaries are stable.
-
-## Accepted-change history
-
-Store:
-
-- proposal,
-- source evidence,
-- reviewer decision,
-- final diff,
-- execution result,
-- later maintenance outcome.
-
-This may provide higher-quality retrieval examples than raw model outputs.
+Provider count is not a product-quality metric. One validated provider is more
+valuable than several unvalidated integrations.
 
 ## LLM evaluation through llm-qa-toolkit
 
-Use a dedicated evaluation harness to assess selected TestCartographer outputs,
-such as:
+A separate evaluation harness may assess outputs such as:
 
 - missing-context detection,
 - source-grounded classification,
@@ -167,63 +111,45 @@ such as:
 - unsafe certainty,
 - change-impact explanations.
 
-Evaluation requires trustworthy reference cases and cannot rely only on another
-LLM's unsupported opinion.
+Evaluation requires trustworthy reference cases. An unsupported LLM judge
+opinion is not ground truth.
 
-## Private or enterprise deployment
+## PhoenixQA interoperability
 
-Potential modes:
+Potential future boundary:
 
-- fully local orchestration with a cloud model receiving minimized context,
-- approved enterprise model endpoint,
-- air-gapped deployment with a sufficiently capable local model,
-- customer-managed storage and retention.
+```text
+TestCartographer
+→ accepted application/automation context and maintenance evidence
 
-Do not promise provider parity before empirical testing.
+PhoenixQA
+→ runtime recovery/healing evidence
 
-## Plugin architecture
+explicit handoff
+→ better diagnosis or maintenance proposal
+```
 
-Potential extension points:
+Do not merge runtime dependencies merely because both projects touch failures.
 
-- issue trackers,
-- documentation sources,
-- browsers,
-- LLM providers,
-- context stores,
-- framework targets,
-- review interfaces.
+## Visual and multimodal evidence
 
-A plugin system should follow multiple proven integrations, not precede them.
+Screenshots or visual models may become useful for:
 
-## IDE integration
+- overlays,
+- occlusion,
+- canvas-based controls,
+- visual-only hierarchy,
+- layout-dependent outcomes.
 
-Possible Cursor or VS Code workflow:
+Multimodal capture increases privacy exposure, model cost, retention burden,
+and review complexity.
 
-- review missing context,
-- start a guided capture,
-- inspect proposed mappings,
-- preview diffs,
-- accept or reject changes.
-
-An IDE interface is secondary to a stable provider-neutral core workflow.
-
-## Web review interface
-
-A local review UI could visualize:
-
-- process steps,
-- pages and components,
-- evidence,
-- unresolved questions,
-- generated artefacts,
-- proposed changes.
-
-Do not build a large frontend before the review model is proven through a
-simpler interface.
+Adopt only when external validation proves DOM/accessibility evidence
+insufficient for an important target.
 
 ## Team review and approval
 
-Support separate roles for:
+Enterprise use may eventually separate:
 
 - collector,
 - domain reviewer,
@@ -231,244 +157,74 @@ Support separate roles for:
 - security reviewer,
 - approver.
 
-The first product remains single-user and local.
+The v1 validation path remains single-user unless a real target requires
+separate authority.
 
-## Authentication strategies for credentialed systems
+## Private / enterprise deployment modes
 
-Three strategies are parked for systems such as Salesforce:
+Potential deployment patterns:
 
-1. **Shared Playwright storage state** used by framework execution and
-   Cartographer discovery through separate browser contexts.
-2. **Declarative login recipe** that resolves approved secrets in memory,
-   performs the login, verifies success, and may create short-lived storage
-   state.
-3. **Interactive human login** in a headed browser for SSO/MFA flows that should
-   not be automated.
+- fully local,
+- local orchestration with minimized approved cloud-model input,
+- approved enterprise model endpoint,
+- air-gapped customer-managed deployment.
 
-The strategies share common principles:
+Do not promise provider/deployment parity before empirical testing.
 
-- project files contain secret references, not values,
-- the framework and Cartographer consume one approved secret source through
-  separate runtime adapters,
-- storage state is sensitive and ignored by Git,
-- allowed origins, actions, retention, and session expiry are explicit,
-- pytest fixtures remain execution-plane details rather than Cartographer APIs.
+## Domain packs
 
-See [`authentication-strategies.md`](authentication-strategies.md).
+Optional vocabularies or prompts might later help domains such as banking,
+insurance, telecommunications, CRM, or e-commerce.
 
-## Framework execution-evidence collector
-
-Add a bounded collector to `qa-automation-framework` that exports useful
-maintenance context without assuming every failed test is an application bug.
-
-Potential evidence:
-
-- test, step, Page Object, and method identifiers,
-- action, locator, and failure classification,
-- minimized page/element state,
-- environment and application-version metadata,
-- policy-approved trace, screenshot, or network references,
-- links to the relevant Cartographer context.
-
-Collection belongs to the framework execution plane. Diagnosis, context
-updates, impact analysis, and patch proposals belong to TestCartographer.
-
-## Proactive frontend/context regression
-
-Run bounded re-observation after deployment windows or on an approved schedule,
-even when current tests remain green.
-
-The observation inventory may include:
-
-- elements used by current tests,
-- shared components,
-- mapped elements not yet used by tests,
-- areas planned for future automation.
-
-This is not unrestricted crawling. It requires approved areas, read-only or
-allowlisted actions, authentication profiles, sensitivity rules, and budgets.
-
-## Expansion using the existing application map
-
-Add a second process while reusing existing:
-
-- pages and components,
-- locators and observations,
-- environment and authentication mappings,
-- fixtures and test-data patterns,
-- naming conventions and accepted decisions.
-
-Measure whether reuse reduces repeated questions, observations, duplicate code,
-LLM input, cost, and review time.
-
-## Salesforce validation case
-
-Use a safe Salesforce Developer Edition, Trailhead-style environment, or other
-approved non-production Salesforce environment for an enterprise validation
-flow:
-
-```text
-login
-→ open Accounts
-→ create an Account
-→ save
-→ verify the record
-```
-
-Salesforce is deliberately retained as a major acceptance target because it can
-exercise:
-
-- credentialed access and session reuse,
-- dynamic component-driven UI,
-- complex navigation and application state,
-- enterprise data restrictions,
-- difficult locator and synchronization decisions,
-- realistic creation, execution, maintenance, and expansion workflows.
-
-Simple public pages and modern public portals remain earlier validation levels.
-They prove useful mechanisms but cannot establish enterprise readiness.
-
-This is a validation target, not a product dependency or early sprint scope.
-
-## Live LLM provider adapters
-
-Implement one or more providers behind the Sprint 4 `SynthesisAdapter`
-boundary.
-
-A provider slice should define and test:
-
-- model and endpoint configuration,
-- structured-output support versus plain raw text,
-- timeout and retry policy,
-- token, latency, and cost accounting,
-- provider error classification,
-- raw request/response retention policy,
-- privacy and external-processing approval,
-- replay capture for deterministic regression,
-- resistance to prompt injection or malicious context,
-- semantic evaluation against manually reviewed POM proposals.
-
-A live adapter must not receive more context than `BoundedSynthesisRequest` and
-must not bypass deterministic parsing, validation, or human review.
-
-Do not add multiple providers before one provider demonstrates the boundary and
-its operational costs clearly.
-
-## Broader framework targets
-
-Possible later support:
-
-- other Playwright languages,
-- Selenium,
-- Cypress,
-- Robot Framework,
-- alternative Python framework layouts.
-
-Generalization should follow a proven Playwright/Python implementation.
-
-## Test-maintenance economics dashboard
-
-Track:
-
-- initial adaptation time,
-- active operator time,
-- LLM usage,
-- number of accepted and rejected proposals,
-- correction rate,
-- change-detection time,
-- maintenance time saved or added.
-
-Metrics should support product decisions, not become vanity reporting.
-
-## Reusable domain packs
-
-Provide optional domain vocabularies or question sets for areas such as:
-
-- e-commerce,
-- CRM,
-- banking,
-- insurance,
-- telecommunications.
-
-A domain pack must not silently claim domain authority. It should help ask
-better questions and still require project-specific evidence.
-
-## Controlled recommendation of test level
-
-Use available architecture and risk context to suggest whether a scenario may
-be better covered through:
-
-- unit,
-- component,
-- API,
-- integration,
-- UI/E2E,
-- test-support automation rather than a test.
-
-The tool should explain the recommendation and preserve human ownership.
+A domain pack must never silently become domain authority.
 
 ## Test-design assistance
 
-Suggest candidate coverage using techniques such as:
+Future assistance may suggest candidate techniques such as:
 
 - equivalence partitioning,
-- boundary value analysis,
+- boundary values,
 - decision tables,
 - state transitions,
 - risk-based prioritization.
 
-This requires stronger business and rule context than UI capture alone can
-provide.
+This requires stronger structured business-rule evidence than the current UI/POM
+map.
 
-## Model-based test generation
+## Economics dashboard
 
-Generate multiple test paths from the application-context model.
+If repeated validation creates enough data, a dashboard could summarize:
 
-This is deliberately parked. The project must first prove that the model is
-accurate, reviewable, and economical to maintain for one process.
+- setup time,
+- active operator time,
+- corrections,
+- proposal acceptance/rejection,
+- LLM usage/cost,
+- maintenance effort,
+- expansion effort.
 
-## Self-improving retrieval
+Metrics must inform product decisions rather than become vanity reporting.
 
-Use previously accepted context and changes to reduce repeated questioning and
-improve proposals.
+## Ideas removed from TestCartographer roadmap
 
-Safeguards are required to prevent stale or project-specific decisions from
-being treated as universal truth.
+### API / Service Object Model adaptation
 
+API/SOM adaptation is **not part of TestCartographer's product direction**.
 
-## Additional guided-intake providers
+The product targets frontend/UI context and POM-oriented automation. API
+automation may be explored separately in another project if ever needed.
 
-After the local Ollama path is validated, consider LM Studio, OpenAI-compatible
-local endpoints, Anthropic, or OpenAI adapters behind the same question-plan
-contract. External providers require a separate authorization and redaction
-policy; they must not be enabled merely because the adapter interface exists.
+### General multi-framework platform
 
-## Verbatim authorized conversation archive
+Supporting arbitrary Selenium/Cypress/Robot/Playwright-language architectures
+is not a current product goal.
 
-Sprint 8 intentionally stores only hashes and metrics for prompts and model
-responses. A future opt-in diagnostic archive could retain exact conversations
-under explicit sensitivity, encryption, retention, and deletion rules. This is
-not required for the external demo and should not weaken the default minimal
-persistence boundary.
+### Autonomous whole-application exploration
 
-## Persistent project bootstrap profile
+Unrestricted autonomous crawling is not a v1 roadmap goal. Bounded guided
+observation may evolve only from concrete validation needs.
 
-Persist context and configuration that TestCartographer and its LLM provider
-need before work can begin, such as application identity, environment, starting
-URL, framework profile, provider/model selection, authentication strategy, and
-data-sensitivity policy.
+### Model-based generation of arbitrary test suites
 
-The profile should be collected once, then reused across later Creation Flows.
-Questions should reopen only when:
-
-- the operator explicitly requests a change,
-- evidence marks a value stale or conflicting,
-- the application or environment changes,
-- the framework, provider, model, authentication, or sensitivity policy changes
-  in a way that can affect correctness.
-
-A pipeline stage must not ask again merely because it received control from a
-previous module. Later stages should consume confirmed profile data and evidence.
-The profile needs explicit versioning, provenance, review, invalidation, and a
-clear distinction between project-wide configuration and process-specific
-context.
+The current goal is reliable context-assisted automation for explicitly selected
+processes, not autonomous generation of a whole application's test model.
