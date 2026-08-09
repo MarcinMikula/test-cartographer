@@ -1,0 +1,118 @@
+{
+  "additionalProperties": false,
+  "description": "One human request to add a bounded process using accepted project knowledge.",
+  "properties": {
+    "base_context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Base Context Id",
+      "type": "string"
+    },
+    "base_context_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Base Context Sha256",
+      "type": "string"
+    },
+    "framework_snapshot_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Framework Snapshot Fingerprint",
+      "type": "string"
+    },
+    "framework_snapshot_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Framework Snapshot Id",
+      "type": "string"
+    },
+    "human_intent": {
+      "minLength": 1,
+      "title": "Human Intent",
+      "type": "string"
+    },
+    "human_triggered": {
+      "const": true,
+      "default": true,
+      "title": "Human Triggered",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "live_llm_required": {
+      "const": false,
+      "default": false,
+      "title": "Live Llm Required",
+      "type": "boolean"
+    },
+    "proactive_report_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Proactive Report Id"
+    },
+    "requested_at": {
+      "format": "date-time",
+      "title": "Requested At",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "secret_values_included": {
+      "const": false,
+      "default": false,
+      "title": "Secret Values Included",
+      "type": "boolean"
+    },
+    "target_element_ids": {
+      "items": {
+        "pattern": "^[a-z][a-z0-9_]{2,63}$",
+        "type": "string"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Target Element Ids",
+      "type": "array"
+    },
+    "target_process_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Target Process Id",
+      "type": "string"
+    },
+    "target_process_name": {
+      "minLength": 1,
+      "title": "Target Process Name",
+      "type": "string"
+    },
+    "workspace_profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Workspace Profile Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "base_context_id",
+    "base_context_sha256",
+    "workspace_profile_id",
+    "framework_snapshot_id",
+    "framework_snapshot_fingerprint",
+    "target_process_id",
+    "target_process_name",
+    "human_intent",
+    "target_element_ids",
+    "requested_at"
+  ],
+  "title": "ExpansionRequest",
+  "type": "object"
+}

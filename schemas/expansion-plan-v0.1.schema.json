@@ -1,0 +1,310 @@
+{
+  "$defs": {
+    "ExpansionDisposition": {
+      "description": "What the expansion workflow should do with one subject.",
+      "enum": [
+        "reuse",
+        "ask_human",
+        "observe_new",
+        "reobserve",
+        "review",
+        "blocked"
+      ],
+      "title": "ExpansionDisposition",
+      "type": "string"
+    },
+    "ExpansionPlanItem": {
+      "additionalProperties": false,
+      "properties": {
+        "disposition": {
+          "$ref": "#/$defs/ExpansionDisposition"
+        },
+        "evidence_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "knowledge_status": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/KnowledgeStatus"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reason_code": {
+          "$ref": "#/$defs/ExpansionReasonCode"
+        },
+        "source_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Id"
+        },
+        "subject_kind": {
+          "$ref": "#/$defs/ExpansionSubjectKind"
+        },
+        "subject_ref": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.\\[\\]-]+$",
+          "title": "Subject Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "subject_kind",
+        "subject_ref",
+        "disposition",
+        "reason_code"
+      ],
+      "title": "ExpansionPlanItem",
+      "type": "object"
+    },
+    "ExpansionPlanStatus": {
+      "enum": [
+        "ready_for_review",
+        "accepted",
+        "rejected",
+        "blocked"
+      ],
+      "title": "ExpansionPlanStatus",
+      "type": "string"
+    },
+    "ExpansionReasonCode": {
+      "enum": [
+        "authorized_current_knowledge",
+        "human_expansion_intent",
+        "new_process_specific_context",
+        "target_not_in_base_context",
+        "proactive_locator_drift",
+        "proactive_target_missing",
+        "proactive_target_ambiguous",
+        "knowledge_requires_review",
+        "knowledge_requires_reobservation",
+        "knowledge_conflict",
+        "framework_snapshot_bound"
+      ],
+      "title": "ExpansionReasonCode",
+      "type": "string"
+    },
+    "ExpansionReviewDecision": {
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "title": "ExpansionReviewDecision",
+      "type": "string"
+    },
+    "ExpansionSubjectKind": {
+      "enum": [
+        "application_value",
+        "page_value",
+        "element",
+        "process_value",
+        "framework_snapshot"
+      ],
+      "title": "ExpansionSubjectKind",
+      "type": "string"
+    },
+    "KnowledgeStatus": {
+      "description": "How a knowledge value is currently supported.",
+      "enum": [
+        "observed",
+        "provided",
+        "inferred",
+        "confirmed",
+        "unknown",
+        "stale",
+        "conflicting"
+      ],
+      "title": "KnowledgeStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Inspectable reuse/gap decision before any expansion observation or generation.",
+  "properties": {
+    "ask_human_count": {
+      "minimum": 0,
+      "title": "Ask Human Count",
+      "type": "integer"
+    },
+    "automatic_context_write_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Automatic Context Write Allowed",
+      "type": "boolean"
+    },
+    "base_context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Base Context Id",
+      "type": "string"
+    },
+    "base_context_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Base Context Sha256",
+      "type": "string"
+    },
+    "blocked_count": {
+      "minimum": 0,
+      "title": "Blocked Count",
+      "type": "integer"
+    },
+    "bootstrap_questions_repeated": {
+      "const": false,
+      "default": false,
+      "title": "Bootstrap Questions Repeated",
+      "type": "boolean"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/ExpansionReviewDecision",
+      "default": "pending"
+    },
+    "framework_snapshot_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Framework Snapshot Fingerprint",
+      "type": "string"
+    },
+    "framework_snapshot_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Framework Snapshot Id",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "items": {
+      "items": {
+        "$ref": "#/$defs/ExpansionPlanItem"
+      },
+      "minItems": 1,
+      "title": "Items",
+      "type": "array"
+    },
+    "observe_new_count": {
+      "minimum": 0,
+      "title": "Observe New Count",
+      "type": "integer"
+    },
+    "phoenixqa_healing_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Phoenixqa Healing Allowed",
+      "type": "boolean"
+    },
+    "reobserve_count": {
+      "minimum": 0,
+      "title": "Reobserve Count",
+      "type": "integer"
+    },
+    "request_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Request Id",
+      "type": "string"
+    },
+    "reuse_count": {
+      "minimum": 0,
+      "title": "Reuse Count",
+      "type": "integer"
+    },
+    "review_count": {
+      "minimum": 0,
+      "title": "Review Count",
+      "type": "integer"
+    },
+    "review_reason": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Review Reason"
+    },
+    "review_seconds": {
+      "default": 0.0,
+      "minimum": 0.0,
+      "title": "Review Seconds",
+      "type": "number"
+    },
+    "reviewed_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Reviewed At"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/ExpansionPlanStatus",
+      "default": "ready_for_review"
+    },
+    "workspace_profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Workspace Profile Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "request_id",
+    "base_context_id",
+    "base_context_sha256",
+    "workspace_profile_id",
+    "framework_snapshot_id",
+    "framework_snapshot_fingerprint",
+    "created_at",
+    "items",
+    "reuse_count",
+    "ask_human_count",
+    "observe_new_count",
+    "reobserve_count",
+    "review_count",
+    "blocked_count"
+  ],
+  "title": "ExpansionPlan",
+  "type": "object"
+}

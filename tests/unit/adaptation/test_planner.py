@@ -76,11 +76,7 @@ def test_plan_rejects_snapshot_from_other_profile(
         _build(accepted_synthesis_run, workspace_profile, other)
 
 
-def test_existing_target_symbol_is_reused(
-    accepted_synthesis_run,
-    workspace_profile,
-    framework_snapshot,
-):
+def _snapshot_with_catalog(framework_snapshot, *, methods, properties):
     extra = {
         "path": "pages/catalog_page.py",
         "kind": "file",
@@ -91,15 +87,59 @@ def test_existing_target_symbol_is_reused(
                 "kind": PythonSymbolKind.CLASS.value,
                 "name": "CatalogPage",
                 "bases": ["BasePage"],
-                "method_names": [],
+                "method_names": list(methods),
+                "property_names": list(properties),
             }
         ],
     }
     payload = framework_snapshot.model_dump(mode="json")
     payload["entries"].append(extra)
-    snapshot = FrameworkSnapshot.model_validate(payload)
+    return FrameworkSnapshot.model_validate(payload)
+
+
+def test_existing_target_class_is_reused_when_all_required_members_exist(
+    accepted_synthesis_run,
+    workspace_profile,
+    framework_snapshot,
+):
+    snapshot = _snapshot_with_catalog(
+        framework_snapshot,
+        methods=("open_catalog", "read_results"),
+        properties=("results_heading", "results_list"),
+    )
     plan = _build(accepted_synthesis_run, workspace_profile, snapshot)
     assert plan.operations[0].kind is AdaptationOperationKind.REUSE_SYMBOL
+
+
+def test_existing_target_class_is_extended_when_required_member_is_missing(
+    accepted_synthesis_run,
+    workspace_profile,
+    framework_snapshot,
+):
+    snapshot = _snapshot_with_catalog(
+        framework_snapshot,
+        methods=("open_catalog", "read_results"),
+        properties=("results_list",),
+    )
+    plan = _build(accepted_synthesis_run, workspace_profile, snapshot)
+    page = plan.operations[0]
+    assert page.kind is AdaptationOperationKind.EXTEND_SYMBOL
+    assert page.method_names == ()
+    assert page.property_names == ("results_heading",)
+
+
+def test_existing_class_member_kind_conflict_is_rejected(
+    accepted_synthesis_run,
+    workspace_profile,
+    framework_snapshot,
+):
+    snapshot = _snapshot_with_catalog(
+        framework_snapshot,
+        methods=("open_catalog", "read_results", "results_heading"),
+        properties=("results_list",),
+    )
+    with pytest.raises(ValueError, match="member kind conflicts"):
+        _build(accepted_synthesis_run, workspace_profile, snapshot)
 
 
 def test_existing_file_without_target_symbol_gets_add_symbol(

@@ -290,7 +290,7 @@ are implemented and approved.
 
 ## Current implementation boundary
 
-After Sprint 12, TestCartographer implements controlled reference slices for:
+After Sprint 14, TestCartographer implements controlled reference slices for:
 
 - one-process context modelling and deterministic human intake,
 - local-LLM-guided intake from a short request with human factual authority,
@@ -299,7 +299,10 @@ After Sprint 12, TestCartographer implements controlled reference slices for:
 - fixture-assisted and real-operator Creation Flows,
 - independent framework execution and bounded evidence collection,
 - one human-triggered reactive locator-maintenance flow,
-- fail-before/pass-after verification in a fresh snapshot-bounded sandbox.
+- fail-before/pass-after verification in a fresh snapshot-bounded sandbox,
+- one human-triggered proactive frontend/context regression flow,
+- one human-triggered incremental expansion from an existing Search process to a second Sort process,
+- reuse/gap planning, targeted re-observation, existing-Page-Object extension, and hash-bound sandbox delivery.
 
 It does not yet implement:
 
@@ -307,9 +310,9 @@ It does not yet implement:
 - general source editing or arbitrary root-cause diagnosis,
 - reactive maintenance beyond one controlled locator drift,
 - automatic context staleness/conflict propagation and broad impact analysis,
-- proactive maintenance,
+- proactive scheduling and broad/enterprise frontend regression,
 - persistent cross-run bootstrap/profile reuse with invalidation semantics,
-- expansion reuse across a second process,
+- expansion beyond the controlled second-process reference slice,
 - shared production authentication and secret profiles,
 - enterprise validation or Salesforce acceptance,
 - comparative usability, quality, or maintenance-economics evidence.
@@ -369,3 +372,36 @@ green independent framework execution
 This transition deliberately detects drift outside the current test pool. It
 does not diagnose an application defect, patch automation, or mutate context.
 A later maintenance or expansion transition must consume the accepted report.
+
+
+## Implemented Sprint 14 expansion transition
+
+```text
+explicit human intent to add Sort
++ accepted Search/application map
++ accepted framework snapshot
++ Sprint 13 stale Sort evidence
+→ REUSE / ASK_HUMAN / REOBSERVE plan
+→ headed fresh Sort observation
+→ reviewed candidate Sort context
+→ existing synthesis pipeline
+→ existing adaptation pipeline
+→ CatalogPage EXTEND_SYMBOL
+→ source-hash-bound REPLACE_FILE + new Sort test
+→ exact source review
+→ fresh sandbox
+→ Search PASS + Sort PASS
+```
+
+The transition preserves three boundaries:
+
+1. **knowledge authority:** stale frontend evidence is refreshed and new process
+   meaning comes from the operator;
+2. **repository authority:** existing source is extended only through the
+   inspected, reviewed, hash-bound pipeline;
+3. **runtime authority:** the original framework remains unchanged and PhoenixQA
+   is not invoked.
+
+Sprint 14 therefore connects application-map reuse back to the mature creation
+pipeline without turning expansion into autonomous crawling, unrestricted
+source editing, or runtime healing.

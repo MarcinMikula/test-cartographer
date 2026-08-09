@@ -140,7 +140,8 @@
     "SourceChangeKind": {
       "enum": [
         "create_file",
-        "append_symbol"
+        "append_symbol",
+        "replace_file"
       ],
       "title": "SourceChangeKind",
       "type": "string"

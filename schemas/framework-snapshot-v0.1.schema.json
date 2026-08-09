@@ -28,6 +28,15 @@
           "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
           "title": "Name",
           "type": "string"
+        },
+        "property_names": {
+          "default": [],
+          "items": {
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+            "type": "string"
+          },
+          "title": "Property Names",
+          "type": "array"
         }
       },
       "required": [

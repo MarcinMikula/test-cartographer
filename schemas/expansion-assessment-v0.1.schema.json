@@ -1,0 +1,41 @@
+{
+  "additionalProperties": false,
+  "description": "Deterministic assessment of the controlled Sprint 14 proof boundary.",
+  "properties": {
+    "blockers": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Blockers",
+      "type": "array"
+    },
+    "controlled_demo_ready": {
+      "title": "Controlled Demo Ready",
+      "type": "boolean"
+    },
+    "expansion_verified": {
+      "title": "Expansion Verified",
+      "type": "boolean"
+    },
+    "run_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "blockers",
+    "expansion_verified",
+    "controlled_demo_ready"
+  ],
+  "title": "ExpansionAssessment",
+  "type": "object"
+}

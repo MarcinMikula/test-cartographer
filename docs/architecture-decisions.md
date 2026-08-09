@@ -1264,3 +1264,37 @@ TestCartographer production-repository write authority.
    observation.
 8. Ollama and every other LLM provider remain outside this deterministic
    slice; model choice is not a product constraint.
+
+
+## Sprint 14 decisions — incremental expansion reuses the existing creation pipeline
+
+1. **Human intent starts expansion.** A proactive change report may provide
+   freshness evidence, but it does not authorize a new process.
+2. **Expansion dispositions are workflow actions, not knowledge statuses.**
+   ContextBundle continues to use its existing authority/status model.
+3. **Reuse is conditional on current authority.** A required item known to be
+   stale becomes `REOBSERVE`; ambiguity becomes `REVIEW` or `BLOCKED`.
+4. **Accepted base context is immutable during delta collection.** Expansion
+   creates a separately reviewed candidate ContextBundle.
+5. **Browser observation never silently promotes business meaning.** Fresh
+   application evidence can establish `OBSERVED`; human confirmation remains
+   the authority for process purpose, risk, and expected outcomes.
+6. **Do not fork the creation engine.** Candidate expanded context returns to the
+   existing synthesis → adaptation → delivery pipeline.
+7. **Existing classes may need `EXTEND_SYMBOL`.** Reuse is insufficient when the
+   target class exists but explicitly reviewed required members do not.
+8. **Framework inspection distinguishes methods from properties.** A name-kind
+   collision fails closed rather than generating ambiguous class structure.
+9. **Existing-file replacement is hash-bound.** `REPLACE_FILE` is allowed only
+   as the deterministic consequence of an accepted existing-symbol extension
+   tied to the inspected source hash. Source drift fails before write.
+10. **Acceptance remains sandbox-only.** Search and Sort must run together in a
+    fresh sandbox while the original framework fingerprint stays unchanged.
+11. **Expansion does not invoke PhoenixQA automatically.** Runtime healing and
+    recovery remain a separate responsibility.
+12. **The first expansion proof does not require a live LLM.** The acceptance
+    isolates reuse, authority, repository extension, and delivery mechanics.
+13. **Invalid operator input is not a decision.** Only explicit accept/reject
+    tokens cross an authority boundary; typos and control characters re-prompt.
+14. **Green execution does not end review.** Acceptance also reviews whether the
+    generated oracle and failure message match the claimed process outcome.

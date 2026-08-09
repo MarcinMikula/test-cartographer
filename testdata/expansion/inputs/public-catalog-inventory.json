@@ -1,0 +1,50 @@
+{
+  "schema_version": "0.1",
+  "id": "inventory_public_catalog",
+  "context_bundle_id": "context_public_catalog",
+  "process_id": "process_search_catalog",
+  "base_origin": "http://127.0.0.1",
+  "allowed_routes": [
+    "/public_catalog_baseline.html",
+    "/public_catalog_deployed.html"
+  ],
+  "allowed_actions": [
+    "navigate",
+    "observe"
+  ],
+  "authentication_mode": "none",
+  "sensitivity": "public",
+  "budget": {
+    "max_pages": 1,
+    "max_elements": 2,
+    "navigation_timeout_ms": 30000,
+    "locator_timeout_ms": 2000
+  },
+  "review_decision": "accepted",
+  "human_approved": true,
+  "accepted_at": "2026-08-06T17:00:00Z",
+  "items": [
+    {
+      "id": "inventory_search_submit",
+      "page_id": "page_public_catalog",
+      "element_id": "el_search_submit",
+      "route": "/public_catalog_deployed.html",
+      "semantic_role": "button",
+      "accessible_name": "Search",
+      "primary_locator_strategy": "test_id",
+      "primary_locator_value": "search-submit",
+      "covered_by_current_framework_test": true
+    },
+    {
+      "id": "inventory_sort_results",
+      "page_id": "page_public_catalog",
+      "element_id": "el_sort_results",
+      "route": "/public_catalog_deployed.html",
+      "semantic_role": "button",
+      "accessible_name": "Sort results",
+      "primary_locator_strategy": "test_id",
+      "primary_locator_value": "catalog-sort",
+      "covered_by_current_framework_test": false
+    }
+  ]
+}

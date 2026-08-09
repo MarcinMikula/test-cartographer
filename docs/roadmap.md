@@ -86,8 +86,8 @@ product framing
 | Sprint 10 | Fixture-assisted integrated Creation Flow and effort summary | Done |
 | Sprint 11 | Human-triggered interactive Creation Flow | Done |
 | Sprint 12 | Human-triggered reactive maintenance from bounded execution evidence | Done — real operator acceptance verified |
-| Sprint 13 | Proactive post-deployment frontend/context regression | Implemented; real operator acceptance required |
-| Sprint 14 | Expansion using the existing application map | Parked |
+| Sprint 13 | Proactive post-deployment frontend/context regression | Done — real operator acceptance verified |
+| Sprint 14 | Expansion using the existing application map | Done — real operator acceptance verified |
 | Sprint 15 | External artefacts, authentication profiles, and enterprise safety | Parked |
 | Sprint 16 | Validation ladder culminating in a safe Salesforce flow | Parked |
 | Sprint 17 | Comparative usability, effort, quality, and v1.0 decision | Parked |
@@ -1056,12 +1056,8 @@ that test pool has drifted.
 
 ### Acceptance gate
 
-Closed on 2026-08-06. The Windows acceptance run collected and passed all 305
-tests, then completed the headed flow with three real operator actions. The
-persisted assessment reported no blockers, one stable mapped element, one
-uncovered locator drift, unchanged framework fingerprints, and no automatic
-patch, context mutation, application-bug claim, live LLM call, or raw-page
-persistence.
+The scripted verifier proves mechanics only. Sprint 13 closes only after a real
+operator runs the headed flow and the persisted assessment reports no blockers.
 
 ### Deferred from the original direction
 
@@ -1072,13 +1068,75 @@ vertical slice, not a claim that the full parked direction is complete.
 
 ## Sprint 14 — Expansion using the existing map
 
-**Status:** Parked
+**Status:** Done — real operator acceptance verified
 
-### Direction
+### Goal
 
-Add a second process and measure whether existing context reduces repeated
-human questions, browser discovery, duplicate objects, LLM input, review time,
-and implementation time.
+Prove one bounded incremental-expansion slice in which a second automated
+process reuses accepted application/framework knowledge, collects only the
+missing or stale delta, and reaches runnable code through the existing
+creation/adaptation/delivery pipeline.
+
+### Delivered vertical slice
+
+- explicit human intent to add Sort beside an existing Search process,
+- versioned `ExpansionRequest`, `ExpansionPlan`, `ExpansionRun`, and
+  `ExpansionAssessment` contracts,
+- separate workflow dispositions `REUSE`, `ASK_HUMAN`, `OBSERVE_NEW`,
+  `REOBSERVE`, `REVIEW`, and `BLOCKED`,
+- reuse of eight accepted application/framework knowledge items with no
+  bootstrap re-intake,
+- three process-specific human questions,
+- targeted headed re-observation of the stale Sort locator from Sprint 13,
+- immutable accepted base ContextBundle plus a separately reviewed candidate
+  Sort ContextBundle,
+- reuse of the existing synthesis, adaptation, and delivery pipeline,
+- `EXTEND_SYMBOL` for adding only `apply_sort` and `sort_results` to the
+  existing `CatalogPage`,
+- method/property collision protection in framework snapshots,
+- hash-bound `REPLACE_FILE` with source-drift preflight,
+- one new Sort test and preservation of the existing Search test,
+- sandbox-only application with the original framework unchanged,
+- seven explicit real-operator authority transitions,
+- no live LLM, PhoenixQA healing, raw-page persistence, or measured-savings
+  claim.
+
+### Acceptance evidence
+
+The Sprint 14D.2 Windows closure gate recorded:
+
+```text
+339 passed
+0 failures
+0 errors
+0 skipped
+
+Search before expansion: PASS
+Search after expansion: PASS
+Sort after expansion: PASS
+
+expansion_verified: true
+controlled_demo_ready: true
+blockers: []
+```
+
+### What Sprint 14 proves
+
+A controlled second process can reuse accepted current knowledge, refresh one
+known-stale frontend target, extend an existing Page Object through the same
+reviewed creation pipeline, and execute beside the preserved first process.
+
+### What Sprint 14 does not prove
+
+- arbitrary new application areas,
+- persistent cross-run bootstrap/profile invalidation,
+- authenticated or enterprise expansion,
+- production-repository writes,
+- general source rewriting,
+- a general-purpose sort oracle,
+- broad usability or measured productivity savings.
+
+See [`expansion-flow.md`](expansion-flow.md).
 
 ## Sprint 15 — External artefacts, authentication profiles, and enterprise safety
 

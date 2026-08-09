@@ -70,10 +70,12 @@ temp/
 # Local TestCartographer working state
 .test-cartographer/
 
-# Local sprint delivery helpers
-TestCartographer-sprint-*-setup.ps1
-TestCartographer-sprint-*-commit.ps1
+# Local sprint delivery helpers and archives
+TestCartographer-sprint-*.ps1
 TestCartographer-sprint-*-manifest.md
-test-cartographer-sprint-*-setup.ps1
-test-cartographer-sprint-*-commit.ps1
+TestCartographer-sprint-*.zip
+TestCartographer-sprint-*.sha256.txt
+test-cartographer-sprint-*.ps1
 test-cartographer-sprint-*-manifest.md
+test-cartographer-sprint-*.zip
+test-cartographer-sprint-*.sha256.txt

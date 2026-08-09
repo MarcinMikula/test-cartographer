@@ -18,6 +18,9 @@ from test_cartographer.delivery.models import (
 )
 from test_cartographer.context.readiness import assess_readiness
 from test_cartographer.execution.assessment import assess_execution_evidence
+from test_cartographer.expansion.assessment import assess_expansion_run
+from test_cartographer.expansion.models import ExpansionAssessment, ExpansionPlan, ExpansionRequest, ExpansionRun
+from test_cartographer.expansion.planner import build_expansion_plan
 from test_cartographer.guided_intake.models import (
     GuidedIntakeProfile,
     GuidedIntakeRun,
@@ -66,6 +69,10 @@ __all__ = [
     "ReactiveMaintenanceRun",
     "ExecutionEvidenceBundle",
     "ExecutionEvidenceProfile",
+    "ExpansionAssessment",
+    "ExpansionPlan",
+    "ExpansionRequest",
+    "ExpansionRun",
     "FrameworkSnapshot",
     "GenerationProfile",
     "GuidedIntakeProfile",
@@ -85,6 +92,8 @@ __all__ = [
     "assess_creation_flow",
     "assess_discovery",
     "assess_execution_evidence",
+    "build_expansion_plan",
+    "assess_expansion_run",
     "assess_failure_for_maintenance",
     "assess_guided_intake",
     "assess_intake",
@@ -92,4 +101,4 @@ __all__ = [
     "assess_readiness",
     "assess_reactive_maintenance_run",
 ]
-__version__ = "0.13.0"
+__version__ = "0.14.0"

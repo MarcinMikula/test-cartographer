@@ -124,6 +124,35 @@ def build_code_patch(
                 )
             )
             continue
+        if operation.kind is AdaptationOperationKind.EXTEND_SYMBOL:
+            target = root / operation.target_path
+            if not target.is_file():
+                raise ValueError(f"extend_symbol target is missing: {operation.target_path}")
+            entry = snapshot_entries.get(operation.target_path)
+            if entry is None or entry.kind is not RepositoryEntryKind.FILE or entry.sha256 is None:
+                raise ValueError(f"snapshot has no file hash for {operation.target_path}")
+            before_bytes = target.read_bytes()
+            before_hash = hashlib.sha256(before_bytes).hexdigest()
+            if before_hash != entry.sha256:
+                raise ValueError(f"target changed after snapshot: {operation.target_path}")
+            before_text = before_bytes.decode("utf-8")
+            replacement = _render_extended_object_file(
+                proposal,
+                run,
+                operation,
+                before_text,
+            )
+            _validate_combined_python(replacement, operation.target_path)
+            changes.append(
+                _source_change(
+                    operation,
+                    kind=SourceChangeKind.REPLACE_FILE,
+                    content=replacement,
+                    before=before_hash,
+                    after_bytes=replacement.encode("utf-8"),
+                )
+            )
+            continue
 
         source = generated_sources.get(operation.id)
         if source is None:
@@ -265,6 +294,135 @@ def _source_change(
         expected_after_sha256=hashlib.sha256(after_bytes).hexdigest(),
     )
 
+
+
+def _render_extended_object_file(
+    proposal: PomProposal,
+    run: SynthesisRun,
+    operation: AdaptationOperation,
+    before_text: str,
+) -> str:
+    """Return the complete existing file with only reviewed missing class members inserted."""
+
+    tree = ast.parse(before_text, filename=operation.target_path)
+    class_node = next(
+        (
+            node
+            for node in tree.body
+            if isinstance(node, ast.ClassDef) and node.name == operation.symbol_name
+        ),
+        None,
+    )
+    if class_node is None or class_node.end_lineno is None:
+        raise ValueError(f"extend_symbol class is missing: {operation.symbol_name}")
+    existing_methods, existing_properties = _class_member_names(class_node)
+    duplicate_methods = sorted(set(operation.method_names) & existing_methods)
+    duplicate_properties = sorted(set(operation.property_names) & existing_properties)
+    wrong_kind_methods = sorted(set(operation.method_names) & existing_properties)
+    wrong_kind_properties = sorted(set(operation.property_names) & existing_methods)
+    if duplicate_methods or duplicate_properties:
+        raise ValueError(
+            "planned class members already exist in "
+            f"{operation.target_path}: methods={duplicate_methods}, properties={duplicate_properties}"
+        )
+    if wrong_kind_methods or wrong_kind_properties:
+        raise ValueError(
+            "existing class member kind conflicts with planned extension in "
+            f"{operation.target_path}: methods_as_properties={wrong_kind_methods}, "
+            f"properties_as_methods={wrong_kind_properties}"
+        )
+
+    if operation.target_kind is AdaptationTargetKind.PAGE:
+        owner = next(item for item in proposal.pages if item.class_name == operation.symbol_name)
+        methods = [_method(proposal, method_id) for method_id in owner.method_ids]
+        owner_source_id = owner.source_page_id
+    elif operation.target_kind is AdaptationTargetKind.COMPONENT:
+        owner = next(item for item in proposal.components if item.class_name == operation.symbol_name)
+        methods = [_method(proposal, method_id) for method_id in owner.method_ids]
+        owner_source_id = owner.source_component_id
+    else:
+        raise ValueError("extend_symbol is supported only for page/component classes")
+
+    method_by_name = {method.name: method for method in methods}
+    request_elements = {
+        item.id: item
+        for item in run.request.elements
+        if item.owner_id == owner_source_id
+    }
+    property_by_name = {
+        _element_attribute(element.id): element for element in request_elements.values()
+    }
+    missing_method_templates = sorted(set(operation.method_names) - set(method_by_name))
+    missing_property_templates = sorted(set(operation.property_names) - set(property_by_name))
+    if missing_method_templates or missing_property_templates:
+        raise ValueError(
+            "no deterministic class-member template for planned extension: "
+            f"methods={missing_method_templates}, properties={missing_property_templates}"
+        )
+
+    lines: list[str] = [
+        "",
+        f"    # TestCartographer expansion trace: {', '.join(operation.source_proposal_ids)}",
+    ]
+    for property_name in operation.property_names:
+        lines.extend(_render_locator_property(property_by_name[property_name], indent="    "))
+    for method_name in operation.method_names:
+        lines.extend(_render_method(method_by_name[method_name], run, indent="    "))
+
+    snippet = "\n".join(lines).rstrip() + "\n"
+    replacement = _insert_after_class_body(before_text, class_node, snippet)
+    if operation.property_names:
+        replacement = _ensure_locator_import(replacement)
+    parsed = ast.parse(replacement, filename=operation.target_path)
+    updated_class = next(
+        node for node in parsed.body if isinstance(node, ast.ClassDef) and node.name == operation.symbol_name
+    )
+    updated_methods, updated_properties = _class_member_names(updated_class)
+    missing_methods = sorted(set(operation.method_names) - updated_methods)
+    missing_properties = sorted(set(operation.property_names) - updated_properties)
+    if missing_methods or missing_properties:
+        raise ValueError(
+            f"extended class is missing planned members: methods={missing_methods}, "
+            f"properties={missing_properties}"
+        )
+    _validate_safe_ast(parsed, operation.target_path)
+    return replacement
+
+
+def _class_member_names(class_node: ast.ClassDef) -> tuple[set[str], set[str]]:
+    methods: set[str] = set()
+    properties: set[str] = set()
+    for node in class_node.body:
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        if any(_ast_name(item) == "property" for item in node.decorator_list):
+            properties.add(node.name)
+        else:
+            methods.add(node.name)
+    return methods, properties
+def _insert_after_class_body(before_text: str, class_node: ast.ClassDef, snippet: str) -> str:
+    newline = "\r\n" if "\r\n" in before_text else "\n"
+    normalized_snippet = snippet.replace("\r\n", "\n").replace("\n", newline)
+    lines = before_text.splitlines(keepends=True)
+    insertion_index = class_node.end_lineno
+    if insertion_index > len(lines):
+        raise ValueError("class end position is outside source file")
+    if insertion_index and not lines[insertion_index - 1].endswith(("\n", "\r")):
+        lines[insertion_index - 1] += newline
+    lines.insert(insertion_index, normalized_snippet)
+    return "".join(lines)
+
+
+def _ensure_locator_import(source: str) -> str:
+    if re.search(r"from playwright\.sync_api import .*\bLocator\b", source):
+        return source
+    pattern = re.compile(r"^from playwright\.sync_api import ([^\n]+)$", re.MULTILINE)
+    match = pattern.search(source)
+    if match is None:
+        raise ValueError("existing POM file lacks playwright.sync_api import required for locator extension")
+    imported = [item.strip() for item in match.group(1).split(",")]
+    imported = list(dict.fromkeys(["Locator", *imported]))
+    return source[: match.start(1)] + ", ".join(imported) + source[match.end(1) :]
 
 def _render_component(proposal: PomProposal, component_id: str, run: SynthesisRun) -> str:
     component = next(item for item in proposal.components if item.id == component_id)
@@ -469,7 +627,7 @@ def _render_test(
         [
             f"    expected_fragment = str({proposal.fixtures[0].name}[{query_key!r}]).casefold()",
             f"    assert expected_fragment in str({read_variables[0]}).casefold(), (",
-            "        \"The visible results do not contain the explicitly supplied search query.\"",
+            "        \"The visible results do not contain the explicitly supplied expected result.\"",
             "    )",
             "",
         ]

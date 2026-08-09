@@ -425,21 +425,31 @@ prove that the broader mapped frontend is unchanged.
 
 ## Gap 19 — Reuse during automation expansion
 
-**Status:** OPEN
+**Status:** PARTIALLY CLOSED by Sprint 14 for one controlled second process
 
-**Target:** After the first complete creation lifecycle
+**Target:** Broaden only after external/enterprise validation
 
-No second process has been added using the existing application map.
+Sprint 14 provides the first concrete reuse evidence. A real operator adds Sort
+beside an existing Search process while reusing eight accepted knowledge items,
+answering three process-specific questions, performing one targeted
+re-observation, reusing one framework symbol, extending one existing Page
+Object, and adding one new test. Bootstrap questions are not repeated and the
+original framework remains unchanged.
 
-The project has no evidence that prior knowledge reduces:
+This closes the absence-of-proof gap for one controlled public/no-auth slice,
+but does not establish general efficiency or scale. Still open:
 
-- repeated human questions,
-- repeated browser observation,
-- duplicate Page Objects or components,
-- LLM context size and cost,
-- review and implementation time.
+- whether reuse remains correct across genuinely new application areas,
+- cross-run project/bootstrap persistence and invalidation,
+- authenticated/enterprise expansion,
+- broad Page Object/component reuse and conflict handling,
+- live-LLM context/token/cost comparison,
+- measured review/implementation-time comparison,
+- repeated expansion across more than one additional process,
+- production repository / pull-request integration.
 
-Expansion must be evaluated as reuse rather than another independent demo.
+The current evidence supports “reuse occurred,” not “expansion is generally
+faster or cheaper.”
 
 ## Gap 20 — Enterprise validation and Salesforce acceptance
 

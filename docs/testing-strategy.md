@@ -1133,22 +1133,65 @@ operator authorizes the inventory. The browser navigation gate waits for the
 response commit and an attached document body within the same total navigation
 deadline; it does not add an unbounded retry or a second hidden navigation.
 
-### Recorded Sprint 13 Windows acceptance
 
-The final acceptance run on 2026-08-06 satisfied the gate:
+
+## Sprint 14 test strategy — reuse, delta collection, and existing-class extension
+
+Automated coverage must prove more than creation of a second test.
+
+Contract/unit coverage verifies:
+
+- strict `ExpansionRequest`, `ExpansionPlan`, `ExpansionRun`, and
+  `ExpansionAssessment` schemas,
+- base-context fingerprint binding,
+- `REUSE` only for accepted/current knowledge,
+- known stale Sort evidence becomes `REOBSERVE`, never silent `REUSE`,
+- missing mapped targets become `OBSERVE_NEW` or block when required evidence
+  is unavailable,
+- candidate ContextBundle construction does not mutate the accepted base bundle,
+- fresh application observation does not become human-confirmed business meaning,
+- framework snapshots distinguish method names from property names,
+- method/property name-kind collisions fail closed,
+- existing classes with all required members reuse cleanly,
+- existing classes with reviewed missing members produce `EXTEND_SYMBOL`,
+- accepted existing-class extension produces source-hash-bound `REPLACE_FILE`,
+- source drift is rejected before any write,
+- sandbox application leaves the original framework unchanged,
+- fixture/replay evidence cannot masquerade as real-operator controlled-demo
+  readiness.
+
+Integration coverage verifies the reference chain:
 
 ```text
-collected: 305
-passed: 305
-failed: 0
-errors: 0
-skipped: 0
-real operator actions: 3
-headed browser used: true
-fixture decisions used: false
-proactive-regression blockers: none
+CatalogPage exists
+→ missing apply_sort + sort_results
+→ EXTEND_SYMBOL
+→ REPLACE_FILE bound to current source hash
+→ create test_sort_catalog.py
+→ apply accepted patch only to sandbox
+→ reject changed source before write
 ```
 
-The scripted and real runs produced identical observation hashes for the stable
-Search control and the drifted Sort control. Only the real run counts as the
-operator-acceptance artefact.
+The Sprint 14D.2 closure gate adds real-operator evidence:
+
+- operator-input typos/control characters cause re-prompt, not rejection,
+- the controlled Sort expected result is complete (`Alpha Beta Zulu`),
+- generated Sort failure wording refers to the expected result rather than a
+  copied Search query,
+- exactly 339 tests pass with zero failures, errors, or skips before headed
+  acceptance,
+- the pre-existing Search test passes before expansion,
+- headed Chromium performs one targeted Sort re-observation,
+- seven explicit authority transitions are recorded,
+- only three new process-specific questions are asked,
+- eight knowledge items are reused and bootstrap questions are not repeated,
+- the accepted patch extends the existing Page Object and creates one new test,
+- Search and Sort both pass in a fresh sandbox,
+- deterministic reassessment reports `expansion_verified=true`,
+  `controlled_demo_ready=true`, and no blockers,
+- base context and original framework remain unchanged,
+- no live LLM, PhoenixQA healing, raw-page persistence, or measured-savings
+  claim occurs.
+
+Expected Sprint 14 Windows closure result: exactly `339 passed`, zero failures,
+zero errors, and zero skipped tests.

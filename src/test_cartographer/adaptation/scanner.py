@@ -99,10 +99,20 @@ def _python_symbols(tree: ast.Module) -> list[PythonSymbol]:
     for node in tree.body:
         if isinstance(node, ast.ClassDef):
             bases = tuple(name for base in node.bases if (name := _node_name(base)) is not None)
-            methods = tuple(
-                item.name for item in node.body if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
+            functions = [
+                item for item in node.body if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
+            ]
+            properties = tuple(item.name for item in functions if _is_property(item))
+            methods = tuple(item.name for item in functions if not _is_property(item))
+            result.append(
+                PythonSymbol(
+                    kind=PythonSymbolKind.CLASS,
+                    name=node.name,
+                    bases=bases,
+                    method_names=methods,
+                    property_names=properties,
+                )
             )
-            result.append(PythonSymbol(kind=PythonSymbolKind.CLASS, name=node.name, bases=bases, method_names=methods))
         elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             result.append(PythonSymbol(kind=PythonSymbolKind.FUNCTION, name=node.name))
     return result
@@ -114,3 +124,7 @@ def _node_name(node: ast.expr) -> str | None:
     if isinstance(node, ast.Attribute):
         return node.attr
     return None
+
+
+def _is_property(node: ast.FunctionDef | ast.AsyncFunctionDef) -> bool:
+    return any(_node_name(decorator) == "property" for decorator in node.decorator_list)

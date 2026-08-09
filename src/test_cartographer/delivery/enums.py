@@ -6,6 +6,7 @@ from enum import StrEnum
 class SourceChangeKind(StrEnum):
     CREATE_FILE = "create_file"
     APPEND_SYMBOL = "append_symbol"
+    REPLACE_FILE = "replace_file"
 
 
 class CodePatchStatus(StrEnum):

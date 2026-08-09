@@ -107,7 +107,9 @@ class SourceChange(ContractModel):
             if self.content_sha256 != self.expected_after_sha256:
                 raise ValueError("create_file after hash must equal content hash")
         elif self.expected_before_sha256 is None:
-            raise ValueError("append_symbol requires expected_before_sha256")
+            raise ValueError("non-create source change requires expected_before_sha256")
+        elif self.kind is SourceChangeKind.REPLACE_FILE and self.content_sha256 != self.expected_after_sha256:
+            raise ValueError("replace_file after hash must equal full replacement content hash")
         return self
 
 

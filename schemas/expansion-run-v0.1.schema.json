@@ -1,0 +1,363 @@
+{
+  "$defs": {
+    "ExpansionRunStatus": {
+      "enum": [
+        "pending",
+        "passed",
+        "rejected",
+        "blocked"
+      ],
+      "title": "ExpansionRunStatus",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Cross-stage evidence ledger for one incremental expansion.",
+  "properties": {
+    "active_operator_seconds": {
+      "minimum": 0.0,
+      "title": "Active Operator Seconds",
+      "type": "number"
+    },
+    "adaptation_plan_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Adaptation Plan Id"
+    },
+    "application_report_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Application Report Id"
+    },
+    "automatic_context_write_performed": {
+      "const": false,
+      "default": false,
+      "title": "Automatic Context Write Performed",
+      "type": "boolean"
+    },
+    "base_context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Base Context Id",
+      "type": "string"
+    },
+    "base_context_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Base Context Sha256",
+      "type": "string"
+    },
+    "base_context_unchanged": {
+      "title": "Base Context Unchanged",
+      "type": "boolean"
+    },
+    "blocked_item_count": {
+      "minimum": 0,
+      "title": "Blocked Item Count",
+      "type": "integer"
+    },
+    "bootstrap_questions_repeated": {
+      "const": false,
+      "default": false,
+      "title": "Bootstrap Questions Repeated",
+      "type": "boolean"
+    },
+    "browser_seconds": {
+      "minimum": 0.0,
+      "title": "Browser Seconds",
+      "type": "number"
+    },
+    "candidate_context_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Candidate Context Id",
+      "type": "string"
+    },
+    "candidate_context_reviewed": {
+      "title": "Candidate Context Reviewed",
+      "type": "boolean"
+    },
+    "candidate_context_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Candidate Context Sha256",
+      "type": "string"
+    },
+    "code_patch_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Code Patch Id"
+    },
+    "existing_creation_pipeline_reused": {
+      "title": "Existing Creation Pipeline Reused",
+      "type": "boolean"
+    },
+    "existing_page_object_extended": {
+      "title": "Existing Page Object Extended",
+      "type": "boolean"
+    },
+    "existing_tests_preserved": {
+      "minimum": 0,
+      "title": "Existing Tests Preserved",
+      "type": "integer"
+    },
+    "finished_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Finished At"
+    },
+    "fixture_decisions_used": {
+      "title": "Fixture Decisions Used",
+      "type": "boolean"
+    },
+    "framework_execution_independent": {
+      "title": "Framework Execution Independent",
+      "type": "boolean"
+    },
+    "framework_snapshot_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Framework Snapshot Fingerprint",
+      "type": "string"
+    },
+    "framework_snapshot_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Framework Snapshot Id",
+      "type": "string"
+    },
+    "framework_symbols_added": {
+      "minimum": 0,
+      "title": "Framework Symbols Added",
+      "type": "integer"
+    },
+    "framework_symbols_extended": {
+      "minimum": 0,
+      "title": "Framework Symbols Extended",
+      "type": "integer"
+    },
+    "framework_symbols_reused": {
+      "minimum": 0,
+      "title": "Framework Symbols Reused",
+      "type": "integer"
+    },
+    "hash_bound_source_replacement_used": {
+      "title": "Hash Bound Source Replacement Used",
+      "type": "boolean"
+    },
+    "headed_browser_used": {
+      "title": "Headed Browser Used",
+      "type": "boolean"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "interactive_human_trigger_used": {
+      "title": "Interactive Human Trigger Used",
+      "type": "boolean"
+    },
+    "live_llm_calls": {
+      "minimum": 0,
+      "title": "Live Llm Calls",
+      "type": "integer"
+    },
+    "measured_savings_claimed": {
+      "const": false,
+      "default": false,
+      "title": "Measured Savings Claimed",
+      "type": "boolean"
+    },
+    "method_property_collision_protection": {
+      "title": "Method Property Collision Protection",
+      "type": "boolean"
+    },
+    "new_observation_count": {
+      "minimum": 0,
+      "title": "New Observation Count",
+      "type": "integer"
+    },
+    "new_tests_added": {
+      "minimum": 0,
+      "title": "New Tests Added",
+      "type": "integer"
+    },
+    "operator_action_count": {
+      "minimum": 0,
+      "title": "Operator Action Count",
+      "type": "integer"
+    },
+    "original_framework_unchanged": {
+      "title": "Original Framework Unchanged",
+      "type": "boolean"
+    },
+    "phoenixqa_healing_used": {
+      "const": false,
+      "default": false,
+      "title": "Phoenixqa Healing Used",
+      "type": "boolean"
+    },
+    "plan_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "process_specific_questions_asked": {
+      "minimum": 0,
+      "title": "Process Specific Questions Asked",
+      "type": "integer"
+    },
+    "raw_page_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Page Persisted",
+      "type": "boolean"
+    },
+    "reobservation_count": {
+      "minimum": 0,
+      "title": "Reobservation Count",
+      "type": "integer"
+    },
+    "request_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Request Id",
+      "type": "string"
+    },
+    "reused_knowledge_item_count": {
+      "minimum": 0,
+      "title": "Reused Knowledge Item Count",
+      "type": "integer"
+    },
+    "review_item_count": {
+      "minimum": 0,
+      "title": "Review Item Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_drift_preflight_enforced": {
+      "title": "Source Drift Preflight Enforced",
+      "type": "boolean"
+    },
+    "stale_knowledge_silently_reused": {
+      "const": false,
+      "default": false,
+      "title": "Stale Knowledge Silently Reused",
+      "type": "boolean"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/ExpansionRunStatus",
+      "default": "pending"
+    },
+    "synthesis_run_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Synthesis Run Id"
+    },
+    "target_test": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Target Test"
+    },
+    "verification_seconds": {
+      "minimum": 0.0,
+      "title": "Verification Seconds",
+      "type": "number"
+    }
+  },
+  "required": [
+    "id",
+    "request_id",
+    "plan_id",
+    "base_context_id",
+    "base_context_sha256",
+    "candidate_context_id",
+    "candidate_context_sha256",
+    "framework_snapshot_id",
+    "framework_snapshot_fingerprint",
+    "started_at",
+    "reused_knowledge_item_count",
+    "process_specific_questions_asked",
+    "new_observation_count",
+    "reobservation_count",
+    "review_item_count",
+    "blocked_item_count",
+    "framework_symbols_reused",
+    "framework_symbols_extended",
+    "framework_symbols_added",
+    "existing_tests_preserved",
+    "new_tests_added",
+    "operator_action_count",
+    "active_operator_seconds",
+    "browser_seconds",
+    "verification_seconds",
+    "live_llm_calls",
+    "interactive_human_trigger_used",
+    "headed_browser_used",
+    "fixture_decisions_used",
+    "candidate_context_reviewed",
+    "existing_creation_pipeline_reused",
+    "existing_page_object_extended",
+    "method_property_collision_protection",
+    "hash_bound_source_replacement_used",
+    "source_drift_preflight_enforced",
+    "framework_execution_independent",
+    "base_context_unchanged",
+    "original_framework_unchanged"
+  ],
+  "title": "ExpansionRun",
+  "type": "object"
+}

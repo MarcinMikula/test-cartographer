@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1",
+  "id": "workspace_expansion_reference",
+  "repository_kind": "qa_automation_framework",
+  "repository_label": "Sprint 14 controlled expansion framework",
+  "root_marker_files": [
+    "README.md"
+  ],
+  "allowed_roots": [
+    "pages",
+    "tests/e2e"
+  ],
+  "ignored_names": [
+    ".git",
+    ".venv",
+    "__pycache__",
+    ".pytest_cache",
+    "allure-results"
+  ],
+  "max_files": 500,
+  "max_file_bytes": 200000
+}

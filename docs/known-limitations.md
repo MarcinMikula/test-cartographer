@@ -250,16 +250,15 @@ These are current project boundaries, not hidden bugs. Full reasoning lives in
 - **Reactive maintenance uses no LLM.** Candidate filtering and the reference
   locator replacement are deterministic. No model-assisted diagnosis or source
   repair has been validated.
-- **No proactive maintenance exists.** Cartographer cannot run bounded
-  post-deployment frontend/context regression against an approved observation
-  inventory.
-- **No change detection or automatic staleness calculation exists.**
+- **Proactive regression remains bounded.** Sprint 13 proves one human-triggered
+  public/no-auth approved-inventory scan; scheduling, protected applications,
+  large inventories, broad change classes, and automatic handoff remain unsupported.
+- **Change detection is narrow.** Locator drift is demonstrated for one bounded proactive inventory; semantic, visual, workflow, data, network, and broad state drift remain unsupported.
 - **No impact analysis exists.**
 - **No selector or workflow repair exists.**
 - **No accepted-change history beyond current intake and observation evidence
   exists.**
-- **No second-process expansion has been evaluated.** The project has no proof
-  that its application map reduces repeated work.
+- **Expansion evidence is one controlled second process only.** Sprint 14 proves concrete reuse for Search → Sort, but not general efficiency, arbitrary application-area expansion, persistent cross-run profile reuse, or enterprise scale.
 
 ## Validation and claims
 
@@ -486,3 +485,25 @@ the selected generation profile rather than silently handled.
   terminal Sprint 13 state.
 - No LLM participates, so this sprint neither validates nor constrains Ollama,
   cloud models, or future provider selection.
+
+
+## Sprint 14 — incremental expansion limitations
+
+- The accepted expansion covers one public/no-auth page and one second process.
+- Eight reused knowledge items demonstrate reuse mechanics, not a measured
+  productivity or cost saving.
+- Cross-run bootstrap/project-profile persistence and invalidation semantics are
+  still not implemented.
+- `EXTEND_SYMBOL` is validated for one existing Page Object with one missing
+  method and one missing property; arbitrary class editing is unsupported.
+- `REPLACE_FILE` is deterministic and source-hash-bound, not a general-purpose
+  source rewrite facility.
+- The controlled Sort oracle binds the complete expected visible result, but
+  generated code still uses containment and the synthesis proposal still calls
+  the value a fragment. This is not a general sorting validator.
+- Expansion applies accepted source only to a fresh sandbox. The original
+  framework repository is not modified and no pull request is created.
+- No live LLM participates in Sprint 14 acceptance, so the sprint proves reuse
+  mechanics rather than live-model quality, cost, or provider behavior.
+- PhoenixQA is not invoked. Runtime recovery remains a separate module boundary.
+- No authenticated, dynamic external, or Salesforce expansion has been tested.

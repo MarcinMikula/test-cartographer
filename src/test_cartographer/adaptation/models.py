@@ -65,13 +65,21 @@ class PythonSymbol(ContractModel):
     name: PythonName
     bases: tuple[PythonName, ...] = ()
     method_names: tuple[PythonName, ...] = ()
+    property_names: tuple[PythonName, ...] = ()
 
-    @field_validator("bases", "method_names")
+    @field_validator("bases", "method_names", "property_names")
     @classmethod
     def names_must_be_unique(cls, value: tuple[str, ...]) -> tuple[str, ...]:
         if len(value) != len(set(value)):
             raise ValueError("python symbol names must be unique")
         return value
+
+    @model_validator(mode="after")
+    def method_and_property_names_must_not_overlap(self) -> "PythonSymbol":
+        overlap = sorted(set(self.method_names) & set(self.property_names))
+        if overlap:
+            raise ValueError(f"python symbol method/property names overlap: {overlap}")
+        return self
 
 
 class RepositoryEntry(ContractModel):
@@ -128,6 +136,8 @@ class AdaptationOperation(ContractModel):
     symbol_name: PythonName
     source_proposal_ids: tuple[Identifier, ...] = Field(min_length=1)
     rationale: NonEmptyText
+    method_names: tuple[PythonName, ...] = ()
+    property_names: tuple[PythonName, ...] = ()
     depends_on: tuple[Identifier, ...] = ()
 
     @field_validator("source_proposal_ids", "depends_on")
@@ -136,6 +146,27 @@ class AdaptationOperation(ContractModel):
         if len(value) != len(set(value)):
             raise ValueError("adaptation operation references must be unique")
         return value
+
+    @field_validator("method_names", "property_names")
+    @classmethod
+    def extension_names_must_be_unique(cls, value: tuple[str, ...]) -> tuple[str, ...]:
+        if len(value) != len(set(value)):
+            raise ValueError("adaptation extension names must be unique")
+        return value
+
+    @model_validator(mode="after")
+    def validate_extension_shape(self) -> "AdaptationOperation":
+        overlap = sorted(set(self.method_names) & set(self.property_names))
+        if overlap:
+            raise ValueError(f"adaptation method/property names overlap: {overlap}")
+        if self.kind is AdaptationOperationKind.EXTEND_SYMBOL:
+            if self.target_kind not in {AdaptationTargetKind.PAGE, AdaptationTargetKind.COMPONENT}:
+                raise ValueError("extend_symbol supports page/component classes only")
+            if not self.method_names and not self.property_names:
+                raise ValueError("extend_symbol requires missing methods or properties")
+        elif self.method_names or self.property_names:
+            raise ValueError("extension names are only valid for extend_symbol")
+        return self
 
 
 class AdaptationPlan(ContractModel):

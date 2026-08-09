@@ -15,6 +15,8 @@ and expansion.
 
 ## Status
 
+**Sprint 14 — human-triggered incremental expansion using the existing map: complete — real operator acceptance verified**
+
 **Sprint 13 — human-triggered Proactive Frontend Regression: complete — real operator acceptance verified**
 
 **Sprint 12 — human-triggered Reactive Maintenance Flow: complete**
@@ -24,7 +26,7 @@ and expansion.
 Current evidence:
 
 ```text
-305 tests passed with Playwright Chromium in the Sprint 13 Windows acceptance run
+339 tests passed with Playwright Chromium in the Sprint 14D.2 Windows closure run
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
@@ -33,10 +35,11 @@ framework-side execution-evidence collection and maintenance-readiness verified 
 human-triggered Creation Flow with headed review and exact patch acceptance verified end to end
 human-triggered reactive locator maintenance with real-operator fail-before/pass-after sandbox proof verified
 human-triggered proactive frontend/context regression with green-test / mapped-drift proof verified
+human-triggered second-process expansion with reuse, targeted re-observation, existing-Page-Object extension, and sandbox execution verified
 live local-Ollama interview planning from a minimal request verified end to end
 ```
 
-The repository now provides thirteen executable boundaries:
+The repository now provides fourteen executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -63,6 +66,7 @@ The repository now provides thirteen executable boundaries:
 12. a human-triggered reactive-maintenance flow from bounded failed-run evidence
     through headed re-observation, exact patch review, sandbox repair, and a passing retest.
 13. a human-triggered proactive-regression flow that keeps the framework test green while detecting locator drift on an approved mapped element outside the current test pool.
+14. a human-triggered incremental-expansion flow that reuses accepted application/framework knowledge, re-observes stale targets, extends an existing Page Object through the existing creation pipeline, and proves the old and new processes together in a fresh sandbox.
 
 The current workflow can:
 
@@ -124,6 +128,12 @@ The current workflow can:
 - replace the technical placeholder with an observed page, component, elements,
   locators, test data, and process steps,
 - reach full existing ContextBundle readiness after accepted discovery.
+- start a second process from explicit human intent without repeating bootstrap questions,
+- classify expansion work as `REUSE`, `ASK_HUMAN`, `OBSERVE_NEW`, `REOBSERVE`, `REVIEW`, or `BLOCKED` without replacing ContextBundle knowledge status,
+- re-observe stale mapped frontend knowledge before using it in the candidate expanded context,
+- extend an existing Page Object only with reviewed missing methods/properties,
+- bind existing-file replacement to the inspected source hash and reject source drift before write,
+- execute the preserved Search process and the new Sort process together in a fresh sandbox while the original framework remains unchanged.
 
 It still cannot crawl a complete application, safely patch the user's original
 framework repository, handle arbitrary source edits, measure time savings, or
@@ -863,7 +873,7 @@ See:
 | 11 | Human-triggered interactive Creation Flow | Done |
 | 12 | Human-triggered reactive maintenance from bounded execution evidence | Done — real operator acceptance verified |
 | 13 | Proactive frontend/context regression | Done — real operator acceptance verified |
-| 14 | Expansion using the existing map | Parked |
+| 14 | Expansion using the existing map | Done — real operator acceptance verified |
 | 15–17 | Enterprise authentication, Salesforce validation, comparative evaluation, and v1.0 decision | Parked |
 
 See [`docs/roadmap.md`](docs/roadmap.md).
@@ -907,6 +917,7 @@ See [`docs/roadmap.md`](docs/roadmap.md).
 | [`docs/interactive-creation-flow.md`](docs/interactive-creation-flow.md) | Sprint 11 real operator trigger, blocking decisions, headed browser, and operator audit ledger |
 | [`docs/reactive-maintenance-flow.md`](docs/reactive-maintenance-flow.md) | Sprint 12 failed-run evidence, headed re-observation, exact patch review, sandbox-only repair, and retest |
 | [`docs/proactive-regression-flow.md`](docs/proactive-regression-flow.md) | Sprint 13 approved-inventory re-observation, green-test/drift proof, and review-only impact reporting |
+| [`docs/expansion-flow.md`](docs/expansion-flow.md) | Sprint 14 reuse/gap planning, targeted re-observation, existing-class extension, hash-bound delivery, and real-operator acceptance |
 | [`docs/browser-observation.md`](docs/browser-observation.md) | Sprint 3 minimized Playwright capture, review, and context update |
 | [`docs/synthesis-protocol.md`](docs/synthesis-protocol.md) | Sprint 4 bounded request, replay, strict parsing, proposal validation, and review |
 | [`docs/framework-adaptation-planning.md`](docs/framework-adaptation-planning.md) | Sprint 5 workspace profile, read-only snapshot, exact file/symbol plan, and review |
@@ -1140,3 +1151,36 @@ budget, and accepts the full report. No LLM, application-bug claim, automatic
 context update, code patch, or raw-page persistence is involved.
 
 See [`docs/proactive-regression-flow.md`](docs/proactive-regression-flow.md).
+
+
+## Sprint 14 result — incremental expansion reuses accepted knowledge
+
+Sprint 14 adds the first controlled proof that TestCartographer can add a
+second automated process without treating the application as greenfield again.
+
+The accepted Search process, application/environment/page context, role,
+precondition, framework snapshot, and reusable fixture are reused. The mapped
+Sort control is not silently reused after Sprint 13 reported locator drift:
+the expansion plan marks it `REOBSERVE`, headed Chromium confirms the current
+`catalog-sort-control` locator, and only then is a candidate Sort context built.
+
+The existing creation pipeline is reused rather than forked. Repository
+inspection detects that `CatalogPage` already exists and produces
+`EXTEND_SYMBOL` for only `apply_sort` and `sort_results`. Controlled delivery
+maps that accepted extension to a source-hash-bound `REPLACE_FILE`, creates one
+new Sort test, rejects source drift before writing, and applies only to a fresh
+sandbox.
+
+The final Windows closure run completed with `339 passed`, zero failures, zero
+errors, and zero skipped tests. The real operator made seven explicit authority
+transitions, answered only three new process-specific questions, reused eight
+knowledge items, performed one targeted re-observation, used no live LLM or
+PhoenixQA healing, and kept the original framework unchanged. The sandbox then
+passed both the pre-existing Search test and the new Sort test.
+
+This remains a controlled public/no-auth reference slice. It does not prove
+arbitrary application expansion, general sort-oracle generation, persistent
+cross-run bootstrap invalidation, enterprise authentication, production
+repository writes, broad usability, or measured savings.
+
+See [`docs/expansion-flow.md`](docs/expansion-flow.md).

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>Public catalog expansion</title></head>
+<body>
+  <main>
+    <h1>Public catalog</h1>
+    <form id="catalog-form">
+      <label for="catalog-query">Search catalog</label>
+      <input id="catalog-query" data-testid="search-query" />
+      <button type="submit" data-testid="search-submit">Search</button>
+    </form>
+    <button type="button" data-testid="catalog-sort">Sort results</button>
+    <div data-testid="catalog-results" role="region" aria-label="Catalog results">Zulu Beta Alpha</div>
+  </main>
+  <script>
+    const results = document.querySelector('[data-testid="catalog-results"]');
+    document.querySelector('#catalog-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const query = document.querySelector('#catalog-query').value;
+      results.textContent = `Results for ${query}`;
+    });
+    document.querySelector('[data-testid="catalog-sort"]').addEventListener('click', () => {
+      results.textContent = 'Alpha Beta Zulu';
+    });
+  </script>
+</body>
+</html>

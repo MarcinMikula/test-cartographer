@@ -16,6 +16,7 @@ class PythonSymbolKind(StrEnum):
 class AdaptationOperationKind(StrEnum):
     CREATE_FILE = "create_file"
     ADD_SYMBOL = "add_symbol"
+    EXTEND_SYMBOL = "extend_symbol"
     REUSE_SYMBOL = "reuse_symbol"
 
 

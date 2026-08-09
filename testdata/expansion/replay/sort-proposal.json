@@ -1,0 +1,113 @@
+{
+  "schema_version": "0.1",
+  "id": "proposal_sort_expansion",
+  "request_id": "synreq_sort_expansion",
+  "context_id": "ctx_sort_candidate",
+  "summary": "Extend the existing CatalogPage with the accepted Sort process.",
+  "pages": [
+    {
+      "id": "pom_page_catalog_sort",
+      "class_name": "CatalogPage",
+      "source_page_id": "page_public_catalog",
+      "method_ids": [
+        "method_open_catalog",
+        "method_apply_sort",
+        "method_read_results"
+      ],
+      "component_object_ids": []
+    }
+  ],
+  "components": [],
+  "methods": [
+    {
+      "id": "method_open_catalog",
+      "name": "open_catalog",
+      "owner_kind": "page",
+      "owner_source_id": "page_public_catalog",
+      "intent": "Open the public catalog.",
+      "actions": [
+        {
+          "step_id": "step_open_catalog_sort",
+          "kind": "navigate",
+          "target_element_id": null,
+          "locator_id": null,
+          "test_data_id": null
+        }
+      ]
+    },
+    {
+      "id": "method_apply_sort",
+      "name": "apply_sort",
+      "owner_kind": "page",
+      "owner_source_id": "page_public_catalog",
+      "intent": "Apply alphabetical result sorting.",
+      "actions": [
+        {
+          "step_id": "step_apply_sort",
+          "kind": "click",
+          "target_element_id": "el_sort_results",
+          "locator_id": "loc_sort_results_expansion",
+          "test_data_id": null
+        }
+      ]
+    },
+    {
+      "id": "method_read_results",
+      "name": "read_results",
+      "owner_kind": "page",
+      "owner_source_id": "page_public_catalog",
+      "intent": "Read the sorted catalog results.",
+      "actions": [
+        {
+          "step_id": "step_read_sorted",
+          "kind": "read",
+          "target_element_id": "el_results_list",
+          "locator_id": "loc_results_list",
+          "test_data_id": null
+        }
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "fixture_catalog_context",
+      "name": "catalog_context",
+      "purpose": "Reuse the existing bounded browser/data fixture.",
+      "uses_role_from_context": true,
+      "uses_environment_from_context": true,
+      "secret_values_included": false
+    }
+  ],
+  "test": {
+    "id": "test_sort_catalog",
+    "name": "test_sort_catalog",
+    "process_id": "proc_sort_catalog",
+    "fixture_ids": [
+      "fixture_catalog_context"
+    ],
+    "method_ids": [
+      "method_open_catalog",
+      "method_apply_sort",
+      "method_read_results"
+    ],
+    "assertions": [
+      {
+        "id": "assert_sorted",
+        "outcome_id": "out_sorted",
+        "page_id": "page_public_catalog",
+        "related_element_ids": [
+          "el_results_list"
+        ],
+        "intent": "Verify the visible results contain the explicitly supplied expected sorted fragment."
+      }
+    ]
+  },
+  "open_questions": [],
+  "claim_flags": {
+    "execution_success": false,
+    "business_correctness": false,
+    "locator_stability": false,
+    "repository_fit": false,
+    "security_approval": false
+  }
+}

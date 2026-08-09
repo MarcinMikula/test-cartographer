@@ -20,6 +20,24 @@
         "kind": {
           "$ref": "#/$defs/AdaptationOperationKind"
         },
+        "method_names": {
+          "default": [],
+          "items": {
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+            "type": "string"
+          },
+          "title": "Method Names",
+          "type": "array"
+        },
+        "property_names": {
+          "default": [],
+          "items": {
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]{2,79}$",
+            "type": "string"
+          },
+          "title": "Property Names",
+          "type": "array"
+        },
         "rationale": {
           "minLength": 1,
           "title": "Rationale",
@@ -65,6 +83,7 @@
       "enum": [
         "create_file",
         "add_symbol",
+        "extend_symbol",
         "reuse_symbol"
       ],
       "title": "AdaptationOperationKind",

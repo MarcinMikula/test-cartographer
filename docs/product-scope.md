@@ -448,9 +448,11 @@ Adding a new process repeats much of initial creation, but it should reuse the
 existing application map, accepted Page Objects, components, fixtures,
 configuration mappings, and prior decisions.
 
-A future validation hypothesis is that later processes require fewer repeated
-questions, observations, LLM tokens, duplicate artefacts, and review time than
-the first process.
+Sprint 14 provides the first controlled reuse evidence: a second Sort process
+reuses accepted application/framework knowledge, asks only for new process
+meaning, re-observes one known-stale target, extends the existing `CatalogPage`,
+and runs beside the preserved Search process in a fresh sandbox. This is a
+mechanics proof, not evidence of general time/cost savings.
 
 Autonomous repair and unrestricted crawling are not part of the first vertical
 slice.
@@ -815,3 +817,28 @@ re-observe approved mapped elements, and produce a reviewable impact report.
 This does not turn TestCartographer into the normal test runner. The framework
 still owns ordinary execution. Cartographer performs a separately authorized
 engineering/maintenance activity against approved map scope.
+
+
+## Sprint 14 implemented scope — incremental expansion
+
+TestCartographer now owns one executable expansion boundary in addition to
+creation, reactive maintenance, and proactive frontend/context regression.
+
+```text
+explicit human expansion intent
++ accepted base ContextBundle
++ current framework snapshot
++ optional proactive freshness evidence
+→ deterministic reuse/gap plan
+→ targeted human questions and re-observation
+→ reviewed candidate ContextBundle
+→ existing synthesis/adaptation/delivery pipeline
+→ reviewed existing-class extension
+→ hash-bound sandbox delivery
+→ preserved old process + runnable new process
+```
+
+The current implementation deliberately keeps expansion human-triggered and
+reviewed. It does not mutate the accepted base ContextBundle, silently reuse
+known-stale evidence, create a second creation engine, invoke PhoenixQA, or
+write to the original framework repository.

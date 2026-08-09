@@ -66,12 +66,17 @@ def apply_code_patch(
             after_bytes = change.content.encode("utf-8")
         else:
             if not target.is_file():
-                raise ValueError(f"append_symbol target is missing: {change.target_path}")
+                raise ValueError(f"existing-file change target is missing: {change.target_path}")
             before_bytes = target.read_bytes()
             before_hash = hashlib.sha256(before_bytes).hexdigest()
             if before_hash != change.expected_before_sha256:
-                raise ValueError(f"append target hash changed: {change.target_path}")
-            after_bytes = before_bytes + change.content.encode("utf-8")
+                raise ValueError(f"existing-file target hash changed: {change.target_path}")
+            if change.kind is SourceChangeKind.APPEND_SYMBOL:
+                after_bytes = before_bytes + change.content.encode("utf-8")
+            elif change.kind is SourceChangeKind.REPLACE_FILE:
+                after_bytes = change.content.encode("utf-8")
+            else:
+                raise ValueError(f"unsupported source change kind: {change.kind.value}")
         actual_after = hashlib.sha256(after_bytes).hexdigest()
         if actual_after != change.expected_after_sha256:
             raise ValueError(f"planned after hash does not match rendered content: {change.target_path}")

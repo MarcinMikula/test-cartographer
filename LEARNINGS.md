@@ -3933,3 +3933,168 @@ framework test remains green. This does not yet prove scheduling, authenticated
 or enterprise coverage, broad change detection, false-positive performance,
 automatic map reconciliation, maintenance handoff, usability, or measured
 savings.
+
+
+## Sprint 14 — expansion is a reuse problem, not a second greenfield creation
+
+### Starting hypothesis
+
+The next process should not repeat bootstrap intake or rediscover application
+and framework facts that are already accepted and current. Expansion needs a
+small orchestration layer before the existing synthesis/adaptation/delivery
+pipeline, not a second creation engine.
+
+The reference request was intentionally explicit:
+
+```text
+Add a second automated process for sorting catalog results.
+```
+
+Search already existed. The catalog page and framework structure were known.
+Sprint 13 had already produced evidence that the mapped Sort locator
+`catalog-sort` had drifted to `catalog-sort-control`.
+
+### Architecture correction after implementation started
+
+The first design stopped too early at an `ExpansionPlan`. Implementation showed
+that this would leave the product unable to deliver the second runnable process.
+The accepted design was corrected before test closure:
+
+```text
+existing accepted knowledge
++ explicit human expansion intent
++ optional currentness/change evidence
+→ reuse/gap decision
+→ bounded delta collection
+→ candidate expanded ContextBundle
+→ existing synthesis pipeline
+→ existing repository-aware adaptation
+→ exact reviewed delivery
+→ fresh sandbox execution
+```
+
+The existing ContextBundle knowledge states remain authoritative. Sprint 14
+adds a separate workflow disposition only:
+
+```text
+REUSE
+ASK_HUMAN
+OBSERVE_NEW
+REOBSERVE
+REVIEW
+BLOCKED
+```
+
+This avoids inventing a competing knowledge-status model.
+
+### Existing classes require extension, not fake reuse
+
+A concrete repository problem appeared immediately: `CatalogPage` already
+existed, but Sort needed two members that Search did not need. Treating the
+class as `REUSE_SYMBOL` would hide missing implementation; inventing a
+`CatalogSortPage` would duplicate the page.
+
+Sprint 14 therefore adds `EXTEND_SYMBOL`. The framework snapshot distinguishes
+normal methods from `@property` members, rejects name-kind collisions, and
+records only explicitly reviewed missing members. The reference extension is:
+
+```text
+CatalogPage
++ apply_sort()
++ sort_results
+```
+
+Delivery maps an accepted existing-class extension to `REPLACE_FILE`, but not
+as a free-form rewrite. The replacement is bound to the inspected source hash,
+the accepted plan, the reviewed missing members, deterministic generation, and
+preflight source-drift rejection.
+
+### 14D exposed a human-interface failure before a product failure
+
+The first real operator attempt accidentally entered Ctrl+A (`^A`) at an
+accept/reject prompt. The runner treated every value other than `A` as a
+rejection and aborted the entire flow.
+
+That policy was wrong. A human-guided authority boundary must be strict about
+meaning without requiring perfect keyboard input.
+
+The corrected rule is:
+
+```text
+A / Accept  → accept
+R / Reject  → reject
+anything else → no decision; explain and re-prompt
+```
+
+The final run deliberately exercised inputs such as `asd` and `123`; neither
+was recorded as an authority transition. Only explicit acceptance advanced the
+flow.
+
+### Green execution was not enough: review the oracle too
+
+The first successful 14D run exposed a second quality issue after all tests were
+green. The generated Sort test used an assertion message copied from the Search
+template and the controlled expected value covered only the prefix
+`Alpha Beta`.
+
+14D.2 corrected the message to an expected-result statement and changed the
+controlled binding to the full `Alpha Beta Zulu` result. The closure gate then
+reran the focused expansion/delivery regression, the complete 339-test suite,
+and the real headed acceptance.
+
+The current generator still uses a containment assertion and the synthesis
+proposal still uses the word `fragment`. This is acceptable only for the
+controlled reference slice because the complete expected string distinguishes
+the before/after state. It is not evidence of a general-purpose sort oracle.
+
+### Final real-operator evidence
+
+The accepted run records:
+
+```text
+status: passed
+expansion_verified: true
+controlled_demo_ready: true
+blockers: []
+
+bootstrap_questions_repeated: false
+process_specific_questions_asked: 3
+reused_knowledge_item_count: 8
+reobservation_count: 1
+
+framework_symbols_reused: 1
+framework_symbols_extended: 1
+framework_symbols_added: 1
+existing_tests_preserved: 1
+new_tests_added: 1
+
+operator_action_count: 7
+active_operator_seconds: ~24.4
+live_llm_calls: 0
+
+interactive_human_trigger_used: true
+headed_browser_used: true
+fixture_decisions_used: false
+base_context_unchanged: true
+original_framework_unchanged: true
+stale_knowledge_silently_reused: false
+automatic_context_write_performed: false
+phoenixqa_healing_used: false
+raw_page_persisted: false
+```
+
+Before expansion the existing Search test passed. After applying the reviewed
+patch to a fresh sandbox, Search and Sort both passed. The final closure
+regression recorded exactly `339 passed`, zero failures, zero errors, and zero
+skipped tests.
+
+### Product conclusion
+
+Sprint 14 provides controlled evidence for the original expansion hypothesis:
+TestCartographer can reuse accepted application/framework knowledge, ask only
+for genuinely new process context, refresh stale frontend knowledge, and extend
+an existing automation structure through the same reviewed creation pipeline.
+
+It does not prove that expansion is faster in general, that eight reused items
+translate into business savings, that arbitrary existing classes can be edited
+safely, or that this flow scales to authenticated enterprise systems.

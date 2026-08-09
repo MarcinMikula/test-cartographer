@@ -1,0 +1,71 @@
+{
+  "schema_version": "0.1",
+  "id": "report_7fd264a16609",
+  "run_id": "proactive_e8520cef24e0",
+  "inventory_id": "inventory_public_catalog",
+  "generated_at": "2026-08-06T18:42:40.071801Z",
+  "decision": "accepted",
+  "observations": [
+    {
+      "item_id": "inventory_search_submit",
+      "element_id": "el_search_submit",
+      "disposition": "unchanged",
+      "automation_impact": "none_detected",
+      "covered_by_current_framework_test": true,
+      "expected_locator_strategy": "test_id",
+      "expected_locator_value": "search-submit",
+      "expected_locator_visible_count": 1,
+      "semantic_visible_count": 1,
+      "current_locator_strategy": "test_id",
+      "current_locator_value": "search-submit",
+      "observed_attributes": [
+        {
+          "name": "data-testid",
+          "value": "search-submit"
+        },
+        {
+          "name": "type",
+          "value": "submit"
+        }
+      ],
+      "observation_sha256": "24abc0807201840a04e7edb17fc01aa54415e23c6cde8074e6558627f83a90c4"
+    },
+    {
+      "item_id": "inventory_sort_results",
+      "element_id": "el_sort_results",
+      "disposition": "locator_drift",
+      "automation_impact": "mapped_context_stale",
+      "covered_by_current_framework_test": false,
+      "expected_locator_strategy": "test_id",
+      "expected_locator_value": "catalog-sort",
+      "expected_locator_visible_count": 0,
+      "semantic_visible_count": 1,
+      "current_locator_strategy": "test_id",
+      "current_locator_value": "catalog-sort-control",
+      "observed_attributes": [
+        {
+          "name": "data-testid",
+          "value": "catalog-sort-control"
+        },
+        {
+          "name": "type",
+          "value": "button"
+        }
+      ],
+      "observation_sha256": "1c5ab2980dabcac678b256e715e0503ad7e38039c00e744a86515894c609405a"
+    }
+  ],
+  "stable_count": 1,
+  "locator_drift_count": 1,
+  "missing_count": 0,
+  "ambiguous_count": 0,
+  "current_test_risk_count": 0,
+  "mapped_context_stale_count": 1,
+  "application_bug_claimed": false,
+  "automatic_patch_created": false,
+  "context_automatically_modified": false,
+  "raw_page_persisted": false,
+  "html_persisted": false,
+  "screenshot_persisted": false,
+  "live_llm_used": false
+}

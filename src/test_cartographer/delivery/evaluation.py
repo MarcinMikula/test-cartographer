@@ -80,7 +80,8 @@ def build_creation_evaluation(
             change.kind is SourceChangeKind.CREATE_FILE for change in patch.changes
         ),
         modified_file_count=sum(
-            change.kind is SourceChangeKind.APPEND_SYMBOL for change in patch.changes
+            change.kind in {SourceChangeKind.APPEND_SYMBOL, SourceChangeKind.REPLACE_FILE}
+            for change in patch.changes
         ),
         reused_symbol_count=len(patch.reused_targets),
         collected_test_count=collected_test_count,
