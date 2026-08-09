@@ -1,0 +1,422 @@
+{
+  "$defs": {
+    "AuthenticationDeclaration": {
+      "additionalProperties": false,
+      "properties": {
+        "auth_profile_ref": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Auth Profile Ref"
+        },
+        "state": {
+          "$ref": "#/$defs/AuthenticationDeclarationState"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "title": "AuthenticationDeclaration",
+      "type": "object"
+    },
+    "AuthenticationDeclarationState": {
+      "enum": [
+        "not_required",
+        "required_unresolved",
+        "configured_ref"
+      ],
+      "title": "AuthenticationDeclarationState",
+      "type": "string"
+    },
+    "KnowledgeStatus": {
+      "description": "How a knowledge value is currently supported.",
+      "enum": [
+        "observed",
+        "provided",
+        "inferred",
+        "confirmed",
+        "unknown",
+        "stale",
+        "conflicting"
+      ],
+      "title": "KnowledgeStatus",
+      "type": "string"
+    },
+    "ProfileBindingState": {
+      "enum": [
+        "unresolved",
+        "current",
+        "review_required",
+        "stale",
+        "conflicting"
+      ],
+      "title": "ProfileBindingState",
+      "type": "string"
+    },
+    "ProjectApplicationBootstrap": {
+      "additionalProperties": false,
+      "properties": {
+        "base_url": {
+          "$ref": "#/$defs/ProjectValue"
+        },
+        "environment": {
+          "$ref": "#/$defs/ProjectValue"
+        },
+        "name": {
+          "$ref": "#/$defs/ProjectValue"
+        }
+      },
+      "required": [
+        "name",
+        "environment",
+        "base_url"
+      ],
+      "title": "ProjectApplicationBootstrap",
+      "type": "object"
+    },
+    "ProjectDataPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "allowed_context_sensitivities": {
+          "default": [
+            "public",
+            "internal"
+          ],
+          "items": {
+            "$ref": "#/$defs/SensitivityLevel"
+          },
+          "title": "Allowed Context Sensitivities",
+          "type": "array"
+        },
+        "external_processing_allowed": {
+          "default": false,
+          "title": "External Processing Allowed",
+          "type": "boolean"
+        },
+        "raw_application_content_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Application Content Persisted",
+          "type": "boolean"
+        },
+        "raw_secret_values_persisted": {
+          "const": false,
+          "default": false,
+          "title": "Raw Secret Values Persisted",
+          "type": "boolean"
+        }
+      },
+      "title": "ProjectDataPolicy",
+      "type": "object"
+    },
+    "ProjectProfileBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "profile_id": {
+          "anyOf": [
+            {
+              "pattern": "^[a-z][a-z0-9_]{2,63}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Profile Id"
+        },
+        "profile_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Profile Sha256"
+        },
+        "review_reason": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Review Reason"
+        },
+        "reviewed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reviewed At"
+        },
+        "state": {
+          "$ref": "#/$defs/ProfileBindingState"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "title": "ProjectProfileBinding",
+      "type": "object"
+    },
+    "ProjectProfileEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "affected_paths": {
+          "items": {
+            "minLength": 1,
+            "pattern": "^[a-z][a-z0-9_-]*(?:\\.[a-z][a-z0-9_-]*)*$",
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Affected Paths",
+          "type": "array"
+        },
+        "kind": {
+          "$ref": "#/$defs/ProjectProfileEventKind"
+        },
+        "new_revision": {
+          "minimum": 1,
+          "title": "New Revision",
+          "type": "integer"
+        },
+        "occurred_at": {
+          "format": "date-time",
+          "title": "Occurred At",
+          "type": "string"
+        },
+        "previous_revision": {
+          "minimum": 0,
+          "title": "Previous Revision",
+          "type": "integer"
+        },
+        "reason_code": {
+          "minLength": 1,
+          "title": "Reason Code",
+          "type": "string"
+        },
+        "sequence": {
+          "minimum": 1,
+          "title": "Sequence",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sequence",
+        "occurred_at",
+        "kind",
+        "affected_paths",
+        "reason_code",
+        "previous_revision",
+        "new_revision"
+      ],
+      "title": "ProjectProfileEvent",
+      "type": "object"
+    },
+    "ProjectProfileEventKind": {
+      "enum": [
+        "created",
+        "confirmed",
+        "changed",
+        "invalidated",
+        "revalidated",
+        "binding_changed",
+        "assessed"
+      ],
+      "title": "ProjectProfileEventKind",
+      "type": "string"
+    },
+    "ProjectValue": {
+      "additionalProperties": false,
+      "properties": {
+        "review_reason": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Review Reason"
+        },
+        "reviewed_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reviewed At"
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/SensitivityLevel",
+          "default": "internal"
+        },
+        "source": {
+          "$ref": "#/$defs/ProjectValueSource"
+        },
+        "status": {
+          "$ref": "#/$defs/KnowledgeStatus"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "value",
+        "status",
+        "source"
+      ],
+      "title": "ProjectValue",
+      "type": "object"
+    },
+    "ProjectValueSource": {
+      "enum": [
+        "human",
+        "system",
+        "migration"
+      ],
+      "title": "ProjectValueSource",
+      "type": "string"
+    },
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "application": {
+      "$ref": "#/$defs/ProjectApplicationBootstrap"
+    },
+    "arbitrary_metadata_allowed": {
+      "const": false,
+      "default": false,
+      "title": "Arbitrary Metadata Allowed",
+      "type": "boolean"
+    },
+    "authentication": {
+      "$ref": "#/$defs/AuthenticationDeclaration"
+    },
+    "configuration_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Configuration Fingerprint",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "data_policy": {
+      "$ref": "#/$defs/ProjectDataPolicy"
+    },
+    "events": {
+      "items": {
+        "$ref": "#/$defs/ProjectProfileEvent"
+      },
+      "minItems": 1,
+      "title": "Events",
+      "type": "array"
+    },
+    "guided_intake_binding": {
+      "$ref": "#/$defs/ProjectProfileBinding"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "raw_auth_state_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Raw Auth State Persisted",
+      "type": "boolean"
+    },
+    "revision": {
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "secret_values_persisted": {
+      "const": false,
+      "default": false,
+      "title": "Secret Values Persisted",
+      "type": "boolean"
+    },
+    "updated_at": {
+      "format": "date-time",
+      "title": "Updated At",
+      "type": "string"
+    },
+    "workspace_binding": {
+      "$ref": "#/$defs/ProjectProfileBinding"
+    }
+  },
+  "required": [
+    "id",
+    "revision",
+    "created_at",
+    "updated_at",
+    "application",
+    "workspace_binding",
+    "guided_intake_binding",
+    "data_policy",
+    "authentication",
+    "configuration_fingerprint",
+    "events"
+  ],
+  "title": "ProjectProfile",
+  "type": "object"
+}

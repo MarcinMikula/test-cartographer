@@ -97,6 +97,10 @@ from test_cartographer.interactive_creation.models import (
     InteractiveOperatorSession,
     OperatorActionRecord,
 )
+from test_cartographer.interactive_creation.project_profile import (
+    apply_persistent_project_bootstrap,
+    load_runtime_project_profile,
+)
 from test_cartographer.observation.reference import serve_reference_directory
 from test_cartographer.synthesis.adapter import ReplaySynthesisAdapter
 from test_cartographer.synthesis.enums import ProposalReviewDecision, SynthesisRunStatus
@@ -239,6 +243,7 @@ def run_human_triggered_creation_flow(
     timeout_seconds: float,
     executable_path: str | None = None,
     provider_mode: str = "ollama",
+    project_profile_path: str | Path | None = None,
     browser_opener=None,
     command_runner=None,
     input_fn: InputFn = input,
@@ -258,6 +263,31 @@ def run_human_triggered_creation_flow(
     source_framework = Path(
         framework_root or root / "testdata/framework/reference"
     ).resolve()
+    runtime_workspace_profile = load_workspace_profile(
+        root / "testdata/adaptation/profile/qa_automation_framework.json"
+    )
+    runtime_guided_profile = load_guided_profile(
+        root / "testdata/guided_intake/profile/ollama_local_qwen.json"
+    ).model_copy(
+        update={
+            "id": "guided_interactive_local",
+            "model": ollama_model,
+            "base_url": ollama_base_url,
+            "timeout_seconds": timeout_seconds,
+            "provider": (
+                GuidanceProviderKind.OLLAMA
+                if provider_mode == "ollama"
+                else GuidanceProviderKind.REPLAY
+            ),
+        }
+    )
+    active_project_profile = None
+    if project_profile_path is not None:
+        active_project_profile = load_runtime_project_profile(
+            project_profile_path,
+            workspace_profile=runtime_workspace_profile,
+            guided_profile=runtime_guided_profile,
+        )
     original_framework_hash = _tree_hash(source_framework)
     flow_started_at = now_fn()
     flow_started_perf = timer_fn()
@@ -298,6 +328,20 @@ def run_human_triggered_creation_flow(
             created_at=flow_started_at,
         )
         context = build_minimal_context(seed)
+        if active_project_profile is not None:
+            assert project_profile_path is not None
+            context, _ = apply_persistent_project_bootstrap(
+                context,
+                project_profile_path=project_profile_path,
+                project_profile=active_project_profile,
+                output_dir=output,
+                projected_at=flow_started_at,
+            )
+            output_fn(
+                "Persistent ProjectProfile reused: "
+                f"revision={active_project_profile.revision}; "
+                "bootstrap application questions=0."
+            )
         session = create_session(
             context,
             session_id=f"intake_{uuid.uuid4().hex[:12]}",
@@ -308,21 +352,7 @@ def run_human_triggered_creation_flow(
         save_session(session, output / "01-intake-session.json")
 
         intake_started = now_fn()
-        guided_profile = load_guided_profile(
-            root / "testdata/guided_intake/profile/ollama_local_qwen.json"
-        ).model_copy(
-            update={
-                "id": "guided_interactive_local",
-                "model": ollama_model,
-                "base_url": ollama_base_url,
-                "timeout_seconds": timeout_seconds,
-                "provider": (
-                    GuidanceProviderKind.OLLAMA
-                    if provider_mode == "ollama"
-                    else GuidanceProviderKind.REPLAY
-                ),
-            }
-        )
+        guided_profile = runtime_guided_profile
         guided_run = create_guided_run(
             session,
             seed,
@@ -733,9 +763,7 @@ def run_human_triggered_creation_flow(
         )
 
         adaptation_started = now_fn()
-        workspace_profile = load_workspace_profile(
-            root / "testdata/adaptation/profile/qa_automation_framework.json"
-        )
+        workspace_profile = runtime_workspace_profile
         snapshot = inspect_framework(
             source_framework,
             workspace_profile,

@@ -1,0 +1,81 @@
+{
+  "schema_version": "0.1",
+  "id": "project_public_catalog",
+  "revision": 1,
+  "created_at": "2026-08-09T14:30:00+02:00",
+  "updated_at": "2026-08-09T14:30:00+02:00",
+  "application": {
+    "name": {
+      "value": "Public Catalog",
+      "status": "confirmed",
+      "sensitivity": "internal",
+      "source": "human",
+      "reviewed_at": "2026-08-09T14:30:00+02:00",
+      "review_reason": null
+    },
+    "environment": {
+      "value": "local_acceptance",
+      "status": "confirmed",
+      "sensitivity": "internal",
+      "source": "human",
+      "reviewed_at": "2026-08-09T14:30:00+02:00",
+      "review_reason": null
+    },
+    "base_url": {
+      "value": "http://127.0.0.1:8765",
+      "status": "confirmed",
+      "sensitivity": "internal",
+      "source": "human",
+      "reviewed_at": "2026-08-09T14:30:00+02:00",
+      "review_reason": null
+    }
+  },
+  "workspace_binding": {
+    "profile_id": "workspace_expansion_reference",
+    "profile_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "state": "current",
+    "reviewed_at": "2026-08-09T14:30:00+02:00",
+    "review_reason": null
+  },
+  "guided_intake_binding": {
+    "profile_id": "guided_profile_public_catalog",
+    "profile_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "state": "current",
+    "reviewed_at": "2026-08-09T14:30:00+02:00",
+    "review_reason": null
+  },
+  "data_policy": {
+    "external_processing_allowed": false,
+    "allowed_context_sensitivities": [
+      "public",
+      "internal"
+    ],
+    "raw_application_content_persisted": false,
+    "raw_secret_values_persisted": false
+  },
+  "authentication": {
+    "state": "not_required",
+    "auth_profile_ref": null
+  },
+  "configuration_fingerprint": "0f807b2a3b75afcb2767d3cb8bc682620dff8228478580017dd30b55e0bff1bc",
+  "events": [
+    {
+      "sequence": 1,
+      "occurred_at": "2026-08-09T14:30:00+02:00",
+      "kind": "created",
+      "affected_paths": [
+        "application",
+        "workspace_binding",
+        "guided_intake_binding",
+        "data_policy",
+        "authentication"
+      ],
+      "reason_code": "initial_project_bootstrap",
+      "previous_revision": 0,
+      "new_revision": 1
+    }
+  ],
+  "secret_values_persisted": false,
+  "raw_auth_state_persisted": false,
+  "arbitrary_metadata_allowed": false
+}

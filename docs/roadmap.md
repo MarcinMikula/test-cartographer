@@ -94,8 +94,8 @@ product framing
 | Sprint 13 | Proactive post-deployment frontend/context regression | Done — real operator acceptance verified |
 | Sprint 14 | Expansion using the existing application map | Done — real operator acceptance verified |
 | Checkpoint 14.5 | Documentation truth cleanup and validation-first roadmap reset | Done in documentation |
-| Sprint 15 | Persistent ProjectProfile and bootstrap reuse/invalidation | Next |
-| Sprint 16 | External-validation protocol and repeatable evidence package | Planned |
+| Sprint 15 | Persistent ProjectProfile and bootstrap reuse/invalidation | Done — real operator acceptance verified |
+| Sprint 16 | External-validation protocol and repeatable evidence package | Next |
 | Sprint 17 | External validation I — simple and dynamic public applications | Planned |
 | Sprint 18 | External validation II — multi-page and difficult low-control public applications | Provisional |
 | Sprint 19 | Authentication profiles and credentialed validation | Provisional |
@@ -1174,41 +1174,54 @@ See [`checkpoint-14.5.md`](checkpoint-14.5.md).
 
 ## Sprint 15 — Persistent ProjectProfile and bootstrap reuse
 
-**Status:** Next
+**Status:** Done — real operator acceptance verified
 
 ### Goal
 
 Implement the missing project-wide persistence boundary that allows bootstrap
-facts and configuration to be collected once, reused across later flows, and
+facts/configuration to be collected once, reused across later flows, and
 selectively invalidated.
 
-### Target slice
+### Delivered
 
-The first slice should cover non-secret project-wide facts such as:
+- strict non-secret `ProjectProfile v0.1`,
+- dedicated `ProjectValue`,
+- one active application environment + base URL/origin,
+- exact `WorkspaceProfile` and capability-specific `GuidedIntakeProfile` ID/hash bindings,
+- project data-boundary policy and minimal authentication declaration/reference,
+- local deterministic JSON persistence and JSON Schema,
+- accepted revision/event lifecycle and `configuration_fingerprint`,
+- fail-closed fingerprint and binding-drift validation,
+- normal ContextBundle bootstrap projection through SYSTEM evidence,
+- `COMPATIBLE / REVIEW_REQUIRED / REOBSERVE / RESNAPSHOT / BLOCKED`,
+- actual human-triggered Creation Flow runner wiring,
+- real operator separate-process acceptance.
 
-- application identity,
-- environment,
-- framework/workspace mapping,
-- provider/model configuration,
-- sensitivity/external-processing policy,
-- authentication strategy/reference metadata without secret values.
+### Acceptance evidence
 
-Required behavior:
+```text
+Run A: revision 1; first bootstrap questions 3; secrets/auth state persisted false
+Run B: later creation; bootstrap questions 0; process questions preserved
+Run C: later expansion; bootstrap questions 0; workspace/guided bindings reused
+Run D: revision 1 → 2; browser evidence REOBSERVE; business context COMPATIBLE;
+       workspace COMPATIBLE; guided intake COMPATIBLE; unrelated fields re-asked 0
 
-- versioning and provenance,
-- explicit human review,
-- reuse without repeated bootstrap questions,
-- selective reopening after explicit change, staleness, conflict, or relevant
-  configuration change,
-- clear project-wide vs process-specific separation.
+post-acceptance regression: 394 passed; 0 failures/errors/skipped
+```
 
-### Non-goals
+### What Sprint 15 proves
 
-- full authentication implementation,
-- secret-manager integration,
-- team profile management,
-- Jira/document ingestion,
-- application graph redesign.
+Bootstrap configuration can survive separate runs without becoming an unbounded
+cache. Current values are reused silently while relevant change produces
+selective compatibility consequences.
+
+### What Sprint 15 does not prove
+
+External-app usability/economics, multi-environment/team profile management,
+authenticated execution, production repository delivery, or need for a shared
+multi-process application graph.
+
+See [`sprint-15-project-profile.md`](sprint-15-project-profile.md).
 
 ## Sprint 16 — External-validation protocol and evidence package
 

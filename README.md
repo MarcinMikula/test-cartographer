@@ -15,6 +15,8 @@ and expansion.
 
 ## Status
 
+**Sprint 15 — persistent ProjectProfile and cross-run bootstrap reuse/invalidation: complete — real operator acceptance verified**
+
 **Checkpoint 14.5 — documentation truth cleanup and validation-first roadmap reset: complete in documentation**
 
 **Sprint 14 — human-triggered incremental expansion using the existing map: complete — real operator acceptance verified**
@@ -28,7 +30,10 @@ and expansion.
 Current evidence:
 
 ```text
-339 tests passed with Playwright Chromium in the Sprint 14D.2 Windows closure run
+394 tests passed after the Sprint 15D real-operator acceptance with persistent revision-2 ProjectProfile present
+persistent ProjectProfile revision 1 → 2 verified across separate disk-backed runs
+creation and expansion bootstrap reuse verified with 0 repeated application questions
+selective environment/base-URL invalidation verified as REOBSERVE while business context remains COMPATIBLE
 controlled browser readiness transition verified end to end
 bounded synthesis replay and human-review transition verified end to end
 read-only framework inspection and adaptation-plan review verified end to end
@@ -41,7 +46,7 @@ human-triggered second-process expansion with reuse, targeted re-observation, ex
 live local-Ollama interview planning from a minimal request verified end to end
 ```
 
-The repository now provides fourteen executable boundaries:
+The repository now provides fifteen executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -69,6 +74,8 @@ The repository now provides fourteen executable boundaries:
     through headed re-observation, exact patch review, sandbox repair, and a passing retest.
 13. a human-triggered proactive-regression flow that keeps the framework test green while detecting locator drift on an approved mapped element outside the current test pool.
 14. a human-triggered incremental-expansion flow that reuses accepted application/framework knowledge, re-observes stale targets, extends an existing Page Object through the existing creation pipeline, and proves the old and new processes together in a fresh sandbox.
+15. a persistent non-secret `ProjectProfile` that binds project-wide bootstrap, workspace, guided-intake, policy, and authentication-declaration metadata; projects current bootstrap into normal `ContextBundle` intake; detects exact binding drift; and selectively invalidates future reuse across separate runs.
+15. a persistent non-secret `ProjectProfile` that binds project-wide bootstrap, workspace, guided-intake, policy, and authentication-declaration metadata; projects current bootstrap into normal `ContextBundle` intake; detects exact binding drift; and selectively invalidates future reuse across separate runs.
 
 The current workflow can:
 
@@ -136,6 +143,18 @@ The current workflow can:
 - extend an existing Page Object only with reviewed missing methods/properties,
 - bind existing-file replacement to the inspected source hash and reject source drift before write,
 - execute the preserved Search process and the new Sort process together in a fresh sandbox while the original framework remains unchanged.
+- persist accepted project-wide bootstrap in `.test-cartographer/project-profile.json`,
+- bind existing `WorkspaceProfile` and capability-specific `GuidedIntakeProfile` by ID plus canonical SHA-256,
+- project current accepted application bootstrap into the normal ContextBundle without a second intake engine,
+- skip application name/environment/base-URL questions on compatible later runs while preserving process-specific intake,
+- fail closed on ProjectProfile fingerprint tampering or runtime binding drift,
+- classify environment/base-URL change as `REOBSERVE` for environment-bound browser evidence without erasing accepted business context.
+- persist accepted project-wide bootstrap in `.test-cartographer/project-profile.json`,
+- bind existing `WorkspaceProfile` and capability-specific `GuidedIntakeProfile` by ID plus canonical SHA-256,
+- project current accepted application bootstrap into the normal ContextBundle without a second intake engine,
+- skip application name/environment/base-URL questions on compatible later runs while preserving process-specific intake,
+- fail closed on ProjectProfile fingerprint tampering or runtime binding drift,
+- classify environment/base-URL change as `REOBSERVE` for environment-bound browser evidence without erasing accepted business context.
 
 It still cannot crawl a complete application, safely patch the user's original
 framework repository, handle arbitrary source edits, measure time savings, or

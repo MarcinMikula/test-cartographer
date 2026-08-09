@@ -4207,3 +4207,36 @@ is simplification, narrowing, or stopping.
 
 A GUI/IDE layer remains post-v1 evaluation: it may improve usability after core
 value exists, but it must not hide an inefficient workflow.
+
+## Sprint 15 — persistence is useful only with selective invalidation
+
+Checkpoint 14.5 identified repeated bootstrap configuration as the next P0 core
+problem. Sprint 15 showed that solving it safely required more than saving a JSON
+settings file.
+
+The real operator acceptance demonstrated:
+
+```text
+first-run bootstrap questions: 3
+later creation bootstrap questions: 0
+later expansion bootstrap questions: 0
+environment/base URL change: REOBSERVE
+business context after change: COMPATIBLE
+unrelated fields re-asked: 0
+final revision: 2
+post-acceptance regression: 394/394
+```
+
+A Sprint 15C test-design failure confirmed the fingerprint boundary. Tests that
+mutated ProjectProfile while retaining the previous fingerprint were correctly
+rejected by product code. The tests were corrected to create legal revisions,
+and tamper rejection became an explicit regression test.
+
+Lesson:
+
+> Do not weaken a safety invariant because a test fixture constructed a state
+> the real persistence boundary would reject.
+
+The current local/single-user, one-environment profile is enough to start real
+validation. Sprint 16 should test the evidence protocol rather than enlarge the
+profile speculatively.

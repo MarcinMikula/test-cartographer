@@ -1,6 +1,6 @@
 # Known limitations — current-state index
 
-This file describes what is **true now** after Sprint 14 and Checkpoint 14.5.
+This file describes what is **true now** after Sprint 15.
 Chronological history belongs in `LEARNINGS.md`; implementation gaps belong in
 `gaps.md`.
 
@@ -12,15 +12,17 @@ replace or remove it so this document remains a current-state map.
 The current Windows closure baseline is:
 
 ```text
-339 tests passed
-Search before expansion: PASS
-Search after expansion: PASS
-Sort after expansion: PASS
+394 tests passed
+persistent ProjectProfile separate-run acceptance: VERIFIED
+creation bootstrap reuse questions: 0
+expansion bootstrap reuse questions: 0
+environment/base-URL change: REOBSERVE
+business context after change: COMPATIBLE
 ```
 
 The repository has controlled executable evidence for creation, independent
-framework execution, reactive maintenance, proactive regression, and
-incremental expansion.
+framework execution, reactive maintenance, proactive regression, incremental
+expansion, and persistent project-bootstrap reuse.
 
 However:
 
@@ -31,20 +33,25 @@ However:
 
 ## CORE limitations
 
-### No persistent cross-run ProjectProfile
+### ProjectProfile v0.1 is deliberately local and bounded
 
-Bootstrap/project knowledge can be reused inside controlled flows, but there is
-no durable project profile with versioning, provenance, review, and selective
-invalidation.
+Sprint 15 closes the missing cross-run bootstrap-persistence slice, but the
+implemented ProjectProfile is intentionally not a general project-state service.
 
-The product cannot yet reliably answer across separate runs:
+Current limits:
 
-- which application/environment/framework facts remain current,
-- which bootstrap questions must not be repeated,
-- which configuration change invalidates which accepted knowledge,
-- whether provider/model/authentication/policy changes require review.
+- one local project-profile JSON file,
+- one active environment,
+- single-user authority/review,
+- no team synchronization or merge,
+- no long-lived schema migration workflow,
+- no TTL-based automatic freshness,
+- authentication is declaration/reference metadata only,
+- no `AuthProfile`, `SecretProvider`, or credential lifecycle,
+- process-specific knowledge remains in separate ContextBundles.
 
-This is the highest-priority missing core capability.
+These are not reasons to enlarge the model before external validation shows
+which shared state is actually needed.
 
 ### Application-map persistence remains process-oriented
 

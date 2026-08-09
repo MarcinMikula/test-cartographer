@@ -83,7 +83,7 @@ The value hypothesis is not "AI writes code." It is:
 
 This hypothesis is **not yet proven economically**.
 
-## Current implemented boundary — after Sprint 14
+## Current implemented boundary — after Sprint 15
 
 The repository currently provides controlled, executable slices for:
 
@@ -105,16 +105,21 @@ The repository currently provides controlled, executable slices for:
 - one real-operator proactive frontend/context-regression slice,
 - one real-operator incremental expansion slice that reuses accepted knowledge,
   re-observes stale frontend evidence, extends an existing Page Object, and runs
-  the existing and new process together.
+  the existing and new process together,
+- persistent non-secret `ProjectProfile v0.1` with revision, configuration
+  fingerprint, exact workspace/guided-intake bindings, local persistence,
+  ContextBundle bootstrap projection, and selective compatibility semantics.
 
-The Sprint 14 closure baseline is:
+The Sprint 15 closure baseline is:
 
 ```text
-339 tests passed
-Search before expansion: PASS
-Search after expansion: PASS
-Sort after expansion: PASS
-original framework unchanged: true
+394 tests passed
+ProjectProfile disk-backed separate runs: VERIFIED
+later creation bootstrap questions: 0
+later expansion bootstrap questions: 0
+environment/base URL change: REOBSERVE
+business context after environment change: COMPATIBLE
+final ProjectProfile revision: 2
 ```
 
 These results prove the controlled mechanisms. They do **not** prove external
@@ -175,36 +180,39 @@ Deterministic rules protect structural and safety boundaries such as:
 These rules are guardrails inside the product, not the target user's competing
 workflow.
 
-## Persistent project knowledge — highest-priority missing core
+## Persistent project knowledge — implemented core boundary
 
-Sprint 14 proves reuse inside one controlled expansion flow, but the product
-still lacks a persistent project/bootstrap profile with full invalidation
-semantics.
-
-The next core boundary should persist project-wide facts such as:
+Sprint 15 implements the first persistent project/bootstrap lifecycle.
 
 ```text
-ProjectProfile
-├── application identity
-├── environment
-├── framework/workspace mapping
-├── provider/model configuration
-├── sensitivity and external-processing policy
-├── authentication strategy/reference
-└── provenance, version, and review state
+ProjectProfile v0.1
+├── application name
+├── one active environment
+├── base URL/origin
+├── WorkspaceProfile ID + canonical hash
+├── capability-specific GuidedIntakeProfile ID + canonical hash
+├── sensitivity/external-processing policy
+├── minimal authentication declaration/reference
+├── revision/event metadata
+└── configuration fingerprint
 ```
 
-Bootstrap/project questions should be collected once and reused later.
+Current accepted values can be projected into normal `ContextBundle` intake on
+later runs, so application bootstrap questions are not repeated.
 
-They should reopen only when:
+Selective compatibility distinguishes:
 
-- the operator explicitly changes them,
-- evidence marks them stale or conflicting,
-- the application or environment changes,
-- framework/provider/model/authentication/policy changes can affect correctness,
-- new evidence requires review.
+- environment/base-URL change → browser/application evidence `REOBSERVE`,
+- workspace binding change → repository work `RESNAPSHOT`,
+- guided-intake binding change → future guided work `REVIEW_REQUIRED`,
+- unrelated accepted business context → remains reusable when current,
+- time alone → no automatic staleness.
 
-This is a core scalability requirement, not a post-v1 convenience.
+The current implementation is deliberately local/single-user and supports one
+active environment. It does not implement `AuthProfile`, secret management,
+team synchronization, or a persistent multi-process application graph.
+
+See [`sprint-15-project-profile.md`](sprint-15-project-profile.md).
 
 ## Frontend/POM scope
 

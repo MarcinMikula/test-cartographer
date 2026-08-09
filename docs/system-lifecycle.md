@@ -75,28 +75,40 @@ The framework must remain independently runnable.
 
 ## Phase 1 — project/bootstrap establishment
 
-The intended future entry point is a persistent non-secret `ProjectProfile`.
+Sprint 15 implements persistent non-secret `ProjectProfile v0.1`.
 
 ```text
 ProjectProfile
-├── application
-├── environment
-├── framework/workspace
-├── provider/model configuration
+├── application name
+├── one active environment
+├── base URL/origin
+├── WorkspaceProfile ID + canonical hash
+├── capability-specific GuidedIntakeProfile ID + canonical hash
 ├── sensitivity/external-processing policy
-├── authentication strategy/reference
-└── provenance/version/review
+├── minimal authentication declaration/reference
+├── revision/event metadata
+└── configuration fingerprint
 ```
 
-This profile does not yet exist as a complete implemented lifecycle.
+The profile is loaded before the normal IntakeSession. Current accepted
+application bootstrap is projected into the existing ContextBundle using bounded
+SYSTEM evidence. A later compatible run therefore asks zero application
+name/environment/base-URL questions while preserving process-specific intake.
 
-It is the next priority because later creation, maintenance, and expansion
-cannot scale if every flow asks the same bootstrap questions again.
+Compatibility remains selective:
 
-Project-wide values are reused while current.
+```text
+environment/base URL change → REOBSERVE environment-bound browser evidence
+workspace binding change    → RESNAPSHOT repository-dependent work
+guided-intake binding change→ REVIEW_REQUIRED for future guided work
+unrelated business context  → remains reusable when current
+```
 
-They reopen only after explicit change, stale/conflicting evidence, or a
-configuration change that can affect correctness.
+Time alone is not a staleness signal.
+
+The current profile is local/single-user and deliberately does not yet implement
+multi-environment catalogs, team sync, AuthProfile/SecretProvider, or credential
+lifecycle.
 
 ## Phase 2 — create one automation process
 

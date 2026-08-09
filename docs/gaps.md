@@ -1,7 +1,6 @@
 # Gaps — current prioritized index
 
-This file lists missing capabilities or missing evidence **as of Checkpoint
-14.5**.
+This file lists missing capabilities or missing evidence **after Sprint 15**.
 
 Chronological history belongs in `LEARNINGS.md`.
 Current product boundaries belong in `product-scope.md`.
@@ -28,24 +27,24 @@ Every open item belongs to one of five categories:
 
 **Category:** CORE  
 **Priority:** P0  
-**Status:** OPEN  
-**Target:** Sprint 15
+**Status:** CLOSED for the bounded v0.1 slice in Sprint 15  
+**Evidence:** real operator + separate disk-backed runs + 394/394 regression
 
-The product needs a durable project/bootstrap profile so that application,
-environment, framework, provider/model, policy, and authentication configuration
-can be asked once and reused across later creation/maintenance/expansion flows.
+Implemented:
 
-Required behavior:
+- strict non-secret `ProjectProfile v0.1`,
+- local `.test-cartographer/project-profile.json` persistence,
+- dedicated `ProjectValue`,
+- exact WorkspaceProfile and capability-specific GuidedIntakeProfile ID/hash bindings,
+- monotonic accepted revisions and bounded event ledger,
+- configuration fingerprint distinct from audit/event history,
+- normal ContextBundle bootstrap projection using SYSTEM evidence,
+- zero repeated application bootstrap questions on compatible later creation and expansion runs,
+- selective `REOBSERVE / RESNAPSHOT / REVIEW_REQUIRED / BLOCKED` compatibility,
+- fail-closed fingerprint tamper and binding-drift checks.
 
-- versioned non-secret profile,
-- provenance and explicit review state,
-- project-wide vs process-specific separation,
-- reuse of current values without re-asking,
-- selective invalidation after explicit change, staleness, conflict, or relevant
-  configuration change,
-- no silent reuse after invalidation.
-
-Sprint 14 demonstrates reuse mechanics but not persistent cross-run lifecycle.
+Remaining multi-environment/team/authentication/migration questions are tracked
+under their actual validation/enterprise gaps rather than keeping C-1 open.
 
 ### Gap C-2 — Durable shared application-map reuse
 

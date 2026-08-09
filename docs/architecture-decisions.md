@@ -1334,3 +1334,28 @@ TestCartographer production-repository write authority.
 12. **v1.0 is an economic as well as technical decision.** A feature-complete
     tool that materially slows or complicates testing work without compensating
     quality gains does not satisfy the product goal.
+
+## Sprint 15 decisions — persistent bootstrap without global invalidation
+
+1. **ProjectProfile is project configuration, not process truth.** Process
+   purpose, risk, role, outcomes, pages, elements, locators, and assertions stay
+   in ContextBundle/process artifacts.
+2. **Project-wide values use `ProjectValue`.** ContextBundle evidence IDs do not
+   leak into the persistent profile contract.
+3. **Reuse existing bounded profiles by ID + hash.** WorkspaceProfile and
+   capability-specific GuidedIntakeProfile remain authoritative.
+4. **There is no universal project-wide LLM provider.** The v0.1 binding is
+   specifically for guided intake.
+5. **Authentication remains declaration/reference metadata.** Auth execution and
+   strategy belong to later AuthProfile work.
+6. **Configuration fingerprint differs from document history.** Audit-only
+   events do not alter reusable configuration identity.
+7. **Tampered profile state fails closed before compatibility classification.**
+8. **ProjectProfile projects into the existing ContextBundle/intake engine.**
+9. **Historical artifacts are not cascaded-mutated.**
+10. **Invalidation is selective.** Environment/base URL → REOBSERVE; workspace
+    drift → RESNAPSHOT; guided-intake drift → REVIEW_REQUIRED.
+11. **Unrelated accepted business truth survives configuration changes.**
+12. **Age alone is not evidence of staleness.**
+13. **Persistent reuse requires separate disk-backed runs for acceptance.**
+14. **Invalid operator input remains no decision and re-prompts.**
