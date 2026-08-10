@@ -95,7 +95,7 @@ product framing
 | Sprint 14 | Expansion using the existing application map | Done — real operator acceptance verified |
 | Checkpoint 14.5 | Documentation truth cleanup and validation-first roadmap reset | Done in documentation |
 | Sprint 15 | Persistent ProjectProfile and bootstrap reuse/invalidation | Done — real operator acceptance verified |
-| Sprint 16 | External-validation protocol and repeatable evidence package | Next |
+| Sprint 16 | External-validation protocol and repeatable evidence package | Done — controlled real-operator rehearsal verified |
 | Sprint 17 | External validation I — simple and dynamic public applications | Planned |
 | Sprint 18 | External validation II — multi-page and difficult low-control public applications | Provisional |
 | Sprint 19 | Authentication profiles and credentialed validation | Provisional |
@@ -1225,7 +1225,7 @@ See [`sprint-15-project-profile.md`](sprint-15-project-profile.md).
 
 ## Sprint 16 — External-validation protocol and evidence package
 
-**Status:** Planned
+**Status:** Done — controlled real-operator rehearsal verified
 
 ### Goal
 

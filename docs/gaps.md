@@ -1,6 +1,6 @@
 # Gaps — current prioritized index
 
-This file lists missing capabilities or missing evidence **after Sprint 15**.
+This file lists missing capabilities or missing evidence **after Sprint 16**.
 
 Chronological history belongs in `LEARNINGS.md`.
 Current product boundaries belong in `product-scope.md`.
@@ -89,6 +89,8 @@ requirement.
 **Category:** VALIDATION  
 **Status:** OPEN  
 **Target:** Sprint 17+
+
+Sprint 16 now provides the repeatable target/run/finding/evidence protocol and controlled rehearsal needed to record this evidence consistently.
 
 Run the existing lifecycle on an application not created for TestCartographer.
 
@@ -369,7 +371,9 @@ The following gaps are closed only for their deliberately bounded slices:
 - Sprint 11 — real-operator Creation Flow,
 - Sprint 12 — one reactive locator-maintenance repair,
 - Sprint 13 — one proactive mapped-element drift,
-- Sprint 14 — one incremental second-process expansion.
+- Sprint 14 — one incremental second-process expansion,
+- Sprint 15 — persistent project bootstrap reuse and selective invalidation,
+- Sprint 16 — repeatable validation evidence protocol and controlled first-finding/rerun rehearsal.
 
 "Closed" never means universally solved. The relevant VALIDATION gap remains
 open until external evidence supports generalization.

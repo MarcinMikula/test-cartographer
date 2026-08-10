@@ -25,6 +25,7 @@ from test_cartographer.project_profile.readiness import assess_project_profile
 from test_cartographer.reactive_maintenance.assessment import assess_failure_for_maintenance, assess_reactive_maintenance_run
 from test_cartographer.reactive_maintenance.models import MaintenanceDiagnosis, MaintenanceEvidenceAssessment, MaintenanceSourcePatch, ReactiveMaintenanceProfile, ReactiveMaintenanceRun
 from test_cartographer.synthesis.models import BoundedSynthesisRequest, PomProposal, SynthesisRun
+from test_cartographer.validation.models import ValidationEvidenceManifest, ValidationFinding, ValidationRun, ValidationTargetProfile
 
 __all__ = [
     "AdaptationPlan", "BoundedSynthesisRequest", "BrowserObservation", "CodePatch",
@@ -37,10 +38,11 @@ __all__ = [
     "MaintenanceEvidenceAssessment", "MaintenanceSourcePatch", "ObservationInventory",
     "FrontendChangeReport", "ProactiveRegressionProfile", "ProactiveRegressionRun",
     "ProjectProfile", "PatchApplicationReport", "PomProposal", "SynthesisRun",
+    "ValidationEvidenceManifest", "ValidationFinding", "ValidationRun", "ValidationTargetProfile",
     "WorkspaceProfile", "assess_creation_flow", "assess_discovery",
     "assess_execution_evidence", "build_expansion_plan", "assess_expansion_run",
     "assess_failure_for_maintenance", "assess_guided_intake", "assess_intake",
     "assess_proactive_regression_run", "assess_project_profile", "assess_readiness",
     "assess_reactive_maintenance_run",
 ]
-__version__ = "0.15.0"
+__version__ = "0.16.0"

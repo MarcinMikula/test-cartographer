@@ -4240,3 +4240,75 @@ Lesson:
 The current local/single-user, one-environment profile is enough to start real
 validation. Sprint 16 should test the evidence protocol rather than enlarge the
 profile speculatively.
+
+## Sprint 16 — validation protocol before external targets
+
+### Build the evidence method before interpreting external failures
+
+External validation would be weak if a failed run could be immediately modified
+until it passed and the original observation disappeared. Sprint 16 therefore
+made one validation run an immutable evidence unit tied to one target, workflow,
+and product state.
+
+The practical rule is:
+
+```text
+observe
+→ persist finding
+→ close/verify run package
+→ only then design the smallest correction
+→ rerun as a new linked run
+```
+
+### Difficulty and control are different target properties
+
+A technically difficult target can still be project-controlled, while an
+ordinary-looking external site can be low-control. Validation profiles therefore
+keep technical difficulty and degree of control as independent axes.
+
+### Package identity must be one-way
+
+The accepted chain is:
+
+```text
+target_fingerprint
+→ run_fingerprint
+→ package_fingerprint
+```
+
+### A verifier must distrust its own builder
+
+Verification re-loads target, run, and manifest, re-computes fingerprints and
+file hashes, validates policy and finding references, and rejects unmanifested
+files.
+
+### Uncommitted acceptance code requires truthful provenance
+
+The controlled pre-closure rehearsal records the base Git commit plus a
+working-tree fingerprint over the exact accepted Sprint 16 repository scope.
+Normal external validation after closure should run against a clean committed
+product state.
+
+### The validation process found a defect in itself
+
+The first complete real-operator rehearsal exposed a measurement defect:
+invalid choice input was reprompted correctly but not counted in the final
+`invalid_input_reprompts` metric.
+
+```text
+authority boundary: worked
+measurement: wrong
+finding recorded before fix: yes
+smallest correction: invalid-choice counter only
+regression after correction: 469/469
+```
+
+### Usability evidence must not become a productivity claim
+
+The operator rated the controlled workflow as hard while retaining high
+confidence. Reuse intent was uncertain in the first complete rehearsal and yes
+in the corrected complete rehearsal, but the target was already familiar and the
+runs were sequential.
+
+The next meaningful evidence must come from external public targets using the
+same protocol.

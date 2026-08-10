@@ -1,6 +1,6 @@
 # Known limitations — current-state index
 
-This file describes what is **true now** after Sprint 15.
+This file describes what is **true now** after Sprint 16.
 Chronological history belongs in `LEARNINGS.md`; implementation gaps belong in
 `gaps.md`.
 
@@ -12,17 +12,20 @@ replace or remove it so this document remains a current-state map.
 The current Windows closure baseline is:
 
 ```text
-394 tests passed
+469 tests passed
 persistent ProjectProfile separate-run acceptance: VERIFIED
-creation bootstrap reuse questions: 0
-expansion bootstrap reuse questions: 0
-environment/base-URL change: REOBSERVE
-business context after change: COMPATIBLE
+Sprint 16 validation protocol controlled rehearsal: VERIFIED
+R1/R2 evidence packages independently verified: true
+first finding preserved across linked rerun: true
+tampered evidence fails closed: true
+external application validity proven: false
+productivity savings claimed: false
 ```
 
 The repository has controlled executable evidence for creation, independent
 framework execution, reactive maintenance, proactive regression, incremental
-expansion, and persistent project-bootstrap reuse.
+expansion, persistent project-bootstrap reuse, and a repeatable validation
+evidence protocol with immutable package verification.
 
 However:
 
@@ -79,6 +82,10 @@ Direct unattended writes to a production branch are not planned as a default.
 ## VALIDATION limitations
 
 ### External validity is intentionally open
+
+Sprint 16 provides a repeatable protocol, package format, fail-closed verifier,
+finding-before-fix rule, linked rerun evidence, timing categories, and stop
+conditions. Its acceptance target was still project-controlled.
 
 No simple public, dynamic public, low-control public, credentialed, or
 enterprise application has yet completed the end-to-end lifecycle.

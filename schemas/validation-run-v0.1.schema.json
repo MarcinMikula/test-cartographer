@@ -1,0 +1,500 @@
+{
+  "$defs": {
+    "ValidationFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "could_continue": {
+          "title": "Could Continue",
+          "type": "boolean"
+        },
+        "evidence_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ValidationFindingKind"
+        },
+        "lifecycle_stage": {
+          "$ref": "#/$defs/ValidationLifecycleStage"
+        },
+        "observation": {
+          "minLength": 1,
+          "title": "Observation",
+          "type": "string"
+        },
+        "observed_at": {
+          "format": "date-time",
+          "title": "Observed At",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "0.1",
+          "default": "0.1",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "stop_condition": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ValidationStopCondition"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "id",
+        "observed_at",
+        "lifecycle_stage",
+        "kind",
+        "observation",
+        "could_continue"
+      ],
+      "title": "ValidationFinding",
+      "type": "object"
+    },
+    "ValidationFindingKind": {
+      "enum": [
+        "failure",
+        "friction",
+        "unsupported_assumption",
+        "safety_stop",
+        "measurement_issue"
+      ],
+      "title": "ValidationFindingKind",
+      "type": "string"
+    },
+    "ValidationFindingReference": {
+      "additionalProperties": false,
+      "properties": {
+        "finding_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "run_id": {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "title": "Run Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "run_id",
+        "finding_id"
+      ],
+      "title": "ValidationFindingReference",
+      "type": "object"
+    },
+    "ValidationLifecycleStage": {
+      "enum": [
+        "bootstrap",
+        "intake",
+        "browser_discovery",
+        "context_review",
+        "synthesis",
+        "repository_mapping",
+        "source_review",
+        "delivery",
+        "execution",
+        "maintenance",
+        "expansion",
+        "general"
+      ],
+      "title": "ValidationLifecycleStage",
+      "type": "string"
+    },
+    "ValidationOperatorAssessment": {
+      "additionalProperties": false,
+      "properties": {
+        "confidence_in_result": {
+          "$ref": "#/$defs/ValidationResultConfidence"
+        },
+        "difficulty": {
+          "$ref": "#/$defs/ValidationOperatorDifficulty"
+        },
+        "prior_target_familiarity": {
+          "$ref": "#/$defs/ValidationTargetFamiliarity"
+        },
+        "would_reuse_workflow": {
+          "$ref": "#/$defs/ValidationWorkflowReuseIntent"
+        }
+      },
+      "required": [
+        "difficulty",
+        "confidence_in_result",
+        "would_reuse_workflow",
+        "prior_target_familiarity"
+      ],
+      "title": "ValidationOperatorAssessment",
+      "type": "object"
+    },
+    "ValidationOperatorDifficulty": {
+      "enum": [
+        "easy",
+        "moderate",
+        "hard",
+        "blocked"
+      ],
+      "title": "ValidationOperatorDifficulty",
+      "type": "string"
+    },
+    "ValidationProductReference": {
+      "additionalProperties": false,
+      "properties": {
+        "git_commit": {
+          "pattern": "^[0-9a-f]{40}$",
+          "title": "Git Commit",
+          "type": "string"
+        },
+        "product": {
+          "const": "test-cartographer",
+          "default": "test-cartographer",
+          "title": "Product",
+          "type": "string"
+        },
+        "version": {
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        },
+        "working_tree_fingerprint": {
+          "anyOf": [
+            {
+              "pattern": "^[0-9a-f]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Working Tree Fingerprint"
+        }
+      },
+      "required": [
+        "git_commit",
+        "version"
+      ],
+      "title": "ValidationProductReference",
+      "type": "object"
+    },
+    "ValidationResultConfidence": {
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "title": "ValidationResultConfidence",
+      "type": "string"
+    },
+    "ValidationRunCompletion": {
+      "enum": [
+        "completed",
+        "incomplete",
+        "stopped"
+      ],
+      "title": "ValidationRunCompletion",
+      "type": "string"
+    },
+    "ValidationRuntimeEnvironment": {
+      "additionalProperties": false,
+      "properties": {
+        "browser_name": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Browser Name"
+        },
+        "browser_version": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Browser Version"
+        },
+        "llm_model": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Llm Model"
+        },
+        "llm_provider": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Llm Provider"
+        },
+        "operating_system": {
+          "minLength": 1,
+          "title": "Operating System",
+          "type": "string"
+        },
+        "python_version": {
+          "anyOf": [
+            {
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Python Version"
+        }
+      },
+      "required": [
+        "operating_system"
+      ],
+      "title": "ValidationRuntimeEnvironment",
+      "type": "object"
+    },
+    "ValidationStopCondition": {
+      "enum": [
+        "authentication_not_approved",
+        "destructive_or_irreversible_action",
+        "sensitive_data_boundary",
+        "outside_approved_target",
+        "rate_limit_or_anti_abuse",
+        "policy_decision_required",
+        "unrestricted_capture_required",
+        "comparability_broken",
+        "retention_safety_uncertain"
+      ],
+      "title": "ValidationStopCondition",
+      "type": "string"
+    },
+    "ValidationTargetFamiliarity": {
+      "enum": [
+        "new_to_operator",
+        "seen_before",
+        "automated_before"
+      ],
+      "title": "ValidationTargetFamiliarity",
+      "type": "string"
+    },
+    "ValidationTiming": {
+      "additionalProperties": false,
+      "properties": {
+        "correction_active_seconds": {
+          "minimum": 0,
+          "title": "Correction Active Seconds",
+          "type": "number"
+        },
+        "elapsed_seconds": {
+          "minimum": 0,
+          "title": "Elapsed Seconds",
+          "type": "number"
+        },
+        "intake_active_seconds": {
+          "minimum": 0,
+          "title": "Intake Active Seconds",
+          "type": "number"
+        },
+        "review_active_seconds": {
+          "minimum": 0,
+          "title": "Review Active Seconds",
+          "type": "number"
+        },
+        "setup_active_seconds": {
+          "minimum": 0,
+          "title": "Setup Active Seconds",
+          "type": "number"
+        },
+        "system_wait_seconds": {
+          "minimum": 0,
+          "title": "System Wait Seconds",
+          "type": "number"
+        }
+      },
+      "required": [
+        "elapsed_seconds",
+        "setup_active_seconds",
+        "intake_active_seconds",
+        "review_active_seconds",
+        "correction_active_seconds",
+        "system_wait_seconds"
+      ],
+      "title": "ValidationTiming",
+      "type": "object"
+    },
+    "ValidationWorkflowKind": {
+      "enum": [
+        "testcartographer",
+        "manual_automation_aids",
+        "codegen_plus_general_llm"
+      ],
+      "title": "ValidationWorkflowKind",
+      "type": "string"
+    },
+    "ValidationWorkflowReuseIntent": {
+      "enum": [
+        "yes",
+        "uncertain",
+        "no"
+      ],
+      "title": "ValidationWorkflowReuseIntent",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "addressed_findings": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ValidationFindingReference"
+      },
+      "title": "Addressed Findings",
+      "type": "array"
+    },
+    "completion": {
+      "$ref": "#/$defs/ValidationRunCompletion"
+    },
+    "findings": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ValidationFinding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "finished_at": {
+      "format": "date-time",
+      "title": "Finished At",
+      "type": "string"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "operator_assessment": {
+      "$ref": "#/$defs/ValidationOperatorAssessment"
+    },
+    "predecessor_run_id": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z][a-z0-9_]{2,63}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Predecessor Run Id"
+    },
+    "product_ref": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ValidationProductReference"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "run_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Run Fingerprint",
+      "type": "string"
+    },
+    "runtime": {
+      "$ref": "#/$defs/ValidationRuntimeEnvironment"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "stop_condition": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ValidationStopCondition"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "target_profile_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Target Profile Fingerprint",
+      "type": "string"
+    },
+    "target_profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Target Profile Id",
+      "type": "string"
+    },
+    "timing": {
+      "$ref": "#/$defs/ValidationTiming"
+    },
+    "workflow": {
+      "$ref": "#/$defs/ValidationWorkflowKind"
+    }
+  },
+  "required": [
+    "id",
+    "target_profile_id",
+    "target_profile_fingerprint",
+    "workflow",
+    "started_at",
+    "finished_at",
+    "runtime",
+    "timing",
+    "completion",
+    "operator_assessment",
+    "run_fingerprint"
+  ],
+  "title": "ValidationRun",
+  "type": "object"
+}

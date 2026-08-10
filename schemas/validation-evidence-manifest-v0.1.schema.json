@@ -1,0 +1,141 @@
+{
+  "$defs": {
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    },
+    "ValidationArtefactKind": {
+      "enum": [
+        "context_bundle",
+        "intake_session",
+        "project_profile_reference",
+        "browser_observation",
+        "synthesis_summary",
+        "adaptation_plan",
+        "source_patch",
+        "execution_evidence",
+        "operator_summary"
+      ],
+      "title": "ValidationArtefactKind",
+      "type": "string"
+    },
+    "ValidationArtefactProducer": {
+      "enum": [
+        "testcartographer",
+        "framework",
+        "operator",
+        "system"
+      ],
+      "title": "ValidationArtefactProducer",
+      "type": "string"
+    },
+    "ValidationEvidenceEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "artefact_kind": {
+          "$ref": "#/$defs/ValidationArtefactKind"
+        },
+        "finding_ids": {
+          "default": [],
+          "items": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "type": "string"
+          },
+          "title": "Finding Ids",
+          "type": "array"
+        },
+        "producer": {
+          "$ref": "#/$defs/ValidationArtefactProducer"
+        },
+        "relative_path": {
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+          "title": "Relative Path",
+          "type": "string"
+        },
+        "sensitivity": {
+          "$ref": "#/$defs/SensitivityLevel"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "relative_path",
+        "sha256",
+        "artefact_kind",
+        "sensitivity",
+        "producer"
+      ],
+      "title": "ValidationEvidenceEntry",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/ValidationEvidenceEntry"
+      },
+      "minItems": 1,
+      "title": "Entries",
+      "type": "array"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "package_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Package Fingerprint",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target_profile_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Target Profile Fingerprint",
+      "type": "string"
+    },
+    "target_profile_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Target Profile Id",
+      "type": "string"
+    },
+    "validation_run_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Validation Run Fingerprint",
+      "type": "string"
+    },
+    "validation_run_id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Validation Run Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "target_profile_id",
+    "target_profile_fingerprint",
+    "validation_run_id",
+    "validation_run_fingerprint",
+    "entries",
+    "package_fingerprint"
+  ],
+  "title": "ValidationEvidenceManifest",
+  "type": "object"
+}

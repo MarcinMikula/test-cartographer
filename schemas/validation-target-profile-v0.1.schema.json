@@ -1,0 +1,148 @@
+{
+  "$defs": {
+    "SensitivityLevel": {
+      "description": "Minimum local classification used before any external LLM request.",
+      "enum": [
+        "public",
+        "internal",
+        "confidential",
+        "restricted"
+      ],
+      "title": "SensitivityLevel",
+      "type": "string"
+    },
+    "ValidationAuthenticationRequirement": {
+      "enum": [
+        "none",
+        "required",
+        "unknown"
+      ],
+      "title": "ValidationAuthenticationRequirement",
+      "type": "string"
+    },
+    "ValidationTargetControl": {
+      "enum": [
+        "project_controlled",
+        "external_stable",
+        "external_low_control",
+        "policy_constrained"
+      ],
+      "title": "ValidationTargetControl",
+      "type": "string"
+    },
+    "ValidationTargetDifficulty": {
+      "enum": [
+        "simple",
+        "dynamic_async",
+        "multi_page_stateful",
+        "difficult",
+        "enterprise_constrained"
+      ],
+      "title": "ValidationTargetDifficulty",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "allowed_actions": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Allowed Actions",
+      "type": "array"
+    },
+    "authentication": {
+      "$ref": "#/$defs/ValidationAuthenticationRequirement"
+    },
+    "authorization_statement": {
+      "minLength": 1,
+      "title": "Authorization Statement",
+      "type": "string"
+    },
+    "cleanup_requirement": {
+      "anyOf": [
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cleanup Requirement"
+    },
+    "control": {
+      "$ref": "#/$defs/ValidationTargetControl"
+    },
+    "difficulty": {
+      "$ref": "#/$defs/ValidationTargetDifficulty"
+    },
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{2,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "label": {
+      "minLength": 1,
+      "title": "Label",
+      "type": "string"
+    },
+    "operator_authorization_confirmed": {
+      "const": true,
+      "title": "Operator Authorization Confirmed",
+      "type": "boolean"
+    },
+    "process_label": {
+      "minLength": 1,
+      "title": "Process Label",
+      "type": "string"
+    },
+    "prohibited_actions": {
+      "default": [],
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "title": "Prohibited Actions",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "0.1",
+      "default": "0.1",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sensitivity": {
+      "$ref": "#/$defs/SensitivityLevel",
+      "default": "internal"
+    },
+    "target_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Target Fingerprint",
+      "type": "string"
+    },
+    "target_url": {
+      "minLength": 1,
+      "title": "Target Url",
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "label",
+    "target_url",
+    "difficulty",
+    "control",
+    "authentication",
+    "process_label",
+    "allowed_actions",
+    "authorization_statement",
+    "operator_authorization_confirmed",
+    "target_fingerprint"
+  ],
+  "title": "ValidationTargetProfile",
+  "type": "object"
+}
