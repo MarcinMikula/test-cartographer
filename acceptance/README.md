@@ -47,8 +47,10 @@ acceptance/
         ├── target-selection.md
         └── traceability.md
 
-added later when evidence requires them:
 ├── findings/
+│   └── ACC-FIND-001.md
+
+added later when evidence requires them:
 └── templates/
 ```
 

@@ -2,7 +2,12 @@
 
 ## Status
 
-**Planning active. Execution not started.**
+**Level 1 target authorized. Execution blocked during environment preflight.**
+
+`ACC-FIND-001` / GitHub Issue #1: Creation Flow is bound to controlled catalog
+fixture.
+
+No external GOV.UK execution has started.
 
 Campaign testware baseline before this slice:
 

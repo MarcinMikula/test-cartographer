@@ -23,7 +23,7 @@ Planning traceability only. No ValidationRun exists yet.
 | ACC-REQ-013 | Primary | pending |
 | ACC-REQ-014 | Primary | pending |
 | ACC-REQ-015 | Primary | pending |
-| ACC-REQ-016 | Primary | pending |
+| ACC-REQ-016 | Primary | ACC-FIND-001 / GitHub Issue #1 — blocker before external execution |
 | ACC-REQ-017 | Primary | pending |
 
 After execution, replace `pending` with run/finding/issue identifiers. Do not

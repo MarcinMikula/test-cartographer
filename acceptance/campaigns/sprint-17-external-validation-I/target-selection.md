@@ -2,7 +2,7 @@
 
 ## Status
 
-**Selected for operator authorization:** GOV.UK public informational navigation.
+**AUTHORIZED by operator:** GOV.UK public informational navigation.
 
 Research date: 2026-08-11.
 
@@ -168,10 +168,10 @@ Do not:
 
 ## Authorization gate
 
-Research selection is not operator authorization.
+Operator authorization was recorded on 2026-08-11 (Europe/Warsaw).
 
-Execution may begin only after the operator explicitly accepts:
+Accepted: GOV.UK as Level 1 target, the four-page bounded process, and read-only
+navigation plus bounded observation. Prohibited boundaries remain unchanged.
 
-- GOV.UK as Level 1 target,
-- the four-page bounded process,
-- the allowed/prohibited actions above.
+Authorization does not start external execution. Environment preflight found
+`ACC-FIND-001`, which blocks the nominal Creation Flow before GOV.UK is contacted.

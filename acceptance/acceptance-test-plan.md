@@ -149,9 +149,10 @@ case count.
 - [x] Acceptance Requirements v0.1 accepted and committed.
 - [x] STLC workflow accepted and committed.
 - [x] First external Level 1 target assessed.
-- [ ] Selected Level 1 target explicitly authorized by operator.
+- [x] Selected Level 1 target explicitly authorized by operator.
 - [x] First test case designed before execution.
-- [ ] Supported new-project/profile preparation path confirmed before execution.
+- [ ] Nominal external Creation Flow entry path available.
+  - Blocked by `ACC-FIND-001` / GitHub Issue #1 before external execution.
 
 ## 9. Suspension and stop conditions
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-**DESIGNED — not executed.**
+**AUTHORIZED — execution blocked by ACC-FIND-001 during preflight.**
 
 ## Objective
 
