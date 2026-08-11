@@ -37,12 +37,17 @@ acceptance/
 ├── README.md
 ├── acceptance-test-plan.md
 ├── stlc-workflow.md
-└── requirements/
-    └── acceptance-requirements.md
-
-planned as execution starts:
+├── requirements/
+│   └── acceptance-requirements.md
 ├── test-cases/
-├── campaigns/
+│   └── ACC-EXT-001.md
+└── campaigns/
+    └── sprint-17-external-validation-I/
+        ├── campaign-plan.md
+        ├── target-selection.md
+        └── traceability.md
+
+added later when evidence requires them:
 ├── findings/
 └── templates/
 ```

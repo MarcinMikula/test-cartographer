@@ -145,11 +145,13 @@ case count.
 - [x] Finding-before-fix rule accepted.
 - [x] Product baseline regression: 469/469.
 - [x] `main` contains accepted Sprint 16 implementation.
-- [ ] Acceptance Test Plan v0.1 accepted.
-- [ ] Acceptance Requirements v0.1 accepted.
-- [ ] STLC workflow accepted.
-- [ ] First external target assessed and authorized.
-- [ ] First test case designed before execution.
+- [x] Acceptance Test Plan v0.1 accepted and committed.
+- [x] Acceptance Requirements v0.1 accepted and committed.
+- [x] STLC workflow accepted and committed.
+- [x] First external Level 1 target assessed.
+- [ ] Selected Level 1 target explicitly authorized by operator.
+- [x] First test case designed before execution.
+- [ ] Supported new-project/profile preparation path confirmed before execution.
 
 ## 9. Suspension and stop conditions
 
