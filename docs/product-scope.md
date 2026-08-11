@@ -83,7 +83,7 @@ The value hypothesis is not "AI writes code." It is:
 
 This hypothesis is **not yet proven economically**.
 
-## Current implemented boundary — after Sprint 15
+## Current implemented boundary — after Sprint 16
 
 The repository currently provides controlled, executable slices for:
 
@@ -108,18 +108,28 @@ The repository currently provides controlled, executable slices for:
   the existing and new process together,
 - persistent non-secret `ProjectProfile v0.1` with revision, configuration
   fingerprint, exact workspace/guided-intake bindings, local persistence,
-  ContextBundle bootstrap projection, and selective compatibility semantics.
+  ContextBundle bootstrap projection, and selective compatibility semantics,
+- strict validation target/finding/run/evidence-manifest contracts with
+  deterministic target → run → package identity,
+- immutable validation evidence packaging with independent fail-closed
+  verification, first-finding preservation, linked reruns, timing/operator
+  evidence, and explicit stop conditions.
 
-The Sprint 15 closure baseline is:
+The Sprint 16 closure baseline is:
 
 ```text
-394 tests passed
+469 tests passed
 ProjectProfile disk-backed separate runs: VERIFIED
 later creation bootstrap questions: 0
 later expansion bootstrap questions: 0
 environment/base URL change: REOBSERVE
 business context after environment change: COMPATIBLE
-final ProjectProfile revision: 2
+Sprint 16 controlled validation-protocol rehearsal: VERIFIED
+R1/R2 evidence packages independently verified: true
+first finding preserved across linked rerun: true
+tampered evidence fails closed: true
+external application validity proven: false
+productivity savings claimed: false
 ```
 
 These results prove the controlled mechanisms. They do **not** prove external
