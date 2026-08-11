@@ -29,6 +29,18 @@ Planning traceability only. No ValidationRun exists yet.
 After execution, replace `pending` with run/finding/issue identifiers. Do not
 invent execution coverage from the design alone.
 
+## Level 1 scenario status
+
+```text
+ACC-EXT-001
+→ four-page GOV.UK navigation
+→ BLOCKED by ACC-FIND-001 and ACC-FIND-002 / Issues #1 and #2
+
+ACC-EXT-002
+→ single-page GOV.UK heading verification
+→ designed as smallest first external execution after Issue #1 correction
+```
+
 ## Level 2
 
 No test case or target authorized yet.

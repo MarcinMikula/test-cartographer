@@ -148,15 +148,23 @@ observe
 
 Do not rewrite the target or handcraft hidden internal state to get a green run.
 
-## First test case
+## Level 1 test cases
 
-`ACC-EXT-001` is the first Level 1 end-to-end acceptance test.
+`ACC-EXT-001` remains the originally designed four-page navigation scenario.
+Pre-execution analysis found that it is blocked by current single-page discovery
+capability; see `ACC-FIND-002` / GitHub Issue #2.
 
-See:
+`ACC-EXT-002` is the smallest first executable external scenario:
 
 ```text
-acceptance/test-cases/ACC-EXT-001.md
+https://www.gov.uk/driving-licence-codes
+→ open page
+→ discover/represent "Driving licence codes" heading
+→ generate/review/sandbox/execute
 ```
+
+This is a test-design correction driven by evidence. ACC-EXT-001 is not
+rewritten or retroactively simplified.
 
 ## Level 1 exit gate
 
