@@ -632,7 +632,7 @@
       "items": {
         "$ref": "#/$defs/DiscoveryTargetResult"
       },
-      "minItems": 2,
+      "minItems": 1,
       "title": "Targets",
       "type": "array"
     },

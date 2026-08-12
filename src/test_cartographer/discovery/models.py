@@ -275,7 +275,7 @@ class ProcessDiscoveryRun(ContractModel):
     capture_seconds: float = Field(default=0.0, ge=0.0)
     state: DiscoveryRunState
     candidates: tuple[ElementCandidate, ...] = Field(min_length=1)
-    targets: tuple[DiscoveryTargetResult, ...] = Field(min_length=2)
+    targets: tuple[DiscoveryTargetResult, ...] = Field(min_length=1)
     ambiguities: tuple[DiscoveryAmbiguity, ...] = ()
     guidance_turns: tuple[DiscoveryGuidanceTurn, ...] = ()
     capture_sha256: Sha256

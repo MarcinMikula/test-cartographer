@@ -68,3 +68,32 @@ def test_accepted_run_requires_every_target_selected(plan, candidates, profile) 
             decision=DiscoveryDecision.ACCEPTED,
             reviewed_at=now,
         )
+
+def test_run_allows_single_target_discovery(plan, candidates, profile) -> None:
+    from test_cartographer.discovery.enums import DiscoveryRunState
+    from test_cartographer.discovery.models import ProcessDiscoveryRun
+    from test_cartographer.discovery.ranking import rank_targets
+
+    payload = plan.model_dump(mode="python")
+    payload["targets"] = (payload["targets"][0],)
+    single_target_plan = ProcessDiscoveryPlan.model_validate(payload)
+    ranked = rank_targets(single_target_plan.targets, candidates, profile)
+    assert len(ranked) == 1
+
+    now = datetime(2026, 8, 12, 16, 30, tzinfo=timezone.utc)
+    run = ProcessDiscoveryRun(
+        id="discovery_single_target",
+        profile_id=profile.id,
+        plan_id=single_target_plan.id,
+        context_id=single_target_plan.context_id,
+        source_url=single_target_plan.source_url,
+        captured_at=now,
+        updated_at=now,
+        state=DiscoveryRunState.RESOLVED,
+        candidates=candidates,
+        targets=ranked,
+        capture_sha256="a" * 64,
+    )
+
+    assert len(run.targets) == 1
+    assert run.targets[0].target_id == single_target_plan.targets[0].id
