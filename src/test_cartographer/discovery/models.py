@@ -102,7 +102,7 @@ class ProcessDiscoveryPlan(ContractModel):
     route: NonEmptyText
     source_url: NonEmptyText
     component_ids: tuple[Identifier, ...] = ()
-    targets: tuple[DiscoveryTarget, ...] = Field(min_length=2)
+    targets: tuple[DiscoveryTarget, ...] = Field(min_length=1)
     sensitivity: SensitivityLevel = SensitivityLevel.INTERNAL
 
     @field_validator("source_url")

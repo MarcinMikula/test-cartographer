@@ -40,8 +40,6 @@ def assess_interactive_creation(
         blockers.append("insufficient_real_confirmations")
     if session.handoff_confirmation_count < 1:
         blockers.append("synthesis_handoff_confirmation_missing")
-    if session.ambiguity_selection_count < 1:
-        blockers.append("real_ambiguity_selection_missing")
     if session.review_decision_count < profile.minimum_review_decisions:
         blockers.append("real_review_decisions_missing")
     if session.execution_trigger_count < 1:

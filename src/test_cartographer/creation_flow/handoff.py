@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 from datetime import datetime
 
-from test_cartographer.context.enums import EvidenceSourceType, KnowledgeStatus, SensitivityLevel
+from test_cartographer.context.enums import ActionKind, EvidenceSourceType, KnowledgeStatus, SensitivityLevel
 from test_cartographer.context.models import (
     ApplicationContext,
     ContextBundle,
@@ -19,7 +19,7 @@ HANDOFF_PATHS = (
     "application.name",
     "application.environment",
     "process.name",
-    "process.steps[step_open_catalog].intent",
+    "process.steps[opening_navigation].intent",
 )
 
 
@@ -60,22 +60,33 @@ def confirm_synthesis_handoff(
             }
         )
 
-    opening_step_found = False
+    navigation_steps = tuple(
+        step
+        for step in context.process.steps
+        if step.action.kind is ActionKind.NAVIGATE
+    )
+    discovered_steps = tuple(
+        step
+        for step in context.process.steps
+        if step.action.kind is not ActionKind.NAVIGATE
+    )
+    if len(navigation_steps) != 1 or not discovered_steps:
+        raise ValueError(
+            "synthesis handoff requires one opening navigation and discovered process steps"
+        )
+    opening_step = navigation_steps[0]
     updated_steps = []
     for step in context.process.steps:
-        if step.id == "step_open_catalog":
-            opening_step_found = True
+        if step.id == opening_step.id:
             step = step.model_copy(
                 update={
                     "intent": confirm(
                         step.intent,
-                        path="process.steps[step_open_catalog].intent",
+                        path="process.steps[opening_navigation].intent",
                     )
                 }
             )
         updated_steps.append(step)
-    if not opening_step_found:
-        raise ValueError("synthesis handoff requires step_open_catalog")
 
     application = ApplicationContext(
         id=context.application.id,

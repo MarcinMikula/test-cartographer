@@ -22,7 +22,8 @@ from test_cartographer.discovery.models import (
 )
 from test_cartographer.discovery.ranking import rank_targets
 
-_SCAN_SELECTOR = "input, button, select, textarea, [role], [data-testid], ul, ol, table, [aria-live]"
+_BASE_SCAN_SELECTOR = "input, button, select, textarea, [role], [data-testid], ul, ol, table, [aria-live]"
+_HEADING_SCAN_SELECTOR = "h1, h2, h3, h4, h5, h6"
 
 
 def capture_process_discovery(
@@ -54,7 +55,11 @@ def capture_process_discovery(
             page = browser.new_page()
             page.goto(plan.source_url, wait_until="domcontentloaded", timeout=timeout_ms)
             page.wait_for_timeout(50)
-            candidates = _collect_candidates(page, profile)
+            candidates = _collect_candidates(
+                page,
+                profile,
+                selector=_scan_selector(plan),
+            )
         finally:
             browser.close()
     capture_seconds = max(0.0, time.perf_counter() - started)
@@ -102,8 +107,24 @@ def capture_process_discovery(
     )
 
 
-def _collect_candidates(page, profile: DiscoveryProfile) -> tuple[ElementCandidate, ...]:
-    locator = page.locator(_SCAN_SELECTOR)
+def _scan_selector(plan: ProcessDiscoveryPlan) -> str:
+    expected_roles = {
+        role
+        for target in plan.targets
+        for role in target.expected_roles
+    }
+    if "heading" in expected_roles:
+        return f"{_BASE_SCAN_SELECTOR}, {_HEADING_SCAN_SELECTOR}"
+    return _BASE_SCAN_SELECTOR
+
+
+def _collect_candidates(
+    page,
+    profile: DiscoveryProfile,
+    *,
+    selector: str,
+) -> tuple[ElementCandidate, ...]:
+    locator = page.locator(selector)
     count = min(locator.count(), profile.max_elements_scanned)
     values: list[ElementCandidate] = []
     for index in range(count):
@@ -115,6 +136,7 @@ def _collect_candidates(page, profile: DiscoveryProfile) -> tuple[ElementCandida
             el => {
               const label = el.labels && el.labels.length ? el.labels[0].innerText.trim() : null;
               const buttonText = el.tagName.toLowerCase() === 'button' ? el.innerText.trim() : null;
+              const headingText = /^h[1-6]$/.test(el.tagName.toLowerCase()) ? el.innerText.trim() : null;
               return {
                 tagName: el.tagName.toLowerCase(),
                 id: el.getAttribute('id'),
@@ -126,6 +148,7 @@ def _collect_candidates(page, profile: DiscoveryProfile) -> tuple[ElementCandida
                 testId: el.getAttribute('data-testid'),
                 label,
                 buttonText,
+                headingText,
                 disabled: el.disabled === true,
                 contentEditable: el.isContentEditable === true
               };
@@ -162,6 +185,8 @@ def _semantic_role(raw: dict[str, Any]) -> str:
         return str(raw["role"]).casefold()
     tag = raw["tagName"]
     input_type = str(raw.get("type") or "").casefold()
+    if tag in {"h1", "h2", "h3", "h4", "h5", "h6"}:
+        return "heading"
     if tag == "button":
         return "button"
     if tag == "input" and input_type == "search":
@@ -178,7 +203,7 @@ def _semantic_role(raw: dict[str, Any]) -> str:
 
 
 def _semantic_name(raw: dict[str, Any]) -> str:
-    for key in ("ariaLabel", "label", "placeholder", "buttonText", "testId", "id", "name"):
+    for key in ("ariaLabel", "label", "placeholder", "buttonText", "headingText", "testId", "id", "name"):
         value = raw.get(key)
         if isinstance(value, str) and value.strip():
             return value.strip()

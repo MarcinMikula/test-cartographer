@@ -8,9 +8,9 @@ from datetime import datetime
 from typing import Any
 
 from test_cartographer.discovery.capture import (
-    _SCAN_SELECTOR,
     _capture_digest,
     _collect_candidates,
+    _scan_selector,
     minimize_source_url,
 )
 from test_cartographer.discovery.enums import DiscoveryRunState, DiscoveryTargetState
@@ -92,7 +92,8 @@ def open_interactive_discovery(
         page = browser.new_page(viewport={"width": 1280, "height": 900})
         page.goto(plan.source_url, wait_until="domcontentloaded", timeout=timeout_ms)
         page.wait_for_timeout(100)
-        candidates = _collect_candidates(page, profile)
+        selector = _scan_selector(plan)
+        candidates = _collect_candidates(page, profile, selector=selector)
         if not candidates:
             raise ValueError("bounded discovery found no visible candidates")
         targets = rank_targets(plan.targets, candidates, profile)
@@ -135,7 +136,7 @@ def open_interactive_discovery(
                 targets=targets,
             ),
         )
-        _annotate_candidates(page, candidates)
+        _annotate_candidates(page, candidates, selector=selector)
         return InteractiveDiscoveryBrowser(playwright, browser, page, run)
     except Exception:
         if browser is not None:
@@ -144,7 +145,7 @@ def open_interactive_discovery(
         raise
 
 
-def _annotate_candidates(page, candidates) -> None:
+def _annotate_candidates(page, candidates, *, selector: str) -> None:
     markers = [{"ordinal": item.ordinal, "id": item.id} for item in candidates]
     page.evaluate(
         """
@@ -177,5 +178,5 @@ def _annotate_candidates(page, candidates) -> None:
           }
         }
         """,
-        {"selector": _SCAN_SELECTOR, "markers": markers},
+        {"selector": selector, "markers": markers},
     )

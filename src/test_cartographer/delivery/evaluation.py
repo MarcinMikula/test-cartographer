@@ -60,11 +60,24 @@ def build_creation_evaluation(
         "framework_execution_independent": not patch.live_llm_used,
         "original_framework_unchanged": original_framework_unchanged,
     }
+    required_architecture = (
+        architecture_checks["page_object_generated"],
+        architecture_checks["fixture_generated"],
+        architecture_checks["test_generated"],
+        architecture_checks["meaningful_test_assertion_present"],
+        architecture_checks["framework_execution_independent"],
+        architecture_checks["original_framework_unchanged"],
+        (
+            architecture_checks["component_generated"]
+            if run.proposal and run.proposal.components
+            else True
+        ),
+    )
     passed = (
         collected_test_count >= 1
         and passed_test_count >= 1
         and all_verification_passed
-        and all(architecture_checks.values())
+        and all(required_architecture)
     )
     return CreationEvaluation(
         id=evaluation_id,

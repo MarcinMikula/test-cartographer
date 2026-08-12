@@ -672,6 +672,14 @@ def _build_parser() -> argparse.ArgumentParser:
     creation_interactive.add_argument("--ollama-model", default="qwen2.5-coder:7b")
     creation_interactive.add_argument("--ollama-timeout-seconds", type=float, default=600.0)
     creation_interactive.add_argument("--executable-path")
+    creation_interactive.add_argument(
+        "--external-public-single-page",
+        action="store_true",
+        help=(
+            "run a bounded external public single-page heading Creation Flow; "
+            "the URL is collected through guided intake"
+        ),
+    )
 
     creation_interactive_status = creation_commands.add_parser(
         "interactive-status",
@@ -1330,6 +1338,7 @@ def _creation_interactive_command(args: argparse.Namespace) -> int:
             ollama_model=args.ollama_model,
             timeout_seconds=args.ollama_timeout_seconds,
             executable_path=args.executable_path,
+            external_public_single_page=args.external_public_single_page,
         )
     except InteractiveFlowStopped as exc:
         print(f"Interactive Creation Flow stopped: {exc}")

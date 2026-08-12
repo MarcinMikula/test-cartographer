@@ -11,10 +11,11 @@ import sys
 import time
 import uuid
 from collections.abc import Callable
+from contextlib import nullcontext
 from datetime import datetime, timezone
 from pathlib import Path
 
-from test_cartographer.adaptation.enums import AdaptationReviewDecision
+from test_cartographer.adaptation.enums import AdaptationReviewDecision, AdaptationTargetKind
 from test_cartographer.adaptation.io import (
     load_workspace_profile,
     save_adaptation_plan,
@@ -34,6 +35,7 @@ from test_cartographer.creation_flow.enums import (
 from test_cartographer.creation_flow.handoff import HANDOFF_PATHS, confirm_synthesis_handoff
 from test_cartographer.creation_flow.io import save_creation_flow_run
 from test_cartographer.creation_flow.models import CreationFlowRun, CreationStageRecord
+from test_cartographer.creation_flow.external_template import render_external_single_page_proposal
 from test_cartographer.creation_flow.template import render_reference_pom_proposal
 from test_cartographer.delivery.apply import apply_code_patch
 from test_cartographer.delivery.enums import PatchReviewDecision
@@ -87,6 +89,7 @@ from test_cartographer.intake.seed import MinimalContextSeed, build_minimal_cont
 from test_cartographer.intake.session import create_session, pause_session, record_answer
 from test_cartographer.interactive_creation.assessment import assess_interactive_creation
 from test_cartographer.interactive_creation.browser import open_interactive_discovery
+from test_cartographer.interactive_creation.external import build_external_public_single_page_plan
 from test_cartographer.interactive_creation.enums import (
     InteractiveSessionState,
     OperatorActionKind,
@@ -250,8 +253,9 @@ def run_human_triggered_creation_flow(
     output_fn: OutputFn = print,
     now_fn: NowFn = lambda: datetime.now(timezone.utc),
     timer_fn: TimerFn = time.perf_counter,
+    external_public_single_page: bool = False,
 ) -> tuple[CreationFlowRun, InteractiveOperatorSession]:
-    """Run the controlled reference Creation Flow with a real blocking operator."""
+    """Run the reference flow or one bounded external public single-page flow."""
 
     root = Path(project_root).resolve()
     output = Path(output_dir).resolve()
@@ -301,7 +305,11 @@ def run_human_triggered_creation_flow(
     )
 
     output_fn("TestCartographer — human-triggered Creation Flow")
-    output_fn("Scope: one controlled public-catalog search process.")
+    output_fn(
+        "Scope: one bounded external public single-page process."
+        if external_public_single_page
+        else "Scope: one controlled public-catalog search process."
+    )
     output_fn("The flow will stop for your answers, ambiguity choice, reviews, and execution trigger.")
     request_started = now_fn()
     timer_started = timer_fn()
@@ -318,12 +326,25 @@ def run_human_triggered_creation_flow(
         active_seconds=max(0.0, timer_fn() - timer_started),
     )
 
-    with serve_reference_directory(root / "testdata/browser") as app_base:
-        application_url = f"{app_base}/public_catalog_discovery.html"
+    application_context = (
+        nullcontext(None)
+        if external_public_single_page
+        else serve_reference_directory(root / "testdata/browser")
+    )
+    with application_context as app_base:
+        application_url = (
+            None
+            if external_public_single_page
+            else f"{app_base}/public_catalog_discovery.html"
+        )
         seed = MinimalContextSeed(
             id=f"seed_{uuid.uuid4().hex[:12]}",
             context_id=f"ctx_{uuid.uuid4().hex[:12]}",
-            title="Human-triggered catalog search",
+            title=(
+                "Human-triggered external single-page process"
+                if external_public_single_page
+                else "Human-triggered catalog search"
+            ),
             initial_request=initial_request,
             created_at=flow_started_at,
         )
@@ -536,16 +557,24 @@ def run_human_triggered_creation_flow(
         )
 
         discovery_started = now_fn()
-        discovery_plan = load_discovery_plan(
-            root / "testdata/discovery/plan/public_catalog.json"
-        ).model_copy(
-            update={
-                "id": "discovery_plan_interactive",
-                "context_id": session.context.id,
-                "process_id": session.context.process.id,
-                "source_url": application_url,
-            }
-        )
+        if external_public_single_page:
+            discovery_plan = build_external_public_single_page_plan(
+                session.context,
+                plan_id="discovery_plan_external_interactive",
+            )
+            application_url = discovery_plan.source_url
+        else:
+            assert application_url is not None
+            discovery_plan = load_discovery_plan(
+                root / "testdata/discovery/plan/public_catalog.json"
+            ).model_copy(
+                update={
+                    "id": "discovery_plan_interactive",
+                    "context_id": session.context.id,
+                    "process_id": session.context.process.id,
+                    "source_url": application_url,
+                }
+            )
         discovery_profile = load_discovery_profile(
             root / "testdata/discovery/profile/ollama_local_qwen.json"
         ).model_copy(
@@ -715,7 +744,11 @@ def run_human_triggered_creation_flow(
         )
 
         synthesis_started = now_fn()
-        raw_proposal = render_reference_pom_proposal(request)
+        raw_proposal = (
+            render_external_single_page_proposal(request)
+            if external_public_single_page
+            else render_reference_pom_proposal(request)
+        )
         synthesis_run = run_synthesis(
             request,
             ReplaySynthesisAdapter(raw_proposal),
@@ -816,24 +849,29 @@ def run_human_triggered_creation_flow(
         )
 
         delivery_started = now_fn()
-        generation_profile = load_generation_profile(
-            root / "testdata/delivery/profile/public_search_generation.json"
-        )
-        source_binding = generation_profile.test_data_bindings[0]
-        generation_profile = generation_profile.model_copy(
-            update={
-                "id": "generation_interactive",
-                "test_data_bindings": (
-                    TestDataBinding(
-                        test_data_id=request.test_data[0].id,
-                        fixture_key=source_binding.fixture_key,
-                        value=source_binding.value,
-                        sensitivity=source_binding.sensitivity,
-                        secret=False,
+        if external_public_single_page:
+            generation_profile = load_generation_profile(
+                root / "profiles/delivery/external_public_single_page.json"
+            )
+        else:
+            generation_profile = load_generation_profile(
+                root / "testdata/delivery/profile/public_search_generation.json"
+            )
+            source_binding = generation_profile.test_data_bindings[0]
+            generation_profile = generation_profile.model_copy(
+                update={
+                    "id": "generation_interactive",
+                    "test_data_bindings": (
+                        TestDataBinding(
+                            test_data_id=request.test_data[0].id,
+                            fixture_key=source_binding.fixture_key,
+                            value=source_binding.value,
+                            sensitivity=source_binding.sensitivity,
+                            secret=False,
+                        ),
                     ),
-                ),
-            }
-        )
+                }
+            )
         patch = build_code_patch(
             synthesis_run,
             adaptation_plan,
@@ -896,8 +934,13 @@ def run_human_triggered_creation_flow(
             )
         )
 
+        target_test = next(
+            operation.target_path
+            for operation in adaptation_plan.operations
+            if operation.target_kind is AdaptationTargetKind.TEST
+        )
         output_fn("\nExecution trigger")
-        output_fn(f"Target: {TARGET_TEST}")
+        output_fn(f"Target: {target_test}")
         execution_prompt_started = now_fn()
         execution_timer = timer_fn()
         execute = _ask_accept(
@@ -934,12 +977,13 @@ def run_human_triggered_creation_flow(
             "pytest",
             "--collect-only",
             "-q",
-            TARGET_TEST,
+            target_test,
         ]
         collect_result, collect_seconds = command_runner(collect_command, sandbox)
         env = os.environ.copy()
-        env["TEST_CARTOGRAPHER_CATALOG_URL"] = application_url
-        test_command = [sys.executable, "-m", "pytest", "-q", TARGET_TEST]
+        assert application_url is not None
+        env[generation_profile.environment_url_variable] = application_url
+        test_command = [sys.executable, "-m", "pytest", "-q", target_test]
         test_result, test_seconds = command_runner(test_command, sandbox, env)
         verification_results = (
             _verification("compileall", compile_command, compile_result, compile_seconds),
@@ -954,7 +998,7 @@ def run_human_triggered_creation_flow(
             application,
             evaluation_id=f"creation_eval_{uuid.uuid4().hex[:12]}",
             completed_at=now_fn(),
-            target_test=TARGET_TEST,
+            target_test=target_test,
             collected_test_count=1 if collect_result.returncode == 0 else 0,
             passed_test_count=1 if test_result.returncode == 0 else 0,
             verification_results=verification_results,
@@ -1002,7 +1046,7 @@ def run_human_triggered_creation_flow(
         status=CreationFlowStatus.PASSED,
         started_at=flow_started_at,
         completed_at=flow_completed_at,
-        target_test=TARGET_TEST,
+        target_test=target_test,
         stages=tuple(stages),
         total_seconds=max(0.0, timer_fn() - flow_started_perf),
         model_seconds=model_seconds,
@@ -1302,9 +1346,15 @@ def _knowledge_at_path(context, path: str) -> str:
         return context.application.environment.value or "<unknown>"
     if path == "process.name":
         return context.process.name.value or "<unknown>"
-    if path == "process.steps[step_open_catalog].intent":
-        step = next(item for item in context.process.steps if item.id == "step_open_catalog")
-        return step.intent.value or "<unknown>"
+    if path == "process.steps[opening_navigation].intent":
+        navigation = tuple(
+            item
+            for item in context.process.steps
+            if item.action.kind.value == "navigate"
+        )
+        if len(navigation) != 1:
+            raise KeyError(path)
+        return navigation[0].intent.value or "<unknown>"
     raise KeyError(path)
 
 

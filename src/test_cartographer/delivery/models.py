@@ -51,7 +51,7 @@ class GenerationProfile(ContractModel):
     workspace_profile_id: Identifier
     environment_url_variable: EnvironmentVariableName
     required_framework_symbols: tuple[FrameworkSymbolRequirement, ...] = Field(min_length=1)
-    test_data_bindings: tuple[TestDataBinding, ...] = Field(min_length=1)
+    test_data_bindings: tuple[TestDataBinding, ...] = ()
     browser_headless: bool = True
     secret_values_included: Literal[False] = False
     live_llm_used: Literal[False] = False

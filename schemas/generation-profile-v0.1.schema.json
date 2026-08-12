@@ -123,10 +123,10 @@
       "type": "boolean"
     },
     "test_data_bindings": {
+      "default": [],
       "items": {
         "$ref": "#/$defs/TestDataBinding"
       },
-      "minItems": 1,
       "title": "Test Data Bindings",
       "type": "array"
     },
@@ -140,8 +140,7 @@
     "id",
     "workspace_profile_id",
     "environment_url_variable",
-    "required_framework_symbols",
-    "test_data_bindings"
+    "required_framework_symbols"
   ],
   "title": "GenerationProfile",
   "type": "object"

@@ -24,7 +24,7 @@ def test_handoff_confirms_every_provided_value_required_by_synthesis() -> None:
         "application.name",
         "application.environment",
         "process.name",
-        "process.steps[step_open_catalog].intent",
+        "process.steps[opening_navigation].intent",
     )
     assert updated.application.name.status is KnowledgeStatus.CONFIRMED
     assert updated.application.environment.status is KnowledgeStatus.CONFIRMED
@@ -40,7 +40,7 @@ def test_handoff_confirms_every_provided_value_required_by_synthesis() -> None:
 def test_handoff_rejects_context_before_process_discovery() -> None:
     context = load_context(ROOT / "testdata/guided_intake/context/replay_complete.json")
 
-    with pytest.raises(ValueError, match="step_open_catalog"):
+    with pytest.raises(ValueError, match="opening navigation and discovered process steps"):
         confirm_synthesis_handoff(
             context,
             confirmed_at=datetime(2026, 8, 4, 16, 0, tzinfo=timezone.utc),

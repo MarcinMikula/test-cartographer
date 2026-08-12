@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1",
+  "id": "generation_external_public_single_page",
+  "workspace_profile_id": "workspace_qaf_reference",
+  "environment_url_variable": "TEST_CARTOGRAPHER_TARGET_URL",
+  "required_framework_symbols": [
+    {
+      "path": "pages/base_page.py",
+      "symbol_name": "BasePage",
+      "symbol_kind": "class"
+    }
+  ],
+  "test_data_bindings": [],
+  "browser_headless": true,
+  "secret_values_included": false,
+  "live_llm_used": false
+}

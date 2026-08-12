@@ -8,7 +8,7 @@ def assess_creation_flow(run: CreationFlowRun) -> CreationFlowAssessment:
     mechanics_blockers: list[str] = []
     if run.status is not CreationFlowStatus.PASSED:
         mechanics_blockers.append("flow_not_passed")
-    if run.live_llm_call_count < 2:
+    if run.live_llm_call_count < 1:
         mechanics_blockers.append("live_llm_boundary_missing")
     if run.passed_test_count < 1:
         mechanics_blockers.append("runnable_test_missing")
@@ -35,7 +35,7 @@ def assess_creation_flow(run: CreationFlowRun) -> CreationFlowAssessment:
         external_demo_blockers=tuple(external_demo_blockers),
         evidence_statements=(
             "The integrated engine begins from one short request.",
-            "Bounded local-LLM turns assist collection planning and ambiguity phrasing.",
+            "A bounded local-LLM turn assists collection planning; ambiguity phrasing is used only when needed.",
             (
                 "A real operator supplied answers and decisions through blocking prompts."
                 if run.interactive_human_used_during_verifier

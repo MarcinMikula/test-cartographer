@@ -535,7 +535,7 @@ def _render_fixture(
             "",
             "@pytest.fixture",
             f"def {fixture.name}() -> Generator[dict[str, object], None, None]:",
-            "    \"\"\"Provide one bounded browser session and explicit non-secret test data.\"\"\"",
+            "    \"\"\"Provide one bounded browser session and optional non-secret test data.\"\"\"",
             f"    base_url = os.environ.get({profile.environment_url_variable!r})",
             "    if not base_url:",
             f"        pytest.fail({('Missing required environment variable: ' + profile.environment_url_variable)!r})",
@@ -613,25 +613,43 @@ def _render_test(
         for element_id in assertion.related_element_ids
     }
     request_elements = {item.id: item for item in run.request.elements}
+    asserted_elements = []
     for element_id in sorted(related_ids):
         element = request_elements[element_id]
-        if "heading" in element.id:
+        if element.owner_id == page.source_page_id:
             lines.append(
                 f"    expect({page_variable}.{_element_attribute(element.id)}).to_be_visible()"
             )
+            asserted_elements.append(element)
 
-    if not read_variables or not profile.test_data_bindings:
-        raise ValueError("Sprint 6 template requires one read result and one explicit test-data binding")
-    query_key = profile.test_data_bindings[0].fixture_key
-    lines.extend(
-        [
-            f"    expected_fragment = str({proposal.fixtures[0].name}[{query_key!r}]).casefold()",
-            f"    assert expected_fragment in str({read_variables[0]}).casefold(), (",
-            "        \"The visible results do not contain the explicitly supplied expected result.\"",
-            "    )",
-            "",
-        ]
-    )
+    if read_variables and profile.test_data_bindings:
+        query_key = profile.test_data_bindings[0].fixture_key
+        lines.extend(
+            [
+                f"    expected_fragment = str({proposal.fixtures[0].name}[{query_key!r}]).casefold()",
+                f"    assert expected_fragment in str({read_variables[0]}).casefold(), (",
+                "        \"The visible results do not contain the explicitly supplied expected result.\"",
+                "    )",
+                "",
+            ]
+        )
+    elif read_variables:
+        if len(read_variables) != 1 or len(asserted_elements) != 1:
+            raise ValueError(
+                "read-only generated test requires exactly one read result and one asserted element"
+            )
+        expected_value = asserted_elements[0].name.value
+        lines.extend(
+            [
+                f"    expected_value = {expected_value!r}",
+                f"    assert str({read_variables[0]}).strip() == expected_value, (",
+                "        \"The visible read result does not equal the accepted observed element name.\"",
+                "    )",
+                "",
+            ]
+        )
+    elif not asserted_elements:
+        raise ValueError("generated test requires at least one executable assertion")
     return "\n".join(lines)
 
 

@@ -54,9 +54,21 @@ def apply_accepted_discovery(
     evidence = tuple(_evidence(target, run, plan.sensitivity) for target in plan.targets)
     evidence_by_target = {target.id: evidence[index].id for index, target in enumerate(plan.targets)}
 
-    elements = tuple(
-        _element(target, candidates[results[target.id].selected_candidate_id], evidence_by_target[target.id])
+    selected_candidates = {
+        target.id: candidates[results[target.id].selected_candidate_id]
         for target in plan.targets
+    }
+    elements = tuple(
+        _element(target, selected_candidates[target.id], evidence_by_target[target.id])
+        for target in plan.targets
+    )
+    observed_page_name = next(
+        (
+            selected_candidates[target.id].semantic_name
+            for target in plan.targets
+            if target.outcome_target
+        ),
+        plan.page_name,
     )
     components = tuple(
         ComponentContext(
@@ -68,7 +80,7 @@ def apply_accepted_discovery(
     )
     page = PageContext(
         id=plan.page_id,
-        name=_observed(plan.page_name, tuple(evidence_by_target.values())),
+        name=_observed(observed_page_name, tuple(evidence_by_target.values())),
         route=_observed(plan.route, tuple(evidence_by_target.values()), sensitivity=context.pages[0].route.sensitivity),
         component_ids=plan.component_ids,
         element_ids=tuple(target.element_id for target in plan.targets if target.owner_id == plan.page_id),
@@ -90,12 +102,12 @@ def apply_accepted_discovery(
     existing_intent = context.process.steps[0].intent
     steps = [
         ProcessStep(
-            id="step_open_catalog",
+            id="step_open_page",
             order=1,
             page_id=page.id,
             intent=existing_intent,
             action=UIAction(kind=ActionKind.NAVIGATE),
-            expected_state=_observed("The catalog search page is available.", tuple(evidence_by_target.values())),
+            expected_state=_observed("The target page is available.", tuple(evidence_by_target.values())),
         )
     ]
     for index, target in enumerate(plan.targets, start=2):
@@ -177,7 +189,7 @@ def _element(target: DiscoveryTarget, candidate: ElementCandidate, evidence_id: 
     return UIElement(
         id=target.element_id,
         owner_id=target.owner_id,
-        name=_observed(target.name, (evidence_id,)),
+        name=_observed(candidate.semantic_name, (evidence_id,)),
         semantic_role=_observed(candidate.semantic_role, (evidence_id,)),
         locator_candidates=locators,
     )
@@ -211,18 +223,18 @@ def _observed(value: str, evidence_ids: tuple[str, ...], *, sensitivity=None) ->
 
 def _intent(target: DiscoveryTarget) -> str:
     verbs = {
-        "fill": "Enter the symbolic search query.",
-        "click": "Submit the catalog search.",
-        "read": "Observe the matching catalog results.",
+        "fill": f"Enter the symbolic value for {target.name}.",
+        "click": f"Use {target.name}.",
+        "read": f"Observe {target.name}.",
     }
     return verbs.get(target.action_kind.value, f"Use {target.name}.")
 
 
 def _expected_state(target: DiscoveryTarget) -> str:
     values = {
-        "fill": "The search field contains the symbolic query during execution.",
-        "click": "The search action is submitted.",
-        "read": "The results region is visible and can be asserted.",
+        "fill": f"The {target.name} value is supplied during execution.",
+        "click": f"The {target.name} action completes.",
+        "read": f"The {target.name} is visible and can be asserted.",
     }
     return values.get(target.action_kind.value, f"The {target.name} step completes.")
 

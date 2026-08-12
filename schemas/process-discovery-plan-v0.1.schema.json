@@ -151,7 +151,7 @@
       "items": {
         "$ref": "#/$defs/DiscoveryTarget"
       },
-      "minItems": 2,
+      "minItems": 1,
       "title": "Targets",
       "type": "array"
     }

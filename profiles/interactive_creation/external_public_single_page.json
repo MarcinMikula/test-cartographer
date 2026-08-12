@@ -1,0 +1,13 @@
+{
+  "schema_version": "0.1",
+  "id": "interactive_external_public_single_page",
+  "label": "Human-triggered external public single-page Creation Flow",
+  "target_test": "derived_from_accepted_proposal",
+  "require_live_local_llm": true,
+  "require_headed_browser": true,
+  "fixture_answers_allowed": false,
+  "raw_operator_values_persisted": false,
+  "minimum_intake_answers": 9,
+  "minimum_intake_confirmations": 1,
+  "minimum_review_decisions": 4
+}
