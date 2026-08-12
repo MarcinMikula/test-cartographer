@@ -50,6 +50,7 @@ def build_creation_evaluation(
         raise ValueError("application report does not belong to the code patch")
 
     target_kinds = {change.target_kind for change in patch.changes}
+    component_required = bool(run.proposal and run.proposal.components)
     all_verification_passed = all(item.passed for item in verification_results)
     architecture_checks = {
         "page_object_generated": AdaptationTargetKind.PAGE in target_kinds,
@@ -67,11 +68,7 @@ def build_creation_evaluation(
         architecture_checks["meaningful_test_assertion_present"],
         architecture_checks["framework_execution_independent"],
         architecture_checks["original_framework_unchanged"],
-        (
-            architecture_checks["component_generated"]
-            if run.proposal and run.proposal.components
-            else True
-        ),
+        architecture_checks["component_generated"] if component_required else True,
     )
     passed = (
         collected_test_count >= 1
@@ -106,6 +103,7 @@ def build_creation_evaluation(
         verification_seconds=verification_seconds,
         time_to_first_runnable_test_seconds=time_to_first_runnable_test_seconds,
         verification_results=verification_results,
+        component_required=component_required,
         corrections=corrections,
         **architecture_checks,
     )

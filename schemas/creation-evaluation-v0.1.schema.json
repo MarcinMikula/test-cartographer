@@ -99,6 +99,11 @@
       "title": "Component Generated",
       "type": "boolean"
     },
+    "component_required": {
+      "default": true,
+      "title": "Component Required",
+      "type": "boolean"
+    },
     "context_id": {
       "pattern": "^[a-z][a-z0-9_]{2,63}$",
       "title": "Context Id",

@@ -23,6 +23,7 @@
   "llm_call_count": 0,
   "live_llm_used": false,
   "page_object_generated": true,
+  "component_required": true,
   "component_generated": true,
   "fixture_generated": true,
   "test_generated": true,

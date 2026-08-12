@@ -255,6 +255,7 @@ class CreationEvaluation(ContractModel):
     llm_call_count: Literal[0] = 0
     live_llm_used: Literal[False] = False
     page_object_generated: bool
+    component_required: bool = True
     component_generated: bool
     fixture_generated: bool
     test_generated: bool
@@ -277,7 +278,7 @@ class CreationEvaluation(ContractModel):
             self.collected_test_count >= 1,
             self.passed_test_count >= 1,
             self.page_object_generated,
-            self.component_generated,
+            not self.component_required or self.component_generated,
             self.fixture_generated,
             self.test_generated,
             self.meaningful_test_assertion_present,
