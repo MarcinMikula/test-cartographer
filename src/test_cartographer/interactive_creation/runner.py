@@ -695,7 +695,7 @@ def run_human_triggered_creation_flow(
                 CreationStageKind.BROWSER_DISCOVERY,
                 discovery_started,
                 discovery_completed,
-                live=1 if provider_mode == "ollama" else 0,
+                live=_discovery_live_llm_call_count(discovery_run),
                 deterministic=max(0, len(discovery_run.targets) - len(discovery_run.ambiguities)),
                 browser=1,
                 human=1 + len(discovery_run.ambiguities),
@@ -1261,6 +1261,12 @@ def _read_non_empty(prompt: str, *, input_fn: InputFn) -> str:
         value = input_fn(prompt).strip()
         if value:
             return value
+
+
+def _discovery_live_llm_call_count(discovery_run) -> int:
+    """Return the number of actual persisted discovery guidance turns."""
+
+    return len(discovery_run.guidance_turns)
 
 
 def _phase_for_questions(questions) -> GuidedIntakePhase:
