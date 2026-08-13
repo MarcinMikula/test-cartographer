@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — preserved before remediation.**
+**RESOLVED — verified by acceptance retest and regression evidence.**
 
 Related GitHub Issue: `#5 [ACCEPTANCE] ACC-EXT-002 — existing output directory is destructively removed before run start`
 
@@ -147,3 +147,11 @@ against the new exact product commit.
 - Issue #3 blocker was crossed by run-02.
 - Issue #4 remediation remains awaiting a real external retest.
 - Issue #5 tracks this independent output-integrity blocker.
+
+## Resolution
+
+Status: RESOLVED.
+
+The collision behavior was corrected to fail closed without deleting existing output and was covered by focused regression; the new immutable `ACC-EXT-002-run-04` then started from a fresh output directory and completed successfully.
+
+Historical failed/incomplete evidence remains immutable and is not rewritten.

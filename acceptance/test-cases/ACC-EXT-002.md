@@ -2,7 +2,7 @@
 
 ## Status
 
-**DESIGNED — not executed.**
+**PASSED — `ACC-EXT-002-run-04` on 2026-08-13.**
 
 ## Why this test exists
 
@@ -163,4 +163,73 @@ Additionally stop if the proposed fix for Issue #1 still requires:
 
 ## Result
 
-Not executed yet.
+**PASS.**
+
+Accepted external execution:
+
+```text
+acceptance test: ACC-EXT-002
+passing run: ACC-EXT-002-run-04
+tested product commit: bd6595ab89c5c4c2d1e6317ee372bfaa9a74462f
+external target: https://www.gov.uk/driving-licence-codes
+creation flow status: passed
+tests collected / passed: 1 / 1
+independent framework execution: true
+original framework unchanged: true
+component required: false
+component generated: false
+```
+
+The run completed the supported bounded workflow from human intent through
+external browser discovery, explicit reviews, sandbox application, and
+independent framework execution.
+
+The successful run also provided the real acceptance retest for:
+
+- `ACC-FIND-003` / Issue #3 — single-target discovery contract,
+- `ACC-FIND-004` / Issue #4 — componentless CreationEvaluation,
+- `ACC-FIND-005` / Issue #5 — immutable/fail-closed output startup.
+
+`ACC-FIND-006` / Issue #6 was discovered after the functional PASS as a
+non-blocking stage-level LLM-call measurement error. It was preserved before
+remediation and corrected deterministically in commit
+`ab4f3f5e873f0849a2d418a9a0c6cf7ff8279839`; no additional GOV.UK execution
+was required.
+
+Formal Sprint 16 validation packaging was then built from the immutable run-04
+evidence and independently verified:
+
+```text
+ValidationRun contract id: acc_ext_002_run_04
+validation run fingerprint:
+281c0eac510eacb98eeda16c3e5bae96c0c2cf87bc2c1739be9d4360bfcf7c96
+
+target fingerprint:
+85691211bcbde45eb885309a6518875392f084409a6d3a4b4db33a277dd875c0
+
+package fingerprint:
+2d297736725ee99363b1e37e69b7972fa284af8ada2083325849537b2ab69381
+
+manifest entries: 7
+independent package verification: passed
+run-04 source evidence unchanged: true
+```
+
+Operator closure assessment:
+
+```text
+difficulty: hard
+confidence in result: high
+would reuse workflow: yes
+prior target familiarity: automated_before
+```
+
+Timing interpretation is intentionally conservative. The Creation Flow recorded
+`730.247` seconds of prompt-to-response/operator-response elapsed time and
+`898.836` seconds total elapsed time. These values are useful burden evidence
+but are not treated as proof of continuous human active work. No productivity or
+time-savings claim is made.
+
+`ACC-EXT-001` remains separately blocked by `ACC-FIND-002` / Issue #2 because
+the original four-page scenario requires multi-page discovery. Passing
+`ACC-EXT-002` does not claim that capability.

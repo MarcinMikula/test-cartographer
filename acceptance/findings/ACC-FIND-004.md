@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — preserved before remediation.**
+**RESOLVED — verified by acceptance retest and regression evidence.**
 
 Related GitHub Issue: `#4 [ACCEPTANCE] ACC-EXT-002 — componentless external run is rejected by CreationEvaluation contract`
 
@@ -156,3 +156,11 @@ After remediation is committed and pushed, execute a new immutable
 - Issue #2 remains open because multi-page discovery remains unsupported.
 - Issue #3 remediation was successfully crossed by run-02.
 - Issue #4 tracks this failure.
+
+## Resolution
+
+Status: RESOLVED.
+
+`ACC-EXT-002-run-04` persisted a PASSED `CreationEvaluation` with `component_required=false` and `component_generated=false`, then completed independent framework execution with `1/1` tests passed.
+
+Historical failed/incomplete evidence remains immutable and is not rewritten.

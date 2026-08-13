@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — preserved before remediation.**
+**RESOLVED — verified by acceptance retest and regression evidence.**
 
 Related GitHub Issue: `#3 [ACCEPTANCE] ACC-EXT-002 — single-target discovery run is rejected by runtime contract`
 
@@ -95,3 +95,11 @@ Keep `ACC-EXT-002-run-01` unchanged as failed evidence.
 After the correction is committed on the remediation branch, execute
 `ACC-EXT-002` again as a new immutable run (`ACC-EXT-002-run-02`) against the
 new exact product commit.
+
+## Resolution
+
+Status: RESOLVED.
+
+`ACC-EXT-002-run-02` crossed the corrected single-target discovery boundary, and the final `ACC-EXT-002-run-04` completed the same single-target discovery path end to end.
+
+Historical failed/incomplete evidence remains immutable and is not rewritten.

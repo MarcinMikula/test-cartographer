@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — preserved before remediation design.**
+**RESOLVED — bounded external single-page Creation Flow proved by `ACC-EXT-002-run-04`.**
 
 GitHub Issue: `#1 [ACCEPTANCE] ACC-EXT-001 — Creation Flow is bound to controlled catalog fixture`
 
@@ -68,3 +68,19 @@ application graph.
 
 After a justified product correction, keep this finding unchanged and execute
 ACC-EXT-001 as a new run against a new exact product commit.
+
+## Resolution
+
+Status: RESOLVED.
+
+The fixture-binding problem described by this finding was removed by the
+bounded external single-page Creation Flow remediation. `ACC-EXT-002-run-04`
+successfully used the supported product interface with the external GOV.UK page,
+without the controlled catalog fixture, fixed catalog Page Object, fixed catalog
+test target, or manual internal-state surgery.
+
+This resolves `ACC-FIND-001` itself and supports closing GitHub Issue #1.
+
+It does **not** make the original four-page `ACC-EXT-001` scenario executable.
+That scenario remains blocked independently by `ACC-FIND-002` / Issue #2
+(multi-page discovery unsupported).

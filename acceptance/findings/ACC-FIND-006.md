@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — preserved before remediation.**
+**RESOLVED — deterministic measurement correction verified by regression.**
 
 Related GitHub Issue: `#6 [ACCEPTANCE] ACC-EXT-002 — browser discovery stage overcounts live LLM calls`
 
@@ -109,3 +109,19 @@ This correction is deterministic aggregation over already persisted runtime
 facts. Validate through focused unit regression and the full product suite.
 
 `ACC-EXT-002-run-04` remains immutable and must not be rewritten.
+
+## Resolution
+
+Status: RESOLVED.
+
+The finding was preserved in commit
+`657bad79d991e66b8f48f586fc2d212cd50688e6` before remediation.
+
+Commit `ab4f3f5e873f0849a2d418a9a0c6cf7ff8279839` changed browser-discovery
+`live_llm_calls` to derive from the actual persisted `guidance_turns` count and
+added focused regression coverage for zero, one, and multiple turns. The full
+product regression also passed before commit.
+
+The historical `ACC-EXT-002-run-04` artefact remains unchanged and therefore
+retains the originally observed stage metric. Its functional PASS remains valid.
+No new external GOV.UK run was required for this deterministic aggregation fix.
