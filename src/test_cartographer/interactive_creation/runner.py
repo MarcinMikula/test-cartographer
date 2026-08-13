@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import shutil
 import subprocess
 import sys
 import time
@@ -261,9 +260,12 @@ def run_human_triggered_creation_flow(
     output = Path(output_dir).resolve()
     browser_opener = browser_opener or open_interactive_discovery
     command_runner = command_runner or _run
-    if output.exists():
-        shutil.rmtree(output)
-    output.mkdir(parents=True)
+    try:
+        output.mkdir(parents=True, exist_ok=False)
+    except FileExistsError as exc:
+        raise InteractiveFlowStopped(
+            f"output directory already exists; choose a new run id: {output}"
+        ) from exc
     source_framework = Path(
         framework_root or root / "testdata/framework/reference"
     ).resolve()
