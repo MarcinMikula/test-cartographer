@@ -15,6 +15,8 @@ and expansion.
 
 ## Status
 
+**Sprint 17 - external product acceptance Level 1: complete - first real external Creation Flow passed on GOV.UK with a verified evidence package**
+
 **Sprint 16 — external-validation protocol and repeatable evidence package: complete — controlled real-operator rehearsal verified**
 
 **Sprint 15 — persistent ProjectProfile and cross-run bootstrap reuse/invalidation: complete — real operator acceptance verified**
@@ -29,10 +31,16 @@ and expansion.
 
 **Architecture checkpoint A — two-module lifecycle alignment: complete in documentation**
 
+External validation report:
+[`Sprint 17 Level 1 validation report`](acceptance/campaigns/sprint-17-external-validation-I/level-1-validation-report.md)
+
 Current evidence:
 
 ```text
-469 tests passed after the corrected Sprint 16D.1 controlled real-operator validation-protocol rehearsal
+490 tests passed after the Sprint 17 Level 1 acceptance closure regression
+first real external public Creation Flow completed on GOV.UK without catalog-fixture rescue
+ACC-EXT-002-run-04 completed with independent framework execution 1/1 PASS
+formal immutable run-04 evidence package independently verified
 persistent ProjectProfile revision 1 → 2 verified across separate disk-backed runs
 creation and expansion bootstrap reuse verified with 0 repeated application questions
 selective environment/base-URL invalidation verified as REOBSERVE while business context remains COMPATIBLE
@@ -48,7 +56,7 @@ human-triggered second-process expansion with reuse, targeted re-observation, ex
 live local-Ollama interview planning from a minimal request verified end to end
 ```
 
-The repository now provides sixteen executable boundaries:
+The repository now provides seventeen executable boundaries:
 
 1. a strict, provider-neutral `ContextBundle` for one UI process,
 2. a resumable deterministic intake for human-answerable context,
@@ -78,6 +86,7 @@ The repository now provides sixteen executable boundaries:
 14. a human-triggered incremental-expansion flow that reuses accepted application/framework knowledge, re-observes stale targets, extends an existing Page Object through the existing creation pipeline, and proves the old and new processes together in a fresh sandbox.
 15. a persistent non-secret `ProjectProfile` that binds project-wide bootstrap, workspace, guided-intake, policy, and authentication-declaration metadata; projects current bootstrap into normal `ContextBundle` intake; detects exact binding drift; and selectively invalidates future reuse across separate runs.
 16. a strict external-validation evidence protocol with target/run/finding/manifest contracts, deterministic target → run → package identity, immutable evidence-package construction, independent fail-closed verification, first-finding preservation, linked reruns, timing/operator evidence, and explicit stop conditions.
+17. a bounded external-public single-page Creation Flow that accepts a real public URL through supported product interfaces, performs browser discovery without the controlled catalog fixture, supports componentless generation when justified by evidence, protects pre-existing run output fail-closed, and proves the generated test independently in the framework sandbox.
 
 The current workflow can:
 

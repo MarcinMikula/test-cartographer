@@ -2,25 +2,35 @@
 
 ## Status
 
-**Level 1 target authorized. Execution blocked during environment preflight.**
+**Level 1 external single-page acceptance executed and closed.**
 
-`ACC-FIND-001` / GitHub Issue #1: Creation Flow is bound to controlled catalog
-fixture.
-
-No external GOV.UK execution has started.
-
-Campaign testware baseline before this slice:
+Accepted external scenario:
 
 ```text
-3b939026fcf9592710581dbd4682893fd0ff2029
-docs: establish product acceptance test foundation
+ACC-EXT-002
+target: https://www.gov.uk/driving-licence-codes
+passing run: ACC-EXT-002-run-04
+result: PASS
+independent framework execution: 1/1 PASS
+formal evidence package: VERIFIED
 ```
 
-The first execution run will bind the exact clean Git commit that exists after
-the Level 1 planning/test-case slice is accepted and committed.
+The original `ACC-EXT-001` four-page GOV.UK scenario remains preserved and
+blocked by `ACC-FIND-002` / GitHub Issue #2 because multi-page discovery is not
+implemented.
+
+The human-readable closure is in `level-1-validation-report.md`. Detailed
+requirement evidence remains in `traceability.md`, and the exact acceptance
+oracle/result remains in `../../test-cases/ACC-EXT-002.md`.
+
+For subsequent planning, this completed Level 1 may be treated as **Level 1A**
+only to distinguish it from the planned **Level 1B analyst-rich validation**.
+Historical Level 1 records keep their original naming.
+
+No Level 1B target is authorized by this plan yet. No Level 2 target is
+authorized yet.
 
 ## Campaign objective
-
 Challenge TestCartographer on external public frontend applications it does not
 control, while preserving the Sprint 16 evidence discipline.
 
@@ -186,6 +196,16 @@ A passing generated test does not by itself close Level 1.
 
 No Level 2 target is authorized by this document.
 
-Pracuj.pl is a candidate because its current public frontend appears materially
-more dynamic, but a separate policy/robots review and test design are required
-before use.
+Pracuj.pl remains one candidate because its public frontend is materially more
+dynamic/script-heavy than the Level 1 GOV.UK target, but it is intentionally not
+the only planned Level 2 application.
+
+The current direction is to use multiple Level 2 public targets, including
+Pracuj.pl plus two additional applications preferably from different functional
+domains. Each target requires a separate scope, policy/robots review,
+authorization, and test design before execution.
+
+Before Level 2, a separate Level 1B test-design slice will challenge
+TestCartographer with richer and less perfectly structured analyst/tester input.
+No product correction is authorized merely because that future validation is
+planned.

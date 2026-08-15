@@ -18,44 +18,61 @@ actionable bugs/findings.
 
 ## Current phase
 
-The acceptance phase starts after Sprint 16 closed the validation-evidence
-protocol.
+The first external product-acceptance slice is complete.
 
-Initial test type:
+```text
+Sprint 17 Level 1
+target: GOV.UK
+scenario: ACC-EXT-002
+passing run: ACC-EXT-002-run-04
+result: PASS
+independent framework execution: 1/1 PASS
+formal evidence package: VERIFIED
+```
 
-> **Product Acceptance Testing — External Validation Campaign**
+The human-readable result and its limits are summarized in:
 
-The process is STLC-derived and intentionally iterative. The initial
-requirements and test cases are not treated as complete.
+```text
+campaigns/sprint-17-external-validation-I/level-1-validation-report.md
+```
 
-## Initial structure
+The detailed acceptance oracle and execution record remain in
+`test-cases/ACC-EXT-002.md`, while requirement-by-requirement evidence remains in
+the campaign `traceability.md`.
 
-Only artefacts needed now are created.
+The next planned validation slice is Level 1B: a more analytically demanding
+public process where the operator supplies richer, less perfectly structured
+testing context and TestCartographer must cope without being led through a
+minimal predetermined path.
+
+Level 2 remains reserved for materially more dynamic/script-heavy public
+applications. Pracuj.pl is one candidate, not the only planned Level 2 target.
+
+## Current structure
 
 ```text
 acceptance/
-├── README.md
-├── acceptance-test-plan.md
-├── stlc-workflow.md
-├── requirements/
-│   └── acceptance-requirements.md
-├── test-cases/
-│   └── ACC-EXT-001.md
-└── campaigns/
-    └── sprint-17-external-validation-I/
-        ├── campaign-plan.md
-        ├── target-selection.md
-        └── traceability.md
-
-├── test-cases/
-│   ├── ACC-EXT-001.md
-│   └── ACC-EXT-002.md
-├── findings/
-│   ├── ACC-FIND-001.md
-│   └── ACC-FIND-002.md
-
-added later when evidence requires them:
-└── templates/
+|-- README.md
+|-- acceptance-test-plan.md
+|-- stlc-workflow.md
+|-- requirements/
+|   `-- acceptance-requirements.md
+|-- test-cases/
+|   |-- ACC-EXT-001.md
+|   `-- ACC-EXT-002.md
+|-- findings/
+|   |-- ACC-FIND-001.md
+|   |-- ACC-FIND-002.md
+|   |-- ACC-FIND-003.md
+|   |-- ACC-FIND-004.md
+|   |-- ACC-FIND-005.md
+|   `-- ACC-FIND-006.md
+`-- campaigns/
+    `-- sprint-17-external-validation-I/
+        |-- campaign-plan.md
+        |-- target-selection.md
+        |-- traceability.md
+        `-- level-1-validation-report.md
 ```
 
 Empty structure is not committed merely to make the tree look complete.
@@ -68,6 +85,9 @@ acceptance requirements/test basis
 
 test cases and campaign records
 -> tracked on main under acceptance/
+
+human-readable campaign result
+-> campaign validation reports
 
 immutable ValidationRun/evidence packages
 -> TestCartographer-local-artifacts/
@@ -82,6 +102,10 @@ product correction
 A `ValidationFinding` is immutable evidence from a particular run. A GitHub
 Issue is a mutable operational record used to triage and resolve an actionable
 problem. They are related but not interchangeable.
+
+The validation report is not a replacement for immutable evidence,
+requirement traceability, or the test case. Its purpose is to make the result
+understandable to a reader who did not participate in the campaign.
 
 ## Testware evolution rule
 
