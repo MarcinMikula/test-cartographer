@@ -40,10 +40,11 @@ The detailed acceptance oracle and execution record remain in
 `test-cases/ACC-EXT-002.md`, while requirement-by-requirement evidence remains in
 the campaign `traceability.md`.
 
-The next planned validation slice is Level 1B: a more analytically demanding
-public process where the operator supplies richer, less perfectly structured
+The next validation slice is now designed as `ACC-EXT-003` Level 1B:
+Practice Software Testing / Toolshop with a more analytically demanding public
+catalogue process. The operator will supply richer, less perfectly structured
 testing context and TestCartographer must cope without being led through a
-minimal predetermined path.
+minimal predetermined path. The test is designed but not yet executed.
 
 Level 2 remains reserved for materially more dynamic/script-heavy public
 applications. Pracuj.pl is one candidate, not the only planned Level 2 target.
@@ -59,7 +60,8 @@ acceptance/
 |   `-- acceptance-requirements.md
 |-- test-cases/
 |   |-- ACC-EXT-001.md
-|   `-- ACC-EXT-002.md
+|   |-- ACC-EXT-002.md
+|   `-- ACC-EXT-003.md
 |-- findings/
 |   |-- ACC-FIND-001.md
 |   |-- ACC-FIND-002.md
@@ -71,6 +73,7 @@ acceptance/
     `-- sprint-17-external-validation-I/
         |-- campaign-plan.md
         |-- target-selection.md
+        |-- level-1b-target-selection.md
         |-- traceability.md
         `-- level-1-validation-report.md
 ```

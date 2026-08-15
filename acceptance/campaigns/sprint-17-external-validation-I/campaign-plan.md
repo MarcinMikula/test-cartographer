@@ -27,8 +27,11 @@ For subsequent planning, this completed Level 1 may be treated as **Level 1A**
 only to distinguish it from the planned **Level 1B analyst-rich validation**.
 Historical Level 1 records keep their original naming.
 
-No Level 1B target is authorized by this plan yet. No Level 2 target is
-authorized yet.
+Level 1B test design now proposes Practice Software Testing / Toolshop for
+operator review. `ACC-EXT-003` is designed but not executed; execution still
+requires explicit scope authorization and a final target preflight.
+
+No Level 2 target is authorized yet.
 
 ## Campaign objective
 Challenge TestCartographer on external public frontend applications it does not
@@ -49,7 +52,7 @@ drive product changes.
 
 ## Level 1 selected target
 
-Pending operator authorization:
+Historical authorized Level 1 target:
 
 ```text
 application: GOV.UK
@@ -192,6 +195,40 @@ Level 1 may move toward closure when:
 
 A passing generated test does not by itself close Level 1.
 
+## Level 1B - analyst-rich validation
+
+Level 1B is designed as `ACC-EXT-003`.
+
+Proposed target:
+
+```text
+Practice Software Testing / Toolshop
+https://practicesoftwaretesting.com/
+```
+
+Primary purpose:
+
+> Challenge TestCartographer with richer, imperfectly structured analyst/tester
+> intent while keeping the browser target bounded enough to distinguish intake
+> and context-modeling failures from unrelated frontend complexity.
+
+The process remains catalogue-focused and non-destructive. The operator starts
+from a natural mission around finding suitable products and ordering relevant
+results by price rather than from a prepared selector/test-script description.
+
+The design intentionally leaves the meaning of relevant/suitable results
+incomplete and forbids a prepared follow-up answer sheet.
+
+See:
+
+```text
+level-1b-target-selection.md
+../../test-cases/ACC-EXT-003.md
+```
+
+This design does not authorize product code changes. Execution findings must
+drive any remediation.
+
 ## Level 2
 
 No Level 2 target is authorized by this document.
@@ -205,7 +242,8 @@ Pracuj.pl plus two additional applications preferably from different functional
 domains. Each target requires a separate scope, policy/robots review,
 authorization, and test design before execution.
 
-Before Level 2, a separate Level 1B test-design slice will challenge
-TestCartographer with richer and less perfectly structured analyst/tester input.
-No product correction is authorized merely because that future validation is
-planned.
+Level 1B execution will challenge TestCartographer with richer and less perfectly
+structured analyst/tester input. It remains testware-only until explicit target
+authorization and final preflight.
+
+No product correction is authorized merely because the validation is planned.
