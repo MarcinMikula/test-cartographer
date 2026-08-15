@@ -7,7 +7,8 @@
 `ACC-EXT-003-run-01` was consumed by an operator terminal interruption during
 intake. The evidence-bearing `ACC-EXT-003-run-02` completed guided intake and
 then stopped before browser discovery. No formal ValidationRun package was
-created. See `ACC-FIND-007`, `ACC-FIND-008`, and `ACC-FIND-009`.
+created. See `ACC-FIND-007` / Issue #7, `ACC-FIND-008` / Issue #8, and
+`ACC-FIND-009` / Issue #9.
 
 ## Why this test exists
 

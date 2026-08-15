@@ -4,7 +4,7 @@
 
 **OPEN — evidence-lifecycle finding preserved before remediation.**
 
-GitHub Issue: pending creation after the finding-preservation commit.
+Related GitHub Issue: `#9 [ACCEPTANCE] ACC-EXT-003 — terminal interruption leaves operator session active`
 
 ## Discovery context
 

@@ -4,7 +4,7 @@
 
 **OPEN — Level 1B intake/intent blocker preserved before remediation.**
 
-GitHub Issue: pending creation after the finding-preservation commit.
+Related GitHub Issue: `#8 [ACCEPTANCE] ACC-EXT-003 — guided intake loses material catalogue intent`
 
 ## Discovery context
 

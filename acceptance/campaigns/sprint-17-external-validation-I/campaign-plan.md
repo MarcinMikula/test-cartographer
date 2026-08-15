@@ -239,9 +239,9 @@ ACC-EXT-003-run-02
 -> result: NOT ACCEPTED / PRODUCT FINDING
 ```
 
-The independent findings are preserved as `ACC-FIND-007` through
-`ACC-FIND-009`. GitHub Issues are intentionally deferred until this finding-only
-state is committed.
+The independent findings are preserved as `ACC-FIND-007` / Issue #7,
+`ACC-FIND-008` / Issue #8, and `ACC-FIND-009` / Issue #9. Their GitHub Issues
+were created only after the finding-only state was committed.
 
 Primary purpose:
 

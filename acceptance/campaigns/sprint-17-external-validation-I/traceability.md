@@ -107,17 +107,17 @@ browser-discovery live LLM calls overcounted
 -> fix commit ab4f3f5e873f0849a2d418a9a0c6cf7ff8279839
 -> no new external run required
 
-ACC-FIND-007 / GitHub Issue pending
+ACC-FIND-007 / Issue #7
 external single-page flow supports heading outcomes only
 -> OPEN / Level 1B blocker
 -> run-02 stopped before browser discovery
 
-ACC-FIND-008 / GitHub Issue pending
+ACC-FIND-008 / Issue #8
 guided intake omitted material ambiguity and ordering intent
 -> OPEN / Level 1B blocker
 -> run-02 accepted context lost cheapest-first semantics
 
-ACC-FIND-009 / GitHub Issue pending
+ACC-FIND-009 / Issue #9
 terminal exception leaves operator session active
 -> OPEN / evidence-lifecycle blocker
 -> corroborated by operator-interrupted run-01

@@ -84,7 +84,8 @@ Two acceptance run identifiers were later consumed:
 Run-02 did not contact the target through TestCartographer, create a framework
 sandbox, generate source, or execute a target test. The target preflight remains
 valid suitability evidence, while the product result is **NOT ACCEPTED / PRODUCT
-FINDING** through `ACC-FIND-007`, `ACC-FIND-008`, and `ACC-FIND-009`.
+FINDING** through `ACC-FIND-007` / Issue #7, `ACC-FIND-008` / Issue #8,
+and `ACC-FIND-009` / Issue #9.
 
 ## Why this target fits Level 1B
 

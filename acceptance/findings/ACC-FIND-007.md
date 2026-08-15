@@ -4,7 +4,7 @@
 
 **OPEN — Level 1B blocker preserved before remediation.**
 
-GitHub Issue: pending creation after the finding-preservation commit.
+Related GitHub Issue: `#7 [ACCEPTANCE] ACC-EXT-003 — external single-page flow supports heading outcomes only`
 
 ## Discovery context
 
