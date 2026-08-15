@@ -21,6 +21,11 @@ package fingerprint:
 The original `ACC-EXT-001` four-page scenario remains **BLOCKED** by
 `ACC-FIND-002` / Issue #2 because multi-page discovery is not implemented.
 
+Level 1B execution has also started. `ACC-EXT-003-run-02` is **NOT ACCEPTED /
+PRODUCT FINDING** at product commit
+`ac1d7b61033251377b9b49d970c50f6d8cdf91e9`. It stopped before browser
+discovery; the external target is not implicated.
+
 ## Level 1 requirement traceability
 
 | Requirement | ACC-EXT-002 closure | Execution evidence |
@@ -42,6 +47,28 @@ The original `ACC-EXT-001` four-page scenario remains **BLOCKED** by
 | ACC-REQ-015 | NOT TRIGGERED | No auth, destructive action, sensitive-data boundary, scope escape, rate-limit, or policy stop was encountered in run-04. Passing this scenario does not claim coverage of every stop condition. |
 | ACC-REQ-016 | PASS after remediation | Run-04 completed the nominal supported external single-page workflow without manual internal JSON/source/state surgery. |
 | ACC-REQ-017 | PASS | CreationEvaluation records the original automation framework as unchanged; patch application was confined to the approved sandbox/copy. |
+
+## Level 1B interim requirement traceability
+
+| Requirement | ACC-EXT-003 run-02 | Execution evidence |
+|---|---|---|
+| ACC-REQ-001 | NOT ACCEPTED | The initial cheapest-first intent was absent from the accepted context summary. |
+| ACC-REQ-002 | NOT ESTABLISHED | Bootstrap questions were asked; no compatible persistent ProjectProfile reuse was demonstrated. |
+| ACC-REQ-003 | NOT ACCEPTED | Relevant/suitable and ordering ambiguity was neither clarified nor retained as UNKNOWN. |
+| ACC-REQ-004 | PASS WITH MATERIAL CAVEAT | Runtime provenance was persisted, but the operator used disclosed ChatGPT translation and limited answer-content assistance. |
+| ACC-REQ-005 | NOT REACHED | Product capability validation failed before browser discovery. |
+| ACC-REQ-006 | PARTIAL | The operator confirmed the displayed context, but the product had already omitted material initial intent. |
+| ACC-REQ-007 | NOT ACCEPTED | The bounded LLM question plan did not address the material ambiguity in the mission. |
+| ACC-REQ-008 | NOT REACHED | No synthesis or automation proposal was produced. |
+| ACC-REQ-009 | NOT REACHED | No sandbox or independent test execution occurred. |
+| ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | Run-01 and run-02 were retained and hashed before any remediation. |
+| ACC-REQ-011 | PENDING | Any external retest requires a new run identifier and a new exact product commit after authorized remediation. |
+| ACC-REQ-012 | NOT ACCEPTED | The process failed closed functionally, but the terminated run retained an `active` operator-session state and no formal package exists. |
+| ACC-REQ-013 | NOT ESTABLISHED | The run stopped before final operator assessment and complete runtime measurement. |
+| ACC-REQ-014 | PASS | The failure is classified against TestCartographer; no Toolshop defect verdict is made. |
+| ACC-REQ-015 | NOT ACCEPTED | The capability exception was not converted into a controlled terminal session state. |
+| ACC-REQ-016 | NOT ACCEPTED | The nominal external interface supports heading outcomes only and cannot represent the authorized same-page process. |
+| ACC-REQ-017 | PASS | The clean framework baseline remained unchanged and no sandbox was created. |
 
 ## Finding / retest chain
 
@@ -79,6 +106,21 @@ browser-discovery live LLM calls overcounted
 -> finding commit 657bad79d991e66b8f48f586fc2d212cd50688e6
 -> fix commit ab4f3f5e873f0849a2d418a9a0c6cf7ff8279839
 -> no new external run required
+
+ACC-FIND-007 / GitHub Issue pending
+external single-page flow supports heading outcomes only
+-> OPEN / Level 1B blocker
+-> run-02 stopped before browser discovery
+
+ACC-FIND-008 / GitHub Issue pending
+guided intake omitted material ambiguity and ordering intent
+-> OPEN / Level 1B blocker
+-> run-02 accepted context lost cheapest-first semantics
+
+ACC-FIND-009 / GitHub Issue pending
+terminal exception leaves operator session active
+-> OPEN / evidence-lifecycle blocker
+-> corroborated by operator-interrupted run-01
 ```
 
 ## Formal evidence package
@@ -126,6 +168,12 @@ ACC-EXT-002
 -> single-page GOV.UK heading verification
 -> PASS via ACC-EXT-002-run-04
 -> formal evidence package VERIFIED
+
+ACC-EXT-003
+-> analyst-rich same-page catalogue process
+-> run-01 operator-interrupted during intake
+-> run-02 NOT ACCEPTED / PRODUCT FINDING before browser discovery
+-> blocked by ACC-FIND-007, ACC-FIND-008, and ACC-FIND-009
 ```
 
 ## Level 2

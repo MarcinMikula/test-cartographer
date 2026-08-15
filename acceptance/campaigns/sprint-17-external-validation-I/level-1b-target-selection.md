@@ -2,11 +2,12 @@
 
 ## Status
 
-**AUTHORIZED FOR EXECUTION - final target preflight passed; not executed.**
+**AUTHORIZED / EXECUTION ATTEMPTED - stopped before target contact.**
 
-This document designs the next external acceptance slice. It does not authorize
-product changes and it does not claim that the target has already been executed
-by TestCartographer.
+This document records the authorized target boundary and the first execution
+attempts. It does not authorize product changes. `ACC-EXT-003-run-02` stopped
+before browser discovery, so it makes no defect or correctness claim about the
+Practice Software Testing application.
 
 ## Candidate application
 
@@ -68,7 +69,22 @@ A final bounded read-only target preflight on 2026-08-15 confirmed that:
 
 The preflight establishes target suitability only. It deliberately preserves no
 exact result count, product list, price, selector, DOM target, or prepared intake
-answer. No ValidationRun ID was consumed.
+answer. No run identifier had been consumed at preflight time.
+
+## Execution status
+
+Two acceptance run identifiers were later consumed:
+
+- `ACC-EXT-003-run-01` ended through an operator terminal interruption during
+  guided intake and provides no product verdict;
+- `ACC-EXT-003-run-02` completed guided intake and aggregate confirmation, then
+  failed before browser discovery because the nominal external flow supports
+  heading outcomes only.
+
+Run-02 did not contact the target through TestCartographer, create a framework
+sandbox, generate source, or execute a target test. The target preflight remains
+valid suitability evidence, while the product result is **NOT ACCEPTED / PRODUCT
+FINDING** through `ACC-FIND-007`, `ACC-FIND-008`, and `ACC-FIND-009`.
 
 ## Why this target fits Level 1B
 

@@ -27,9 +27,14 @@ For subsequent planning, this completed Level 1 may be treated as **Level 1A**
 only to distinguish it from the planned **Level 1B analyst-rich validation**.
 Historical Level 1 records keep their original naming.
 
-Practice Software Testing / Toolshop is authorized as the Level 1B target.
-`ACC-EXT-003` remains not executed. The final bounded read-only target preflight
-passed on 2026-08-15 without creating a ValidationRun.
+Practice Software Testing / Toolshop remains the authorized Level 1B target.
+Execution started on 2026-08-15 against product commit
+`ac1d7b61033251377b9b49d970c50f6d8cdf91e9`. `ACC-EXT-003-run-01` was
+consumed by an operator terminal interruption during intake. The evidence-bearing
+`ACC-EXT-003-run-02` completed guided intake and then stopped before browser
+discovery with the explicit heading-only capability error. The result is **NOT
+ACCEPTED / PRODUCT FINDING**; no target defect verdict or product correction is
+authorized.
 
 No Level 2 target is authorized yet.
 
@@ -213,8 +218,30 @@ and the public price-ascending sort supports the intended outcome semantics afte
 normal UI stabilization. No write action is required.
 
 This is target-suitability evidence only. It does not freeze an exact result
-count, product list, price, implementation path, or locator, and it did not
-consume a ValidationRun ID.
+count, product list, price, implementation path, or locator. At preflight time it
+had not consumed a run identifier.
+
+Execution evidence now shows:
+
+```text
+ACC-EXT-003-run-01
+-> operator terminal interruption during intake
+-> no product verdict
+-> immutable and not reusable
+
+ACC-EXT-003-run-02
+-> nine guided-intake questions and aggregate context confirmation
+-> no clarification of relevant/suitable or cheapest-first semantics
+-> accepted context omitted the initial ordering preference
+-> explicit stop: external public single-page creation supports heading outcomes only
+-> browser discovery not started
+-> framework sandbox not created
+-> result: NOT ACCEPTED / PRODUCT FINDING
+```
+
+The independent findings are preserved as `ACC-FIND-007` through
+`ACC-FIND-009`. GitHub Issues are intentionally deferred until this finding-only
+state is committed.
 
 Primary purpose:
 
@@ -252,8 +279,9 @@ Pracuj.pl plus two additional applications preferably from different functional
 domains. Each target requires a separate scope, policy/robots review,
 authorization, and test design before execution.
 
-Level 1B execution will challenge TestCartographer with richer and less perfectly
-structured analyst/tester input. Target authorization and final preflight are
-complete; no ValidationRun exists yet.
+Level 1B execution produced its first product evidence. The nominal flow did not
+reach the authorized target because intake and capability boundaries stopped it
+before browser discovery. Level 1B remains open and blocked pending finding
+triage; Level 2 must not begin from this state.
 
 No product correction is authorized merely because the validation is planned.

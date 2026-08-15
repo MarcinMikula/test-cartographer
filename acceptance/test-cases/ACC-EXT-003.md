@@ -2,9 +2,12 @@
 
 ## Status
 
-**AUTHORIZED / NOT EXECUTED.**
+**NOT ACCEPTED / PRODUCT FINDINGS PRESERVED.**
 
-No ValidationRun exists for this test yet.
+`ACC-EXT-003-run-01` was consumed by an operator terminal interruption during
+intake. The evidence-bearing `ACC-EXT-003-run-02` completed guided intake and
+then stopped before browser discovery. No formal ValidationRun package was
+created. See `ACC-FIND-007`, `ACC-FIND-008`, and `ACC-FIND-009`.
 
 ## Why this test exists
 
@@ -155,28 +158,69 @@ Before consuming the first ValidationRun ID:
 - local browser/provider prerequisites are ready;
 - no product code is changed merely to make this scenario fit.
 
-## Current pre-execution gate
+## Pre-execution gate and execution record
 
-Recorded on 2026-08-15 (Europe/Warsaw):
+All pre-execution gates passed on 2026-08-15 (Europe/Warsaw):
 
 ```text
 operator target/scope authorization: PASS
 bounded read-only target preflight: PASS
-ValidationRun ID consumed: no
+TestCartographer commit: ac1d7b61033251377b9b49d970c50f6d8cdf91e9
+framework baseline: 4d916dea8190bc59ef8c9dd5aa78aa31dbbf16a6
+framework baseline clean: true
+historical framework checkout preserved: true
+Ollama version/model: 0.32.9 / qwen2.5-coder:7b
+headed browser prerequisite: PASS (Chromium 151.0.7922.34)
 product change authorized: no
 ```
 
-The preflight confirmed that the public catalogue, the working term `hammer`,
-and public price-ascending ordering remain sufficient for the intended process
-semantics without authentication or a write action. It does not freeze exact
-products, counts, prices, selectors, or prepared intake answers.
+The target preflight confirmed that the public catalogue, the working term
+`hammer`, and public price-ascending ordering remained sufficient without
+authentication or a write action. It froze no exact products, counts, prices,
+selectors, or prepared intake answers.
 
-Still required immediately before the first run:
+### ACC-EXT-003-run-01
 
-- integrate the accepted testware to `main`;
-- verify that `main` is clean and record its exact product commit;
-- verify local browser/provider prerequisites and framework-sandbox protection;
-- allocate a fresh ValidationRun ID only after all gates pass.
+Run-01 was interrupted by the operator with a terminal `KeyboardInterrupt`
+during the fourth intake question. It provides no product verdict. The process
+had persisted four operator actions and left the operator session `active`.
+
+```text
+01-guided-intake-run.json  FA40F3A6A3B5F78C2128410C4E67AAC0F6DA2E7AE89A3DDBC5FD7727358CEB3D
+01-intake-session.json      38A6F9478E97525E8FA659686BBBB3E3D670D57DAC579C9375C6ED5C6EFFD5C3
+01-minimal-context.json     50A26E91A3EEA879BBDA83711359D24F7B191D7B38DE1399701FD849238496D8
+01-minimal-seed.json        9176338819191868D8B575C54C2DEABF21B8969A2D4EF9E39936EFDF9E7B38EB
+operator-session.json       F607284064CE7A8B65F82AB307AD7B0B253786FD546B44450B817E10884F40D4
+```
+
+Run-01 is immutable and not reusable. Run-02 was partially primed because the
+first four prompts had already been exposed.
+
+### ACC-EXT-003-run-02
+
+Run-02 completed nine guided-intake questions and one aggregate context
+confirmation, persisting eleven operator actions. It then failed before browser
+discovery with:
+
+```text
+ValueError: external public single-page creation currently supports heading outcomes only
+```
+
+The operator session remained `active` after process termination. Browser
+discovery did not start, no framework sandbox was created, the clean framework
+baseline remained unchanged, and no target or generated-test verdict exists.
+
+```text
+01-guided-intake-run.json  2D6F65FCE3F798E80A32D6B47A62D4D5670C3256E32EAD6A7ACD67D9688918F3
+01-intake-session.json      1A27E75EC1DAC2D8367990359884941D89F22F5D893096A7879BA5719ED004A6
+01-minimal-context.json     55958DC37C0C5393A089FD340810DD11120AE1591B56CE97A6D00B793CB55467
+01-minimal-seed.json        3CFE32B449B59B00C19A27DA2158276FDBC945F81E0A2F1BE44AC49FB8D838CB
+operator-session.json       A078DB724A349B5F4CEA40C54C4A55AB10E543FCC29CC340661FFB742C3C37AA
+```
+
+Run-02 is **NOT ACCEPTED / PRODUCT FINDING** and is immutable. No run-03 is
+authorized before the findings are preserved, triaged, and separately approved
+for remediation.
 
 ## Operator freedom rule
 
@@ -228,6 +272,20 @@ This does not invalidate the scenario as acceptance evidence for the intended
 expert-operator workflow. It only means that the result must not be presented
 as a blinded evaluation of first-time problem discovery or question
 discoverability.
+
+## Operator-assistance limitation observed in run-02
+
+The operator used ChatGPT during intake to translate Polish answers into English.
+Most business content originated with the operator, but the assistance also
+refined the environment and role wording and proposed the precondition. The run
+must therefore not be represented as unassisted natural-input evidence.
+
+This limitation does not remove the deterministic heading-only failure, the
+comparison between the original mission and accepted context, or the persisted
+terminal-state observation. It does limit claims about operator effort and the
+independent discoverability of good answers. A later retest should use either no
+external assistance or disclosed literal translation only, without answer-
+content suggestions.
 
 ## Operator anti-rescue rule
 
@@ -315,6 +373,37 @@ The post-run review should pay special attention to:
 - questions that ask for implementation rather than business/process knowledge;
 - missed clarification of relevance/suitability when it was required to support the claimed assertion;
 - places where the LLM appears to infer a fact that the human never authorized.
+
+### Run-02 question-quality result
+
+The nine questions were understandable and remained at business/process level.
+No locator, DOM, source-code, class, method, or API answer was requested.
+
+| Question area | Review |
+|---|---|
+| Application | NECESSARY |
+| Environment | NECESSARY |
+| Starting URL | NECESSARY |
+| Process short name | USEFUL |
+| Business outcome | NECESSARY, but insufficient to preserve the full initial mission |
+| Failure/risk | USEFUL |
+| User role | USEFUL |
+| Precondition | NECESSARY |
+| Observable result | NECESSARY, but accepted without ordering semantics |
+
+Material `MISSED_CLARIFICATION` observations:
+
+- no question established what `relevant` or `suitable` meant;
+- no question preserved or challenged the `cheapest suitable options first`
+  ordering preference;
+- no question tied visible result evidence to an accepted ascending-price rule;
+- the aggregate context summary omitted the initial ordering requirement, yet
+  the product accepted the context as ready for discovery.
+
+The finding is omission/loss rather than silent invention. External answer
+assistance limits broader claims about question discoverability, but these gaps
+are directly visible by comparing the persisted initial mission, ordered
+questions, and confirmed context summary.
 
 ## Acceptance oracle
 
