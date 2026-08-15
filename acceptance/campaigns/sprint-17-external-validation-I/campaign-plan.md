@@ -27,9 +27,9 @@ For subsequent planning, this completed Level 1 may be treated as **Level 1A**
 only to distinguish it from the planned **Level 1B analyst-rich validation**.
 Historical Level 1 records keep their original naming.
 
-Level 1B test design now proposes Practice Software Testing / Toolshop for
-operator review. `ACC-EXT-003` is designed but not executed; execution still
-requires explicit scope authorization and a final target preflight.
+Practice Software Testing / Toolshop is authorized as the Level 1B target.
+`ACC-EXT-003` remains not executed. The final bounded read-only target preflight
+passed on 2026-08-15 without creating a ValidationRun.
 
 No Level 2 target is authorized yet.
 
@@ -197,14 +197,24 @@ A passing generated test does not by itself close Level 1.
 
 ## Level 1B - analyst-rich validation
 
-Level 1B is designed as `ACC-EXT-003`.
+`ACC-EXT-003` is the authorized Level 1B acceptance test.
 
-Proposed target:
+Authorized target:
 
 ```text
 Practice Software Testing / Toolshop
 https://practicesoftwaretesting.com/
 ```
+
+Operator authorization and the final bounded read-only target preflight were
+recorded on 2026-08-15 (Europe/Warsaw). The public no-auth catalogue remains
+available, the working term `hammer` produces multiple visible relevant results,
+and the public price-ascending sort supports the intended outcome semantics after
+normal UI stabilization. No write action is required.
+
+This is target-suitability evidence only. It does not freeze an exact result
+count, product list, price, implementation path, or locator, and it did not
+consume a ValidationRun ID.
 
 Primary purpose:
 
@@ -226,8 +236,8 @@ level-1b-target-selection.md
 ../../test-cases/ACC-EXT-003.md
 ```
 
-This design does not authorize product code changes. Execution findings must
-drive any remediation.
+This authorization does not authorize product code changes. Execution
+findings must drive any remediation.
 
 ## Level 2
 
@@ -243,7 +253,7 @@ domains. Each target requires a separate scope, policy/robots review,
 authorization, and test design before execution.
 
 Level 1B execution will challenge TestCartographer with richer and less perfectly
-structured analyst/tester input. It remains testware-only until explicit target
-authorization and final preflight.
+structured analyst/tester input. Target authorization and final preflight are
+complete; no ValidationRun exists yet.
 
 No product correction is authorized merely because the validation is planned.

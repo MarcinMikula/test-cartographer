@@ -2,7 +2,7 @@
 
 ## Status
 
-**DESIGNED / NOT EXECUTED.**
+**AUTHORIZED / NOT EXECUTED.**
 
 No ValidationRun exists for this test yet.
 
@@ -155,6 +155,29 @@ Before consuming the first ValidationRun ID:
 - local browser/provider prerequisites are ready;
 - no product code is changed merely to make this scenario fit.
 
+## Current pre-execution gate
+
+Recorded on 2026-08-15 (Europe/Warsaw):
+
+```text
+operator target/scope authorization: PASS
+bounded read-only target preflight: PASS
+ValidationRun ID consumed: no
+product change authorized: no
+```
+
+The preflight confirmed that the public catalogue, the working term `hammer`,
+and public price-ascending ordering remain sufficient for the intended process
+semantics without authentication or a write action. It does not freeze exact
+products, counts, prices, selectors, or prepared intake answers.
+
+Still required immediately before the first run:
+
+- integrate the accepted testware to `main`;
+- verify that `main` is clean and record its exact product commit;
+- verify local browser/provider prerequisites and framework-sandbox protection;
+- allocate a fresh ValidationRun ID only after all gates pass.
+
 ## Operator freedom rule
 
 This test intentionally removes the answer script used implicitly by earlier
@@ -222,7 +245,7 @@ The operator must not provide:
 
 If the flow cannot continue without such intervention, preserve the finding.
 
-## Proposed same-page process envelope
+## Authorized same-page process envelope
 
 The final accepted process may legitimately include:
 

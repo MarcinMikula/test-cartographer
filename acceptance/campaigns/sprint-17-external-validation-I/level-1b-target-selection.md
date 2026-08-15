@@ -2,7 +2,7 @@
 
 ## Status
 
-**PROPOSED FOR OPERATOR REVIEW - not executed.**
+**AUTHORIZED FOR EXECUTION - final target preflight passed; not executed.**
 
 This document designs the next external acceptance slice. It does not authorize
 product changes and it does not claim that the target has already been executed
@@ -16,8 +16,8 @@ current public application: https://practicesoftwaretesting.com/
 observed version during planning: v5.0
 owner/project: Testsmith
 application type: public demo/training e-commerce application
-authentication for proposed scope: none
-writes for proposed scope: none
+authentication for authorized scope: none
+writes for authorized scope: none
 ```
 
 Planning review on 2026-08-15 found that Testsmith explicitly presents
@@ -39,9 +39,36 @@ Direct robots.txt retrieval was not independently established during this
 planning review. This design therefore does **not** authorize crawling,
 high-volume scanning, API harvesting, account creation, or destructive actions.
 
-The proposed execution is intentionally limited to a small human-triggered,
+The authorized execution is intentionally limited to a small human-triggered,
 headed-browser interaction on an application explicitly intended for software
 testing practice.
+
+## Authorization and final preflight
+
+Operator authorization was recorded on 2026-08-15 (Europe/Warsaw).
+
+Authorized:
+
+- Practice Software Testing / Toolshop as the Level 1B target;
+- the initial operator mission defined below;
+- bounded read-only catalogue search, filtering, sorting, and visible-result
+  observation when justified by the accepted process context;
+- the explicit non-destructive browser boundary defined below.
+
+This authorization does not start an `ACC-EXT-003` ValidationRun and does not
+authorize product changes.
+
+A final bounded read-only target preflight on 2026-08-15 confirmed that:
+
+- the public root loaded as Practice Software Testing / Toolshop v5.0;
+- the working term `hammer` produced multiple visible relevant results;
+- the public price-ascending sort produced ascending visible result prices after
+  normal UI stabilization;
+- the accepted catalogue process required no authentication or write action.
+
+The preflight establishes target suitability only. It deliberately preserves no
+exact result count, product list, price, selector, DOM target, or prepared intake
+answer. No ValidationRun ID was consumed.
 
 ## Why this target fits Level 1B
 
@@ -137,7 +164,7 @@ Forbidden during nominal execution:
 - pre-written intake answers copied from this testware,
 - changing the acceptance target merely to obtain a green run.
 
-## Proposed browser boundary
+## Authorized browser boundary
 
 Allowed:
 
@@ -182,7 +209,7 @@ Before the first external ValidationRun, perform a read-only target preflight
 only to establish that the chosen product term still yields enough visible
 results to exercise the intended result/sort semantics.
 
-Current working term:
+Authorized working term:
 
 ```text
 hammer
@@ -232,7 +259,7 @@ with two additional applications from other functional domains.
 
 ## Product-change rule
 
-No product change is authorized by this design.
+No product change is authorized by this testware or target authorization.
 
 If execution exposes a failure:
 
