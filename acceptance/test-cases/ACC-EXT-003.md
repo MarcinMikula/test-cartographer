@@ -2,15 +2,16 @@
 
 ## Status
 
-**NOT ACCEPTED / ACC-FIND-011 / ISSUE #11 OPEN; NEW-RUN RETEST NOT AUTHORIZED.**
+**NOT ACCEPTED / ACC-FIND-007 THROUGH ACC-FIND-011 RESOLVED;
+FRESH RUN-05 RETEST REQUIRED.**
 
 Runs 01 through 04 retain their historical evidence and verdicts. Run-04 tested
 product commit `9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`, completed guided
 intake, invoked the corrected Issue #10 bridge, and stopped before human target
 review because the live proposal failed with `invalid_target_contract`.
-`ACC-FIND-007` through `ACC-FIND-010` remain resolved; `ACC-FIND-011` / Issue #11 is open.
-No formal ValidationRun package was created, Level 1B remains **NOT ACCEPTED**,
-and run-05 is unconsumed and unauthorized.
+`ACC-FIND-007` through `ACC-FIND-011` are now resolved deterministically. No
+formal ValidationRun package was created, Level 1B remains **NOT ACCEPTED**, and
+run-05 is unconsumed pending closure integration and a fresh pre-run gate.
 
 ## Why this test exists
 
@@ -331,7 +332,32 @@ supplied terminal transcript    1457A7B3B8AB605BAF4662F1CC58940D145A593096F0030E
 ```
 
 Run-04 is **NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING**, immutable,
-and not reusable. Run-05 is not authorized.
+and not reusable. Run-05 remains unconsumed pending integration of the Issue #11
+acceptance closure and a fresh pre-run gate.
+
+## ACC-FIND-011 deterministic remediation
+
+The invalid-proposal diagnosability and recovery boundary was corrected by
+product commit `37d5dac73a26c46b68ab2e2515efe7666de5696e`. The initial
+target-proposal prompt and schema remain unchanged. Contract validation failures
+now expose only a safe category, field path, and stable rule code, without raw
+provider content or input values.
+
+Only allowlisted, deterministically repairable failures enter `awaiting_repair`.
+The operator must explicitly choose `RETRY` or `QUIT`; `RETRY` permits exactly
+one repair call through the original provider instance. Per-attempt evidence
+retains hashes and sizes, latency, validation outcome, and safe diagnostic data.
+A valid repair proceeds to the existing human review. A second invalid response
+stops blocked/aborted with no third attempt. Invalid JSON, duplicate keys,
+locator-like content, and unallowlisted rules remain immediate fail-closed cases.
+Browser, target, and framework authority remain unavailable until deterministic
+validation and explicit human acceptance both succeed.
+
+Thirty-eight focused and 527 full-suite tests passed. The correction used no
+external target, live LLM call, framework sandbox, historical evidence change, or
+new run identifier. It resolves `ACC-FIND-011` without changing the run-04 verdict
+or accepting Level 1B. GitHub Issue #11 remains open until this closure is
+integrated. Run-05 remains unconsumed pending a fresh pre-run gate.
 
 ## ACC-FIND-010 preservation
 

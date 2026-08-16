@@ -29,9 +29,12 @@ response failed target-contract validation before human review and was recorded
 only as `invalid_target_contract`. The session truthfully persisted `aborted`;
 no framework change, browser discovery, or target contact occurred.
 
-`ACC-FIND-007` through `ACC-FIND-010` remain resolved. `ACC-FIND-011` / Issue #11 is open
-for the new lack of diagnosable, bounded human recovery at the invalid-proposal
-boundary. Run-05 remains unconsumed, and the external target is not implicated.
+`ACC-FIND-007` through `ACC-FIND-011` are resolved deterministically. Product
+commit `37d5dac73a26c46b68ab2e2515efe7666de5696e` provides safe
+validation diagnostics, explicit operator recovery choice, and exactly one
+bounded repair attempt for allowlisted contract failures. Historical run-04
+remains **NOT ACCEPTED**. Run-05 is unconsumed, and the external target is not
+implicated.
 
 ## Level 1 requirement traceability
 
@@ -160,10 +163,26 @@ caveat, not proof that Issue #8 regressed and not an explanation for the later
 proposal-contract failure.
 
 The proposal artefact proves the Issue #10 bridge executed and therefore does
-not reopen `ACC-FIND-010`. The new failure is preserved as `ACC-FIND-011` / Issue #11.
-Because raw provider responses were intentionally not retained, evidence proves
-that JSON parsing succeeded and later contract validation failed, but it cannot
-identify the exact invalid field or semantic rule.
+not reopen `ACC-FIND-010`. The new failure remains preserved historically as
+`ACC-FIND-011` / Issue #11. Because raw provider responses were intentionally not
+retained, run-04 proves that JSON parsing succeeded and later contract validation
+failed, but it cannot identify the exact invalid field or semantic rule.
+
+Product commit `37d5dac73a26c46b68ab2e2515efe7666de5696e` resolves the
+deterministic diagnosability-and-recovery boundary. The unchanged first prompt
+and schema now feed safe category, field-path, and stable-rule diagnostics with no
+input value or raw response. Only allowlisted repairable validation failures enter
+`awaiting_repair`; the operator explicitly chooses `RETRY` or `QUIT`, and `RETRY`
+permits exactly one repair call through the original provider instance. Each
+attempt records prompt/response hashes and sizes, latency, validation outcome, and
+safe diagnostics. A valid repair proceeds to the existing human review; a second
+invalid response stops blocked/aborted with no third attempt. Invalid JSON,
+duplicate keys, locator-like content, and unallowlisted rules remain immediate
+fail-closed cases.
+
+Thirty-eight focused and 527 full-suite tests passed. The correction invoked no
+live LLM, contacted no external target, changed no framework, consumed no run-05,
+and does not rewrite any run-04 requirement verdict.
 
 ## Finding / retest chain
 
@@ -243,11 +262,14 @@ interactive guided flow cannot produce reviewed rich interaction targets
 
 ACC-FIND-011 / Issue #11
 invalid target proposal cannot reach diagnosable bounded human recovery
--> OPEN
--> run-04 proposal blocked: invalid_target_contract
--> no safe field/rule diagnostic and no operator review/repair/retry path
--> safe fail-closed and truthful aborted lifecycle preserved
--> target not contacted; run-05 unconsumed and unauthorized
+-> RESOLVED
+-> run-04 proposal blocked: invalid_target_contract remains historical
+-> fix commit 37d5dac73a26c46b68ab2e2515efe7666de5696e
+-> safe category / field path / stable rule diagnostics without raw values
+-> explicit RETRY or QUIT; one allowlisted repair attempt at most
+-> invalid JSON / duplicate keys / locator content remain fail-closed
+-> 38 focused / 527 full-suite tests PASS
+-> target not contacted; run-05 remains unconsumed
 ```
 
 ## Formal evidence package
@@ -303,7 +325,8 @@ ACC-EXT-003
 -> run-03 NOT ACCEPTED / PRODUCT FINDING before browser discovery
 -> ACC-FIND-007 through ACC-FIND-010 resolved deterministically
 -> run-04 NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING before browser discovery
--> ACC-FIND-011 / Issue #11 open; run-05 unconsumed and unauthorized
+-> ACC-FIND-011 resolved deterministically by 37d5dac73a26c46b68ab2e2515efe7666de5696e
+-> run-05 unconsumed; fresh separately gated retest required
 ```
 
 ## Level 2

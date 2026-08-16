@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — Level 1B blocker preserved before remediation.**
+**RESOLVED — bounded target-proposal recovery verified; historical run-04 remains NOT ACCEPTED.**
 
 Related GitHub Issue: `#11 [ACCEPTANCE] ACC-EXT-003 — invalid target
 proposal cannot reach diagnosable bounded human recovery`
@@ -150,11 +150,39 @@ diagnostics and bounded recovery must be addressed first. A later provider
 comparison, if authorized, should use the same minimized prompt/schema and no
 external target contact.
 
+## Authorized correction and deterministic verification
+
+After the finding and Issue #11 were durably preserved, the operator separately
+authorized the smallest bounded recovery correction. Product commit
+`37d5dac73a26c46b68ab2e2515efe7666de5696e` now:
+
+- preserves the initial target-proposal prompt and schema unchanged;
+- converts contract `ValidationError` details into a safe category, field path,
+  and stable rule code without input values or raw provider content;
+- moves only allowlisted, deterministically repairable failures into
+  `awaiting_repair`;
+- requires the operator to choose `RETRY` or `QUIT` explicitly;
+- permits exactly one repair call through the original provider instance and
+  retains both provider responses only in process memory;
+- records per-attempt prompt/response hashes and sizes, latency, validation
+  result, and safe diagnostic metadata;
+- sends a valid repaired proposal to the existing human review and stops
+  blocked/aborted after a second invalid response, with no third attempt;
+- keeps invalid JSON, duplicate keys, locator-like content, and unallowlisted
+  validation rules immediately fail-closed;
+- prevents browser discovery, target contact, and framework authority until a
+  proposal passes deterministic validation and explicit human acceptance.
+
+Validation recorded 38 focused and 527 full-suite passing tests. It used no live
+LLM call, external target, framework sandbox, historical evidence mutation, or
+run-05 identifier. This resolves the deterministic product finding without
+changing run-04's evidence or verdict and without accepting Level 1B.
+
 ## Retest rule
 
-Run-04 is immutable and not reusable. Do not authorize run-05 until this finding
-and its GitHub Issue are durably linked, the correction is separately authorized,
-implemented, regression-verified, and recorded in acceptance closure.
+Run-04 is immutable and not reusable. After this acceptance closure is integrated,
+run-05 may be created only through a fresh pre-run gate against the exact
+corrected product commit. This closure does not itself consume or execute run-05.
 
 The later run must use a natural mission that actually expresses the authorized
 hammer/cheapest-first customer outcome, without a prepared answer sheet or
@@ -162,6 +190,8 @@ answer-content assistance. Literal translation may remain allowed if disclosed.
 
 ## Authorization boundary
 
-The finding-only commit is durable and Issue #11 is linked. This record still
-authorizes no product change, provider switch, new external execution, run-05
-identifier, or remediation.
+The finding, Issue #11 linkage, product correction, regression evidence, and
+acceptance closure are now durable. This record authorizes no further product
+change, provider switch, external execution, or automatic run-05 consumption.
+GitHub Issue #11 remains open until this closure is integrated and its repository
+state is verified.

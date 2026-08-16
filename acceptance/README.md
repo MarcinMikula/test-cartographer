@@ -52,13 +52,14 @@ with the generic `invalid_target_contract` blocker. The session truthfully ended
 `aborted`; browser discovery did not start, no framework sandbox was created,
 and Toolshop was not contacted.
 
-`ACC-FIND-007` through `ACC-FIND-010` remain resolved. Run-04 live-corroborates
-the Issue #9 lifecycle correction and demonstrates that the Issue #10 bridge is
-present. `ACC-FIND-011` / Issue #11 is open for the separate lack of diagnosable, bounded
-human recovery from an invalid target proposal. The run also carries an operator
-scope caveat because its natural mission omitted the authorized `hammer` and
-cheapest-first semantics. Run-05 is unconsumed, and Level 1B remains **NOT
-ACCEPTED**.
+`ACC-FIND-007` through `ACC-FIND-011` are resolved deterministically. The Issue
+#11 correction is product commit
+`37d5dac73a26c46b68ab2e2515efe7666de5696e`, verified by 38 focused and
+527 full-suite tests without external target contact, a live LLM call, framework
+mutation, or a new run identifier. Run-04 retains its historical **NOT ACCEPTED**
+verdict and operator-scope caveat. GitHub Issue #11 remains open until this
+acceptance closure is integrated. Run-05 is unconsumed, and Level 1B remains
+**NOT ACCEPTED** pending a fresh, separately gated retest.
 
 Level 2 remains reserved for materially more dynamic/script-heavy public
 applications. Pracuj.pl is one candidate, not the only planned Level 2 target.

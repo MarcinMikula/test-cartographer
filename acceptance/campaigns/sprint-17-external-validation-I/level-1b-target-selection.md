@@ -102,10 +102,12 @@ therefore not a clean end-to-end retest of the original scenario. This operator
 scope caveat does not reopen Issue #8 and does not explain the later contract
 failure.
 
-The target preflight remains valid suitability evidence. Findings 007–010 remain
-resolved, and run-04 live-demonstrates the Issue #10 bridge. `ACC-FIND-011` / Issue #11 is
-open for the new diagnosability/recovery boundary. The target is not implicated,
-and run-05 is unconsumed and unauthorized.
+The target preflight remains valid suitability evidence. Findings 007–011 are
+resolved deterministically. Product commit
+`37d5dac73a26c46b68ab2e2515efe7666de5696e` adds safe diagnostics and
+one bounded operator-authorized repair attempt without contacting the target.
+Historical run-04 remains **NOT ACCEPTED** and does not implicate Toolshop.
+Run-05 is unconsumed pending closure integration and a fresh pre-run gate.
 
 ## Why this target fits Level 1B
 

@@ -41,10 +41,12 @@ contract validation rejected it before human review with the generic
 The run remains **NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING**. The
 session ended `aborted`, browser discovery never started, no framework sandbox
 was created, and the target was not contacted. `ACC-FIND-010` remains resolved
-because its bridge executed; `ACC-FIND-011` / Issue #11 records the separate lack of safe
-diagnostics and bounded human recovery for the invalid proposal. Run-04 also has
-an operator-scope caveat because its natural mission omitted the authorized
-`hammer` and cheapest-first semantics. Run-05 remains unconsumed.
+because its bridge executed. The separate `ACC-FIND-011` / Issue #11
+diagnostics-and-recovery boundary is now corrected deterministically by product
+commit `37d5dac73a26c46b68ab2e2515efe7666de5696e`, with 38 focused and
+527 full-suite tests passing. Run-04 retains its historical verdict and
+operator-scope caveat. Run-05 remains unconsumed pending a fresh, separately
+gated retest.
 
 No Level 2 target is authorized yet.
 
@@ -273,11 +275,13 @@ ACC-EXT-003-run-04
 -> result: NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING
 ```
 
-Findings `ACC-FIND-007` through `ACC-FIND-010` remain resolved
-deterministically. Run-04 proves the Issue #10 bridge was invoked, but the
-provider proposal could not reach human review after contract validation failed.
-`ACC-FIND-011` / Issue #11 is open; no product correction or run-05 is authorized by this
-preservation record.
+Findings `ACC-FIND-007` through `ACC-FIND-011` are resolved
+deterministically. Product commit
+`37d5dac73a26c46b68ab2e2515efe7666de5696e` adds safe validation
+diagnostics, an explicit `RETRY`/`QUIT` gate, and at most one repair attempt while
+keeping invalid or unaccepted proposals outside browser authority. Run-04 remains
+immutable and **NOT ACCEPTED**. Run-05 is unconsumed pending integration of this
+closure and a fresh pre-run gate.
 
 Primary purpose:
 
@@ -301,9 +305,9 @@ level-1b-target-selection.md
 
 This testware authorization did not itself authorize product code changes.
 Execution evidence separately authorized bounded corrections for Issues #7
-through #10. Those deterministic corrections are complete. The Issue #10
+through #11. Those deterministic corrections are complete. The Issue #11
 implementation was separately authorized and verified; no further product change
-is authorized without new evidence. Level 1B still requires a fresh run-04 before
+is authorized without new evidence. Level 1B still requires a fresh run-05 before
 it can be accepted.
 
 ## Level 2
@@ -320,11 +324,11 @@ domains. Each target requires a separate scope, policy/robots review,
 authorization, and test design before execution.
 
 Level 1B execution has still not reached the authorized target. The lifecycle,
-rich same-page engine, intent-preservation, and reviewed-target bridge findings
-remain resolved, but historical runs 03 and 04 remain **NOT ACCEPTED**. Run-04
-exposed `ACC-FIND-011` / Issue #11 at the proposal-validation/recovery boundary. Level 1B
-remains open, run-05 is unauthorized, and Level 2 must not begin before the new
-finding is truthfully resolved and retested.
+rich same-page engine, intent-preservation, reviewed-target bridge, and bounded
+proposal-recovery findings are resolved deterministically, but historical runs 03
+and 04 remain **NOT ACCEPTED**. Level 1B remains open pending a fresh run-05 after
+this closure is integrated and a new pre-run gate passes. Level 2 must not begin
+before that retest is truthfully closed.
 
 No further product correction is authorized merely because the validation is
 planned.
