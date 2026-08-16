@@ -9,6 +9,7 @@ from test_cartographer.discovery.models import DiscoveryTarget
 from test_cartographer.intake.seed import MinimalContextSeed, build_minimal_context
 from test_cartographer.interactive_creation.external import (
     build_external_public_single_page_plan,
+    external_outcome_requires_reviewed_targets,
 )
 
 
@@ -216,3 +217,14 @@ def test_external_public_plan_rejects_obviously_non_public_targets(
             _context(source_url=source_url),
             plan_id="discovery_external",
         )
+
+
+
+def test_external_outcome_predicate_preserves_heading_compatibility():
+    assert external_outcome_requires_reviewed_targets(_context()) is False
+    assert (
+        external_outcome_requires_reviewed_targets(
+            _context("Matching products are visible in ascending-price order.")
+        )
+        is True
+    )

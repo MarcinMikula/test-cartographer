@@ -85,6 +85,13 @@ These controlled tests do not contact an external site or invoke an LLM. They
 prove the richer engine boundary only; intake intent preservation and a new
 external acceptance run remain separate evidence gates.
 
+The Issue #10 bridge adds replay coverage for strict two-to-six action parsing,
+action/role and symbolic-data validation, locator-like content rejection,
+persistence without raw provider content, operator edits and rejection, and
+heading-only compatibility. No invalid, rejected, or paused proposal may become
+reviewed_targets or start browser discovery. Live Ollama quality and latency
+remain acceptance evidence rather than unit-test facts.
+
 ## Test layers
 
 ### Context contract unit tests

@@ -131,10 +131,16 @@ final outcome read, multi-page scope, or public URL outside the existing HTTPS
 boundary. It never derives UI steps, locators, prices, counts, or business rules
 from outcome wording.
 
-The guided-intake bridge that produces this structured intent is a separate
-capability. A non-heading outcome without reviewed interaction targets therefore
-fails closed before browser discovery instead of being reduced to a heading or
-silently converted into invented actions.
+After material-intent confirmation, a non-heading external outcome enters a
+bounded target-proposal gate. One structured local-model call may propose two
+through six semantic actions, but it has no browser authority. The operator sees
+the complete order and may edit fields, add or remove steps, reject it, quit, or
+accept it. Every candidate is revalidated; only acceptance produces
+reviewed_targets.
+
+The model cannot provide selectors, locators, concrete values, prices, counts,
+new pages, or application facts. Invalid, rejected, or paused proposals stop
+before headed-browser discovery.
 
 ## Operator action ledger
 
@@ -153,7 +159,9 @@ The corrected reference flow records 18 real actions:
 - 1 execution trigger.
 
 Edits add extra real actions and are valid. Eighteen is the expected count for
-the unchanged reference answers.
+the unchanged reference answers. A rich external run adds one explicit target
+proposal review decision; proposal field changes remain represented by its
+persisted edit count.
 
 The underlying `IntakeSession` still records the five deterministic confirmation
 transitions needed to promote the process facts to `CONFIRMED`. The operator
@@ -248,7 +256,7 @@ into production-facing source.
 The persisted summary separates authority explicitly:
 
 ```text
-LLM role: intake-question planning and ambiguity clarification only
+LLM role: intake-question planning, reviewed semantic-target proposal, and ambiguity clarification
 POM and source generation: deterministic reviewed reference templates
 ```
 

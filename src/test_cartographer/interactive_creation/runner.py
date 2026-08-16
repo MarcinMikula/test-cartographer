@@ -93,7 +93,10 @@ from test_cartographer.intake.seed import MinimalContextSeed, build_minimal_cont
 from test_cartographer.intake.session import create_session, pause_session, record_answer
 from test_cartographer.interactive_creation.assessment import assess_interactive_creation
 from test_cartographer.interactive_creation.browser import open_interactive_discovery
-from test_cartographer.interactive_creation.external import build_external_public_single_page_plan
+from test_cartographer.interactive_creation.external import (
+    build_external_public_single_page_plan,
+    external_outcome_requires_reviewed_targets,
+)
 from test_cartographer.interactive_creation.enums import (
     InteractiveSessionState,
     OperatorActionKind,
@@ -110,6 +113,16 @@ from test_cartographer.interactive_creation.models import (
 from test_cartographer.interactive_creation.project_profile import (
     apply_persistent_project_bootstrap,
     load_runtime_project_profile,
+)
+from test_cartographer.interactive_creation.target_planning import (
+    ExternalTargetProposalState,
+    OllamaExternalTargetProposalProvider,
+    ReplayExternalTargetProposalProvider,
+    plan_external_target_proposal,
+    render_replay_external_target_output,
+    review_external_target_proposal,
+    review_target_proposal_interactively,
+    save_external_target_proposal_run,
 )
 from test_cartographer.observation.reference import serve_reference_directory
 from test_cartographer.synthesis.adapter import ReplaySynthesisAdapter
@@ -328,6 +341,7 @@ def run_human_triggered_creation_flow(
     now_fn: NowFn = lambda: datetime.now(timezone.utc),
     timer_fn: TimerFn = time.perf_counter,
     external_public_single_page: bool = False,
+    target_proposal_provider=None,
 ) -> tuple[CreationFlowRun, InteractiveOperatorSession]:
     """Run the reference flow or one bounded external public single-page flow."""
 
@@ -706,10 +720,120 @@ def run_human_triggered_creation_flow(
         )
 
         discovery_started = now_fn()
+        target_proposal_run = None
+        target_proposal_live_calls = 0
         if external_public_single_page:
+            reviewed_targets = None
+            if external_outcome_requires_reviewed_targets(session.context):
+                proposal_started = now_fn()
+                if target_proposal_provider is not None:
+                    target_proposal_run = plan_external_target_proposal(
+                        session.context,
+                        seed.initial_request,
+                        guided_profile,
+                        target_proposal_provider,
+                        run_id=f"target_plan_{uuid.uuid4().hex[:12]}",
+                        started_at=proposal_started,
+                        completed_at_fn=now_fn,
+                    )
+                elif provider_mode == "ollama":
+                    target_proposal_live_calls = 1
+                    with OllamaExternalTargetProposalProvider(
+                        guided_profile
+                    ) as target_provider:
+                        target_proposal_run = plan_external_target_proposal(
+                            session.context,
+                            seed.initial_request,
+                            guided_profile,
+                            target_provider,
+                            run_id=f"target_plan_{uuid.uuid4().hex[:12]}",
+                            started_at=proposal_started,
+                            completed_at_fn=now_fn,
+                        )
+                else:
+                    target_provider = ReplayExternalTargetProposalProvider(
+                        outputs=[
+                            render_replay_external_target_output(session.context)
+                        ]
+                    )
+                    target_proposal_run = plan_external_target_proposal(
+                        session.context,
+                        seed.initial_request,
+                        guided_profile,
+                        target_provider,
+                        run_id=f"target_plan_{uuid.uuid4().hex[:12]}",
+                        started_at=proposal_started,
+                        completed_at_fn=now_fn,
+                    )
+
+                proposal_path = output / "02-interaction-target-proposal.json"
+                save_external_target_proposal_run(
+                    target_proposal_run,
+                    proposal_path,
+                )
+                if (
+                    target_proposal_run.state
+                    is ExternalTargetProposalState.BLOCKED
+                ):
+                    raise RuntimeError(
+                        "external interaction-target proposal failed closed: "
+                        f"{target_proposal_run.blocker}"
+                    )
+                output_fn("\nExternal interaction-target proposal")
+                review_started = now_fn()
+                review_timer = timer_fn()
+                decision, reviewed_targets, edit_count = (
+                    review_target_proposal_interactively(
+                        session.context,
+                        target_proposal_run.targets,
+                        input_fn=input_fn,
+                        output_fn=output_fn,
+                    )
+                )
+                review_completed = now_fn()
+                review_seconds = max(0.0, timer_fn() - review_timer)
+                states = {
+                    "accepted": ExternalTargetProposalState.ACCEPTED,
+                    "rejected": ExternalTargetProposalState.REJECTED,
+                    "paused": ExternalTargetProposalState.PAUSED,
+                }
+                proposal_state = states[decision]
+                target_proposal_run = review_external_target_proposal(
+                    target_proposal_run,
+                    session.context,
+                    reviewed_targets,
+                    state=proposal_state,
+                    reviewed_at=review_completed,
+                    review_seconds=review_seconds,
+                    operator_edit_count=edit_count,
+                )
+                save_external_target_proposal_run(
+                    target_proposal_run,
+                    proposal_path,
+                )
+                ledger.record(
+                    OperatorActionKind.REVIEW_DECISION,
+                    "external_interaction_targets",
+                    decision,
+                    started_at=review_started,
+                    completed_at=review_completed,
+                    active_seconds=review_seconds,
+                )
+                if proposal_state is ExternalTargetProposalState.PAUSED:
+                    ledger.pause()
+                    raise InteractiveFlowStopped(
+                        "operator paused external interaction-target review"
+                    )
+                if proposal_state is ExternalTargetProposalState.REJECTED:
+                    ledger.abort()
+                    raise InteractiveFlowStopped(
+                        "operator rejected external interaction-target proposal"
+                    )
+
             discovery_plan = build_external_public_single_page_plan(
                 session.context,
                 plan_id="discovery_plan_external_interactive",
+                reviewed_targets=reviewed_targets,
             )
             application_url = discovery_plan.source_url
         else:
@@ -842,12 +966,30 @@ def run_human_triggered_creation_flow(
                 CreationStageKind.BROWSER_DISCOVERY,
                 discovery_started,
                 discovery_completed,
-                live=_discovery_live_llm_call_count(discovery_run),
-                deterministic=max(0, len(discovery_run.targets) - len(discovery_run.ambiguities)),
+                live=(
+                    target_proposal_live_calls
+                    + _discovery_live_llm_call_count(discovery_run)
+                ),
+                deterministic=max(
+                    0,
+                    len(discovery_run.targets) - len(discovery_run.ambiguities),
+                ),
                 browser=1,
-                human=1 + len(discovery_run.ambiguities),
-                artifacts=(discovery_plan.id, discovery_run.id, discovered_context.id),
-                summary="A headed browser remained open while the operator resolved ambiguity and accepted discovery.",
+                human=(
+                    1
+                    + len(discovery_run.ambiguities)
+                    + (1 if target_proposal_run is not None else 0)
+                ),
+                artifacts=(
+                    *((target_proposal_run.id,) if target_proposal_run is not None else ()),
+                    discovery_plan.id,
+                    discovery_run.id,
+                    discovered_context.id,
+                ),
+                summary=(
+                    "The operator authorized semantic targets before a headed browser "
+                    "remained open for ambiguity resolution and discovery review."
+                ),
             )
         )
 
@@ -1648,7 +1790,7 @@ def _write_summary(run, operator_session, target: Path) -> None:
                 f"- Real operator actions: **{len(operator_session.actions)}**",
                 f"- Active operator time: **{operator_session.active_seconds:.2f}s**",
                 f"- Local-LLM calls: **{run.live_llm_call_count}**",
-                "- LLM role: **intake-question planning and ambiguity clarification only**",
+                "- LLM role: **intake-question planning, optional reviewed semantic-target proposal, and ambiguity clarification**",
                 "- POM and source generation: **deterministic reviewed reference templates**",
                 "- Exact source patch displayed before acceptance: **yes**",
                 f"- Time to first runnable test: **{run.total_seconds:.2f}s**",

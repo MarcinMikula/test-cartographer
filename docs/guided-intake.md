@@ -210,7 +210,7 @@ not model authority over facts.
 ## Current limits
 
 - only Ollama is live; other providers remain unimplemented,
-- only question ordering and wording are model-assisted,
+- question planning and bounded semantic-action proposals are model-assisted,
 - arbitrary free-text answer interpretation is not implemented,
 - no retry or repair loop exists for repeated invalid model output,
 - an existing run can resume only with the same profile, seed, session, and context IDs,
@@ -267,3 +267,21 @@ exhaustion stops the flow fail-closed.
 
 The actual operator-facing clarification prompt is retained in the normal
 `IntakeInteraction` record. Raw provider prompts and responses remain excluded.
+
+
+## Human-reviewed external target proposal
+
+After material-intent confirmation, a non-heading external flow may make one
+separate structured Ollama call that proposes two through six same-page semantic
+actions. The provider is limited to the existing action/role vocabulary and
+symbolic non-secret data references. It cannot provide selectors, locators,
+concrete data values, additional pages, prices, counts, or application facts.
+
+The proposal persists model, latency, hashes, and character counts without raw
+prompts or responses. It remains ready_for_review and has no browser authority
+until the operator accepts it. The operator may edit fields, add or remove
+bounded steps, reject it, or quit. Every candidate is revalidated before it can
+become reviewed_targets.
+
+There is no silent retry, cloud fallback, or automatic acceptance. Invalid model
+output fails closed and remains evidence about the configured provider.

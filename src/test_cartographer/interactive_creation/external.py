@@ -20,6 +20,21 @@ _RICH_ACTION_ROLES = {
 }
 
 
+def external_outcome_requires_reviewed_targets(context: ContextBundle) -> bool:
+    """Return whether the accepted outcome requires a rich target review."""
+
+    if len(context.process.expected_outcomes) != 1:
+        raise ValueError(
+            "external public single-page creation requires exactly one expected outcome"
+        )
+    outcome_text = context.process.expected_outcomes[0].statement.value
+    if not outcome_text:
+        raise ValueError(
+            "external public single-page creation requires an expected outcome"
+        )
+    return "heading" not in outcome_text.casefold()
+
+
 def build_external_public_single_page_plan(
     context: ContextBundle,
     *,
@@ -71,7 +86,7 @@ def build_external_public_single_page_plan(
 
     page = context.pages[0]
     if reviewed_targets is None:
-        if "heading" not in outcome_text.casefold():
+        if external_outcome_requires_reviewed_targets(context):
             raise ValueError(
                 "external public single-page creation requires reviewed interaction "
                 "targets for non-heading outcomes"
