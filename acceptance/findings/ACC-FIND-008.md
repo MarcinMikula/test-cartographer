@@ -98,8 +98,22 @@ target, live LLM call, framework sandbox, or run-03 identifier. This resolves th
 product finding without changing the historical run-02 verdict or accepting
 Level 1B.
 
+## Run-03 live-retest caveat
+
+Run-03 reached the new material-intent review on product commit
+`c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`, but it is not a clean nominal
+retest of this finding. The operator entered application identity instead of the
+authorized hammer/cheapest-first initial mission and shifted the next bootstrap
+answers. ChatGPT then mistakenly supplied expected-result content for a risk
+clarification, and the operator confirmed that semantic mismatch.
+
+The review mechanism executed, but this evidence cannot decide whether the live
+Ollama plan would preserve the correct intended mission. The deterministic
+Issue #8 correction remains resolved; a clean live verdict is deferred until
+run-04 after the separate ACC-FIND-010 bridge correction.
+
 ## Retest rule
 
-Keep run-02 immutable. A later retest must use a new run identifier and either no
-external answer assistance or disclosed literal translation only, without content
-suggestions.
+Keep runs 02 and 03 immutable. Run-04 must use the separately corrected
+interactive bridge and either no external answer assistance or disclosed literal
+translation only, without content suggestions or prepared answers.

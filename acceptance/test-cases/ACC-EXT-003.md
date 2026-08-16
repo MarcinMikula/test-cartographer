@@ -2,14 +2,15 @@
 
 ## Status
 
-**NOT ACCEPTED / PRODUCT FINDINGS RESOLVED; EXTERNAL RETEST PENDING.**
+**NOT ACCEPTED / NEW PRODUCT FINDING PRESERVED.**
 
-`ACC-EXT-003-run-01` was consumed by an operator terminal interruption during
-intake. The evidence-bearing `ACC-EXT-003-run-02` completed guided intake and
-then stopped before browser discovery. No formal ValidationRun package was
-created. `ACC-FIND-007` through `ACC-FIND-009` are resolved by deterministic
-corrections. The historical run-02 verdict remains unchanged, the scenario
-remains **NOT ACCEPTED**, and no run-03 has been consumed.
+Runs 01 and 02 retain their historical evidence and verdicts. Run-03 tested
+product commit `c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`, completed guided
+intake and material-intent review, and stopped before browser discovery because
+the nominal interactive path had no reviewed interaction targets for the rich
+outcome. `ACC-FIND-007` through `ACC-FIND-009` remain resolved;
+`ACC-FIND-010` is open. No formal ValidationRun package was created, Level 1B
+remains **NOT ACCEPTED**, and run-04 is unconsumed.
 
 ## Why this test exists
 
@@ -222,6 +223,69 @@ operator-session.json       A078DB724A349B5F4CEA40C54C4A55AB10E543FCC29CC340661F
 
 Run-02 is **NOT ACCEPTED / PRODUCT FINDING** and is immutable.
 
+### ACC-EXT-003-run-03
+
+Run-03 tested product commit
+`c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`. The operator mistakenly entered
+application identity as the initial mission and shifted the following bootstrap
+answers. The authorized hammer/cheapest-first mission was therefore not supplied
+as the authoritative initial request.
+
+Three real Ollama calls completed without timeout:
+
+```text
+collection  125.51060649997089 s
+review       89.84137620002730 s
+review       93.72105690004537 s
+total       309.07303960004356 s
+timeout     600 s per call
+```
+
+The first review asked for product-search/filtering risks. ChatGPT mistakenly
+treated it as the earlier expected-outcome question and suggested: "Relevant
+hammer products are visible in the catalogue, and the suitable results are
+ordered from the lowest to the highest price." The operator supplied that text,
+so the confirmed `risk` contains outcome semantics. This disclosed assistance
+error and the operator's shifted answers make run-03 unsuitable as a clean live
+verdict on Issue #8 or on Ollama question quality.
+
+Guided intake nevertheless reached `complete`; the operator explicitly confirmed
+the displayed context. The nominal flow then stopped with:
+
+```text
+ValueError: external public single-page creation requires reviewed interaction targets for non-heading outcomes
+```
+
+The operator session persisted `aborted` with twelve actions. Browser discovery
+did not start, `headed_browser_used` is false, no CreationFlowRun or framework
+sandbox was created, and TestCartographer did not contact Toolshop. This
+live-corroborates the resolved Issue #9 lifecycle behavior while preserving a new
+deterministic product finding at the guided-context/reviewed-target seam.
+
+```text
+01-guided-intake-run.json  EB3761988D587919057AAC9C46DF314660A380F602020D61F7F3C41B1CCF7967
+01-intake-session.json      AD5DA212A9B2DA3CDA1A8C66FFB5D5B7BFBBAE81AE03D4BADF11EF0686C2D1DB
+01-minimal-context.json     E77637BA26EB134B1CF30A0A187FA86CA5FAEC7F48B809AEAC6D91694B20225E
+01-minimal-seed.json        70100D18F3B583E835BF9FC6A9FE5A8E4EEA5111860375542042EC7F08705D78
+operator-session.json       57049E7E78207BE242E0F7888BD98B3F32F77DDDC9D8AFEC96EDDF326823FD61
+supplied evidence ZIP       1F1BA2EF4455EF7E353D368FA082E052E34C14BCB7AAB1F3537C9482E1012F65
+```
+
+Run-03 is **NOT ACCEPTED / PRODUCT FINDING**, immutable, and not reusable.
+
+## ACC-FIND-010 preservation
+
+The rich same-page engine from Issue #7 accepts human-reviewed action targets,
+but the nominal interactive runner calls external-plan construction without
+providing `reviewed_targets`. The plan therefore rejects every non-heading
+outcome before browser discovery. This is a separate bridge/integration finding,
+not evidence that the Issue #7 engine regressed.
+
+No manual JSON injection, selector rescue, or framework edit is allowed. The
+finding must be preserved before any correction; run-04 must not start until the
+smallest reviewed proposal bridge is separately designed, authorized,
+implemented, and verified.
+
 ## ACC-FIND-007 deterministic remediation
 
 The heading-only capability gap was corrected by product commit
@@ -232,9 +296,9 @@ actions with declared owners, semantic roles, and symbolic non-secret test data.
 
 Twenty-five focused and 500 full-suite tests passed. The correction used no
 external target, live LLM call, framework sandbox, or new run identifier. It
-resolves `ACC-FIND-007` without changing the historical run-02 result. The
-intent-preservation defect is corrected separately below, and run-03 remains
-unconsumed.
+resolves `ACC-FIND-007` without changing the historical run-02 result. Run-03
+confirms that the rich engine exists but exposes the separate missing interactive
+bridge preserved as `ACC-FIND-010`.
 
 ## ACC-FIND-008 deterministic remediation
 
@@ -249,7 +313,8 @@ planning-budget exhaustion fail closed.
 Twenty focused and 505 full-suite tests passed. The correction used no external
 target, live LLM call, framework sandbox, or new run identifier. It resolves
 `ACC-FIND-008` without changing the historical run-02 result or accepting Level
-1B. Run-03 remains unconsumed pending the authorized external retest.
+1B. Run-03 reached this review boundary, but operator and assistance contamination
+make its live Issue #8 verdict inconclusive; run-04 remains required.
 
 ## ACC-FIND-009 deterministic remediation
 
@@ -260,8 +325,8 @@ and supported `QUIT` remains `paused`, while the original exception is re-raised
 
 Five focused and 492 full-suite tests passed. No external target contact, new
 run identifier, live LLM call, framework sandbox, or historical evidence change
-was required. Run-03 remains unconsumed; the lifecycle correction does not
-accept Level 1B.
+was required. Run-03 later live-corroborated `aborted` after the unhandled bridge
+error; the lifecycle correction still does not accept Level 1B.
 
 ## Operator freedom rule
 
@@ -445,6 +510,20 @@ The finding is omission/loss rather than silent invention. External answer
 assistance limits broader claims about question discoverability, but these gaps
 are directly visible by comparing the persisted initial mission, ordered
 questions, and confirmed context summary.
+
+### Run-03 question-quality result
+
+Run-03 cannot serve as the nominal question-quality retest because the operator
+supplied the wrong initial mission and shifted bootstrap answers, and ChatGPT
+mistakenly proposed outcome content for the product's risk clarification. The
+product then accepted the semantically mismatched confirmed risk.
+
+The evidence still truthfully records three live model calls and their timings,
+including two bounded review turns. All completed within the configured timeout;
+the process did not hang in Ollama. This run therefore does not justify moving to
+a stronger paid provider. It also cannot establish that Ollama would preserve the
+correct hammer/cheapest-first mission. The deterministic reviewed-target bridge
+failure occurred after intake and remains provider-independent.
 
 ## Acceptance oracle
 

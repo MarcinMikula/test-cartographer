@@ -4,11 +4,11 @@
 
 **AUTHORIZED / EXECUTION ATTEMPTED - stopped before target contact.**
 
-This document records the authorized target boundary and the first execution
-attempts. It did not itself authorize product changes. `ACC-EXT-003-run-02`
-stopped before browser discovery, so it makes no defect or correctness claim
-about the Practice Software Testing application. The bounded Issue #9 lifecycle
-correction was separately authorized from preserved execution evidence.
+This document records the authorized target boundary and execution attempts. It
+does not itself authorize product changes. Runs 02 and 03 both stopped before
+browser discovery, so neither makes a defect or correctness claim about Practice
+Software Testing. Run-03 live-corroborated the resolved Issue #9 lifecycle
+contract while exposing a separate interactive reviewed-target bridge gap.
 
 ## Candidate application
 
@@ -74,25 +74,27 @@ answer. No run identifier had been consumed at preflight time.
 
 ## Execution status
 
-Two acceptance run identifiers were later consumed:
+Three acceptance run identifiers were later consumed:
 
 - `ACC-EXT-003-run-01` ended through an operator terminal interruption during
   guided intake and provides no product verdict;
 - `ACC-EXT-003-run-02` completed guided intake and aggregate confirmation, then
-  failed before browser discovery because the nominal external flow supports
-  heading outcomes only.
+  failed before browser discovery on the historical heading-only boundary;
+- `ACC-EXT-003-run-03` completed guided intake and material-intent review, then
+  failed before browser discovery because the interactive path supplied no
+  reviewed interaction targets for the non-heading outcome.
 
-Run-02 did not contact the target through TestCartographer, create a framework
-sandbox, generate source, or execute a target test. The target preflight remains
-valid suitability evidence, while the historical product result remains **NOT
-ACCEPTED / PRODUCT FINDING**. `ACC-FIND-007` / Issue #7 is resolved by the
-bounded rich same-page capability in commit
-`3b8bb73bd665f8d5389ff2b6a1299c023a97392e`, verified by 25 focused and 500
-full-suite tests. `ACC-FIND-009` / Issue #9 is also resolved. `ACC-FIND-008` /
-Issue #8 is resolved by the intent-preservation correction in commit
-`23d3f34be364163337e055f50548e2dfc35a6fd3`, verified by 20 focused and 505
-full-suite tests. The historical run sessions were not rewritten, the target is
-not implicated, and no run-03 identifier was consumed.
+Run-03 used product commit `c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`
+and three live Ollama calls. Its operator session ended `aborted`; no browser
+discovery, target contact, framework sandbox, generated source, or target test
+occurred. The attempted retest was materially contaminated by shifted operator
+answers and disclosed erroneous ChatGPT answer-content assistance, so it does
+not provide a clean live verdict on the resolved Issue #8 behavior.
+
+The target preflight remains valid suitability evidence. Findings 007–009 remain
+resolved, while open `ACC-FIND-010` records the missing guided-context to
+reviewed-target bridge. The target is not implicated, and run-04 remains
+unconsumed.
 
 ## Why this target fits Level 1B
 

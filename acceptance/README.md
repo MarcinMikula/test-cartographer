@@ -40,19 +40,21 @@ The detailed acceptance oracle and execution record remain in
 `test-cases/ACC-EXT-002.md`, while requirement-by-requirement evidence remains in
 the campaign `traceability.md`.
 
-Level 1B execution has started as `ACC-EXT-003` on Practice Software
-Testing / Toolshop. `ACC-EXT-003-run-01` was consumed by an operator terminal
-interruption during intake. `ACC-EXT-003-run-02` completed guided intake but was
-**NOT ACCEPTED / PRODUCT FINDING** before browser discovery: the nominal external
-flow supports heading outcomes only.
+Level 1B execution continues as `ACC-EXT-003` on Practice Software
+Testing / Toolshop. Run-01 remains an operator-interrupted intake attempt, and
+run-02 remains **NOT ACCEPTED / PRODUCT FINDING** before browser discovery.
 
-`ACC-FIND-007` / Issue #7 and `ACC-FIND-009` / Issue #9 remain
-resolved by their bounded deterministic corrections. `ACC-FIND-008` / Issue #8
-is resolved by product commit
-`23d3f34be364163337e055f50548e2dfc35a6fd3`, with 20 focused and 505
-full-suite tests passing. Historical runs remain immutable; no new external run,
-run-03 identifier, or live LLM call was consumed. Level 1B remains **NOT
-ACCEPTED** pending a later new-run retest.
+`ACC-EXT-003-run-03` exercised the corrections for Issues #7–#9 at product
+commit `c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`. It completed guided intake
+and material-intent review with three live Ollama calls, then stopped before
+browser discovery because the interactive path supplied no reviewed interaction
+targets for the rich non-heading outcome. The operator session truthfully ended
+`aborted`; no framework sandbox was created and Toolshop was not contacted.
+
+`ACC-FIND-007` through `ACC-FIND-009` remain resolved. The missing guided-context
+to reviewed-target bridge is preserved separately as open `ACC-FIND-010`; no
+product correction is authorized by preservation alone, and run-04 remains
+unconsumed. Level 1B remains **NOT ACCEPTED**.
 
 Level 2 remains reserved for materially more dynamic/script-heavy public
 applications. Pracuj.pl is one candidate, not the only planned Level 2 target.
@@ -79,7 +81,8 @@ acceptance/
 |   |-- ACC-FIND-006.md
 |   |-- ACC-FIND-007.md
 |   |-- ACC-FIND-008.md
-|   `-- ACC-FIND-009.md
+|   |-- ACC-FIND-009.md
+|   `-- ACC-FIND-010.md
 `-- campaigns/
     `-- sprint-17-external-validation-I/
         |-- campaign-plan.md

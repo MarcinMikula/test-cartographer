@@ -28,20 +28,21 @@ only to distinguish it from the planned **Level 1B analyst-rich validation**.
 Historical Level 1 records keep their original naming.
 
 Practice Software Testing / Toolshop remains the authorized Level 1B target.
-Execution started on 2026-08-15 against product commit
-`ac1d7b61033251377b9b49d970c50f6d8cdf91e9`. `ACC-EXT-003-run-01` was
-consumed by an operator terminal interruption during intake. The evidence-bearing
-`ACC-EXT-003-run-02` completed guided intake and then stopped before browser
-discovery with the explicit heading-only capability error. Its result remains
-**NOT ACCEPTED / PRODUCT FINDING**, and no target defect verdict is made.
+Runs 01 and 02 retain their historical results at product commit
+`ac1d7b61033251377b9b49d970c50f6d8cdf91e9`.
 
-The independently authorized Issue #7 capability correction is implemented by
-commit `3b8bb73bd665f8d5389ff2b6a1299c023a97392e` and verified by 25 focused and
-500 full-suite tests. Issue #9 is also resolved. The Issue #8 intent-preservation
-correction is implemented by commit
-`23d3f34be364163337e055f50548e2dfc35a6fd3` and verified by 20 focused and
-505 full-suite tests. All three corrections required no new external run or live
-LLM call. Level 1B remains not accepted until a later new-run retest.
+After deterministic corrections for Issues #7–#9, `ACC-EXT-003-run-03` tested
+product commit `c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`. Guided intake and
+material-intent review completed through three live Ollama calls. The run then
+stopped before browser discovery because the nominal interactive path had no
+reviewed interaction targets for the accepted non-heading outcome. The operator
+session ended `aborted`, providing live corroboration of the Issue #9 lifecycle
+correction. No framework sandbox was created and the target was not contacted.
+
+The run is **NOT ACCEPTED / PRODUCT FINDING** with disclosed operator and
+answer-assistance contamination. `ACC-FIND-010` preserves the distinct missing
+guided-context to reviewed-target bridge. No correction is authorized merely by
+this finding, and run-04 remains unconsumed.
 
 No Level 2 target is authorized yet.
 
@@ -244,13 +245,24 @@ ACC-EXT-003-run-02
 -> browser discovery not started
 -> framework sandbox not created
 -> result: NOT ACCEPTED / PRODUCT FINDING
+
+ACC-EXT-003-run-03
+-> product commit c1d0237f12582e4d97a9e57cefe9dc3720d5ff27
+-> operator entered application identity as the initial mission and shifted the
+   next bootstrap answers
+-> three live Ollama calls: 125.511 s collection, 89.841 s review, 93.721 s review
+-> disclosed ChatGPT answer assistance put expected-result semantics into risk
+-> guided intake and material-intent review completed
+-> explicit stop: reviewed interaction targets are required for non-heading outcomes
+-> operator session persisted aborted; browser discovery did not start
+-> framework sandbox not created; target not contacted
+-> result: NOT ACCEPTED / PRODUCT FINDING
 ```
 
-The independent findings were preserved as `ACC-FIND-007` / Issue #7,
-`ACC-FIND-008` / Issue #8, and `ACC-FIND-009` / Issue #9 before remediation.
-Issues #7 through #9 are resolved by bounded deterministic corrections and
-regression evidence. The historical run-02 result is unchanged, and no run-03
-identifier has been consumed.
+Findings `ACC-FIND-007` through `ACC-FIND-009` remain resolved.
+`ACC-FIND-010` is open for the missing interactive bridge from accepted process
+context to human-reviewed rich interaction targets. Run-04 must not start before
+that finding is corrected.
 
 Primary purpose:
 
@@ -274,8 +286,9 @@ level-1b-target-selection.md
 
 This testware authorization did not itself authorize product code changes.
 Execution evidence separately authorized bounded corrections for Issues #7
-through #9. Those corrections are complete, but a new-run external retest remains
-required before Level 1B can be accepted.
+through #9. Those corrections remain complete. The new `ACC-FIND-010` evidence
+does not authorize implementation; the smallest bridge must be designed and
+approved separately before run-04 and before Level 1B can be accepted.
 
 ## Level 2
 
@@ -290,11 +303,11 @@ Pracuj.pl plus two additional applications preferably from different functional
 domains. Each target requires a separate scope, policy/robots review,
 authorization, and test design before execution.
 
-Level 1B execution produced its first product evidence. The nominal flow did not
-reach the authorized target because intake and capability boundaries stopped it
-before browser discovery. The lifecycle, rich same-page capability, and
-intent-preservation findings are resolved, but Level 1B remains open pending a
-new-run retest; Level 2 must not begin from this untested correction state.
+Level 1B execution has still not reached the authorized target. The lifecycle,
+rich same-page engine, and intent-preservation findings remain resolved, but
+run-03 exposed the missing reviewed-target bridge before browser discovery.
+Level 1B remains open behind `ACC-FIND-010`; Level 2 must not begin while that
+blocker is unresolved or before the later run-04 retest.
 
 No further product correction is authorized merely because the validation is
 planned.

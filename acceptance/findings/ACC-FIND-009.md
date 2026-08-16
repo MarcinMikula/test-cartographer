@@ -93,3 +93,16 @@ The deterministic regression covers both evidence-bearing failure classes and
 the supported pause path. A later ACC-EXT-003 execution may corroborate the
 contract if it terminates early, but no deliberate external failure or new run
 is required to close this lifecycle defect. Run-01 and run-02 remain immutable.
+
+
+## Run-03 live corroboration
+
+Run-03 exercised the corrected lifecycle at product commit
+`c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`. After guided intake completed,
+the runner raised the unhandled reviewed-target `ValueError`. The persisted
+operator session truthfully ended `aborted` with twelve recorded operator
+actions, `headed_browser_used=false`, and no `creation_flow_run_id`.
+
+This is live corroboration of the Issue #9 correction, not a deliberate failure
+created to retest it. Historical runs remain immutable and the finding remains
+resolved.
