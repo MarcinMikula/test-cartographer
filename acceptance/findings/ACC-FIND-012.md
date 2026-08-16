@@ -94,14 +94,44 @@ reusable.
 ```text
 category: product–provider integration / contract representation and recovery classification
 severity: Level 1B blocker
-primary requirements: ACC-REQ-008, ACC-REQ-016
-related requirements: ACC-REQ-003, ACC-REQ-004, ACC-REQ-006, ACC-REQ-007,
-                      ACC-REQ-010, ACC-REQ-012, ACC-REQ-013, ACC-REQ-014,
-                      ACC-REQ-015, ACC-REQ-017
 target defect: no
 Issue #11 regression: no
 provider replacement justified: no
 ```
+
+Primary violated requirements:
+
+- ACC-REQ-008 — no valid proposal reached human review;
+- ACC-REQ-016 — the nominal supported interface could not prevent or classify
+  the complete action-conditioned contract mismatch.
+
+Guardrails corroborated:
+
+- ACC-REQ-004 — human, provider, validation, hashes, and lifecycle provenance
+  remained distinguishable without raw content;
+- ACC-REQ-006 and ACC-REQ-007 — the rejected LLM proposal received no
+  accept/reject, factual, or browser authority;
+- ACC-REQ-012 — minimized evidence retained the safe category, path, fallback
+  rule, hashes, sizes, latency, and terminal state;
+- ACC-REQ-014 — neither Toolshop nor the framework was blamed;
+- ACC-REQ-015 — the unknown rule remained non-repairable and failed closed;
+- ACC-REQ-017 — the original and fixed-baseline framework checkouts remained
+  unchanged;
+- ACC-REQ-019 — later v0.2 terminology describes the already truthful aborted
+  lifecycle without changing run-05's historical basis.
+
+Supporting / traceability requirements:
+
+- ACC-REQ-003 — unresolved suitability semantics remained a separate caveat;
+- ACC-REQ-010 and ACC-REQ-011 — preservation and future run-06 retest;
+- ACC-REQ-013 — the three live provider latencies were retained.
+
+Requirements derived or revised:
+
+- ACC-REQ-020 — acceptance requirements v0.2 makes the complete, consistent,
+  safely diagnosable, and bounded-recovery proposal contract an explicit closure
+  requirement for Issue #12 and any later run-06. It is not retroactively used
+  to fail run-05.
 
 The product contract is split across the schema supplied to the provider, local
 action-conditioned validators, and the safe validation-rule classifier. Run-05

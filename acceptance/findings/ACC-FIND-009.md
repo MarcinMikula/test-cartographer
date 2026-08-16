@@ -49,9 +49,31 @@ truthful terminal session state: false
 target defect: false
 ```
 
-Primary requirements: `ACC-REQ-012`, `ACC-REQ-015`.
+Primary violated requirements under the v0.2 interpretation:
 
-Related requirements: `ACC-REQ-010`, `ACC-REQ-016`.
+- ACC-REQ-019 — a terminated process remained persisted as active.
+
+At the run-02 basis, ACC-REQ-012 and ACC-REQ-015 were used as the nearest
+available proxy requirements. Their historical linkage is retained, but neither
+states the truthful terminal-lifecycle obligation precisely.
+
+Guardrails corroborated:
+
+- ACC-REQ-010 — partial evidence was preserved before remediation;
+- ACC-REQ-014 — the stale state was not attributed to the external target;
+- ACC-REQ-017 — the original framework remained unchanged.
+
+Supporting / traceability requirements:
+
+- ACC-REQ-011 — later live runs corroborate the deterministic correction;
+- ACC-REQ-012 and ACC-REQ-015 — historical proxy mappings only;
+- ACC-REQ-016 — the failure occurred in a nominal product workflow.
+
+Requirements derived or revised:
+
+- ACC-REQ-019 — acceptance requirements v0.2 now represent truthful persisted
+  lifecycle explicitly. It does not retroactively alter the run-02 requirement
+  basis or verdict.
 
 ## No-workaround rule
 

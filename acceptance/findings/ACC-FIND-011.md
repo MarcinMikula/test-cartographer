@@ -103,11 +103,36 @@ truthful terminal lifecycle: true
 target defect: false
 ```
 
-Primary requirements: `ACC-REQ-008`, `ACC-REQ-016`.
+Primary violated requirements:
 
-Related requirements: `ACC-REQ-003`, `ACC-REQ-004`, `ACC-REQ-006`,
-`ACC-REQ-007`, `ACC-REQ-010`, `ACC-REQ-012`, `ACC-REQ-013`, `ACC-REQ-014`,
-`ACC-REQ-015`, `ACC-REQ-017`.
+- ACC-REQ-008 — no valid proposal reached review;
+- ACC-REQ-016 — the nominal interface exposed neither a diagnosable rule nor
+  bounded operator recovery.
+
+Guardrails corroborated:
+
+- ACC-REQ-004 — safe provenance and hashes remained distinguishable without raw
+  provider persistence;
+- ACC-REQ-006 and ACC-REQ-007 — the invalid proposal received no human, browser,
+  or factual authority;
+- ACC-REQ-012 — minimized evidence failed closed, with the documented diagnostic
+  limitation;
+- ACC-REQ-014 — no Toolshop defect verdict was made;
+- ACC-REQ-015 — the flow stopped before browser use;
+- ACC-REQ-017 — the original framework remained unchanged;
+- ACC-REQ-019 — later v0.2 terminology describes the already corroborated
+  truthful aborted state but does not alter the historical basis.
+
+Supporting / traceability requirements:
+
+- ACC-REQ-003 — run-04's operator-scope caveat remained explicit;
+- ACC-REQ-010 and ACC-REQ-011 — preservation and retest;
+- ACC-REQ-013 — per-call timings documented operator/provider effort.
+
+Requirements derived or revised:
+
+- ACC-REQ-020 — acceptance requirements v0.2 now state the consistent,
+  diagnosable, human-authorized proposal/recovery boundary explicitly.
 
 ## Why this is one finding
 

@@ -46,6 +46,11 @@ classifier do not cover the complete action-conditioned contract enforced by
 local validators. Browser discovery never started, no framework sandbox was
 created, and Toolshop was not contacted. Run-06 is unconsumed and unauthorized.
 
+Acceptance requirements v0.2 are now the planned basis for Issue #12 closure
+and any later run-06. ACC-REQ-018 through ACC-REQ-020 were derived from preserved
+Sprint 17 evidence; they do not retroactively change the requirement basis,
+evidence, or verdict of runs 01 through 05.
+
 No Level 2 target is authorized yet.
 
 ## Campaign objective
@@ -290,6 +295,17 @@ deterministically. Run-05 live-corroborates the bounded Issue #11 behavior for a
 non-repairable unallowlisted rule and exposes the separate open
 `ACC-FIND-012` / Issue #12. Runs 01 through 05 remain immutable and **NOT ACCEPTED** where
 recorded. No run-06 or product remediation is authorized by this preservation.
+
+Before Issue #12 product code changes, a testware-only gate shall establish:
+
+- acceptance requirements v0.2;
+- finding-to-requirement separation between primary violations, corroborated
+  guardrails, supporting traceability, and derived/revised requirements;
+- a complete run-06 target-proposal and recovery oracle in ACC-EXT-003;
+- unchanged historical run evidence and overall verdicts.
+
+This gate performs no live provider call, browser execution, target contact, or
+framework mutation and does not consume run-06.
 
 Primary purpose:
 

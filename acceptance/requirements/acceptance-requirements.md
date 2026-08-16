@@ -1,4 +1,4 @@
-# Acceptance Requirements v0.1
+# Acceptance Requirements v0.2
 
 ## 1. Purpose
 
@@ -30,7 +30,7 @@ Rules:
 5. Requirements describe desired behavior/acceptance quality, not speculative
    implementation.
 
-## 3. Initial active requirements
+## 3. Active requirements
 
 ### ACC-REQ-001 — Start from bounded operator intent
 **Status:** ACTIVE · **Priority:** Critical
@@ -166,9 +166,60 @@ separately implemented and accepted.
 **Acceptance concern:** A successful automation result must not depend on
 unreviewed mutation of the user's source-of-truth repository.
 
+### ACC-REQ-018 — Preserve material operator intent across transformations
+**Status:** ACTIVE · **Priority:** Critical
+
+The initial operator mission shall remain authoritative across intake,
+structuring, planning, proposal, review, and execution preparation. Each
+transformation shall retain material intent or explicitly clarify, defer, or
+block on any material part that cannot be represented safely.
+
+Human confirmation shall be based on a review that makes the unchanged initial
+mission and the transformed context meaningfully comparable.
+
+**Acceptance concern:** A syntactically complete context is not acceptable when
+it silently omits, weakens, or replaces a material part of the operator's
+original goal.
+
+### ACC-REQ-019 — Persist truthful workflow lifecycle
+**Status:** ACTIVE · **Priority:** Critical
+
+Persisted workflow and operator-session state shall truthfully represent normal
+completion, supported pause/quit, operator interruption, product failure, and
+fail-closed blockage. A process that has terminated shall not remain recorded as
+actively running.
+
+The persisted state shall distinguish terminal outcomes from states that may be
+resumed through a supported interface.
+
+**Acceptance concern:** Preserved evidence must not require a reader to infer
+whether a run is still active after its process has already ended.
+
+### ACC-REQ-020 — Keep machine-assisted proposal boundaries consistent and recoverable
+**Status:** ACTIVE · **Priority:** Critical
+
+For each supported machine-assisted proposal shape, the provider-facing
+contract, deterministic local validation, safe diagnostic classification, and
+repairability decision shall represent the same material rules.
+
+Bounded deterministic mismatches may enter only an explicit human-authorized
+recovery path. Unknown, unsafe, syntactically invalid, duplicate-key,
+locator-like, or otherwise unallowlisted failures shall remain fail-closed.
+Raw provider prompts, responses, and rejected values shall not be persisted
+merely to make recovery diagnosable.
+
+No proposal may receive browser, target, framework, or source-change authority
+before the complete deterministic contract passes and the operator explicitly
+accepts the proposal.
+
+**Acceptance concern:** A supported nominal flow must not expose a contract to
+the provider that is weaker than the contract enforced after the provider has
+responded, leaving a deterministic correction unreachable through the supported
+operator interface.
+
 ## 4. Not baselined yet
 
-Known future areas are not turned into detailed v0.1 requirements without real
+Known future areas are not turned into detailed requirements without real
 target evidence:
 
 - credential lifecycle / `AuthProfile`,
@@ -184,7 +235,7 @@ target evidence:
 
 ```text
 Sprint 17 Level 1
--> ACC-REQ-001 ... ACC-REQ-017 as applicable
+-> ACC-REQ-001 ... ACC-REQ-020 as applicable
 
 Sprint 17 Level 2
 -> same basis
@@ -200,5 +251,10 @@ multiple focused scenarios.
 | Version | Change | Evidence/reason |
 |---|---|---|
 | 0.1 | Initial baseline: 17 ACTIVE requirements | Sprint 16 closure and pre-execution critical review of the acceptance basis |
+| 0.2 | Added ACC-REQ-018 through ACC-REQ-020; existing requirement wording and IDs unchanged | ACC-FIND-008 exposed material-intent loss, ACC-FIND-009 exposed an unrepresented lifecycle-state obligation, and ACC-FIND-010 through ACC-FIND-012 exposed a recurring proposal-contract/recovery boundary |
+
+Version 0.2 becomes the active basis before Issue #12 product remediation and
+ACC-EXT-003 run-06. It does not retroactively declare runs 01 through 05 failed
+against requirements that were not active when those runs were executed.
 
 The next version is determined by materiality, not sprint cadence.

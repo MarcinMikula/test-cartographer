@@ -36,6 +36,33 @@ Issue #11 non-repairable fail-closed behavior and exposes the separate open
 cover the complete locally enforced action-conditioned contract. Run-06 is
 unconsumed and unauthorized, and the external target is not implicated.
 
+## Finding-to-requirement interpretation audit
+
+Acceptance requirements v0.2 separates direct violations from requirements that
+successfully protected the workflow while a different defect occurred. The
+matrix below is a current traceability interpretation; it does not change any
+immutable evidence, run identifier, or historical overall verdict.
+
+| Finding | Primary violated requirements | Guardrails corroborated | Supporting / traceability | Requirements derived or revised |
+|---|---|---|---|---|
+| ACC-FIND-001 | ACC-REQ-016 | ACC-REQ-010, 014, 017 | ACC-REQ-001, 005, 008, 009 | none |
+| ACC-FIND-002 | none — preserved scope limitation | ACC-REQ-003, 010, 014 | ACC-REQ-005, 008, 009, 016 | multi-page requirement remains unbaselined until separately authorized |
+| ACC-FIND-003 | ACC-REQ-016 | ACC-REQ-014, 017 | ACC-REQ-005, 008, 009, 010, 011 | none |
+| ACC-FIND-004 | ACC-REQ-016 | ACC-REQ-014, 017 | ACC-REQ-008, 009, 010, 011 | none |
+| ACC-FIND-005 | ACC-REQ-010, 012, 016 | ACC-REQ-014, 017 | ACC-REQ-011 | none |
+| ACC-FIND-006 | ACC-REQ-013 | ACC-REQ-010, 014, 017 | ACC-REQ-009 | none |
+| ACC-FIND-007 | ACC-REQ-016 | ACC-REQ-005, 014, 015, 017 | ACC-REQ-008, 009, 010, 011 | none |
+| ACC-FIND-008 | ACC-REQ-001, 003, 006 | ACC-REQ-004, 007, 014, 017 | ACC-REQ-008, 010, 011 | ACC-REQ-018 |
+| ACC-FIND-009 | ACC-REQ-019 under v0.2 interpretation | ACC-REQ-010, 014, 017 | historical proxies ACC-REQ-012, 015; also 011, 016 | ACC-REQ-019 |
+| ACC-FIND-010 | ACC-REQ-008, 016 | ACC-REQ-004, 006, 007, 012, 014, 015, 017 | ACC-REQ-003, 010, 011, 013 | ACC-REQ-020 |
+| ACC-FIND-011 | ACC-REQ-008, 016 | ACC-REQ-004, 006, 007, 012, 014, 015, 017; later terminology ACC-REQ-019 | ACC-REQ-003, 010, 011, 013 | ACC-REQ-020 |
+| ACC-FIND-012 | ACC-REQ-008, 016 | ACC-REQ-004, 006, 007, 012, 014, 015, 017; later terminology ACC-REQ-019 | ACC-REQ-003, 010, 011, 013 | ACC-REQ-020 |
+
+ACC-REQ-018 through ACC-REQ-020 become active only from requirements v0.2.
+Their presence in the final column records what the findings taught the product
+acceptance basis; it does not retroactively add failed requirements to runs 01
+through 05.
+
 ## Level 1 requirement traceability
 
 | Requirement | ACC-EXT-002 closure | Execution evidence |
@@ -68,23 +95,25 @@ unconsumed and unauthorized, and the external target is not implicated.
 | ACC-REQ-004 | PASS WITH MATERIAL CAVEAT | Runtime provenance was persisted, but the operator used disclosed ChatGPT translation and limited answer-content assistance. |
 | ACC-REQ-005 | NOT REACHED | Product capability validation failed before browser discovery. |
 | ACC-REQ-006 | PARTIAL | The operator confirmed the displayed context, but the product had already omitted material initial intent. |
-| ACC-REQ-007 | NOT ACCEPTED | The bounded LLM question plan did not address the material ambiguity in the mission. |
+| ACC-REQ-007 | PASS WITH MATERIAL CAVEAT / RECLASSIFIED v0.2 | The LLM question plan omitted material ambiguity but did not silently become factual authority. The omission remains a failure of ACC-REQ-001/003/006 and the later-derived ACC-REQ-018. |
 | ACC-REQ-008 | NOT REACHED | No synthesis or automation proposal was produced. |
 | ACC-REQ-009 | NOT REACHED | No sandbox or independent test execution occurred. |
 | ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | Run-01 and run-02 were retained and hashed before any remediation. |
 | ACC-REQ-011 | PENDING | Any external retest requires a new run identifier and a new exact product commit after authorized remediation. |
-| ACC-REQ-012 | NOT ACCEPTED | The process failed closed functionally, but the terminated run retained an `active` operator-session state and no formal package exists. |
+| ACC-REQ-012 | PASS WITH LIMITATION / RECLASSIFIED v0.2 | The partial evidence was retained, but no formal package exists. The stale `active` state is a lifecycle defect represented explicitly by later ACC-REQ-019, not an evidence-integrity failure under ACC-REQ-012. |
 | ACC-REQ-013 | NOT ESTABLISHED | The run stopped before final operator assessment and complete runtime measurement. |
 | ACC-REQ-014 | PASS | The failure is classified against TestCartographer; no Toolshop defect verdict is made. |
-| ACC-REQ-015 | NOT ACCEPTED | The capability exception was not converted into a controlled terminal session state. |
+| ACC-REQ-015 | NOT APPLICABLE TO THE LIFECYCLE DEFECT / RECLASSIFIED v0.2 | The stop was caused by an unsupported product capability, not insufficient authorization or evidence. Truthful persisted termination is represented by later ACC-REQ-019. |
 | ACC-REQ-016 | NOT ACCEPTED | The nominal external interface supports heading outcomes only and cannot represent the authorized same-page process. |
 | ACC-REQ-017 | PASS | The clean framework baseline remained unchanged and no sandbox was created. |
 
-The run-02 `ACC-REQ-012` and `ACC-REQ-015` outcomes remain historical **NOT
-ACCEPTED** evidence and are not rewritten by later unit/regression success. The
-bounded Issue #9 correction proves the terminal-state contract deterministically;
-future external execution may corroborate it but is not required to close the
-lifecycle defect.
+Run-02 remains historical **NOT ACCEPTED** evidence. Requirements v0.2
+reclassifies the earlier ACC-REQ-012/015 relationship without changing that
+verdict: the evidence-integrity and authorization guardrails were not the direct
+terminal-state defect. ACC-REQ-019 now represents the truthful persisted
+lifecycle obligation explicitly. The bounded Issue #9 correction proves that
+contract deterministically; future external execution may corroborate it but is
+not required to close the lifecycle defect.
 
 The run-02 `ACC-REQ-016` outcome is likewise retained as historical evidence.
 Commit `3b8bb73bd665f8d5389ff2b6a1299c023a97392e` separately proves the reviewed
@@ -110,7 +139,7 @@ claiming that run-02 passed or that the full Level 1B scenario is accepted.
 | ACC-REQ-004 | PASS WITH MATERIAL CAVEAT | Human, Ollama, and product provenance remained distinguishable, but the run includes operator error and answer-content assistance. |
 | ACC-REQ-005 | NOT REACHED | The flow stopped before browser discovery and never contacted Toolshop. |
 | ACC-REQ-006 | PARTIAL | Side-by-side review and explicit human confirmation occurred, but the operator confirmed materially corrupted context. |
-| ACC-REQ-007 | INCONCLUSIVE | Three live bounded Ollama calls completed, but the wrong initial mission and assisted risk answer prevent a clean model-quality verdict. |
+| ACC-REQ-007 | PASS WITH MATERIAL CAVEAT / RECLASSIFIED v0.2 | Three bounded Ollama calls completed and no model output silently received factual or browser authority. The wrong mission and assisted risk answer still prevent a clean question-quality verdict under ACC-REQ-001/003/006/018. |
 | ACC-REQ-008 | NOT REACHED | No reviewed rich-action proposal was produced by the nominal interactive path. |
 | ACC-REQ-009 | NOT REACHED | No sandbox, generated target test, or independent execution existed. |
 | ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | The five run files and supplied archive were hashed before remediation. |
@@ -143,8 +172,8 @@ bridge failure. The live provider completed all three calls within the configure
 | ACC-REQ-003 | PARTIAL | The accepted context was coherent with the supplied vague mission, but no concrete search term, filter, or ordering rule was established. |
 | ACC-REQ-004 | PASS | Operator, Ollama, product validation, hashes, and terminal lifecycle remain distinguishable; raw provider content was not persisted. |
 | ACC-REQ-005 | NOT REACHED | Browser discovery never started and Toolshop was not contacted. |
-| ACC-REQ-006 | NOT ACCEPTED AT PROPOSAL GATE | Material-intent confirmation completed, but the invalid target proposal never reached human review or repair. |
-| ACC-REQ-007 | NOT ACCEPTED | Three bounded calls completed within timeout, but the target-proposal response failed the product contract and no bounded recovery existed. |
+| ACC-REQ-006 | PASS WITHIN REACHED SCOPE / RECLASSIFIED v0.2 | The invalid proposal did not cross an accept/reject boundary and received no browser authority. Missing diagnosable recovery remains a failure of ACC-REQ-008/016 and later ACC-REQ-020. |
+| ACC-REQ-007 | PASS WITHIN REACHED SCOPE / RECLASSIFIED v0.2 | The LLM proposal failed validation and never became factual or browser authority. Contract diagnosability/recovery remains a failure of ACC-REQ-008/016 and later ACC-REQ-020. |
 | ACC-REQ-008 | NOT ACCEPTED | No valid, reviewable interaction-target proposal was presented to the operator. |
 | ACC-REQ-009 | NOT REACHED | No framework sandbox, generated source, or independent execution existed. |
 | ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | The six run files and supplied transcript were hashed before remediation. |
@@ -193,8 +222,8 @@ and does not rewrite any run-04 requirement verdict.
 | ACC-REQ-003 | PASS WITH CAVEAT | The operator confirmed coherent context and the authoritative mission retained its concrete term and ordering; no browser evidence existed to resolve catalogue suitability semantics. |
 | ACC-REQ-004 | PASS | Human, Ollama, product validation, hashes, and lifecycle remain distinguishable; raw provider prompts and responses were not persisted. |
 | ACC-REQ-005 | NOT REACHED | Browser discovery never started and Toolshop was not contacted. |
-| ACC-REQ-006 | NOT ACCEPTED AT PROPOSAL GATE | Material-intent confirmation completed, but the invalid proposal never reached human review. |
-| ACC-REQ-007 | NOT ACCEPTED | Three bounded calls completed, but an unclassified action-contract rule was non-repairable and no bounded retry path was reachable. |
+| ACC-REQ-006 | PASS WITHIN REACHED SCOPE / RECLASSIFIED v0.2 | The invalid proposal did not cross an accept/reject boundary and received no browser authority. The absent reachable repair path is traced to ACC-REQ-008/016 and new ACC-REQ-020. |
+| ACC-REQ-007 | PASS WITHIN REACHED SCOPE / RECLASSIFIED v0.2 | The unclassified proposal remained non-repairable and never became factual or browser authority. Contract/classifier incompleteness is traced to ACC-REQ-008/016 and new ACC-REQ-020. |
 | ACC-REQ-008 | NOT ACCEPTED | No valid reviewable target proposal was presented to the operator. |
 | ACC-REQ-009 | NOT REACHED | No framework sandbox, generated source, or independent execution existed. |
 | ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | The exact six-file run inventory and terminal transcript were hashed before remediation. |
@@ -217,6 +246,17 @@ design. It therefore supports no narrower claim than this: a parsed action-level
 proposal reached a deterministic locally enforced rule that the provider-facing
 schema did not prevent and the safe classifier could identify only as
 `unsupported_validation_rule`. The target and framework are not implicated.
+
+## Acceptance requirements v0.2 activation
+
+| Requirement | Historical evidence source | Activation / next proof |
+|---|---|---|
+| ACC-REQ-018 | ACC-FIND-008 and the intent-preservation corrections/corroboration | Active before Issue #12 closure and run-06; run-06 must retain the Toolshop, `hammer`, and lowest-price-first mission through context and proposal review. |
+| ACC-REQ-019 | ACC-FIND-009 plus truthful `aborted` corroboration in runs 03 through 05 | Active before Issue #12 closure and run-06; every run-06 exit path reached must persist a truthful lifecycle state. |
+| ACC-REQ-020 | ACC-FIND-010 through ACC-FIND-012 | Primary new closure requirement for Issue #12 and the proposal boundary used by run-06. |
+
+These requirements were not active for runs 01 through 05. Historical evidence
+justifies them but is not retroactively scored against them.
 
 ## Finding / retest chain
 

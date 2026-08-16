@@ -161,6 +161,37 @@ Rules:
 7. Product-code fixes use short-lived branches when a real product change is
    justified.
 
+## Finding-to-requirement traceability taxonomy
+
+A finding must not treat every relevant requirement as failed. Use four
+separate relationships:
+
+```text
+Primary violated requirements
+-> requirements directly contradicted by the observed product behavior
+
+Guardrails corroborated
+-> safety, authority, provenance, integrity, or write-boundary requirements
+   that continued to hold while the finding occurred
+
+Supporting / traceability requirements
+-> requirements that govern evidence, remediation, retest, measurement, or a
+   downstream result without being directly violated by the finding
+
+Requirements derived or revised
+-> new or revised acceptance obligations justified by the preserved evidence
+```
+
+Run-level requirement outcomes and finding-level relationships are different
+views. A run may remain **NOT ACCEPTED** while several guardrails receive PASS
+evidence. Reclassifying a relationship or requirement interpretation does not
+change immutable evidence, run identity, or the historical overall verdict.
+
+When a later requirement version clarifies an earlier run, record both the
+historical basis and the newer interpretation. Do not silently rewrite the old
+classification and do not retroactively fail a run against a requirement that
+was not active at execution time.
+
 ## Acceptance is not "all green"
 
 Campaign closure may be:

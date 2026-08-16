@@ -67,10 +67,33 @@ material omission observed: true
 target defect: false
 ```
 
-Primary requirements: `ACC-REQ-001`, `ACC-REQ-003`.
+Primary violated requirements:
 
-Related requirements: `ACC-REQ-004`, `ACC-REQ-006`, `ACC-REQ-007`,
-`ACC-REQ-008`.
+- ACC-REQ-001 — material parts of the bounded initial mission were not retained
+  in the accepted context;
+- ACC-REQ-003 — omitted relevance and ordering uncertainty was not preserved;
+- ACC-REQ-006 — the aggregate confirmation boundary did not make the material
+  loss visible enough for meaningful human authority.
+
+Guardrails corroborated:
+
+- ACC-REQ-004 — initial mission, questions, answers, and confirmation remained
+  distinguishable in evidence;
+- ACC-REQ-007 — no silently invented business rule became factual authority;
+- ACC-REQ-014 — the omission was classified against TestCartographer;
+- ACC-REQ-017 — the original framework remained unchanged.
+
+Supporting / traceability requirements:
+
+- ACC-REQ-008 — reviewable automation was the downstream goal affected by the
+  incomplete context;
+- ACC-REQ-010 and ACC-REQ-011 — preservation and retest govern closure.
+
+Requirements derived or revised:
+
+- ACC-REQ-018 — acceptance requirements v0.2 now state material-intent
+  preservation across transformations explicitly. It is derived from this
+  finding and is not applied retroactively to change run-02's historical basis.
 
 ## No-workaround rule
 

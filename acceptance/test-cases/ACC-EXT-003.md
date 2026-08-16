@@ -138,6 +138,9 @@ ACC-REQ-014  product failure is not target defect
 ACC-REQ-015  safe stop on insufficient authority/evidence
 ACC-REQ-016  nominal supported interfaces only
 ACC-REQ-017  protect original automation repository
+ACC-REQ-018  preserve material operator intent across transformations
+ACC-REQ-019  persist truthful workflow lifecycle
+ACC-REQ-020  consistent and recoverable machine-assisted proposal boundary
 ```
 
 Conditional if findings/corrections occur:
@@ -629,6 +632,48 @@ include evidence such as:
 The exact oracle must come from the final accepted context and observable UI,
 not be silently invented by the implementation.
 
+## Target-proposal and recovery oracle for run-06
+
+Requirement basis v0.2 becomes active before Issue #12 remediation and run-06.
+It does not alter the historical basis or verdict of runs 01 through 05.
+
+Before a fresh run-06 is authorized, deterministic regression evidence must
+cover every supported proposal action shape and prove that provider guidance,
+provider-facing schema, local validation, safe diagnostic code, and
+repairability classification agree on the same material rules.
+
+At minimum the deterministic matrix must cover:
+
+```text
+FILL
+SELECT
+CLICK
+CHECK
+UNCHECK
+READ / final outcome
+```
+
+It must also prove:
+
+- required versus forbidden symbolic test-data references;
+- action-specific role allowlists;
+- unique action roles and symbolic references where required;
+- exactly one final READ/outcome and at least one interaction;
+- stable safe codes for every deterministically correctable local rule;
+- immediate fail-closed behavior for invalid JSON, duplicate keys,
+  locator-like content, unsafe values, and genuinely unknown rules;
+- one explicit operator-authorized repair attempt at most;
+- no raw provider prompt, response, or rejected value persistence;
+- no browser, target, framework, or source authority before complete validation
+  and explicit human acceptance.
+
+Run-06 is nominal and must not intentionally force an invalid proposal. It may
+reach PASS after a valid first proposal or after one valid operator-authorized
+repair. If the live proposal fails safely but no accepted automation is
+produced, the guardrails may receive PASS evidence while the overall scenario
+remains NOT ACCEPTED, BLOCKED, or INCONCLUSIVE according to the diagnosed
+boundary.
+
 ## Question-quality review
 
 Level 1B adds a manual qualitative review of the intake conversation.
@@ -745,8 +790,14 @@ PASS requires evidence that:
 - the operator is not required to translate their knowledge into selectors or
   source-code structure;
 - material ambiguity is clarified, explicitly deferred, or kept UNKNOWN;
+- the unchanged initial mission remains materially represented through context,
+  proposal, and review;
 - supplied facts retain human provenance/authority;
 - TestCartographer does not silently invent business or catalogue facts;
+- the accepted target proposal satisfies the complete supported action contract
+  and is explicitly reviewed by the operator;
+- any live repair is entered only after an explicit `RETRY` decision and uses no
+  more than the single authorized repair attempt;
 - browser discovery stays within the authorized catalogue page/scope;
 - the process model contains multiple meaningful actions/results rather than a
   static-page check;
@@ -755,6 +806,8 @@ PASS requires evidence that:
 - patch application is confined to the isolated framework sandbox;
 - independent framework execution succeeds;
 - the evidence package verifies fail-closed;
+- persisted lifecycle state matches completion, pause, interruption, blockage,
+  or failure truthfully;
 - no unrecorded manual rescue occurred.
 
 ### PASS WITH LIMITATIONS
@@ -782,6 +835,13 @@ Material failure includes behaviour such as:
 - repeatedly asking project/bootstrap questions without a valid invalidation
   reason;
 - requiring manual internal JSON/source/state surgery;
+- exposing a provider-facing proposal contract that permits a supported action
+  shape later rejected only by an unclassified local rule;
+- mapping a deterministic correctable proposal rule only to
+  `unsupported_validation_rule`;
+- allowing an invalid or unaccepted proposal to receive browser, target,
+  framework, or source authority;
+- leaving a terminated process recorded as active;
 - producing a trivial static assertion that does not represent the accepted
   process;
 - writing unexpectedly to the original automation repository;
@@ -828,6 +888,10 @@ review the analyst-rich interaction:
 - question count and reprompts,
 - operator post-run question-quality review,
 - accepted process context,
+- minimized per-attempt proposal hashes, sizes, latency, validation result, safe
+  category, field path, stable rule code, and repairability decision;
+- the operator's target-proposal `ACCEPT`, `EDIT`, `REJECT`, `RETRY`, or `QUIT`
+  authority transition when reached;
 - browser discovery targets,
 - proposal/plan/source reviews,
 - independent execution,

@@ -84,11 +84,34 @@ provider timeout or hang: false
 target defect: false
 ```
 
-Primary requirements: `ACC-REQ-008`, `ACC-REQ-016`.
+Primary violated requirements:
 
-Related requirements: `ACC-REQ-003`, `ACC-REQ-004`, `ACC-REQ-006`,
-`ACC-REQ-007`, `ACC-REQ-010`, `ACC-REQ-012`, `ACC-REQ-014`, `ACC-REQ-015`,
-`ACC-REQ-017`.
+- ACC-REQ-008 — no rich interaction-target proposal reached human review;
+- ACC-REQ-016 — the nominal interface could not bridge accepted process context
+  into reviewed targets.
+
+Guardrails corroborated:
+
+- ACC-REQ-004 — operator, Ollama, validation, and lifecycle provenance remained
+  distinguishable;
+- ACC-REQ-006 and ACC-REQ-007 — no unreviewed LLM proposal received browser
+  authority;
+- ACC-REQ-012 — minimized evidence remained preserved;
+- ACC-REQ-014 — the stop was not classified as a Toolshop defect;
+- ACC-REQ-015 — the flow stopped before unsupported continuation;
+- ACC-REQ-017 — the original framework remained unchanged.
+
+Supporting / traceability requirements:
+
+- ACC-REQ-003 — run-03 contained separate intent-quality caveats;
+- ACC-REQ-010 and ACC-REQ-011 — finding preservation and retest;
+- ACC-REQ-013 — provider latency remained relevant supporting evidence.
+
+Requirements derived or revised:
+
+- ACC-REQ-020 — this finding begins the recurring machine-assisted proposal
+  boundary later clarified by ACC-FIND-011 and ACC-FIND-012. Requirement v0.2 is
+  not applied retroactively to change run-03's historical basis.
 
 ## Live lifecycle corroboration
 

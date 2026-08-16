@@ -59,9 +59,28 @@ fail-closed functional behavior: true
 graceful terminal behavior: false (tracked separately by ACC-FIND-009)
 ```
 
-Primary requirement: `ACC-REQ-016`.
+Primary violated requirements:
 
-Related requirements: `ACC-REQ-005`, `ACC-REQ-008`, `ACC-REQ-009`.
+- ACC-REQ-016 — the nominal supported interface could not represent the
+  authorized rich same-page outcome.
+
+Guardrails corroborated:
+
+- ACC-REQ-005 — browser discovery did not start outside the supported
+  capability;
+- ACC-REQ-014 — the failure was not attributed to Toolshop;
+- ACC-REQ-015 — the unsupported capability stopped before browser authority;
+- ACC-REQ-017 — the original framework remained unchanged.
+
+Supporting / traceability requirements:
+
+- ACC-REQ-008 — reviewable rich automation was the blocked downstream goal;
+- ACC-REQ-009 — independent execution was not reached;
+- ACC-REQ-010 and ACC-REQ-011 — preservation and deterministic closure govern
+  the finding lifecycle.
+
+Requirements derived or revised: none. The existing ACC-REQ-016 represented the
+observed capability gap directly.
 
 ## No-workaround rule
 
