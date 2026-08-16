@@ -52,7 +52,7 @@ targets for the rich non-heading outcome. The operator session truthfully ended
 `aborted`; no framework sandbox was created and Toolshop was not contacted.
 
 `ACC-FIND-007` through `ACC-FIND-009` remain resolved. The missing guided-context
-to reviewed-target bridge is preserved separately as open `ACC-FIND-010`; no
+to reviewed-target bridge is preserved separately as open `ACC-FIND-010` / Issue #10; no
 product correction is authorized by preservation alone, and run-04 remains
 unconsumed. Level 1B remains **NOT ACCEPTED**.
 

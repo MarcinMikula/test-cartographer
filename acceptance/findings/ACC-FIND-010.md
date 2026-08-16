@@ -4,8 +4,8 @@
 
 **OPEN — Level 1B blocker preserved before remediation.**
 
-Related GitHub Issue: not yet created — finding preservation must become durable
-first.
+Related GitHub Issue: `#10 [ACCEPTANCE] ACC-EXT-003 — interactive guided
+flow cannot produce reviewed rich interaction targets`
 
 ## Discovery context
 

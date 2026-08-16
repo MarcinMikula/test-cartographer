@@ -40,7 +40,7 @@ session ended `aborted`, providing live corroboration of the Issue #9 lifecycle
 correction. No framework sandbox was created and the target was not contacted.
 
 The run is **NOT ACCEPTED / PRODUCT FINDING** with disclosed operator and
-answer-assistance contamination. `ACC-FIND-010` preserves the distinct missing
+answer-assistance contamination. `ACC-FIND-010` / Issue #10 preserves the distinct missing
 guided-context to reviewed-target bridge. No correction is authorized merely by
 this finding, and run-04 remains unconsumed.
 
@@ -260,7 +260,7 @@ ACC-EXT-003-run-03
 ```
 
 Findings `ACC-FIND-007` through `ACC-FIND-009` remain resolved.
-`ACC-FIND-010` is open for the missing interactive bridge from accepted process
+`ACC-FIND-010` / Issue #10 is open for the missing interactive bridge from accepted process
 context to human-reviewed rich interaction targets. Run-04 must not start before
 that finding is corrected.
 
@@ -286,7 +286,7 @@ level-1b-target-selection.md
 
 This testware authorization did not itself authorize product code changes.
 Execution evidence separately authorized bounded corrections for Issues #7
-through #9. Those corrections remain complete. The new `ACC-FIND-010` evidence
+through #9. Those corrections remain complete. The new `ACC-FIND-010` / Issue #10 evidence
 does not authorize implementation; the smallest bridge must be designed and
 approved separately before run-04 and before Level 1B can be accepted.
 
@@ -306,7 +306,7 @@ authorization, and test design before execution.
 Level 1B execution has still not reached the authorized target. The lifecycle,
 rich same-page engine, and intent-preservation findings remain resolved, but
 run-03 exposed the missing reviewed-target bridge before browser discovery.
-Level 1B remains open behind `ACC-FIND-010`; Level 2 must not begin while that
+Level 1B remains open behind `ACC-FIND-010` / Issue #10; Level 2 must not begin while that
 blocker is unresolved or before the later run-04 retest.
 
 No further product correction is authorized merely because the validation is

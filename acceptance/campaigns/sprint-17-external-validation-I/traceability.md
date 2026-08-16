@@ -30,7 +30,7 @@ Run-03 tested the resolved Issues #7–#9 state at product commit
 completed through three live Ollama calls, but the flow stopped before browser
 discovery because no reviewed interaction targets were available for the
 non-heading outcome. The session truthfully persisted `aborted`; no framework
-change or target contact occurred. `ACC-FIND-010` is open for the missing
+change or target contact occurred. `ACC-FIND-010` / Issue #10 is open for the missing
 interactive bridge, run-04 is unconsumed, and the external target is not
 implicated.
 
@@ -112,7 +112,7 @@ claiming that run-02 passed or that the full Level 1B scenario is accepted.
 | ACC-REQ-008 | NOT REACHED | No reviewed rich-action proposal was produced by the nominal interactive path. |
 | ACC-REQ-009 | NOT REACHED | No sandbox, generated target test, or independent execution existed. |
 | ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | The five run files and supplied archive were hashed before remediation. |
-| ACC-REQ-011 | PENDING | Run-04 is permitted only after separately authorized ACC-FIND-010 remediation. |
+| ACC-REQ-011 | PENDING | Run-04 is permitted only after separately authorized ACC-FIND-010 / Issue #10 remediation. |
 | ACC-REQ-012 | PASS WITH LIMITATION | The five-file evidence set is immutable and hashed; no formal ValidationRun package exists. |
 | ACC-REQ-013 | PARTIAL | Three model latencies were captured (125.511 s, 89.841 s, 93.721 s; 309.073 s total), but no final assessment was reached. |
 | ACC-REQ-014 | PASS | The stop is classified against TestCartographer; no Toolshop defect verdict is made. |
@@ -191,7 +191,7 @@ terminal exception leaves operator session active
 -> 5 focused / 492 full-suite tests PASS
 -> run-03 live-corroborated aborted after an unhandled ValueError
 
-ACC-FIND-010
+ACC-FIND-010 / Issue #10
 interactive guided flow cannot produce reviewed rich interaction targets
 -> OPEN / Level 1B blocker
 -> run-03 intake and material-intent review completed
@@ -252,7 +252,7 @@ ACC-EXT-003
 -> run-02 NOT ACCEPTED / PRODUCT FINDING before browser discovery
 -> ACC-FIND-007 through ACC-FIND-009 resolved deterministically
 -> run-03 NOT ACCEPTED / PRODUCT FINDING before browser discovery
--> blocked by open ACC-FIND-010; run-04 unconsumed
+-> blocked by open ACC-FIND-010 / Issue #10; run-04 unconsumed
 ```
 
 ## Level 2

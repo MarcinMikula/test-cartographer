@@ -92,9 +92,9 @@ answers and disclosed erroneous ChatGPT answer-content assistance, so it does
 not provide a clean live verdict on the resolved Issue #8 behavior.
 
 The target preflight remains valid suitability evidence. Findings 007–009 remain
-resolved, while open `ACC-FIND-010` records the missing guided-context to
-reviewed-target bridge. The target is not implicated, and run-04 remains
-unconsumed.
+resolved, while `ACC-FIND-010` / Issue #10 remains open for the missing
+guided-context to reviewed-target bridge. The target is not implicated, and
+run-04 remains unconsumed.
 
 ## Why this target fits Level 1B
 

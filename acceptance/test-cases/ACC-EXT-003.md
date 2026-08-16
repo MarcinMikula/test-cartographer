@@ -9,7 +9,7 @@ product commit `c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`, completed guided
 intake and material-intent review, and stopped before browser discovery because
 the nominal interactive path had no reviewed interaction targets for the rich
 outcome. `ACC-FIND-007` through `ACC-FIND-009` remain resolved;
-`ACC-FIND-010` is open. No formal ValidationRun package was created, Level 1B
+`ACC-FIND-010` / Issue #10 is open. No formal ValidationRun package was created, Level 1B
 remains **NOT ACCEPTED**, and run-04 is unconsumed.
 
 ## Why this test exists
@@ -298,7 +298,7 @@ Twenty-five focused and 500 full-suite tests passed. The correction used no
 external target, live LLM call, framework sandbox, or new run identifier. It
 resolves `ACC-FIND-007` without changing the historical run-02 result. Run-03
 confirms that the rich engine exists but exposes the separate missing interactive
-bridge preserved as `ACC-FIND-010`.
+bridge preserved as `ACC-FIND-010` / Issue #10.
 
 ## ACC-FIND-008 deterministic remediation
 
