@@ -4,8 +4,8 @@
 
 **OPEN — Level 1B blocker preserved before remediation.**
 
-Related GitHub Issue: pending; create only after this finding-only state is
-durable.
+Related GitHub Issue: `#11 [ACCEPTANCE] ACC-EXT-003 — invalid target
+proposal cannot reach diagnosable bounded human recovery`
 
 ## Discovery context
 
@@ -162,6 +162,6 @@ answer-content assistance. Literal translation may remain allowed if disclosed.
 
 ## Authorization boundary
 
-This finding preservation authorizes no product change, provider switch, new
-external execution, run-05 identifier, or GitHub Issue creation before the
-finding-only commit is durable.
+The finding-only commit is durable and Issue #11 is linked. This record still
+authorizes no product change, provider switch, new external execution, run-05
+identifier, or remediation.

@@ -29,7 +29,7 @@ response failed target-contract validation before human review and was recorded
 only as `invalid_target_contract`. The session truthfully persisted `aborted`;
 no framework change, browser discovery, or target contact occurred.
 
-`ACC-FIND-007` through `ACC-FIND-010` remain resolved. `ACC-FIND-011` is open
+`ACC-FIND-007` through `ACC-FIND-010` remain resolved. `ACC-FIND-011` / Issue #11 is open
 for the new lack of diagnosable, bounded human recovery at the invalid-proposal
 boundary. Run-05 remains unconsumed, and the external target is not implicated.
 
@@ -160,7 +160,7 @@ caveat, not proof that Issue #8 regressed and not an explanation for the later
 proposal-contract failure.
 
 The proposal artefact proves the Issue #10 bridge executed and therefore does
-not reopen `ACC-FIND-010`. The new failure is preserved as `ACC-FIND-011`.
+not reopen `ACC-FIND-010`. The new failure is preserved as `ACC-FIND-011` / Issue #11.
 Because raw provider responses were intentionally not retained, evidence proves
 that JSON parsing succeeded and later contract validation failed, but it cannot
 identify the exact invalid field or semantic rule.
@@ -241,7 +241,7 @@ interactive guided flow cannot produce reviewed rich interaction targets
 -> 27 focused / 516 full-suite tests PASS
 -> run-04 live-proved the bridge invocation and persisted proposal evidence
 
-ACC-FIND-011 / GitHub Issue pending
+ACC-FIND-011 / Issue #11
 invalid target proposal cannot reach diagnosable bounded human recovery
 -> OPEN
 -> run-04 proposal blocked: invalid_target_contract
@@ -303,7 +303,7 @@ ACC-EXT-003
 -> run-03 NOT ACCEPTED / PRODUCT FINDING before browser discovery
 -> ACC-FIND-007 through ACC-FIND-010 resolved deterministically
 -> run-04 NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING before browser discovery
--> ACC-FIND-011 open; run-05 unconsumed and unauthorized
+-> ACC-FIND-011 / Issue #11 open; run-05 unconsumed and unauthorized
 ```
 
 ## Level 2

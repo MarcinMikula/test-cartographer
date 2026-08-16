@@ -2,13 +2,13 @@
 
 ## Status
 
-**NOT ACCEPTED / ACC-FIND-011 OPEN; NEW-RUN RETEST NOT AUTHORIZED.**
+**NOT ACCEPTED / ACC-FIND-011 / ISSUE #11 OPEN; NEW-RUN RETEST NOT AUTHORIZED.**
 
 Runs 01 through 04 retain their historical evidence and verdicts. Run-04 tested
 product commit `9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`, completed guided
 intake, invoked the corrected Issue #10 bridge, and stopped before human target
 review because the live proposal failed with `invalid_target_contract`.
-`ACC-FIND-007` through `ACC-FIND-010` remain resolved; `ACC-FIND-011` is open.
+`ACC-FIND-007` through `ACC-FIND-010` remain resolved; `ACC-FIND-011` / Issue #11 is open.
 No formal ValidationRun package was created, Level 1B remains **NOT ACCEPTED**,
 and run-05 is unconsumed and unauthorized.
 

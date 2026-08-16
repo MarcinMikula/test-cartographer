@@ -103,7 +103,7 @@ scope caveat does not reopen Issue #8 and does not explain the later contract
 failure.
 
 The target preflight remains valid suitability evidence. Findings 007–010 remain
-resolved, and run-04 live-demonstrates the Issue #10 bridge. `ACC-FIND-011` is
+resolved, and run-04 live-demonstrates the Issue #10 bridge. `ACC-FIND-011` / Issue #11 is
 open for the new diagnosability/recovery boundary. The target is not implicated,
 and run-05 is unconsumed and unauthorized.
 

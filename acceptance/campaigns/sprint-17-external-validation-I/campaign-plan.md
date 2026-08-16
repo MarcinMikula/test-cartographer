@@ -41,7 +41,7 @@ contract validation rejected it before human review with the generic
 The run remains **NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING**. The
 session ended `aborted`, browser discovery never started, no framework sandbox
 was created, and the target was not contacted. `ACC-FIND-010` remains resolved
-because its bridge executed; `ACC-FIND-011` records the separate lack of safe
+because its bridge executed; `ACC-FIND-011` / Issue #11 records the separate lack of safe
 diagnostics and bounded human recovery for the invalid proposal. Run-04 also has
 an operator-scope caveat because its natural mission omitted the authorized
 `hammer` and cheapest-first semantics. Run-05 remains unconsumed.
@@ -276,7 +276,7 @@ ACC-EXT-003-run-04
 Findings `ACC-FIND-007` through `ACC-FIND-010` remain resolved
 deterministically. Run-04 proves the Issue #10 bridge was invoked, but the
 provider proposal could not reach human review after contract validation failed.
-`ACC-FIND-011` is open; no product correction or run-05 is authorized by this
+`ACC-FIND-011` / Issue #11 is open; no product correction or run-05 is authorized by this
 preservation record.
 
 Primary purpose:
@@ -322,7 +322,7 @@ authorization, and test design before execution.
 Level 1B execution has still not reached the authorized target. The lifecycle,
 rich same-page engine, intent-preservation, and reviewed-target bridge findings
 remain resolved, but historical runs 03 and 04 remain **NOT ACCEPTED**. Run-04
-exposed `ACC-FIND-011` at the proposal-validation/recovery boundary. Level 1B
+exposed `ACC-FIND-011` / Issue #11 at the proposal-validation/recovery boundary. Level 1B
 remains open, run-05 is unauthorized, and Level 2 must not begin before the new
 finding is truthfully resolved and retested.
 
