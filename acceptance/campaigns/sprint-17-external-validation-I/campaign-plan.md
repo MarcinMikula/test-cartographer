@@ -37,9 +37,11 @@ discovery with the explicit heading-only capability error. Its result remains
 
 The independently authorized Issue #7 capability correction is implemented by
 commit `3b8bb73bd665f8d5389ff2b6a1299c023a97392e` and verified by 25 focused and
-500 full-suite tests. Issue #9 is also resolved. Both corrections required no
-external run or live LLM call. Issue #8 remains open, and Level 1B remains not
-accepted until its separate remediation and a later new-run retest.
+500 full-suite tests. Issue #9 is also resolved. The Issue #8 intent-preservation
+correction is implemented by commit
+`23d3f34be364163337e055f50548e2dfc35a6fd3` and verified by 20 focused and
+505 full-suite tests. All three corrections required no new external run or live
+LLM call. Level 1B remains not accepted until a later new-run retest.
 
 No Level 2 target is authorized yet.
 
@@ -246,8 +248,9 @@ ACC-EXT-003-run-02
 
 The independent findings were preserved as `ACC-FIND-007` / Issue #7,
 `ACC-FIND-008` / Issue #8, and `ACC-FIND-009` / Issue #9 before remediation.
-Issues #7 and #9 are resolved by bounded deterministic corrections and regression
-evidence. Issue #8 remains open; the historical run-02 result is unchanged.
+Issues #7 through #9 are resolved by bounded deterministic corrections and
+regression evidence. The historical run-02 result is unchanged, and no run-03
+identifier has been consumed.
 
 Primary purpose:
 
@@ -270,8 +273,9 @@ level-1b-target-selection.md
 ```
 
 This testware authorization did not itself authorize product code changes.
-Execution evidence later authorized only the bounded Issue #9 lifecycle
-correction. Issues #7/#8 remain behind their separate remediation gates.
+Execution evidence separately authorized bounded corrections for Issues #7
+through #9. Those corrections are complete, but a new-run external retest remains
+required before Level 1B can be accepted.
 
 ## Level 2
 
@@ -288,9 +292,9 @@ authorization, and test design before execution.
 
 Level 1B execution produced its first product evidence. The nominal flow did not
 reach the authorized target because intake and capability boundaries stopped it
-before browser discovery. The lifecycle and rich same-page capability findings
-are resolved, but Level 1B remains open and blocked by Issue #8; Level 2 must not
-begin from this state.
+before browser discovery. The lifecycle, rich same-page capability, and
+intent-preservation findings are resolved, but Level 1B remains open pending a
+new-run retest; Level 2 must not begin from this untested correction state.
 
 No further product correction is authorized merely because the validation is
 planned.

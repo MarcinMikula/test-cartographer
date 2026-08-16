@@ -29,8 +29,10 @@ discovery; the external target is not implicated.
 The Issue #7 capability defect is resolved by product commit
 `3b8bb73bd665f8d5389ff2b6a1299c023a97392e`. Twenty-five focused and 500
 full-suite tests passed. Issue #9 is also resolved by its earlier deterministic
-lifecycle correction. No external run, run-03 identifier, framework change, or
-live LLM call was consumed; Issue #8 remains open.
+lifecycle correction. Issue #8 is resolved by product commit
+`23d3f34be364163337e055f50548e2dfc35a6fd3`, with 20 focused and 505
+full-suite tests passing. No new external run, run-03 identifier, framework
+change, or live LLM call was consumed. Historical run-02 remains unchanged.
 
 ## Level 1 requirement traceability
 
@@ -88,6 +90,14 @@ multi-action same-page capability with deterministic contract, proposal,
 generation, and regression coverage. It resolves `ACC-FIND-007` without claiming
 that run-02 passed or that the full Level 1B scenario is accepted.
 
+The run-02 `ACC-REQ-001`, `ACC-REQ-003`, `ACC-REQ-006`, and `ACC-REQ-007`
+outcomes also remain historical. Commit
+`23d3f34be364163337e055f50548e2dfc35a6fd3` separately proves side-by-side
+mission/context review, bounded review planning, targeted clarification,
+operator-facing prompt persistence, explicit human material-intent confirmation,
+and fail-closed unresolved-context handling. It resolves `ACC-FIND-008` without
+claiming that run-02 passed or that the full Level 1B scenario is accepted.
+
 ## Finding / retest chain
 
 ```text
@@ -136,8 +146,12 @@ external single-page flow supports heading outcomes only
 
 ACC-FIND-008 / Issue #8
 guided intake omitted material ambiguity and ordering intent
--> OPEN / Level 1B blocker
+-> RESOLVED
 -> run-02 accepted context lost cheapest-first semantics
+-> fix commit 23d3f34be364163337e055f50548e2dfc35a6fd3
+-> bounded review-plan clarification and human intent-coverage gate
+-> 20 focused / 505 full-suite tests PASS
+-> new external retest still required for Level 1B
 
 ACC-FIND-009 / Issue #9
 terminal exception leaves operator session active
@@ -200,8 +214,8 @@ ACC-EXT-003
 -> analyst-rich same-page catalogue process
 -> run-01 operator-interrupted during intake
 -> run-02 NOT ACCEPTED / PRODUCT FINDING before browser discovery
--> ACC-FIND-007 and ACC-FIND-009 resolved deterministically without run-03
--> blocked by ACC-FIND-008
+-> ACC-FIND-007 through ACC-FIND-009 resolved deterministically without run-03
+-> Level 1B still NOT ACCEPTED pending a new-run retest
 ```
 
 ## Level 2

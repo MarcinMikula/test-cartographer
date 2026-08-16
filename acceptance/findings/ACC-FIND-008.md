@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — Level 1B intake/intent blocker preserved before remediation.**
+**RESOLVED — deterministic intent-preservation correction verified; historical run-02 remains NOT ACCEPTED.**
 
 Related GitHub Issue: `#8 [ACCEPTANCE] ACC-EXT-003 — guided intake loses material catalogue intent`
 
@@ -78,12 +78,25 @@ Do not prepare a follow-up answer sheet, manually add ordering to persisted JSON
 teach the operator to mention every internal context field, or accept a static
 heading/result-card assertion as equivalent to the initial mission.
 
-## Correction boundary to design later
+## Deterministic correction
 
-The product must retain material facts from the initial request and select
-follow-up questions based on unresolved semantic needs, not merely fill a fixed
-generic context checklist. Ambiguity may be clarified, explicitly deferred, or
-kept UNKNOWN, but it must not disappear while the context becomes ready.
+Product commit `23d3f34be364163337e055f50548e2dfc35a6fd3` adds a bounded
+intent-preservation contract:
+
+- the unchanged initial mission is displayed beside the structured context;
+- a bounded review plan classifies every allowlisted context candidate through
+  the existing answer-shape contract;
+- only candidates requiring clarification are asked again;
+- clarified answers use the normal answer-recording path, and the actual
+  operator-facing question is persisted without raw provider prompts/responses;
+- the human operator explicitly confirms material-intent coverage;
+- invalid collection confirmations, unresolved context, and exhausted planning
+  budgets fail closed.
+
+Twenty focused and 505 full-suite tests passed. The correction used no external
+target, live LLM call, framework sandbox, or run-03 identifier. This resolves the
+product finding without changing the historical run-02 verdict or accepting
+Level 1B.
 
 ## Retest rule
 

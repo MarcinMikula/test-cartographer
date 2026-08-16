@@ -89,8 +89,10 @@ ACCEPTED / PRODUCT FINDING**. `ACC-FIND-007` / Issue #7 is resolved by the
 bounded rich same-page capability in commit
 `3b8bb73bd665f8d5389ff2b6a1299c023a97392e`, verified by 25 focused and 500
 full-suite tests. `ACC-FIND-009` / Issue #9 is also resolved. `ACC-FIND-008` /
-Issue #8 remains open; the historical run sessions were not rewritten and no
-run-03 identifier was consumed.
+Issue #8 is resolved by the intent-preservation correction in commit
+`23d3f34be364163337e055f50548e2dfc35a6fd3`, verified by 20 focused and 505
+full-suite tests. The historical run sessions were not rewritten, the target is
+not implicated, and no run-03 identifier was consumed.
 
 ## Why this target fits Level 1B
 

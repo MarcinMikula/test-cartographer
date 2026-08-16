@@ -2,14 +2,14 @@
 
 ## Status
 
-**NOT ACCEPTED / PRODUCT FINDINGS PRESERVED.**
+**NOT ACCEPTED / PRODUCT FINDINGS RESOLVED; EXTERNAL RETEST PENDING.**
 
 `ACC-EXT-003-run-01` was consumed by an operator terminal interruption during
 intake. The evidence-bearing `ACC-EXT-003-run-02` completed guided intake and
 then stopped before browser discovery. No formal ValidationRun package was
-created. `ACC-FIND-007` / Issue #7 and `ACC-FIND-009` / Issue #9 are resolved by
-deterministic corrections. `ACC-FIND-008` / Issue #8 remains open. The scenario
-remains **NOT ACCEPTED** and no run-03 has been consumed.
+created. `ACC-FIND-007` through `ACC-FIND-009` are resolved by deterministic
+corrections. The historical run-02 verdict remains unchanged, the scenario
+remains **NOT ACCEPTED**, and no run-03 has been consumed.
 
 ## Why this test exists
 
@@ -232,8 +232,24 @@ actions with declared owners, semantic roles, and symbolic non-secret test data.
 
 Twenty-five focused and 500 full-suite tests passed. The correction used no
 external target, live LLM call, framework sandbox, or new run identifier. It
-resolves `ACC-FIND-007` without changing the historical run-02 result. Issue #8
-remains the Level 1B blocker, and run-03 remains unconsumed.
+resolves `ACC-FIND-007` without changing the historical run-02 result. The
+intent-preservation defect is corrected separately below, and run-03 remains
+unconsumed.
+
+## ACC-FIND-008 deterministic remediation
+
+The intent-preservation defect was corrected by product commit
+`23d3f34be364163337e055f50548e2dfc35a6fd3`. The unchanged initial mission is
+now reviewed beside the structured context; a bounded review plan selects only
+targeted clarifications through the existing answer-shape contract; the actual
+operator-facing prompt is persisted; and the human operator must explicitly
+confirm material-intent coverage. Invalid confirmations, unresolved context, and
+planning-budget exhaustion fail closed.
+
+Twenty focused and 505 full-suite tests passed. The correction used no external
+target, live LLM call, framework sandbox, or new run identifier. It resolves
+`ACC-FIND-008` without changing the historical run-02 result or accepting Level
+1B. Run-03 remains unconsumed pending the authorized external retest.
 
 ## ACC-FIND-009 deterministic remediation
 
@@ -244,8 +260,8 @@ and supported `QUIT` remains `paused`, while the original exception is re-raised
 
 Five focused and 492 full-suite tests passed. No external target contact, new
 run identifier, live LLM call, framework sandbox, or historical evidence change
-was required. Run-03 remains unconsumed and unauthorized while Issue #8 remains
-open.
+was required. Run-03 remains unconsumed; the lifecycle correction does not
+accept Level 1B.
 
 ## Operator freedom rule
 
