@@ -1,11 +1,19 @@
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
+
+from test_cartographer.guided_intake.enums import (
+    GuidedAnswerShape,
+    GuidedIntakePhase,
+)
 
 from test_cartographer.interactive_creation.enums import InteractiveSessionState
 from test_cartographer.interactive_creation.io import load_operator_session
 from test_cartographer.interactive_creation.runner import (
     InteractiveFlowStopped,
+    _format_context_summary,
+    _review_clarifications,
     run_human_triggered_creation_flow,
 )
 
@@ -150,3 +158,31 @@ def test_controlled_intake_quit_remains_paused(
 
     session = load_operator_session(output / "operator-session.json")
     assert session.state is InteractiveSessionState.PAUSED
+
+def test_context_summary_keeps_initial_mission_visible() -> None:
+    mission = (
+        "Find relevant hammer products and show the cheapest suitable options first."
+    )
+    questions = (
+        SimpleNamespace(
+            target_path="process.expected_outcomes.outcome_target.statement",
+            current_value="At least one matching product is visible.",
+        ),
+    )
+
+    summary = _format_context_summary(mission, questions)
+
+    assert mission in summary
+    assert "Initial mission (authoritative and unchanged)" in summary
+    assert "At least one matching product is visible." in summary
+
+
+def test_review_clarifications_selects_only_nonconfirmation_items() -> None:
+    confirm = SimpleNamespace(answer_shape=GuidedAnswerShape.CONFIRMATION)
+    clarify = SimpleNamespace(answer_shape=GuidedAnswerShape.BULLETS)
+    plan = SimpleNamespace(
+        phase=GuidedIntakePhase.REVIEW,
+        questions=(confirm, clarify),
+    )
+
+    assert _review_clarifications(plan) == (clarify,)

@@ -1216,3 +1216,15 @@ The Sprint 14D.2 closure gate adds real-operator evidence:
 
 Expected Sprint 14 Windows closure result: exactly `339 passed`, zero failures,
 zero errors, and zero skipped tests.
+
+## Guided-intake material-intent regression
+
+Issue #8 regression is split between deterministic product proof and later model
+quality evidence. Unit tests prove phase-specific prompt policy, rejection of a
+collection-time confirmation shape, actual operator-prompt persistence, initial
+mission visibility, and clarification selection from review-plan answer shapes.
+
+These tests use replay output and do not claim that a particular Ollama model
+will always identify every semantic omission. A later external acceptance retest
+will assess that question quality separately, while the human coverage gate keeps
+readiness fail-closed when material intent is unresolved.

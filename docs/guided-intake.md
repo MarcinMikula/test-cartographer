@@ -244,3 +244,26 @@ can now distinguish model loading, collection planning, and review planning.
 
 The timeout is not treated as an output budget. Increasing it does not justify
 unbounded generation.
+
+## Material-intent review
+
+Guided intake now uses a bounded review-planning turn after generic collection.
+The model compares the unchanged initial request with every current review value
+and classifies each allowlisted candidate through its answer shape:
+
+- `confirmation` means the current value is ready for human confirmation;
+- `short_phrase`, `sentence`, or `bullets` means the candidate requires a
+  targeted clarification.
+
+The model still cannot add, remove, or retarget questions. Only non-confirmation
+candidates are asked again, and every answer passes through `record_answer()`.
+After corrections, the review is replanned within the existing round budget.
+
+Before discovery, the operator sees the initial request beside the structured
+summary and explicitly confirms that all material intent is preserved. Missing
+or unresolved intent therefore cannot disappear merely because a provider plan
+was fluent. Invalid output, unknown/deferred required context, or round-budget
+exhaustion stops the flow fail-closed.
+
+The actual operator-facing clarification prompt is retained in the normal
+`IntakeInteraction` record. Raw provider prompts and responses remain excluded.

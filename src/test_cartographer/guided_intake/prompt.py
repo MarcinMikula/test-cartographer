@@ -93,11 +93,24 @@ def build_guidance_request(
 
 def render_guidance_prompt(request: GuidanceRequest) -> str:
     payload = request.model_dump(mode="json")
+    if request.phase is GuidedIntakePhase.COLLECTION:
+        task = (
+            "Order all candidate questions and rephrase each for the human operator. "
+            "Collection questions require an answer, so do not use the confirmation "
+            "answer shape. Do not answer any question."
+        )
+    else:
+        task = (
+            "Compare the initial request with every candidate's current value. Use "
+            "the confirmation answer shape only when that value preserves all material "
+            "initial-request intent relevant to its target and needs no clarification. "
+            "Otherwise ask one targeted clarification and use short_phrase, sentence, "
+            "or bullets. Do not invent facts, criteria, constraints, or business rules."
+        )
     instructions = {
         "role": "Plan a concise human interview for software-test automation discovery.",
         "task": (
-            "Order all candidate questions and rephrase each for the human operator. "
-            "Do not answer any question. Keep each user_prompt at or below "
+            f"{task} Keep each user_prompt at or below "
             f"{_USER_PROMPT_MAX_CHARACTERS} characters and each reason at or below "
             f"{_REASON_MAX_CHARACTERS} characters."
         ),

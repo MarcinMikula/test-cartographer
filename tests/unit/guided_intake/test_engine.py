@@ -1,3 +1,4 @@
+import json
 from datetime import timedelta
 
 import pytest
@@ -138,6 +139,32 @@ def test_plan_rejects_sensitive_request_hidden_in_reason(
     )
 
     with pytest.raises(ValueError, match="prohibited sensitive information"):
+        plan_next_phase(
+            minimal_session,
+            run,
+            seed,
+            replay_profile,
+            provider,
+            started_at=START,
+            completed_at=START + timedelta(seconds=1),
+        )
+
+def test_collection_plan_rejects_confirmation_answer_shape(
+    minimal_session, seed, replay_profile
+) -> None:
+    ids = [q.id for q in available_questions(minimal_session)]
+    payload = json.loads(render_plan("collection", ids))
+    payload["questions"][0]["answer_shape"] = "confirmation"
+    provider = ReplayGuidanceProvider(outputs=[json.dumps(payload)])
+    run = create_guided_run(
+        minimal_session,
+        seed,
+        replay_profile,
+        run_id="guided_invalid_confirmation",
+        started_at=START,
+    )
+
+    with pytest.raises(ValueError, match="collection questions cannot use confirmation"):
         plan_next_phase(
             minimal_session,
             run,

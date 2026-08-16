@@ -284,3 +284,15 @@ the same candidate set and does not select a candidate.
 Sprint 11 makes the controlled prototype demonstrable by a real operator. It is
 not yet evidence that the product generalizes or saves a fixed percentage of
 work.
+
+## Initial-intent preservation gate
+
+The interactive Creation Flow preserves the initial mission unchanged and shows
+it beside the current structured process context before discovery. A bounded
+review-planning turn identifies which existing fields require clarification.
+Only the human can supply corrections or confirm that the structured context
+retains all material intent.
+
+The provider cannot invent targets, mutate context, or declare readiness. If a
+required clarification remains unknown or deferred, a plan is invalid, or the
+round budget is exhausted, the flow stops before browser discovery.

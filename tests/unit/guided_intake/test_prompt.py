@@ -52,3 +52,21 @@ def test_prompt_states_bounded_text_lengths(minimal_session, seed, replay_profil
 
     assert "180 characters" in prompt
     assert "240 characters" in prompt
+
+def test_review_prompt_compares_initial_request_with_current_values(
+    minimal_session, seed, replay_profile
+) -> None:
+    questions = available_questions(minimal_session)
+    request = build_guidance_request(
+        minimal_session.context,
+        seed,
+        questions,
+        replay_profile,
+        phase=GuidedIntakePhase.REVIEW,
+    )
+
+    prompt = render_guidance_prompt(request)
+
+    assert "Compare the initial request" in prompt
+    assert "preserves all material initial-request intent" in prompt
+    assert "Do not invent facts, criteria, constraints, or business rules" in prompt

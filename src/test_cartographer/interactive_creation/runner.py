@@ -71,7 +71,11 @@ from test_cartographer.guided_intake.engine import (
     finish_guided_run,
     plan_next_phase,
 )
-from test_cartographer.guided_intake.enums import GuidanceProviderKind, GuidedIntakePhase
+from test_cartographer.guided_intake.enums import (
+    GuidanceProviderKind,
+    GuidedAnswerShape,
+    GuidedIntakePhase,
+)
 from test_cartographer.guided_intake.io import (
     load_guided_profile,
     save_guided_run,
@@ -519,6 +523,7 @@ def run_human_triggered_creation_flow(
                         answered_at=completed_at,
                         active_seconds=active,
                         allow_reordering=True,
+                        interaction_prompt=planned.user_prompt,
                     )
                     save_session(session, output / "01-intake-session.json")
                     ledger.record(
@@ -536,8 +541,76 @@ def run_human_triggered_creation_flow(
                     break
                 if _phase_for_questions(review_questions) is not GuidedIntakePhase.REVIEW:
                     raise RuntimeError("interactive intake returned to collection unexpectedly")
-                output_fn("\nContext summary")
-                output_fn(_format_context_summary(review_questions))
+
+                if provider_mode == "replay":
+                    replay_guidance.outputs.append(
+                        _render_guided_plan(review_questions, GuidedIntakePhase.REVIEW)
+                    )
+                    review_provider = replay_guidance
+                else:
+                    review_provider = live_guidance
+                review_plan, guided_run = plan_next_phase(
+                    session,
+                    guided_run,
+                    seed,
+                    guided_profile,
+                    review_provider,
+                    started_at=now_fn(),
+                )
+                save_guided_run(guided_run, output / "01-guided-intake-run.json")
+
+                output_fn("\nContext and initial-intent review")
+                output_fn(_format_context_summary(seed.initial_request, review_questions))
+                clarifications = _review_clarifications(review_plan)
+                if clarifications:
+                    output_fn("\nMaterial intent clarification")
+                    for planned in clarifications:
+                        current = {
+                            item.id: item for item in available_questions(session)
+                        }
+                        question = current.get(planned.question_id)
+                        if question is None:
+                            continue
+                        output_fn(f"\n{planned.user_prompt}")
+                        output_fn(f"Why this matters: {planned.reason}")
+                        started_at = now_fn()
+                        started = timer_fn()
+                        answer = _ask_intake_answer(
+                            question,
+                            suggested_value=None,
+                            input_fn=input_fn,
+                            output_fn=output_fn,
+                        )
+                        completed_at = now_fn()
+                        active = max(0.0, timer_fn() - started)
+                        if answer is None:
+                            session = pause_session(session, updated_at=completed_at)
+                            save_session(session, output / "01-intake-session.json")
+                            ledger.pause()
+                            raise InteractiveFlowStopped(
+                                "guided intake paused during intent clarification"
+                            )
+                        session = record_answer(
+                            session,
+                            question=question,
+                            answer=answer,
+                            asked_at=started_at,
+                            answered_at=completed_at,
+                            active_seconds=active,
+                            allow_reordering=True,
+                            interaction_prompt=planned.user_prompt,
+                        )
+                        save_session(session, output / "01-intake-session.json")
+                        ledger.record(
+                            OperatorActionKind.INTAKE_ANSWER,
+                            question.id,
+                            answer.action.value,
+                            started_at=started_at,
+                            completed_at=completed_at,
+                            active_seconds=active,
+                        )
+                    continue
+
                 review_started = now_fn()
                 review_timer = timer_fn()
                 decision, selected_question, replacement = _ask_context_summary_review(
@@ -591,13 +664,16 @@ def run_human_triggered_creation_flow(
                 save_session(session, output / "01-intake-session.json")
                 ledger.record(
                     OperatorActionKind.INTAKE_CONFIRMATION,
-                    "process_context_summary",
-                    "confirmed_all",
+                    "initial_intent_and_process_context",
+                    "coverage_confirmed",
                     started_at=review_started,
                     completed_at=review_completed,
                     active_seconds=review_active,
                 )
-                output_fn("Confirmed all process-context values with one operator decision.")
+                output_fn(
+                    "Confirmed that the structured process context preserves all "
+                    "material intent from the initial mission."
+                )
                 break
 
             guided_run = finish_guided_run(
@@ -1202,7 +1278,17 @@ def _group_collection_plan(planned_items):
     return tuple(groups)
 
 
-def _format_context_summary(questions) -> str:
+def _review_clarifications(plan):
+    if plan.phase is not GuidedIntakePhase.REVIEW:
+        raise ValueError("intent clarification selection requires a review plan")
+    return tuple(
+        item
+        for item in plan.questions
+        if item.answer_shape is not GuidedAnswerShape.CONFIRMATION
+    )
+
+
+def _format_context_summary(initial_request, questions) -> str:
     labels = {
         "process.purpose": "Purpose",
         "process.risk": "Risk",
@@ -1210,7 +1296,10 @@ def _format_context_summary(questions) -> str:
         "process.preconditions[0]": "Precondition",
     }
     lines = [
-        "Review the process context once. The same values will be reused by later stages.",
+        "Review the initial mission against the current structured context.",
+        "Initial mission (authoritative and unchanged):",
+        f"  {initial_request}",
+        "Current structured process context:",
     ]
     for index, question in enumerate(questions, start=1):
         label = labels.get(question.target_path)
@@ -1225,7 +1314,8 @@ def _format_context_summary(questions) -> str:
 def _ask_context_summary_review(questions, *, input_fn, output_fn):
     while True:
         raw = input_fn(
-            "Press Enter to CONFIRM ALL, type EDIT to change one field, or QUIT to stop: "
+            "Press Enter to CONFIRM ALL MATERIAL INTENT, type EDIT to change one "
+            "field, or QUIT to stop: "
         ).strip().casefold()
         if raw in {"", "confirm"}:
             return "confirm", None, None

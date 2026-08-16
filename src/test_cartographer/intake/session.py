@@ -43,6 +43,7 @@ def record_answer(
     answered_at: datetime,
     active_seconds: float,
     allow_reordering: bool = False,
+    interaction_prompt: str | None = None,
 ) -> IntakeSession:
     """Apply one answer, record effort, and deterministically refresh state."""
 
@@ -82,7 +83,7 @@ def record_answer(
         sequence=len(session.interactions) + 1,
         question_id=question.id,
         question_kind=question.kind,
-        prompt=question.prompt,
+        prompt=interaction_prompt or question.prompt,
         target_path=question.target_path,
         action=answer.action,
         asked_at=asked_at,

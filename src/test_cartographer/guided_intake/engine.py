@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 
 from test_cartographer.guided_intake.enums import (
     GuidanceProviderKind,
+    GuidedAnswerShape,
     GuidedIntakePhase,
     GuidedIntakeRunState,
 )
@@ -148,9 +149,18 @@ def _validate_plan(
         raise ValueError("guided plan phase does not match the current intake phase")
     if actual != expected or len(plan.questions) != len(questions):
         raise ValueError("guided plan must contain every available question exactly once")
+    questions_by_id = {question.id: question for question in questions}
     for item in plan.questions:
+        question = questions_by_id[item.question_id]
         if len(item.user_prompt) > 500:
             raise ValueError("guided user prompt exceeds 500 characters")
+        if (
+            phase is GuidedIntakePhase.COLLECTION
+            and item.answer_shape is GuidedAnswerShape.CONFIRMATION
+        ):
+            raise ValueError("collection questions cannot use confirmation answer shape")
+        if phase is GuidedIntakePhase.REVIEW and question.current_value is None:
+            raise ValueError("review candidates must contain a current value")
         rendered = f"{item.user_prompt} {item.reason}".casefold()
         forbidden = ("password", "token", "cookie", "secret", "credential")
         if any(term in rendered for term in forbidden):

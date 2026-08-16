@@ -138,3 +138,31 @@ def test_pause_and_resume_preserve_context_and_history() -> None:
     assert resumed.state is IntakeSessionState.ACTIVE
     assert resumed.context == session.context
     assert resumed.interactions == session.interactions
+
+def test_record_answer_persists_actual_operator_facing_prompt() -> None:
+    session = create_session(
+        _context(),
+        session_id="intake_operator_prompt",
+        started_at=START,
+    )
+    question = select_next_question(session.context)
+    assert question is not None
+    asked_at = START + timedelta(seconds=1)
+
+    updated = record_answer(
+        session,
+        question=question,
+        answer=IntakeAnswer(
+            action=IntakeAnswerAction.PROVIDE,
+            value="Search failures can hide relevant products.",
+        ),
+        asked_at=asked_at,
+        answered_at=asked_at + timedelta(seconds=1),
+        active_seconds=1.0,
+        interaction_prompt="Which material search failure should this test protect against?",
+    )
+
+    assert (
+        updated.interactions[-1].prompt
+        == "Which material search failure should this test protect against?"
+    )
