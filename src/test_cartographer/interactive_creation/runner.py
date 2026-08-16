@@ -12,6 +12,7 @@ import uuid
 from collections.abc import Callable
 from contextlib import nullcontext
 from datetime import datetime, timezone
+from functools import wraps
 from pathlib import Path
 
 from test_cartographer.adaptation.enums import AdaptationReviewDecision, AdaptationTargetKind
@@ -93,7 +94,10 @@ from test_cartographer.interactive_creation.enums import (
     InteractiveSessionState,
     OperatorActionKind,
 )
-from test_cartographer.interactive_creation.io import save_operator_session
+from test_cartographer.interactive_creation.io import (
+    load_operator_session,
+    save_operator_session,
+)
 from test_cartographer.interactive_creation.models import (
     InteractiveCreationProfile,
     InteractiveOperatorSession,
@@ -142,6 +146,72 @@ _RESERVED_CONTEXT_COMMANDS = frozenset(
 
 class InteractiveFlowStopped(RuntimeError):
     """Operator intentionally paused or rejected the flow."""
+
+
+def _utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
+def _persist_terminal_operator_session(
+    output_dir: str | Path,
+    *,
+    state: InteractiveSessionState,
+    now_fn: NowFn,
+    original_exception: BaseException,
+) -> None:
+    """Persist one truthful terminal state without masking the original error."""
+
+    try:
+        if state not in {
+            InteractiveSessionState.INTERRUPTED,
+            InteractiveSessionState.ABORTED,
+        }:
+            raise ValueError(f"unsupported terminal operator-session state: {state}")
+        target = Path(output_dir).resolve() / "operator-session.json"
+        if not target.is_file():
+            return
+        session = load_operator_session(target)
+        if session.state is not InteractiveSessionState.ACTIVE:
+            return
+        updated = session.model_copy(
+            update={"state": state, "updated_at": now_fn()}
+        )
+        validated = InteractiveOperatorSession.model_validate(
+            updated.model_dump(mode="python")
+        )
+        save_operator_session(validated, target)
+    except BaseException as persistence_error:
+        original_exception.add_note(
+            "Could not persist the terminal operator-session state: "
+            f"{type(persistence_error).__name__}: {persistence_error}"
+        )
+
+
+def _operator_session_terminal_guard(operation: Callable) -> Callable:
+    """Make every post-ledger terminal path persist a non-active state."""
+
+    @wraps(operation)
+    def guarded(*args, **kwargs):
+        try:
+            return operation(*args, **kwargs)
+        except KeyboardInterrupt as exc:
+            _persist_terminal_operator_session(
+                kwargs["output_dir"],
+                state=InteractiveSessionState.INTERRUPTED,
+                now_fn=kwargs.get("now_fn", _utc_now),
+                original_exception=exc,
+            )
+            raise
+        except BaseException as exc:
+            _persist_terminal_operator_session(
+                kwargs["output_dir"],
+                state=InteractiveSessionState.ABORTED,
+                now_fn=kwargs.get("now_fn", _utc_now),
+                original_exception=exc,
+            )
+            raise
+
+    return guarded
 
 
 class _ActionLedger:
@@ -234,6 +304,7 @@ class _ActionLedger:
         save_operator_session(self.session, self.target_path)
 
 
+@_operator_session_terminal_guard
 def run_human_triggered_creation_flow(
     *,
     project_root: str | Path,

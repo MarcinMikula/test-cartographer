@@ -1013,6 +1013,11 @@ review transitions are authorized through one aggregate operator confirmation,
 not five separate prompts. Unit tests also prove that single-letter control
 words such as `C` are rejected and cannot be stored as context values.
 
+Post-Sprint-17 lifecycle regression additionally proves that an unhandled runtime
+exception persists `aborted`, `KeyboardInterrupt` persists `interrupted`, and a
+supported intake `QUIT` remains `paused`. Every path re-raises the original
+terminal exception and leaves historical output non-resumable.
+
 The Sprint 11 setup then performs a separate manual gate through:
 
 ```text

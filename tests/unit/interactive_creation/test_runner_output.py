@@ -2,6 +2,8 @@ from pathlib import Path
 
 import pytest
 
+from test_cartographer.interactive_creation.enums import InteractiveSessionState
+from test_cartographer.interactive_creation.io import load_operator_session
 from test_cartographer.interactive_creation.runner import (
     InteractiveFlowStopped,
     run_human_triggered_creation_flow,
@@ -90,5 +92,61 @@ def test_fresh_output_is_created_before_first_operator_input(
         )
 
     assert output.is_dir()
-    assert (output / "operator-session.json").is_file()
+    session = load_operator_session(output / "operator-session.json")
+    assert session.state is InteractiveSessionState.ABORTED
     assert browser_calls == []
+
+
+def test_keyboard_interrupt_persists_interrupted_operator_session(
+    tmp_path,
+    interactive_profile,
+):
+    output = tmp_path / "interrupted-run"
+
+    def interrupt_at_first_input(_prompt=""):
+        raise KeyboardInterrupt
+
+    with pytest.raises(KeyboardInterrupt):
+        run_human_triggered_creation_flow(
+            project_root=_repo_root(),
+            output_dir=output,
+            framework_root=None,
+            interactive_profile=interactive_profile,
+            ollama_base_url="http://127.0.0.1:11434",
+            ollama_model="qwen2.5-coder:7b",
+            timeout_seconds=1.0,
+            provider_mode="replay",
+            input_fn=interrupt_at_first_input,
+            output_fn=lambda _message: None,
+        )
+
+    session = load_operator_session(output / "operator-session.json")
+    assert session.state is InteractiveSessionState.INTERRUPTED
+
+
+def test_controlled_intake_quit_remains_paused(
+    tmp_path,
+    interactive_profile,
+):
+    output = tmp_path / "paused-run"
+    values = iter(("Automate catalog search.", ":quit"))
+
+    def operator_input(_prompt=""):
+        return next(values)
+
+    with pytest.raises(InteractiveFlowStopped, match="guided intake paused"):
+        run_human_triggered_creation_flow(
+            project_root=_repo_root(),
+            output_dir=output,
+            framework_root=None,
+            interactive_profile=interactive_profile,
+            ollama_base_url="http://127.0.0.1:11434",
+            ollama_model="qwen2.5-coder:7b",
+            timeout_seconds=1.0,
+            provider_mode="replay",
+            input_fn=operator_input,
+            output_fn=lambda _message: None,
+        )
+
+    session = load_operator_session(output / "operator-session.json")
+    assert session.state is InteractiveSessionState.PAUSED

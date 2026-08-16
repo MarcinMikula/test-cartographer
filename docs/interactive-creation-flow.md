@@ -139,6 +139,17 @@ The underlying `IntakeSession` still records the five deterministic confirmation
 transitions needed to promote the process facts to `CONFIRMED`. The operator
 ledger records the single human decision that authorized them.
 
+The operator ledger also preserves a truthful terminal state:
+
+- `paused` for a supported operator `QUIT`,
+- `interrupted` for `KeyboardInterrupt`,
+- `aborted` for an unhandled product/runtime termination,
+- `complete` for a successful Creation Flow.
+
+The public runner updates only a persisted `active` session and re-raises the
+original exception. Historical output remains immutable and no failed run is
+silently made resumable.
+
 ## Headed browser review
 
 The discovery page remains open while the operator reviews candidates. Bounded

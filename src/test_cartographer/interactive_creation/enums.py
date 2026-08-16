@@ -6,6 +6,7 @@ from enum import StrEnum
 class InteractiveSessionState(StrEnum):
     ACTIVE = "active"
     PAUSED = "paused"
+    INTERRUPTED = "interrupted"
     ABORTED = "aborted"
     COMPLETE = "complete"
 

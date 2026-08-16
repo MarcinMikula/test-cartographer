@@ -4,6 +4,7 @@
       "enum": [
         "active",
         "paused",
+        "interrupted",
         "aborted",
         "complete"
       ],
