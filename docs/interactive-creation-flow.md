@@ -116,6 +116,26 @@ search process. Pressing Enter for the starting URL accepts the locally served
 reference page. The operator must still inspect the visible page and choose the
 candidate that represents the intended process action.
 
+### External single-page capability boundary
+
+The deterministic external engine preserves the original navigate/read-heading
+flow and also accepts a reviewed structured same-page process containing one
+initial navigation, two to six discovery targets, at least one interaction, and
+one final visible outcome read. The bounded action vocabulary is `FILL`, `CLICK`,
+`SELECT`, `CHECK`, `UNCHECK`, and `READ`.
+
+Rich targets must declare their page/component owner, expected semantic role,
+and symbolic non-secret test data for `FILL` or `SELECT`. The product rejects an
+undeclared owner, unsupported action/role pair, repeated navigation, missing
+final outcome read, multi-page scope, or public URL outside the existing HTTPS
+boundary. It never derives UI steps, locators, prices, counts, or business rules
+from outcome wording.
+
+The guided-intake bridge that produces this structured intent is a separate
+capability. A non-heading outcome without reviewed interaction targets therefore
+fails closed before browser discovery instead of being reduced to a heading or
+silently converted into invented actions.
+
 ## Operator action ledger
 
 `InteractiveOperatorSession` stores the kind, target, decision category,

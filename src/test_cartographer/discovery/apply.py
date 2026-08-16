@@ -225,6 +225,9 @@ def _intent(target: DiscoveryTarget) -> str:
     verbs = {
         "fill": f"Enter the symbolic value for {target.name}.",
         "click": f"Use {target.name}.",
+        "select": f"Select the symbolic value for {target.name}.",
+        "check": f"Select {target.name}.",
+        "uncheck": f"Clear {target.name}.",
         "read": f"Observe {target.name}.",
     }
     return verbs.get(target.action_kind.value, f"Use {target.name}.")
@@ -234,6 +237,9 @@ def _expected_state(target: DiscoveryTarget) -> str:
     values = {
         "fill": f"The {target.name} value is supplied during execution.",
         "click": f"The {target.name} action completes.",
+        "select": f"The {target.name} option is selected during execution.",
+        "check": f"The {target.name} option is selected.",
+        "uncheck": f"The {target.name} option is cleared.",
         "read": f"The {target.name} is visible and can be asserted.",
     }
     return values.get(target.action_kind.value, f"The {target.name} step completes.")

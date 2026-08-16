@@ -150,3 +150,82 @@ def test_external_single_page_reaches_exact_source_patch_without_catalog_assumpt
     assert "TEST_CARTOGRAPHER_TARGET_URL" in combined
     assert "CatalogSearchForm" not in combined
     assert "search_query" not in combined
+
+
+def test_external_rich_single_page_reaches_component_and_result_assertion_patch():
+    now = datetime(2026, 8, 16, 8, 0, tzinfo=timezone.utc)
+    source = load_synthesis_request(
+        ROOT / "testdata/synthesis/request/public_search.json"
+    )
+    result_list = next(item for item in source.elements if item.id == "el_results_list")
+    outcome = source.outcomes[0].model_copy(
+        update={"related_element_ids": (result_list.id,)}
+    )
+    request = BoundedSynthesisRequest.model_validate(
+        source.model_copy(update={"outcomes": (outcome,)}).model_dump(mode="python")
+    )
+
+    synthesis = run_synthesis(
+        request,
+        ReplaySynthesisAdapter(render_external_single_page_proposal(request)),
+        run_id="syn_external_rich_pipeline",
+        started_at=now,
+        completed_at=now,
+    )
+    synthesis = review_synthesis_run(
+        synthesis,
+        decision=ProposalReviewDecision.ACCEPTED,
+        reviewed_at=now,
+        reason="Test operator accepted the deterministic rich external proposal.",
+    )
+
+    workspace = load_workspace_profile(
+        ROOT / "testdata/adaptation/profile/qa_automation_framework.json"
+    )
+    snapshot = inspect_framework(
+        FRAMEWORK_ROOT,
+        workspace,
+        snapshot_id="snapshot_external_rich_pipeline",
+        captured_at=now,
+    )
+    plan = build_adaptation_plan(
+        synthesis,
+        workspace,
+        snapshot,
+        plan_id="adapt_external_rich_pipeline",
+        created_at=now,
+    )
+    plan = review_adaptation_plan(
+        plan,
+        decision=AdaptationReviewDecision.ACCEPTED,
+        reviewed_at=now,
+        reason="Test operator accepted the deterministic repository plan.",
+    )
+    generation = load_generation_profile(
+        ROOT / "testdata/delivery/profile/public_search_generation.json"
+    )
+
+    patch = build_code_patch(
+        synthesis,
+        plan,
+        workspace,
+        generation,
+        snapshot,
+        FRAMEWORK_ROOT,
+        patch_id="patch_external_rich_pipeline",
+        created_at=now,
+    )
+
+    changed_kinds = {change.target_kind for change in patch.changes}
+    assert AdaptationTargetKind.PAGE in changed_kinds
+    assert AdaptationTargetKind.COMPONENT in changed_kinds
+    assert AdaptationTargetKind.TEST in changed_kinds
+
+    combined = "\n".join(change.content for change in patch.changes)
+    assert "CatalogSearchPage" in combined
+    assert "CatalogSearchFormComponent" in combined
+    assert ".fill(value)" in combined
+    assert ".click()" in combined
+    assert ".inner_text()" in combined
+    assert "assert expected_fragment in" in combined
+    assert "TEST_CARTOGRAPHER_CATALOG_URL" in combined

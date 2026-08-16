@@ -191,6 +191,8 @@ def _semantic_role(raw: dict[str, Any]) -> str:
         return "button"
     if tag == "input" and input_type == "search":
         return "searchbox"
+    if tag == "input" and input_type == "checkbox":
+        return "checkbox"
     if tag in {"input", "textarea"}:
         return "textbox"
     if tag == "select":

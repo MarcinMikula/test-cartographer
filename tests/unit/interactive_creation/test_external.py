@@ -2,9 +2,10 @@ from datetime import datetime, timezone
 
 import pytest
 
-from test_cartographer.context.enums import KnowledgeStatus, SensitivityLevel
+from test_cartographer.context.enums import ActionKind, KnowledgeStatus, SensitivityLevel
 from test_cartographer.context.models import ContextBundle, KnowledgeText
 from test_cartographer.discovery.capture import _semantic_name, _semantic_role
+from test_cartographer.discovery.models import DiscoveryTarget
 from test_cartographer.intake.seed import MinimalContextSeed, build_minimal_context
 from test_cartographer.interactive_creation.external import (
     build_external_public_single_page_plan,
@@ -70,11 +71,90 @@ def test_external_plan_uses_reviewed_outcome_without_locator_hint():
     assert plan.targets[0].outcome_target is True
 
 
-def test_external_plan_rejects_non_heading_scope():
-    with pytest.raises(ValueError, match="heading outcomes only"):
+def test_external_plan_requires_reviewed_targets_for_non_heading_scope():
+    with pytest.raises(ValueError, match="requires reviewed interaction targets"):
         build_external_public_single_page_plan(
             _context("The page shows the expected information."),
             plan_id="discovery_external",
+        )
+
+
+def test_external_plan_accepts_reviewed_multi_action_same_page_scope():
+    page_id = "page_discovery_target"
+    component_id = "cmp_catalog_controls"
+    targets = (
+        DiscoveryTarget(
+            id="target_search",
+            element_id="el_search",
+            owner_id=component_id,
+            name="Catalogue search",
+            action_kind=ActionKind.FILL,
+            expected_roles=("searchbox", "textbox"),
+            test_data_symbolic_ref="search_term",
+        ),
+        DiscoveryTarget(
+            id="target_sort",
+            element_id="el_sort",
+            owner_id=component_id,
+            name="Price ascending sort",
+            action_kind=ActionKind.SELECT,
+            expected_roles=("combobox",),
+            test_data_symbolic_ref="sort_order",
+        ),
+        DiscoveryTarget(
+            id="target_results",
+            element_id="el_results",
+            owner_id=page_id,
+            name="Visible matching products",
+            action_kind=ActionKind.READ,
+            expected_roles=("list", "status", "generic"),
+            outcome_target=True,
+        ),
+    )
+
+    plan = build_external_public_single_page_plan(
+        _context("Matching products are visible in accepted ascending-price order."),
+        plan_id="discovery_external_rich",
+        reviewed_targets=targets,
+        component_ids=(component_id,),
+    )
+
+    assert plan.component_ids == (component_id,)
+    assert [target.action_kind for target in plan.targets] == [
+        ActionKind.FILL,
+        ActionKind.SELECT,
+        ActionKind.READ,
+    ]
+    assert plan.targets[-1].outcome_target is True
+
+
+def test_external_plan_rejects_rich_scope_without_final_read_outcome():
+    targets = (
+        DiscoveryTarget(
+            id="target_search",
+            element_id="el_search",
+            owner_id="page_discovery_target",
+            name="Catalogue search",
+            action_kind=ActionKind.FILL,
+            expected_roles=("searchbox",),
+            test_data_symbolic_ref="search_term",
+        ),
+        DiscoveryTarget(
+            id="target_submit",
+            element_id="el_submit",
+            owner_id="page_discovery_target",
+            name="Submit search",
+            action_kind=ActionKind.CLICK,
+            expected_roles=("button",),
+            outcome_target=True,
+        ),
+    )
+
+    with pytest.raises(ValueError, match="one final READ outcome target"):
+        build_external_public_single_page_plan(
+            _context("Matching products are visible."),
+            plan_id="discovery_external_rich",
+            reviewed_targets=targets,
         )
 
 
@@ -97,6 +177,26 @@ def test_native_heading_has_heading_semantics():
 
     assert _semantic_role(raw) == "heading"
     assert _semantic_name(raw) == "Driving licence codes"
+
+
+def test_native_checkbox_has_checkbox_semantics():
+    raw = {
+        "tagName": "input",
+        "id": "category-hammer",
+        "role": None,
+        "ariaLabel": "Hammer category",
+        "name": "category",
+        "placeholder": None,
+        "type": "checkbox",
+        "testId": None,
+        "label": "Hammer category",
+        "buttonText": None,
+        "headingText": None,
+        "disabled": False,
+        "contentEditable": False,
+    }
+
+    assert _semantic_role(raw) == "checkbox"
 
 @pytest.mark.parametrize(
     "source_url, message",

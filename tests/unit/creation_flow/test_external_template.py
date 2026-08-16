@@ -79,3 +79,30 @@ def test_external_proposal_is_valid_without_component_or_test_data():
     assert proposal.components == ()
     assert proposal.pages[0].class_name == "DrivingLicenceCodesPage"
     assert proposal.test.name == "test_driving_licence_codes"
+
+
+def test_external_proposal_represents_reviewed_multi_action_same_page_request():
+    source = load_synthesis_request(
+        ROOT / "testdata/synthesis/request/public_search.json"
+    )
+    result_list = next(item for item in source.elements if item.id == "el_results_list")
+    outcome = source.outcomes[0].model_copy(
+        update={"related_element_ids": (result_list.id,)}
+    )
+    request = BoundedSynthesisRequest.model_validate(
+        source.model_copy(update={"outcomes": (outcome,)}).model_dump(mode="python")
+    )
+
+    proposal = parse_pom_proposal(render_external_single_page_proposal(request))
+    report = validate_pom_proposal(request, proposal)
+
+    assert report.valid
+    assert proposal.id == "proposal_external_single_page_rich"
+    assert [method.actions[0].kind for method in proposal.methods] == [
+        ActionKind.NAVIGATE,
+        ActionKind.FILL,
+        ActionKind.CLICK,
+        ActionKind.READ,
+    ]
+    assert len(proposal.components) == 1
+    assert proposal.test.assertions[0].related_element_ids == (result_list.id,)

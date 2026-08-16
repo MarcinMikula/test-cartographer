@@ -670,7 +670,7 @@ def _render_method(method: ProposedMethod, run: SynthesisRun, *, indent: str) ->
         raise ValueError("Sprint 6 template supports one action per proposed method")
     action = method.actions[0]
     lines = ["", f"{indent}def {method.name}"]
-    if action.kind is ActionKind.FILL:
+    if action.kind in {ActionKind.FILL, ActionKind.SELECT}:
         signature = "(self, value: str) -> None:"
     elif action.kind is ActionKind.READ:
         signature = "(self) -> str:"
@@ -693,6 +693,12 @@ def _render_method(method: ProposedMethod, run: SynthesisRun, *, indent: str) ->
             lines.append(f"{indent}    self.{attribute}.fill(value)")
         elif action.kind is ActionKind.CLICK:
             lines.append(f"{indent}    self.{attribute}.click()")
+        elif action.kind is ActionKind.SELECT:
+            lines.append(f"{indent}    self.{attribute}.select_option(value)")
+        elif action.kind is ActionKind.CHECK:
+            lines.append(f"{indent}    self.{attribute}.check()")
+        elif action.kind is ActionKind.UNCHECK:
+            lines.append(f"{indent}    self.{attribute}.uncheck()")
         elif action.kind is ActionKind.READ:
             lines.append(f"{indent}    return self.{attribute}.inner_text()")
         else:

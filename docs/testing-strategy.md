@@ -69,6 +69,22 @@ Passing tests prove the implemented rules for controlled fixtures. They do not
 prove semantic correctness, usability, safety against arbitrary applications,
 or product value.
 
+### External single-page contract tests
+
+The external flow has separate deterministic coverage for:
+
+- compatibility with the existing navigate/read-heading contract;
+- a reviewed multi-action same-page discovery plan;
+- bounded action/role and owner validation before browser discovery;
+- a final visible result target rather than a heading-only outcome;
+- deterministic Page Object and Component proposal validation;
+- source generation for fill, click, select, check, uncheck, and read actions;
+- explicit non-secret test-data binding and a test-owned result assertion.
+
+These controlled tests do not contact an external site or invoke an LLM. They
+prove the richer engine boundary only; intake intent preservation and a new
+external acceptance run remain separate evidence gates.
+
 ## Test layers
 
 ### Context contract unit tests

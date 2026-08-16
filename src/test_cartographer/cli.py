@@ -676,7 +676,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--external-public-single-page",
         action="store_true",
         help=(
-            "run a bounded external public single-page heading Creation Flow; "
+            "run a bounded external public single-page Creation Flow; "
             "the URL is collected through guided intake"
         ),
     )

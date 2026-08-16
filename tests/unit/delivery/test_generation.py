@@ -11,7 +11,11 @@ from test_cartographer.adaptation.enums import (
 )
 from test_cartographer.adaptation.models import AdaptationPlan, FrameworkSnapshot
 from test_cartographer.delivery.generation import build_code_patch
+from test_cartographer.delivery.generation import _render_method
 from test_cartographer.delivery.models import GenerationProfile
+from test_cartographer.context.enums import ActionKind
+from test_cartographer.synthesis.enums import ProposalOwnerKind
+from test_cartographer.synthesis.models import ProposedAction, ProposedMethod
 
 ROOT = Path(__file__).resolve().parents[3]
 
@@ -238,3 +242,38 @@ def test_exact_patch_formatter_includes_every_source_line(pending_patch) -> None
     for change in pending_patch.changes:
         assert change.content.rstrip("\n") in rendered
         assert change.content_sha256 in rendered
+
+
+@pytest.mark.parametrize(
+    ("kind", "expected_line", "test_data_id"),
+    (
+        (ActionKind.SELECT, "self.sort_control.select_option(value)", "data_sort"),
+        (ActionKind.CHECK, "self.sort_control.check()", None),
+        (ActionKind.UNCHECK, "self.sort_control.uncheck()", None),
+    ),
+)
+def test_generated_method_supports_bounded_rich_external_actions(
+    kind,
+    expected_line,
+    test_data_id,
+):
+    method = ProposedMethod(
+        id=f"method_{kind.value}",
+        name=f"{kind.value}_sort",
+        owner_kind=ProposalOwnerKind.COMPONENT,
+        owner_source_id="cmp_controls",
+        intent=f"Use the reviewed {kind.value} action.",
+        actions=(
+            ProposedAction(
+                step_id=f"step_{kind.value}",
+                kind=kind,
+                target_element_id="el_sort_control",
+                locator_id="loc_sort_control",
+                test_data_id=test_data_id,
+            ),
+        ),
+    )
+
+    rendered = "\n".join(_render_method(method, None, indent="    "))
+
+    assert expected_line in rendered
