@@ -7,8 +7,9 @@
 `ACC-EXT-003-run-01` was consumed by an operator terminal interruption during
 intake. The evidence-bearing `ACC-EXT-003-run-02` completed guided intake and
 then stopped before browser discovery. No formal ValidationRun package was
-created. See `ACC-FIND-007` / Issue #7, `ACC-FIND-008` / Issue #8, and
-`ACC-FIND-009` / Issue #9.
+created. `ACC-FIND-007` / Issue #7 and `ACC-FIND-008` / Issue #8 remain open;
+`ACC-FIND-009` / Issue #9 is resolved by deterministic lifecycle regression.
+The scenario remains **NOT ACCEPTED** and no run-03 has been consumed.
 
 ## Why this test exists
 
@@ -219,9 +220,19 @@ baseline remained unchanged, and no target or generated-test verdict exists.
 operator-session.json       A078DB724A349B5F4CEA40C54C4A55AB10E543FCC29CC340661FFB742C3C37AA
 ```
 
-Run-02 is **NOT ACCEPTED / PRODUCT FINDING** and is immutable. No run-03 is
-authorized before the findings are preserved, triaged, and separately approved
-for remediation.
+Run-02 is **NOT ACCEPTED / PRODUCT FINDING** and is immutable.
+
+## ACC-FIND-009 deterministic remediation
+
+The stale-active lifecycle defect was corrected by product commit
+`5887f83b5159c8751ef9a5a5638f7dc9afd259ce`. Regression proves that unhandled
+runtime failures persist `aborted`, `KeyboardInterrupt` persists `interrupted`,
+and supported `QUIT` remains `paused`, while the original exception is re-raised.
+
+Five focused and 492 full-suite tests passed. No external target contact, new
+run identifier, live LLM call, framework sandbox, or historical evidence change
+was required. Run-03 remains unconsumed and unauthorized while Issues #7/#8
+remain open.
 
 ## Operator freedom rule
 

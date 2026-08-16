@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — evidence-lifecycle finding preserved before remediation.**
+**RESOLVED — deterministic product correction and regression evidence preserved.**
 
 Related GitHub Issue: `#9 [ACCEPTANCE] ACC-EXT-003 — terminal interruption leaves operator session active`
 
@@ -58,23 +58,38 @@ Related requirements: `ACC-REQ-010`, `ACC-REQ-016`.
 Do not edit `operator-session.json`, mark either run complete, delete/reuse the
 output directories, or fabricate a CreationFlowRun/ValidationRun artefact.
 
-## Correction boundary to design later
+## Authorized correction and implementation
 
-Once the operator ledger exists, every terminal process path must persist a
-truthful non-active state before re-raising or returning. The product must
-distinguish at least:
+The operator authorized the smallest Issue #9-only lifecycle correction after
+the finding and GitHub Issue were durably preserved. Product commit
+`5887f83b5159c8751ef9a5a5638f7dc9afd259ce` now ensures that:
 
-- supported operator pause/quit;
-- operator interrupt;
-- product/runtime abort;
-- completed flow.
+- supported operator `QUIT` remains `paused`;
+- `KeyboardInterrupt` persists `interrupted`;
+- an unhandled product/runtime exception persists `aborted`;
+- a successful flow still persists `complete`;
+- only an existing persisted `active` session may be transitioned;
+- the original exception is re-raised after best-effort persistence.
 
-The correction must preserve the original exception, partial evidence, output
-immutability, and non-resumable fresh-run rule unless resume is separately
-designed and authorized.
+The schema and lifecycle documentation include the new `interrupted` state.
+Issues #7/#8, the external-flow outcome contract, and the LLM question planner
+were not changed.
 
-## Regression and retest boundary
+## Regression and retest result
 
-Focused regression should cover an exception after intake and an operator
-interrupt after ledger creation. A future ACC-EXT-003 retest can confirm truthful
-terminal behavior if another stop occurs, but run-01 and run-02 remain immutable.
+Validation on 2026-08-16 (Europe/Warsaw) recorded:
+
+```text
+focused tests: 5 passed in 0.71s
+full suite: 492 passed in 53.12s
+historical run-01/run-02 changed: false
+external run consumed: no
+run-03 consumed: no
+live LLM/Ollama invoked: no
+original framework changed: false
+```
+
+The deterministic regression covers both evidence-bearing failure classes and
+the supported pause path. A later ACC-EXT-003 execution may corroborate the
+contract if it terminates early, but no deliberate external failure or new run
+is required to close this lifecycle defect. Run-01 and run-02 remain immutable.

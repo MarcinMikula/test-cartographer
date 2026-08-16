@@ -5,9 +5,10 @@
 **AUTHORIZED / EXECUTION ATTEMPTED - stopped before target contact.**
 
 This document records the authorized target boundary and the first execution
-attempts. It does not authorize product changes. `ACC-EXT-003-run-02` stopped
-before browser discovery, so it makes no defect or correctness claim about the
-Practice Software Testing application.
+attempts. It did not itself authorize product changes. `ACC-EXT-003-run-02`
+stopped before browser discovery, so it makes no defect or correctness claim
+about the Practice Software Testing application. The bounded Issue #9 lifecycle
+correction was separately authorized from preserved execution evidence.
 
 ## Candidate application
 
@@ -83,9 +84,11 @@ Two acceptance run identifiers were later consumed:
 
 Run-02 did not contact the target through TestCartographer, create a framework
 sandbox, generate source, or execute a target test. The target preflight remains
-valid suitability evidence, while the product result is **NOT ACCEPTED / PRODUCT
-FINDING** through `ACC-FIND-007` / Issue #7, `ACC-FIND-008` / Issue #8,
-and `ACC-FIND-009` / Issue #9.
+valid suitability evidence, while the product result remains **NOT ACCEPTED /
+PRODUCT FINDING** through the open `ACC-FIND-007` / Issue #7 and
+`ACC-FIND-008` / Issue #8 blockers. `ACC-FIND-009` / Issue #9 is resolved by
+commit `5887f83b5159c8751ef9a5a5638f7dc9afd259ce`; the historical run sessions were
+not rewritten.
 
 ## Why this target fits Level 1B
 
@@ -277,6 +280,8 @@ with two additional applications from other functional domains.
 ## Product-change rule
 
 No product change is authorized by this testware or target authorization.
+The Issue #9 lifecycle correction was separately authorized, implemented, and
+regression-verified from preserved run evidence.
 
 If execution exposes a failure:
 

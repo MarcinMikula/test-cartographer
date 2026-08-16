@@ -26,6 +26,11 @@ PRODUCT FINDING** at product commit
 `ac1d7b61033251377b9b49d970c50f6d8cdf91e9`. It stopped before browser
 discovery; the external target is not implicated.
 
+The Issue #9 lifecycle defect is resolved by product commit
+`5887f83b5159c8751ef9a5a5638f7dc9afd259ce`. Five focused and 492 full-suite
+tests passed. No external run, run-03 identifier, framework change, or live LLM
+call was consumed; Issues #7/#8 remain open.
+
 ## Level 1 requirement traceability
 
 | Requirement | ACC-EXT-002 closure | Execution evidence |
@@ -69,6 +74,12 @@ discovery; the external target is not implicated.
 | ACC-REQ-015 | NOT ACCEPTED | The capability exception was not converted into a controlled terminal session state. |
 | ACC-REQ-016 | NOT ACCEPTED | The nominal external interface supports heading outcomes only and cannot represent the authorized same-page process. |
 | ACC-REQ-017 | PASS | The clean framework baseline remained unchanged and no sandbox was created. |
+
+The run-02 `ACC-REQ-012` and `ACC-REQ-015` outcomes remain historical **NOT
+ACCEPTED** evidence and are not rewritten by later unit/regression success. The
+bounded Issue #9 correction proves the terminal-state contract deterministically;
+future external execution may corroborate it but is not required to close the
+lifecycle defect.
 
 ## Finding / retest chain
 
@@ -119,8 +130,13 @@ guided intake omitted material ambiguity and ordering intent
 
 ACC-FIND-009 / Issue #9
 terminal exception leaves operator session active
--> OPEN / evidence-lifecycle blocker
--> corroborated by operator-interrupted run-01
+-> RESOLVED
+-> fix commit 5887f83b5159c8751ef9a5a5638f7dc9afd259ce
+-> runtime exception persists aborted
+-> KeyboardInterrupt persists interrupted
+-> supported QUIT remains paused
+-> 5 focused / 492 full-suite tests PASS
+-> no external retest required
 ```
 
 ## Formal evidence package
@@ -173,7 +189,8 @@ ACC-EXT-003
 -> analyst-rich same-page catalogue process
 -> run-01 operator-interrupted during intake
 -> run-02 NOT ACCEPTED / PRODUCT FINDING before browser discovery
--> blocked by ACC-FIND-007, ACC-FIND-008, and ACC-FIND-009
+-> blocked by ACC-FIND-007 and ACC-FIND-008
+-> ACC-FIND-009 resolved deterministically without run-03
 ```
 
 ## Level 2

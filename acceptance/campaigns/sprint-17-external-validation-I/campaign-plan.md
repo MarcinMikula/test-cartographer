@@ -32,9 +32,13 @@ Execution started on 2026-08-15 against product commit
 `ac1d7b61033251377b9b49d970c50f6d8cdf91e9`. `ACC-EXT-003-run-01` was
 consumed by an operator terminal interruption during intake. The evidence-bearing
 `ACC-EXT-003-run-02` completed guided intake and then stopped before browser
-discovery with the explicit heading-only capability error. The result is **NOT
-ACCEPTED / PRODUCT FINDING**; no target defect verdict or product correction is
-authorized.
+discovery with the explicit heading-only capability error. Its result remains
+**NOT ACCEPTED / PRODUCT FINDING**, and no target defect verdict is made.
+
+The independently authorized Issue #9 lifecycle correction is implemented by
+commit `5887f83b5159c8751ef9a5a5638f7dc9afd259ce` and regression-verified without
+an external run or live LLM call. Issues #7/#8 remain open and no remediation for
+them is authorized.
 
 No Level 2 target is authorized yet.
 
@@ -239,9 +243,10 @@ ACC-EXT-003-run-02
 -> result: NOT ACCEPTED / PRODUCT FINDING
 ```
 
-The independent findings are preserved as `ACC-FIND-007` / Issue #7,
-`ACC-FIND-008` / Issue #8, and `ACC-FIND-009` / Issue #9. Their GitHub Issues
-were created only after the finding-only state was committed.
+The independent findings were preserved as `ACC-FIND-007` / Issue #7,
+`ACC-FIND-008` / Issue #8, and `ACC-FIND-009` / Issue #9 before remediation.
+Issues #7/#8 remain open. Issue #9 is resolved by the bounded lifecycle fix and
+regression evidence recorded above.
 
 Primary purpose:
 
@@ -263,8 +268,9 @@ level-1b-target-selection.md
 ../../test-cases/ACC-EXT-003.md
 ```
 
-This authorization does not authorize product code changes. Execution
-findings must drive any remediation.
+This testware authorization did not itself authorize product code changes.
+Execution evidence later authorized only the bounded Issue #9 lifecycle
+correction. Issues #7/#8 remain behind their separate remediation gates.
 
 ## Level 2
 
@@ -281,7 +287,8 @@ authorization, and test design before execution.
 
 Level 1B execution produced its first product evidence. The nominal flow did not
 reach the authorized target because intake and capability boundaries stopped it
-before browser discovery. Level 1B remains open and blocked pending finding
-triage; Level 2 must not begin from this state.
+before browser discovery. The lifecycle defect is resolved, but Level 1B remains
+open and blocked by Issues #7/#8; Level 2 must not begin from this state.
 
-No product correction is authorized merely because the validation is planned.
+No further product correction is authorized merely because the validation is
+planned.

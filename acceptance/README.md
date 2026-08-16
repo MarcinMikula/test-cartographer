@@ -44,10 +44,14 @@ Level 1B execution has started as `ACC-EXT-003` on Practice Software
 Testing / Toolshop. `ACC-EXT-003-run-01` was consumed by an operator terminal
 interruption during intake. `ACC-EXT-003-run-02` completed guided intake but was
 **NOT ACCEPTED / PRODUCT FINDING** before browser discovery: the nominal external
-flow supports heading outcomes only. `ACC-FIND-007` / Issue #7,
-`ACC-FIND-008` / Issue #8, and `ACC-FIND-009` / Issue #9 preserve the independent
-capability, intake/intent, and lifecycle findings. No product correction is
-authorized yet.
+flow supports heading outcomes only.
+
+`ACC-FIND-007` / Issue #7 and `ACC-FIND-008` / Issue #8 remain open capability
+and intake/intent blockers. The independent lifecycle finding `ACC-FIND-009` /
+Issue #9 is resolved by product commit `5887f83b5159c8751ef9a5a5638f7dc9afd259ce`
+with 5 focused and 492 full-suite tests passing. Historical runs remain immutable;
+no external run, run-03 identifier, or live LLM call was consumed. Level 1B
+remains **NOT ACCEPTED** and no remediation for Issues #7/#8 is authorized.
 
 Level 2 remains reserved for materially more dynamic/script-heavy public
 applications. Pracuj.pl is one candidate, not the only planned Level 2 target.
