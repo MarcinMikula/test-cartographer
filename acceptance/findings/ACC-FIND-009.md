@@ -106,3 +106,14 @@ actions, `headed_browser_used=false`, and no `creation_flow_run_id`.
 This is live corroboration of the Issue #9 correction, not a deliberate failure
 created to retest it. Historical runs remain immutable and the finding remains
 resolved.
+
+## Run-04 live corroboration
+
+Run-04 again exercised the corrected lifecycle at product commit
+`9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`. After the target-proposal
+contract failed, the persisted operator session ended `aborted` with eleven
+actions, `headed_browser_used=false`, and no CreationFlowRun ID.
+
+This is a second live corroboration of the Issue #9 correction. It does not
+reopen the resolved finding and it does not convert the new proposal-contract
+failure into a lifecycle defect.

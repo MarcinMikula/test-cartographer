@@ -31,19 +31,20 @@ Practice Software Testing / Toolshop remains the authorized Level 1B target.
 Runs 01 and 02 retain their historical results at product commit
 `ac1d7b61033251377b9b49d970c50f6d8cdf91e9`.
 
-After deterministic corrections for Issues #7–#9, `ACC-EXT-003-run-03` tested
-product commit `c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`. Guided intake and
-material-intent review completed through three live Ollama calls. The run then
-stopped before browser discovery because the nominal interactive path had no
-reviewed interaction targets for the accepted non-heading outcome. The operator
-session ended `aborted`, providing live corroboration of the Issue #9 lifecycle
-correction. No framework sandbox was created and the target was not contacted.
+After deterministic corrections for Issues #7–#10, `ACC-EXT-003-run-04`
+tested product commit `9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`. Guided intake and
+material-intent review completed through two live Ollama calls. The Issue #10
+bridge then invoked a third call and persisted a target-proposal artefact, but
+contract validation rejected it before human review with the generic
+`invalid_target_contract` blocker.
 
-The run remains **NOT ACCEPTED / PRODUCT FINDING** with disclosed operator and
-answer-assistance contamination. The distinct `ACC-FIND-010` / Issue #10
-reviewed-target bridge is now resolved deterministically by product commit
-`12ce4485a817a5c28bf2d2d8331087ec86b331c0`. Historical run-03 remains
-unchanged, and run-04 remains unconsumed.
+The run remains **NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING**. The
+session ended `aborted`, browser discovery never started, no framework sandbox
+was created, and the target was not contacted. `ACC-FIND-010` remains resolved
+because its bridge executed; `ACC-FIND-011` records the separate lack of safe
+diagnostics and bounded human recovery for the invalid proposal. Run-04 also has
+an operator-scope caveat because its natural mission omitted the authorized
+`hammer` and cheapest-first semantics. Run-05 remains unconsumed.
 
 No Level 2 target is authorized yet.
 
@@ -258,13 +259,25 @@ ACC-EXT-003-run-03
 -> operator session persisted aborted; browser discovery did not start
 -> framework sandbox not created; target not contacted
 -> result: NOT ACCEPTED / PRODUCT FINDING
+
+ACC-EXT-003-run-04
+-> product commit 9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6
+-> natural mission omitted the authorized hammer and cheapest-first semantics
+-> no prepared answers or answer-content assistance; fixture_answers_used=false
+-> three live Ollama calls: 121.355 s collection, 78.448 s review, 36.086 s target proposal
+-> Issue #10 bridge invoked and proposal evidence persisted
+-> proposal blocked before human review: invalid_target_contract
+-> exact violated contract unavailable; raw provider response not persisted
+-> operator session persisted aborted; browser discovery did not start
+-> framework sandbox not created; target not contacted
+-> result: NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING
 ```
 
-Findings `ACC-FIND-007` through `ACC-FIND-010` are resolved
-deterministically. Product commit
-`12ce4485a817a5c28bf2d2d8331087ec86b331c0` supplies the missing bridge
-from accepted process context to human-reviewed rich interaction targets. Run-04
-may start only after this closure is integrated and a fresh pre-run gate passes.
+Findings `ACC-FIND-007` through `ACC-FIND-010` remain resolved
+deterministically. Run-04 proves the Issue #10 bridge was invoked, but the
+provider proposal could not reach human review after contract validation failed.
+`ACC-FIND-011` is open; no product correction or run-05 is authorized by this
+preservation record.
 
 Primary purpose:
 
@@ -308,9 +321,10 @@ authorization, and test design before execution.
 
 Level 1B execution has still not reached the authorized target. The lifecycle,
 rich same-page engine, intent-preservation, and reviewed-target bridge findings
-are resolved deterministically, but historical run-03 remains **NOT ACCEPTED**.
-Level 1B remains open pending the fresh run-04 retest, and Level 2 must not begin
-before that retest is truthfully closed.
+remain resolved, but historical runs 03 and 04 remain **NOT ACCEPTED**. Run-04
+exposed `ACC-FIND-011` at the proposal-validation/recovery boundary. Level 1B
+remains open, run-05 is unauthorized, and Level 2 must not begin before the new
+finding is truthfully resolved and retested.
 
 No further product correction is authorized merely because the validation is
 planned.

@@ -122,9 +122,21 @@ external target, live LLM call, framework sandbox, or run-04 identifier. This
 resolves the deterministic product finding without changing the historical
 run-03 verdict or accepting Level 1B.
 
-## Retest rule
+## Run-04 live bridge corroboration
 
-Keep runs 01–03 immutable. After this closure is integrated, run-04 may be created
-only through a fresh pre-run gate. It must be nominal and use no prepared answers
-or answer-content assistance. GOV.UK regression and Expand Testing BookStore
-follow only after that Level 1B retest.
+Run-04 tested the corrected product state at commit
+`9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`. The runner invoked a live target
+proposal, persisted `02-interaction-target-proposal.json`, and applied contract
+validation before browser authority. This directly demonstrates that the bridge
+absent in run-03 is now present.
+
+The provider response then failed with `invalid_target_contract` before human
+review. That separate diagnosability/recovery boundary is preserved as
+`ACC-FIND-011`; it does not reopen this finding.
+
+## Updated retest rule
+
+Keep runs 01–04 immutable. Run-05 is not authorized until ACC-FIND-011 is durably
+preserved, linked, separately authorized for remediation, corrected, and closed
+deterministically. GOV.UK regression and Expand Testing BookStore remain after
+the Level 1B retest.

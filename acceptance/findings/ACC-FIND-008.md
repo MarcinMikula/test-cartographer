@@ -117,3 +117,24 @@ run-04 after the separate ACC-FIND-010 bridge correction.
 Keep runs 02 and 03 immutable. Run-04 must use the separately corrected
 interactive bridge and either no external answer assistance or disclosed literal
 translation only, without content suggestions or prepared answers.
+
+## Run-04 scope caveat
+
+Run-04 reached material-intent confirmation on product commit
+`9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6` without prepared answers or
+answer-content assistance. However, the operator's natural initial mission asked
+only for generic search and filtering on Practice Software Testing. It did not
+supply the authorized `hammer` term or cheapest-first outcome.
+
+The structured context remained consistent with that narrower input, so this is
+not evidence that the Issue #8 intent-preservation contract lost supplied
+material intent. It does mean run-04 cannot be treated as a clean end-to-end
+retest of the original ACC-EXT-003 mission. The finding remains resolved, and the
+scope caveat is preserved rather than rewritten.
+
+## Updated retest rule
+
+Keep runs 02 through 04 immutable. Any later run must begin from a natural
+mission that actually expresses the authorized hammer/cheapest-first customer
+outcome, while still forbidding a prepared answer sheet or answer-content
+assistance. Run-05 is not authorized before ACC-FIND-011 is resolved.

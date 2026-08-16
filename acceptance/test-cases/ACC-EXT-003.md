@@ -2,15 +2,15 @@
 
 ## Status
 
-**NOT ACCEPTED / DETERMINISTIC BLOCKERS RESOLVED; NEW-RUN RETEST REQUIRED.**
+**NOT ACCEPTED / ACC-FIND-011 OPEN; NEW-RUN RETEST NOT AUTHORIZED.**
 
-Runs 01 through 03 retain their historical evidence and verdicts. Run-03 tested
-product commit `c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`, completed guided
-intake and material-intent review, and stopped before browser discovery because
-the nominal interactive path had no reviewed interaction targets for the rich
-outcome. `ACC-FIND-007` through `ACC-FIND-010` are now resolved
-deterministically. No formal ValidationRun package was created, Level 1B remains
-**NOT ACCEPTED**, and run-04 is unconsumed.
+Runs 01 through 04 retain their historical evidence and verdicts. Run-04 tested
+product commit `9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`, completed guided
+intake, invoked the corrected Issue #10 bridge, and stopped before human target
+review because the live proposal failed with `invalid_target_contract`.
+`ACC-FIND-007` through `ACC-FIND-010` remain resolved; `ACC-FIND-011` is open.
+No formal ValidationRun package was created, Level 1B remains **NOT ACCEPTED**,
+and run-05 is unconsumed and unauthorized.
 
 ## Why this test exists
 
@@ -273,6 +273,66 @@ supplied evidence ZIP       1F1BA2EF4455EF7E353D368FA082E052E34C14BCB7AAB1F3537C
 
 Run-03 is **NOT ACCEPTED / PRODUCT FINDING**, immutable, and not reusable.
 
+### ACC-EXT-003-run-04
+
+Run-04 tested product commit
+`9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6` after a fresh pre-run gate. The
+fixed framework baseline remained exact and clean; historical runs 01–03 were
+fingerprinted and preserved. No prepared answers or answer-content assistance
+were allowed.
+
+The operator naturally supplied a generic search/filter mission rather than the
+authorized hammer/cheapest-first mission. Guided intake and material-intent
+confirmation completed, but the accepted context consequently contained no
+concrete search term, filter, or price-ordering outcome. This operator-scope
+caveat means run-04 is not a clean end-to-end retest of the original scenario.
+It does not reopen Issue #8 and does not explain the later product-contract
+failure.
+
+Three real Ollama calls completed without timeout:
+
+```text
+collection       121.35546079999767 s
+review            78.44793169997865 s
+target proposal   36.08576000004541 s
+provider total   235.88915250002173 s
+timeout          600 s per call
+```
+
+The Issue #10 bridge invoked the target-proposal call and persisted a minimized
+proposal artefact. Its JSON parsed, but subsequent contract validation failed
+before human review with:
+
+```text
+RuntimeError: external interaction-target proposal failed closed:
+invalid_target_contract
+```
+
+The proposal contains zero targets, no review timestamp, zero operator edits,
+and no raw provider response. It exposes no safe field/rule diagnostic and no
+bounded repair/retry path, so the exact violated contract cannot be determined
+from preserved evidence.
+
+The operator session persisted `aborted` with eleven actions,
+`headed_browser_used=false`, `fixture_answers_used=false`, and no CreationFlowRun
+ID. Browser discovery did not start, no framework sandbox was created, and
+Toolshop was not contacted. This live-corroborates Issue #9 and proves the Issue
+#10 bridge is present while exposing the separate ACC-FIND-011 boundary.
+
+```text
+01-guided-intake-run.json       98DFCE3AF74EF537D54B2BDFCE82C37C118875BDB84A3CCCE2D864719CF6B4EB
+01-intake-session.json          42E2D6954A9CD902DE1AF465E920DDB32B9B12C3B7CB0FF29EA1C9A346BAE0D3
+01-minimal-context.json         FE23AF3FA14B021557DAE0A29B0195BD9B0EAC30B752FE338BAF066CECF35B27
+01-minimal-seed.json            08C789241E8951A208EAC2AA6B710637DAD7E184883103EC0971EDF03BA15C5A
+02-interaction-target-proposal.json
+                                DFCF6724BEF75E714D2F382988D9B95F9ACE4A9A88A1EC828CD0D8D14D82E3A9
+operator-session.json           3B3C01CADFEDEE2F25B27CADBD5FFEC77E763528BDB3E0A067DD7D62A961DB57
+supplied terminal transcript    1457A7B3B8AB605BAF4662F1CC58940D145A593096F0030EFC8B93948E6870FC
+```
+
+Run-04 is **NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING**, immutable,
+and not reusable. Run-05 is not authorized.
+
 ## ACC-FIND-010 preservation
 
 The rich same-page engine from Issue #7 accepts human-reviewed action targets,
@@ -296,7 +356,8 @@ authority exists.
 Twenty-seven focused and 516 full-suite tests passed. The correction used no
 external target, live LLM call, framework sandbox, historical evidence change, or
 new run identifier. It resolves `ACC-FIND-010` without changing the run-03 verdict
-or accepting Level 1B. Run-04 remains the required nominal retest.
+or accepting Level 1B. Run-04 later proved that the bridge executed; its separate
+invalid-proposal recovery failure is preserved as `ACC-FIND-011`.
 
 ## ACC-FIND-007 deterministic remediation
 
@@ -325,8 +386,10 @@ planning-budget exhaustion fail closed.
 Twenty focused and 505 full-suite tests passed. The correction used no external
 target, live LLM call, framework sandbox, or new run identifier. It resolves
 `ACC-FIND-008` without changing the historical run-02 result or accepting Level
-1B. Run-03 reached this review boundary, but operator and assistance contamination
-make its live Issue #8 verdict inconclusive; run-04 remains required.
+1B. Run-03 was contaminated by shifted answers and answer assistance. Run-04 had
+no such assistance, but its operator-supplied mission omitted the authorized
+hammer/cheapest-first intent; that scope caveat also cannot reopen the resolved
+finding or provide a clean full-scenario verdict.
 
 ## ACC-FIND-009 deterministic remediation
 
@@ -337,8 +400,8 @@ and supported `QUIT` remains `paused`, while the original exception is re-raised
 
 Five focused and 492 full-suite tests passed. No external target contact, new
 run identifier, live LLM call, framework sandbox, or historical evidence change
-was required. Run-03 later live-corroborated `aborted` after the unhandled bridge
-error; the lifecycle correction still does not accept Level 1B.
+was required. Runs 03 and 04 later live-corroborated `aborted` after distinct
+unhandled failures; the lifecycle correction still does not accept Level 1B.
 
 ## Operator freedom rule
 
@@ -536,6 +599,22 @@ the process did not hang in Ollama. This run therefore does not justify moving t
 a stronger paid provider. It also cannot establish that Ollama would preserve the
 correct hammer/cheapest-first mission. The deterministic reviewed-target bridge
 failure occurred after intake and remains provider-independent.
+
+### Run-04 question-quality result
+
+Run-04 used no prepared answer sheet or answer-content assistance. The questions
+were understandable and stayed at process level, but the operator's initial
+mission itself omitted the authorized product term and ordering outcome. The
+product accepted a coherent but generic search/filter context without requesting
+concrete criteria. Record this as a material run/intake observation; do not open
+a second finding until a correctly scoped later run can distinguish operator
+scope drift from question-selection behavior.
+
+The third Ollama call produced schema-guided JSON that failed the target
+contract. This is the first credible signal that the local model may be part of
+the limitation, but the generic product diagnostic and absent bounded recovery
+prevent a fair provider-only verdict. No provider switch is justified by run-04
+alone.
 
 ## Acceptance oracle
 

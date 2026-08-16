@@ -21,19 +21,17 @@ package fingerprint:
 The original `ACC-EXT-001` four-page scenario remains **BLOCKED** by
 `ACC-FIND-002` / Issue #2 because multi-page discovery is not implemented.
 
-Level 1B has consumed three runs. Historical run-02 remains **NOT ACCEPTED /
-PRODUCT FINDING** at product commit
-`ac1d7b61033251377b9b49d970c50f6d8cdf91e9`.
+Level 1B has consumed four runs. Historical runs retain their original
+evidence and verdicts. Run-04 tested product commit
+`9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`, completed guided intake, and
+invoked the Issue #10 reviewed-target bridge. A syntactically valid provider
+response failed target-contract validation before human review and was recorded
+only as `invalid_target_contract`. The session truthfully persisted `aborted`;
+no framework change, browser discovery, or target contact occurred.
 
-Run-03 tested the resolved Issues #7–#9 state at product commit
-`c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`. Guided intake and review
-completed through three live Ollama calls, but the flow stopped before browser
-discovery because no reviewed interaction targets were available for the
-non-heading outcome. The session truthfully persisted `aborted`; no framework
-change or target contact occurred. `ACC-FIND-010` / Issue #10 is now resolved
-deterministically by product commit
-`12ce4485a817a5c28bf2d2d8331087ec86b331c0`; run-04 remains unconsumed,
-and the external target is not implicated.
+`ACC-FIND-007` through `ACC-FIND-010` remain resolved. `ACC-FIND-011` is open
+for the new lack of diagnosable, bounded human recovery at the invalid-proposal
+boundary. Run-05 remains unconsumed, and the external target is not implicated.
 
 ## Level 1 requirement traceability
 
@@ -113,7 +111,7 @@ claiming that run-02 passed or that the full Level 1B scenario is accepted.
 | ACC-REQ-008 | NOT REACHED | No reviewed rich-action proposal was produced by the nominal interactive path. |
 | ACC-REQ-009 | NOT REACHED | No sandbox, generated target test, or independent execution existed. |
 | ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | The five run files and supplied archive were hashed before remediation. |
-| ACC-REQ-011 | READY FOR NEW-RUN RETEST | Issue #10 is corrected deterministically; run-04 remains unconsumed pending closure integration and a fresh pre-run gate. |
+| ACC-REQ-011 | RETEST LATER CONSUMED | Issue #10 was corrected deterministically; run-04 was subsequently consumed and is traced in the separate run-04 table below. |
 | ACC-REQ-012 | PASS WITH LIMITATION | The five-file evidence set is immutable and hashed; no formal ValidationRun package exists. |
 | ACC-REQ-013 | PARTIAL | Three model latencies were captured (125.511 s, 89.841 s, 93.721 s; 309.073 s total), but no final assessment was reached. |
 | ACC-REQ-014 | PASS | The stop is classified against TestCartographer; no Toolshop defect verdict is made. |
@@ -132,6 +130,40 @@ shifted bootstrap answers, and disclosed ChatGPT content error are part of the
 evidence, not facts to erase. They also do not explain the deterministic final
 bridge failure. The live provider completed all three calls within the configured
 600-second timeout; no provider switch is justified by this run alone.
+
+## Level 1B run-04 requirement traceability
+
+| Requirement | ACC-EXT-003 run-04 | Execution evidence |
+|---|---|---|
+| ACC-REQ-001 | NOT ACCEPTED / OPERATOR-SCOPE CAVEAT | The natural mission requested generic search/filter coverage and omitted the authorized `hammer` and cheapest-first outcome. |
+| ACC-REQ-002 | NOT ESTABLISHED | Bootstrap questions were answered; compatible persistent bootstrap reuse was not demonstrated. |
+| ACC-REQ-003 | PARTIAL | The accepted context was coherent with the supplied vague mission, but no concrete search term, filter, or ordering rule was established. |
+| ACC-REQ-004 | PASS | Operator, Ollama, product validation, hashes, and terminal lifecycle remain distinguishable; raw provider content was not persisted. |
+| ACC-REQ-005 | NOT REACHED | Browser discovery never started and Toolshop was not contacted. |
+| ACC-REQ-006 | NOT ACCEPTED AT PROPOSAL GATE | Material-intent confirmation completed, but the invalid target proposal never reached human review or repair. |
+| ACC-REQ-007 | NOT ACCEPTED | Three bounded calls completed within timeout, but the target-proposal response failed the product contract and no bounded recovery existed. |
+| ACC-REQ-008 | NOT ACCEPTED | No valid, reviewable interaction-target proposal was presented to the operator. |
+| ACC-REQ-009 | NOT REACHED | No framework sandbox, generated source, or independent execution existed. |
+| ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | The six run files and supplied transcript were hashed before remediation. |
+| ACC-REQ-011 | PENDING | Any external retest requires a new run identifier and exact corrected product commit after authorized remediation. |
+| ACC-REQ-012 | PASS WITH LIMITATION | The six-file evidence set is immutable and hashed; safe failure is preserved, but the exact contract error is not diagnosable from minimized evidence. |
+| ACC-REQ-013 | PARTIAL | Provider latencies were captured (121.355 s, 78.448 s, 36.086 s; 235.889 s total), but no final operator assessment was reached. |
+| ACC-REQ-014 | PASS | The failure is classified at the TestCartographer/provider integration boundary; no Toolshop defect verdict is made. |
+| ACC-REQ-015 | PASS | Invalid proposal authority failed closed before browser use and the operator session persisted `aborted`. |
+| ACC-REQ-016 | NOT ACCEPTED | The nominal interface cannot expose a safe diagnostic and bounded human repair/retry path for an invalid target proposal. |
+| ACC-REQ-017 | PASS | The fixed framework baseline remained unchanged and no sandbox was created. |
+
+Run-04 used no prepared answer sheet, fixture answers, or answer-content
+assistance. Its scope drift is nevertheless material: the operator's own mission
+did not include the authorized product term and ordering semantics. This is a run
+caveat, not proof that Issue #8 regressed and not an explanation for the later
+proposal-contract failure.
+
+The proposal artefact proves the Issue #10 bridge executed and therefore does
+not reopen `ACC-FIND-010`. The new failure is preserved as `ACC-FIND-011`.
+Because raw provider responses were intentionally not retained, evidence proves
+that JSON parsing succeeded and later contract validation failed, but it cannot
+identify the exact invalid field or semantic rule.
 
 ## Finding / retest chain
 
@@ -207,7 +239,15 @@ interactive guided flow cannot produce reviewed rich interaction targets
 -> bounded two-through-six action proposal plus explicit operator review
 -> only accepted actions become reviewed_targets
 -> 27 focused / 516 full-suite tests PASS
--> target not contacted; run-04 still unconsumed
+-> run-04 live-proved the bridge invocation and persisted proposal evidence
+
+ACC-FIND-011 / GitHub Issue pending
+invalid target proposal cannot reach diagnosable bounded human recovery
+-> OPEN
+-> run-04 proposal blocked: invalid_target_contract
+-> no safe field/rule diagnostic and no operator review/repair/retry path
+-> safe fail-closed and truthful aborted lifecycle preserved
+-> target not contacted; run-05 unconsumed and unauthorized
 ```
 
 ## Formal evidence package
@@ -260,10 +300,10 @@ ACC-EXT-003
 -> analyst-rich same-page catalogue process
 -> run-01 operator-interrupted during intake
 -> run-02 NOT ACCEPTED / PRODUCT FINDING before browser discovery
--> ACC-FIND-007 through ACC-FIND-009 resolved deterministically
 -> run-03 NOT ACCEPTED / PRODUCT FINDING before browser discovery
 -> ACC-FIND-007 through ACC-FIND-010 resolved deterministically
--> run-04 unconsumed; fresh nominal retest required
+-> run-04 NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING before browser discovery
+-> ACC-FIND-011 open; run-05 unconsumed and unauthorized
 ```
 
 ## Level 2

@@ -41,22 +41,24 @@ The detailed acceptance oracle and execution record remain in
 the campaign `traceability.md`.
 
 Level 1B execution continues as `ACC-EXT-003` on Practice Software
-Testing / Toolshop. Run-01 remains an operator-interrupted intake attempt, and
-run-02 remains **NOT ACCEPTED / PRODUCT FINDING** before browser discovery.
+Testing / Toolshop. Runs 01 through 03 retain their historical evidence and
+verdicts.
 
-`ACC-EXT-003-run-03` exercised the corrections for Issues #7–#9 at product
-commit `c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`. It completed guided intake
-and material-intent review with three live Ollama calls, then stopped before
-browser discovery because the interactive path supplied no reviewed interaction
-targets for the rich non-heading outcome. The operator session truthfully ended
-`aborted`; no framework sandbox was created and Toolshop was not contacted.
+`ACC-EXT-003-run-04` tested product commit
+`9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`. Guided intake completed through
+two live Ollama calls and the Issue #10 bridge invoked a third call to propose
+reviewable interaction targets. The proposal was rejected before human review
+with the generic `invalid_target_contract` blocker. The session truthfully ended
+`aborted`; browser discovery did not start, no framework sandbox was created,
+and Toolshop was not contacted.
 
-`ACC-FIND-007` through `ACC-FIND-010` are resolved deterministically. The
-reviewed-target bridge correction is product commit
-`12ce4485a817a5c28bf2d2d8331087ec86b331c0`, verified by 27 focused and
-516 full-suite tests without external target contact, a live LLM call, or a
-framework sandbox. Run-04 remains unconsumed, and Level 1B remains **NOT
-ACCEPTED** pending a fresh nominal retest.
+`ACC-FIND-007` through `ACC-FIND-010` remain resolved. Run-04 live-corroborates
+the Issue #9 lifecycle correction and demonstrates that the Issue #10 bridge is
+present. `ACC-FIND-011` is open for the separate lack of diagnosable, bounded
+human recovery from an invalid target proposal. The run also carries an operator
+scope caveat because its natural mission omitted the authorized `hammer` and
+cheapest-first semantics. Run-05 is unconsumed, and Level 1B remains **NOT
+ACCEPTED**.
 
 Level 2 remains reserved for materially more dynamic/script-heavy public
 applications. Pracuj.pl is one candidate, not the only planned Level 2 target.
@@ -84,7 +86,8 @@ acceptance/
 |   |-- ACC-FIND-007.md
 |   |-- ACC-FIND-008.md
 |   |-- ACC-FIND-009.md
-|   `-- ACC-FIND-010.md
+|   |-- ACC-FIND-010.md
+|   `-- ACC-FIND-011.md
 `-- campaigns/
     `-- sprint-17-external-validation-I/
         |-- campaign-plan.md
