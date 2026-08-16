@@ -84,11 +84,13 @@ Two acceptance run identifiers were later consumed:
 
 Run-02 did not contact the target through TestCartographer, create a framework
 sandbox, generate source, or execute a target test. The target preflight remains
-valid suitability evidence, while the product result remains **NOT ACCEPTED /
-PRODUCT FINDING** through the open `ACC-FIND-007` / Issue #7 and
-`ACC-FIND-008` / Issue #8 blockers. `ACC-FIND-009` / Issue #9 is resolved by
-commit `5887f83b5159c8751ef9a5a5638f7dc9afd259ce`; the historical run sessions were
-not rewritten.
+valid suitability evidence, while the historical product result remains **NOT
+ACCEPTED / PRODUCT FINDING**. `ACC-FIND-007` / Issue #7 is resolved by the
+bounded rich same-page capability in commit
+`3b8bb73bd665f8d5389ff2b6a1299c023a97392e`, verified by 25 focused and 500
+full-suite tests. `ACC-FIND-009` / Issue #9 is also resolved. `ACC-FIND-008` /
+Issue #8 remains open; the historical run sessions were not rewritten and no
+run-03 identifier was consumed.
 
 ## Why this target fits Level 1B
 

@@ -7,9 +7,9 @@
 `ACC-EXT-003-run-01` was consumed by an operator terminal interruption during
 intake. The evidence-bearing `ACC-EXT-003-run-02` completed guided intake and
 then stopped before browser discovery. No formal ValidationRun package was
-created. `ACC-FIND-007` / Issue #7 and `ACC-FIND-008` / Issue #8 remain open;
-`ACC-FIND-009` / Issue #9 is resolved by deterministic lifecycle regression.
-The scenario remains **NOT ACCEPTED** and no run-03 has been consumed.
+created. `ACC-FIND-007` / Issue #7 and `ACC-FIND-009` / Issue #9 are resolved by
+deterministic corrections. `ACC-FIND-008` / Issue #8 remains open. The scenario
+remains **NOT ACCEPTED** and no run-03 has been consumed.
 
 ## Why this test exists
 
@@ -222,6 +222,19 @@ operator-session.json       A078DB724A349B5F4CEA40C54C4A55AB10E543FCC29CC340661F
 
 Run-02 is **NOT ACCEPTED / PRODUCT FINDING** and is immutable.
 
+## ACC-FIND-007 deterministic remediation
+
+The heading-only capability gap was corrected by product commit
+`3b8bb73bd665f8d5389ff2b6a1299c023a97392e`. The external single-page engine
+now preserves the legacy heading flow and accepts a reviewed bounded sequence of
+same-page `FILL`, `CLICK`, `SELECT`, `CHECK`, `UNCHECK`, and final outcome `READ`
+actions with declared owners, semantic roles, and symbolic non-secret test data.
+
+Twenty-five focused and 500 full-suite tests passed. The correction used no
+external target, live LLM call, framework sandbox, or new run identifier. It
+resolves `ACC-FIND-007` without changing the historical run-02 result. Issue #8
+remains the Level 1B blocker, and run-03 remains unconsumed.
+
 ## ACC-FIND-009 deterministic remediation
 
 The stale-active lifecycle defect was corrected by product commit
@@ -231,8 +244,8 @@ and supported `QUIT` remains `paused`, while the original exception is re-raised
 
 Five focused and 492 full-suite tests passed. No external target contact, new
 run identifier, live LLM call, framework sandbox, or historical evidence change
-was required. Run-03 remains unconsumed and unauthorized while Issues #7/#8
-remain open.
+was required. Run-03 remains unconsumed and unauthorized while Issue #8 remains
+open.
 
 ## Operator freedom rule
 

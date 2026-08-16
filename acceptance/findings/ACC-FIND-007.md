@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — Level 1B blocker preserved before remediation.**
+**RESOLVED — deterministic rich same-page capability verified.**
 
 Related GitHub Issue: `#7 [ACCEPTANCE] ACC-EXT-003 — external single-page flow supports heading outcomes only`
 
@@ -31,7 +31,7 @@ ValueError: external public single-page creation currently supports heading outc
 No browser discovery, synthesis, source generation, sandbox creation, or target
 test execution occurred. The Practice Software Testing target is not implicated.
 
-## Confirmed capability boundary
+## Historical capability boundary
 
 The external plan builder requires exactly one context page, exactly one expected
 outcome, and outcome text containing `heading`. Its discovery target is a single
@@ -69,19 +69,45 @@ Do not insert the word `heading` into operator answers, reduce the scenario to a
 static assertion, handcraft a discovery plan, edit persisted context, substitute
 a controlled fixture, or manually resume from an internal stage.
 
-## Correction boundary to design later
+## Implemented correction
 
-Before a correction is authorized, decide the smallest coherent product boundary
-for a reviewed multi-action same-page process. The design must preserve bounded
-browser scope, human authority, observable evidence, sandbox-only writes, and
-independent execution. It must not silently generalize to arbitrary crawling,
-multi-page workflows, authentication, or writes.
+Product commit `3b8bb73bd665f8d5389ff2b6a1299c023a97392e` implements the
+smallest authorized deterministic boundary for a reviewed multi-action process
+on one public page.
 
-Capability compatibility should also fail before consuming full intake effort
-when the requested process is outside the implemented envelope.
+The correction:
+
+- preserves the existing navigate/read-heading contract;
+- accepts two to six reviewed discovery targets using `FILL`, `CLICK`, `SELECT`,
+  `CHECK`, `UNCHECK`, and exactly one final outcome `READ`;
+- requires declared page/component owners, supported semantic roles, and
+  symbolic non-secret test data for `FILL` and `SELECT`;
+- rejects incomplete or unsupported shapes before browser discovery or source
+  generation;
+- generates deterministic Page Object and Component methods without deriving
+  actions, locators, prices, counts, or business rules from free text.
+
+Issue #8 remains responsible for preserving the initial mission, clarifying
+material ambiguity, and supplying reviewed structured intent to this capability.
+
+## Verification
+
+```text
+focused Issue #7 tests: 25 passed
+full regression suite: 500 passed
+external target contacted: false
+live LLM/Ollama invoked: false
+run-03 consumed: false
+```
+
+The tests cover legacy heading compatibility, rich discovery-plan validation,
+deterministic proposal validation, Page Object/Component generation, and the
+expanded action vocabulary. They do not rewrite or convert the historical
+run-02 verdict into a pass.
 
 ## Retest rule
 
-Keep run-02 immutable. After separate remediation authorization and commit, use a
-new ACC-EXT-003 run identifier against the new exact product commit. Do not begin
-Level 2 from this blocked state.
+Keep run-02 immutable. Do not consume a new ACC-EXT-003 run identifier until the
+separate Issue #8 blocker is corrected and closed. The later retest must use the
+new exact integrated product commit. Do not begin Level 2 from this blocked
+state.

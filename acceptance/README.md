@@ -46,12 +46,13 @@ interruption during intake. `ACC-EXT-003-run-02` completed guided intake but was
 **NOT ACCEPTED / PRODUCT FINDING** before browser discovery: the nominal external
 flow supports heading outcomes only.
 
-`ACC-FIND-007` / Issue #7 and `ACC-FIND-008` / Issue #8 remain open capability
-and intake/intent blockers. The independent lifecycle finding `ACC-FIND-009` /
-Issue #9 is resolved by product commit `5887f83b5159c8751ef9a5a5638f7dc9afd259ce`
-with 5 focused and 492 full-suite tests passing. Historical runs remain immutable;
-no external run, run-03 identifier, or live LLM call was consumed. Level 1B
-remains **NOT ACCEPTED** and no remediation for Issues #7/#8 is authorized.
+`ACC-FIND-007` / Issue #7 is resolved by product commit
+`3b8bb73bd665f8d5389ff2b6a1299c023a97392e`, with 25 focused and 500
+full-suite tests passing. The independent lifecycle finding `ACC-FIND-009` /
+Issue #9 is also resolved. `ACC-FIND-008` / Issue #8 remains the intake/intent
+blocker. Historical runs remain immutable; no external run, run-03 identifier,
+or live LLM call was consumed. Level 1B remains **NOT ACCEPTED** pending Issue #8
+remediation and a later new-run retest.
 
 Level 2 remains reserved for materially more dynamic/script-heavy public
 applications. Pracuj.pl is one candidate, not the only planned Level 2 target.

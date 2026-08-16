@@ -35,10 +35,11 @@ consumed by an operator terminal interruption during intake. The evidence-bearin
 discovery with the explicit heading-only capability error. Its result remains
 **NOT ACCEPTED / PRODUCT FINDING**, and no target defect verdict is made.
 
-The independently authorized Issue #9 lifecycle correction is implemented by
-commit `5887f83b5159c8751ef9a5a5638f7dc9afd259ce` and regression-verified without
-an external run or live LLM call. Issues #7/#8 remain open and no remediation for
-them is authorized.
+The independently authorized Issue #7 capability correction is implemented by
+commit `3b8bb73bd665f8d5389ff2b6a1299c023a97392e` and verified by 25 focused and
+500 full-suite tests. Issue #9 is also resolved. Both corrections required no
+external run or live LLM call. Issue #8 remains open, and Level 1B remains not
+accepted until its separate remediation and a later new-run retest.
 
 No Level 2 target is authorized yet.
 
@@ -245,8 +246,8 @@ ACC-EXT-003-run-02
 
 The independent findings were preserved as `ACC-FIND-007` / Issue #7,
 `ACC-FIND-008` / Issue #8, and `ACC-FIND-009` / Issue #9 before remediation.
-Issues #7/#8 remain open. Issue #9 is resolved by the bounded lifecycle fix and
-regression evidence recorded above.
+Issues #7 and #9 are resolved by bounded deterministic corrections and regression
+evidence. Issue #8 remains open; the historical run-02 result is unchanged.
 
 Primary purpose:
 
@@ -287,8 +288,9 @@ authorization, and test design before execution.
 
 Level 1B execution produced its first product evidence. The nominal flow did not
 reach the authorized target because intake and capability boundaries stopped it
-before browser discovery. The lifecycle defect is resolved, but Level 1B remains
-open and blocked by Issues #7/#8; Level 2 must not begin from this state.
+before browser discovery. The lifecycle and rich same-page capability findings
+are resolved, but Level 1B remains open and blocked by Issue #8; Level 2 must not
+begin from this state.
 
 No further product correction is authorized merely because the validation is
 planned.

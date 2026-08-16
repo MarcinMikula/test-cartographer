@@ -26,10 +26,11 @@ PRODUCT FINDING** at product commit
 `ac1d7b61033251377b9b49d970c50f6d8cdf91e9`. It stopped before browser
 discovery; the external target is not implicated.
 
-The Issue #9 lifecycle defect is resolved by product commit
-`5887f83b5159c8751ef9a5a5638f7dc9afd259ce`. Five focused and 492 full-suite
-tests passed. No external run, run-03 identifier, framework change, or live LLM
-call was consumed; Issues #7/#8 remain open.
+The Issue #7 capability defect is resolved by product commit
+`3b8bb73bd665f8d5389ff2b6a1299c023a97392e`. Twenty-five focused and 500
+full-suite tests passed. Issue #9 is also resolved by its earlier deterministic
+lifecycle correction. No external run, run-03 identifier, framework change, or
+live LLM call was consumed; Issue #8 remains open.
 
 ## Level 1 requirement traceability
 
@@ -81,6 +82,12 @@ bounded Issue #9 correction proves the terminal-state contract deterministically
 future external execution may corroborate it but is not required to close the
 lifecycle defect.
 
+The run-02 `ACC-REQ-016` outcome is likewise retained as historical evidence.
+Commit `3b8bb73bd665f8d5389ff2b6a1299c023a97392e` separately proves the reviewed
+multi-action same-page capability with deterministic contract, proposal,
+generation, and regression coverage. It resolves `ACC-FIND-007` without claiming
+that run-02 passed or that the full Level 1B scenario is accepted.
+
 ## Finding / retest chain
 
 ```text
@@ -120,8 +127,12 @@ browser-discovery live LLM calls overcounted
 
 ACC-FIND-007 / Issue #7
 external single-page flow supports heading outcomes only
--> OPEN / Level 1B blocker
+-> RESOLVED
 -> run-02 stopped before browser discovery
+-> fix commit 3b8bb73bd665f8d5389ff2b6a1299c023a97392e
+-> reviewed FILL/CLICK/SELECT/CHECK/UNCHECK/final READ boundary
+-> 25 focused / 500 full-suite tests PASS
+-> no external retest required before Issue #8 remediation
 
 ACC-FIND-008 / Issue #8
 guided intake omitted material ambiguity and ordering intent
@@ -189,8 +200,8 @@ ACC-EXT-003
 -> analyst-rich same-page catalogue process
 -> run-01 operator-interrupted during intake
 -> run-02 NOT ACCEPTED / PRODUCT FINDING before browser discovery
--> blocked by ACC-FIND-007 and ACC-FIND-008
--> ACC-FIND-009 resolved deterministically without run-03
+-> ACC-FIND-007 and ACC-FIND-009 resolved deterministically without run-03
+-> blocked by ACC-FIND-008
 ```
 
 ## Level 2
