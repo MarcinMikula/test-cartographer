@@ -51,10 +51,12 @@ browser discovery because the interactive path supplied no reviewed interaction
 targets for the rich non-heading outcome. The operator session truthfully ended
 `aborted`; no framework sandbox was created and Toolshop was not contacted.
 
-`ACC-FIND-007` through `ACC-FIND-009` remain resolved. The missing guided-context
-to reviewed-target bridge is preserved separately as open `ACC-FIND-010` / Issue #10; no
-product correction is authorized by preservation alone, and run-04 remains
-unconsumed. Level 1B remains **NOT ACCEPTED**.
+`ACC-FIND-007` through `ACC-FIND-010` are resolved deterministically. The
+reviewed-target bridge correction is product commit
+`12ce4485a817a5c28bf2d2d8331087ec86b331c0`, verified by 27 focused and
+516 full-suite tests without external target contact, a live LLM call, or a
+framework sandbox. Run-04 remains unconsumed, and Level 1B remains **NOT
+ACCEPTED** pending a fresh nominal retest.
 
 Level 2 remains reserved for materially more dynamic/script-heavy public
 applications. Pracuj.pl is one candidate, not the only planned Level 2 target.

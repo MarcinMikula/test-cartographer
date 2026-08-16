@@ -91,10 +91,12 @@ occurred. The attempted retest was materially contaminated by shifted operator
 answers and disclosed erroneous ChatGPT answer-content assistance, so it does
 not provide a clean live verdict on the resolved Issue #8 behavior.
 
-The target preflight remains valid suitability evidence. Findings 007–009 remain
-resolved, while `ACC-FIND-010` / Issue #10 remains open for the missing
-guided-context to reviewed-target bridge. The target is not implicated, and
-run-04 remains unconsumed.
+The target preflight remains valid suitability evidence. Findings 007–010 are
+resolved deterministically. Product commit
+`12ce4485a817a5c28bf2d2d8331087ec86b331c0` supplies the reviewed-target
+bridge and passed 27 focused and 516 full-suite tests without contacting the
+target. The target is not implicated, and run-04 remains unconsumed pending a
+fresh pre-run gate.
 
 ## Why this target fits Level 1B
 

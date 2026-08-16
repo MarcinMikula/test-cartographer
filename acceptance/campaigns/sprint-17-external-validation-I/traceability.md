@@ -30,9 +30,10 @@ Run-03 tested the resolved Issues #7–#9 state at product commit
 completed through three live Ollama calls, but the flow stopped before browser
 discovery because no reviewed interaction targets were available for the
 non-heading outcome. The session truthfully persisted `aborted`; no framework
-change or target contact occurred. `ACC-FIND-010` / Issue #10 is open for the missing
-interactive bridge, run-04 is unconsumed, and the external target is not
-implicated.
+change or target contact occurred. `ACC-FIND-010` / Issue #10 is now resolved
+deterministically by product commit
+`12ce4485a817a5c28bf2d2d8331087ec86b331c0`; run-04 remains unconsumed,
+and the external target is not implicated.
 
 ## Level 1 requirement traceability
 
@@ -112,13 +113,19 @@ claiming that run-02 passed or that the full Level 1B scenario is accepted.
 | ACC-REQ-008 | NOT REACHED | No reviewed rich-action proposal was produced by the nominal interactive path. |
 | ACC-REQ-009 | NOT REACHED | No sandbox, generated target test, or independent execution existed. |
 | ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | The five run files and supplied archive were hashed before remediation. |
-| ACC-REQ-011 | PENDING | Run-04 is permitted only after separately authorized ACC-FIND-010 / Issue #10 remediation. |
+| ACC-REQ-011 | READY FOR NEW-RUN RETEST | Issue #10 is corrected deterministically; run-04 remains unconsumed pending closure integration and a fresh pre-run gate. |
 | ACC-REQ-012 | PASS WITH LIMITATION | The five-file evidence set is immutable and hashed; no formal ValidationRun package exists. |
 | ACC-REQ-013 | PARTIAL | Three model latencies were captured (125.511 s, 89.841 s, 93.721 s; 309.073 s total), but no final assessment was reached. |
 | ACC-REQ-014 | PASS | The stop is classified against TestCartographer; no Toolshop defect verdict is made. |
 | ACC-REQ-015 | PASS | The unhandled runtime error persisted the operator session as `aborted`. |
 | ACC-REQ-016 | NOT ACCEPTED | Guided context could not cross the nominal interface into reviewed rich interaction targets. |
 | ACC-REQ-017 | PASS | The fixed clean framework baseline remained unchanged and no sandbox was created. |
+
+Product commit `12ce4485a817a5c28bf2d2d8331087ec86b331c0` resolves the
+reviewed-target bridge with 27 focused and 516 full-suite passing tests. The
+correction used no external target, live LLM call, framework sandbox, or run-04
+identifier. This deterministic closure does not rewrite the run-03 requirement
+verdicts or accept Level 1B.
 
 Run-03 is not a clean nominal retest of Issue #8. Its wrong initial mission,
 shifted bootstrap answers, and disclosed ChatGPT content error are part of the
@@ -193,11 +200,14 @@ terminal exception leaves operator session active
 
 ACC-FIND-010 / Issue #10
 interactive guided flow cannot produce reviewed rich interaction targets
--> OPEN / Level 1B blocker
+-> RESOLVED
 -> run-03 intake and material-intent review completed
--> nominal runner supplied no reviewed_targets
--> deterministic stop before browser discovery
--> target not contacted; run-04 not authorized
+-> historical stop before browser discovery remains immutable
+-> fix commit 12ce4485a817a5c28bf2d2d8331087ec86b331c0
+-> bounded two-through-six action proposal plus explicit operator review
+-> only accepted actions become reviewed_targets
+-> 27 focused / 516 full-suite tests PASS
+-> target not contacted; run-04 still unconsumed
 ```
 
 ## Formal evidence package
@@ -252,7 +262,8 @@ ACC-EXT-003
 -> run-02 NOT ACCEPTED / PRODUCT FINDING before browser discovery
 -> ACC-FIND-007 through ACC-FIND-009 resolved deterministically
 -> run-03 NOT ACCEPTED / PRODUCT FINDING before browser discovery
--> blocked by open ACC-FIND-010 / Issue #10; run-04 unconsumed
+-> ACC-FIND-007 through ACC-FIND-010 resolved deterministically
+-> run-04 unconsumed; fresh nominal retest required
 ```
 
 ## Level 2

@@ -39,10 +39,11 @@ reviewed interaction targets for the accepted non-heading outcome. The operator
 session ended `aborted`, providing live corroboration of the Issue #9 lifecycle
 correction. No framework sandbox was created and the target was not contacted.
 
-The run is **NOT ACCEPTED / PRODUCT FINDING** with disclosed operator and
-answer-assistance contamination. `ACC-FIND-010` / Issue #10 preserves the distinct missing
-guided-context to reviewed-target bridge. No correction is authorized merely by
-this finding, and run-04 remains unconsumed.
+The run remains **NOT ACCEPTED / PRODUCT FINDING** with disclosed operator and
+answer-assistance contamination. The distinct `ACC-FIND-010` / Issue #10
+reviewed-target bridge is now resolved deterministically by product commit
+`12ce4485a817a5c28bf2d2d8331087ec86b331c0`. Historical run-03 remains
+unchanged, and run-04 remains unconsumed.
 
 No Level 2 target is authorized yet.
 
@@ -259,10 +260,11 @@ ACC-EXT-003-run-03
 -> result: NOT ACCEPTED / PRODUCT FINDING
 ```
 
-Findings `ACC-FIND-007` through `ACC-FIND-009` remain resolved.
-`ACC-FIND-010` / Issue #10 is open for the missing interactive bridge from accepted process
-context to human-reviewed rich interaction targets. Run-04 must not start before
-that finding is corrected.
+Findings `ACC-FIND-007` through `ACC-FIND-010` are resolved
+deterministically. Product commit
+`12ce4485a817a5c28bf2d2d8331087ec86b331c0` supplies the missing bridge
+from accepted process context to human-reviewed rich interaction targets. Run-04
+may start only after this closure is integrated and a fresh pre-run gate passes.
 
 Primary purpose:
 
@@ -286,9 +288,10 @@ level-1b-target-selection.md
 
 This testware authorization did not itself authorize product code changes.
 Execution evidence separately authorized bounded corrections for Issues #7
-through #9. Those corrections remain complete. The new `ACC-FIND-010` / Issue #10 evidence
-does not authorize implementation; the smallest bridge must be designed and
-approved separately before run-04 and before Level 1B can be accepted.
+through #10. Those deterministic corrections are complete. The Issue #10
+implementation was separately authorized and verified; no further product change
+is authorized without new evidence. Level 1B still requires a fresh run-04 before
+it can be accepted.
 
 ## Level 2
 
@@ -304,10 +307,10 @@ domains. Each target requires a separate scope, policy/robots review,
 authorization, and test design before execution.
 
 Level 1B execution has still not reached the authorized target. The lifecycle,
-rich same-page engine, and intent-preservation findings remain resolved, but
-run-03 exposed the missing reviewed-target bridge before browser discovery.
-Level 1B remains open behind `ACC-FIND-010` / Issue #10; Level 2 must not begin while that
-blocker is unresolved or before the later run-04 retest.
+rich same-page engine, intent-preservation, and reviewed-target bridge findings
+are resolved deterministically, but historical run-03 remains **NOT ACCEPTED**.
+Level 1B remains open pending the fresh run-04 retest, and Level 2 must not begin
+before that retest is truthfully closed.
 
 No further product correction is authorized merely because the validation is
 planned.

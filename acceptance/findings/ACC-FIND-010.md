@@ -2,7 +2,7 @@
 
 ## Status
 
-**OPEN — Level 1B blocker preserved before remediation.**
+**RESOLVED — deterministic reviewed-target bridge verified; historical run-03 remains NOT ACCEPTED.**
 
 Related GitHub Issue: `#10 [ACCEPTANCE] ACC-EXT-003 — interactive guided
 flow cannot produce reviewed rich interaction targets`
@@ -102,22 +102,29 @@ Do not inject `reviewed_targets` into JSON, prepare selectors/actions outside th
 supported review interface, edit the framework, reuse run-03, downgrade the
 scenario to a heading assertion, or blame the external target.
 
-## Smallest correction boundary to design
+## Authorized correction and deterministic verification
 
-The correction should bridge accepted process context to a bounded proposal of
-two through six same-page actions, present that proposal for explicit human
-review/edit/rejection, and pass only accepted actions as `reviewed_targets`.
+After the finding and Issue #10 were durably preserved, the operator separately
+authorized the smallest reviewed-target bridge. Product commit
+`12ce4485a817a5c28bf2d2d8331087ec86b331c0` now:
 
-The proposal must remain within the existing authorized action family and
-symbolic non-secret test-data contract. It must not silently convert an LLM
-suggestion into browser authority.
+- derives a bounded proposal of two through six same-page actions from accepted
+  process context;
+- presents the proposal for explicit operator inspection, editing, rejection, or
+  acceptance;
+- converts only accepted actions into `reviewed_targets`;
+- preserves the supported action family and symbolic non-secret test-data
+  contracts;
+- fails closed on invalid or unaccepted plans before browser authority exists.
 
-This document preserves evidence; it does not authorize the correction.
+Validation recorded 27 focused and 516 full-suite passing tests. It used no
+external target, live LLM call, framework sandbox, or run-04 identifier. This
+resolves the deterministic product finding without changing the historical
+run-03 verdict or accepting Level 1B.
 
 ## Retest rule
 
-Do not consume run-04 before the finding is linked to a GitHub Issue, the smallest
-correction is separately authorized, implemented, and deterministically tested,
-and the acceptance records are updated. Run-04 must be nominal and use no
-prepared answers or answer-content assistance. GOV.UK regression and Expand
-Testing BookStore follow only after that Level 1B retest.
+Keep runs 01–03 immutable. After this closure is integrated, run-04 may be created
+only through a fresh pre-run gate. It must be nominal and use no prepared answers
+or answer-content assistance. GOV.UK regression and Expand Testing BookStore
+follow only after that Level 1B retest.

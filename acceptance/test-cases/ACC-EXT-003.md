@@ -2,15 +2,15 @@
 
 ## Status
 
-**NOT ACCEPTED / NEW PRODUCT FINDING PRESERVED.**
+**NOT ACCEPTED / DETERMINISTIC BLOCKERS RESOLVED; NEW-RUN RETEST REQUIRED.**
 
-Runs 01 and 02 retain their historical evidence and verdicts. Run-03 tested
+Runs 01 through 03 retain their historical evidence and verdicts. Run-03 tested
 product commit `c1d0237f12582e4d97a9e57cefe9dc3720d5ff27`, completed guided
 intake and material-intent review, and stopped before browser discovery because
 the nominal interactive path had no reviewed interaction targets for the rich
-outcome. `ACC-FIND-007` through `ACC-FIND-009` remain resolved;
-`ACC-FIND-010` / Issue #10 is open. No formal ValidationRun package was created, Level 1B
-remains **NOT ACCEPTED**, and run-04 is unconsumed.
+outcome. `ACC-FIND-007` through `ACC-FIND-010` are now resolved
+deterministically. No formal ValidationRun package was created, Level 1B remains
+**NOT ACCEPTED**, and run-04 is unconsumed.
 
 ## Why this test exists
 
@@ -281,10 +281,22 @@ providing `reviewed_targets`. The plan therefore rejects every non-heading
 outcome before browser discovery. This is a separate bridge/integration finding,
 not evidence that the Issue #7 engine regressed.
 
-No manual JSON injection, selector rescue, or framework edit is allowed. The
-finding must be preserved before any correction; run-04 must not start until the
-smallest reviewed proposal bridge is separately designed, authorized,
-implemented, and verified.
+No manual JSON injection, selector rescue, or framework edit was used. Historical
+run-03 remains immutable.
+
+## ACC-FIND-010 deterministic remediation
+
+The missing interactive bridge was corrected by product commit
+`12ce4485a817a5c28bf2d2d8331087ec86b331c0`. Accepted process context now
+produces a bounded proposal of two through six same-page actions for explicit
+operator inspection, editing, rejection, or acceptance. Only accepted actions
+become `reviewed_targets`; invalid or unaccepted plans fail closed before browser
+authority exists.
+
+Twenty-seven focused and 516 full-suite tests passed. The correction used no
+external target, live LLM call, framework sandbox, historical evidence change, or
+new run identifier. It resolves `ACC-FIND-010` without changing the run-03 verdict
+or accepting Level 1B. Run-04 remains the required nominal retest.
 
 ## ACC-FIND-007 deterministic remediation
 
@@ -297,8 +309,8 @@ actions with declared owners, semantic roles, and symbolic non-secret test data.
 Twenty-five focused and 500 full-suite tests passed. The correction used no
 external target, live LLM call, framework sandbox, or new run identifier. It
 resolves `ACC-FIND-007` without changing the historical run-02 result. Run-03
-confirms that the rich engine exists but exposes the separate missing interactive
-bridge preserved as `ACC-FIND-010` / Issue #10.
+confirms that the rich engine exists and historically exposed the separate
+interactive bridge later corrected for `ACC-FIND-010` / Issue #10.
 
 ## ACC-FIND-008 deterministic remediation
 
