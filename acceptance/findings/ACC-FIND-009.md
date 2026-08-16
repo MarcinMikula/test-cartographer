@@ -117,3 +117,10 @@ actions, `headed_browser_used=false`, and no CreationFlowRun ID.
 This is a second live corroboration of the Issue #9 correction. It does not
 reopen the resolved finding and it does not convert the new proposal-contract
 failure into a lifecycle defect.
+
+## Run-05 live corroboration
+
+Run-05 again persisted `aborted` after the non-repairable target-proposal rule
+failed closed. Eleven operator actions were retained,
+`headed_browser_used=false`, and no CreationFlowRun ID exists. This is a third
+live corroboration of the lifecycle correction and does not reopen this finding.

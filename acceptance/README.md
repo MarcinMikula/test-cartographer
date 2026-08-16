@@ -41,25 +41,27 @@ The detailed acceptance oracle and execution record remain in
 the campaign `traceability.md`.
 
 Level 1B execution continues as `ACC-EXT-003` on Practice Software
-Testing / Toolshop. Runs 01 through 03 retain their historical evidence and
+Testing / Toolshop. Runs 01 through 05 retain their historical evidence and
 verdicts.
 
-`ACC-EXT-003-run-04` tested product commit
-`9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`. Guided intake completed through
-two live Ollama calls and the Issue #10 bridge invoked a third call to propose
-reviewable interaction targets. The proposal was rejected before human review
-with the generic `invalid_target_contract` blocker. The session truthfully ended
-`aborted`; browser discovery did not start, no framework sandbox was created,
-and Toolshop was not contacted.
+`ACC-EXT-003-run-05` tested product commit
+`782e11c8d4defea267510467e41377a2c5aef621` from a correctly scoped natural
+mission containing Toolshop, `hammer`, and lowest-to-highest price ordering. Two
+guided-intake calls and one target-proposal call completed through the configured
+local Ollama provider. The proposal reached deterministic contract validation,
+then failed closed at `schema:actions[1]:unsupported_validation_rule`. The rule
+was correctly non-repairable under the Issue #11 contract, so no `RETRY` prompt
+or second proposal call occurred.
 
-`ACC-FIND-007` through `ACC-FIND-011` are resolved deterministically. The Issue
-#11 correction is product commit
-`37d5dac73a26c46b68ab2e2515efe7666de5696e`, verified by 38 focused and
-527 full-suite tests without external target contact, a live LLM call, framework
-mutation, or a new run identifier. Run-04 retains its historical **NOT ACCEPTED**
-verdict and operator-scope caveat. GitHub Issue #11 remains open until this
-acceptance closure is integrated. Run-05 is unconsumed, and Level 1B remains
-**NOT ACCEPTED** pending a fresh, separately gated retest.
+`ACC-FIND-007` through `ACC-FIND-011` remain resolved. Run-05 live-corroborates
+the Issue #9 aborted lifecycle, Issue #10 bridge, and Issue #11 safe diagnostic
+and non-repairable fail-closed behavior. It exposes the separate
+`ACC-FIND-012`: the provider-facing proposal schema and safe recovery classifier
+do not cover the full action-conditioned contract enforced locally. The session
+ended `aborted`; browser discovery did not start, no framework sandbox was
+created, and Toolshop was not contacted. Level 1B remains **NOT ACCEPTED**.
+Run-06 is unconsumed and unauthorized pending durable finding preservation,
+GitHub linkage, and separate remediation authorization.
 
 Level 2 remains reserved for materially more dynamic/script-heavy public
 applications. Pracuj.pl is one candidate, not the only planned Level 2 target.
@@ -88,7 +90,8 @@ acceptance/
 |   |-- ACC-FIND-008.md
 |   |-- ACC-FIND-009.md
 |   |-- ACC-FIND-010.md
-|   `-- ACC-FIND-011.md
+|   |-- ACC-FIND-011.md
+|   `-- ACC-FIND-012.md
 `-- campaigns/
     `-- sprint-17-external-validation-I/
         |-- campaign-plan.md

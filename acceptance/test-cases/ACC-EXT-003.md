@@ -2,16 +2,16 @@
 
 ## Status
 
-**NOT ACCEPTED / ACC-FIND-007 THROUGH ACC-FIND-011 RESOLVED;
-FRESH RUN-05 RETEST REQUIRED.**
+**NOT ACCEPTED / ACC-FIND-012 OPEN; RUN-06 NOT AUTHORIZED.**
 
-Runs 01 through 04 retain their historical evidence and verdicts. Run-04 tested
-product commit `9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`, completed guided
-intake, invoked the corrected Issue #10 bridge, and stopped before human target
-review because the live proposal failed with `invalid_target_contract`.
-`ACC-FIND-007` through `ACC-FIND-011` are now resolved deterministically. No
-formal ValidationRun package was created, Level 1B remains **NOT ACCEPTED**, and
-run-05 is unconsumed pending closure integration and a fresh pre-run gate.
+Runs 01 through 05 retain their historical evidence and verdicts. Run-05 tested
+product commit `782e11c8d4defea267510467e41377a2c5aef621` from the correctly
+scoped natural mission. Guided intake completed and the live proposal failed
+before human review at `schema:actions[1]:unsupported_validation_rule`.
+`ACC-FIND-007` through `ACC-FIND-011` remain resolved; the Issue #11 behavior is
+live-corroborated rather than reopened. No formal ValidationRun package was
+created, Level 1B remains **NOT ACCEPTED**, and run-06 is unconsumed and
+unauthorized.
 
 ## Why this test exists
 
@@ -332,8 +332,82 @@ supplied terminal transcript    1457A7B3B8AB605BAF4662F1CC58940D145A593096F0030E
 ```
 
 Run-04 is **NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING**, immutable,
-and not reusable. Run-05 remains unconsumed pending integration of the Issue #11
-acceptance closure and a fresh pre-run gate.
+and not reusable. The Issue #11 closure was later integrated and run-05 was
+consumed through a separate fresh pre-run gate; its evidence is recorded below.
+
+### ACC-EXT-003-run-05
+
+Run-05 tested integrated product commit
+`782e11c8d4defea267510467e41377a2c5aef621` after a fresh pre-run gate. The
+fixed framework baseline remained exact and clean; historical runs 01–04 were
+fingerprinted and preserved. No prepared answers, fixture answers, or
+answer-content assistance were allowed.
+
+The natural initial mission explicitly requested public Toolshop catalogue
+search for `hammer` and sorting from lowest to highest price. Guided intake and
+the material-intent confirmation completed. Three real local Ollama calls
+completed without timeout:
+
+```text
+collection       123.87875819997862 s
+review            89.93903379997937 s
+target proposal   53.373939500015695 s
+provider total   267.191731499974 s
+timeout          600 s per call
+```
+
+The target-proposal call persisted a minimized schema-v0.2 artefact. The proposal
+then failed deterministic validation before human review:
+
+```text
+state: blocked
+blocker: invalid_target_contract
+category: schema
+field path: actions[1]
+rule: unsupported_validation_rule
+repairable: false
+attempt count: 1
+accepted targets: 0
+raw prompt persisted: false
+raw response persisted: false
+```
+
+The Issue #11 behavior is a live PASS: the unallowlisted rule remained
+non-repairable, so no `RETRY` decision or second target-proposal call occurred.
+The operator session persisted `aborted` with eleven actions,
+`headed_browser_used=false`, `fixture_answers_used=false`, and no CreationFlowRun
+ID. Browser discovery did not start, no framework sandbox was created, and
+Toolshop was not contacted.
+
+```text
+01-guided-intake-run.json       3F027B5791BB1A7246E05BE5915785F6B4B69BE01582CEAD6BD82E0C9B887A1D
+01-intake-session.json          C3E91E2378877B71ED17344C2E84055128B7DE2CAD9D7B1E30EB5EEADB47B7F5
+01-minimal-context.json         5EB22BA04412B3C87D8712F362FFEF501C2D004B032476B4B25761FE4FF61B2F
+01-minimal-seed.json            126C7CBC16275B42A9FB55229B13A71B7D2E3BD17AC822AE6EFDA4912AFD0FFC
+02-interaction-target-proposal.json
+                                CD11AB03DAFB764A25FABF58C74BAA3DFC9EDB79E54C31C1862BB99FF069C3DE
+operator-session.json           C919C003928CFE7C3A7D7A7EC26474C81AAACCB9D7AA3FBA30953B2715FAA7F8
+terminal transcript             27513CDEAF4F771D4C9931A0CB687F14EC73901E4BF1B9AC1F80EE8CFCE86390
+```
+
+Run-05 is **NOT ACCEPTED / ACC-FIND-012**, immutable, and not reusable. The
+evidence does not persist the raw proposal value or identify the exact underlying
+local validator. It establishes the distinct gap between the provider-facing
+schema, local action-conditioned contract, and safe recovery classifier. Run-06
+is unconsumed and unauthorized.
+
+## ACC-FIND-012 preservation
+
+The live response reached a deterministic local action rule that the supplied
+proposal schema did not prevent and the safe classifier represented only as
+`unsupported_validation_rule`. Because that fallback is deliberately
+non-repairable, the bounded Issue #11 recovery path could not be reached.
+
+This is not an Issue #11 regression: safe diagnostics, no-raw persistence,
+non-repairable fail-closed behavior, and the aborted lifecycle all worked as
+designed. It is also not a Toolshop defect and is not sufficient evidence to
+replace Ollama. `ACC-FIND-012` preserves the narrower product–provider contract
+representation/classification gap. No remediation is authorized by this record.
 
 ## ACC-FIND-011 deterministic remediation
 
@@ -356,8 +430,9 @@ validation and explicit human acceptance both succeed.
 Thirty-eight focused and 527 full-suite tests passed. The correction used no
 external target, live LLM call, framework sandbox, historical evidence change, or
 new run identifier. It resolves `ACC-FIND-011` without changing the run-04 verdict
-or accepting Level 1B. GitHub Issue #11 remains open until this closure is
-integrated. Run-05 remains unconsumed pending a fresh pre-run gate.
+or accepting Level 1B. The closure is integrated and GitHub Issue #11 is closed.
+Run-05 later live-corroborated the non-repairable path and exposed the separate
+`ACC-FIND-012` boundary.
 
 ## ACC-FIND-010 preservation
 
@@ -414,8 +489,9 @@ target, live LLM call, framework sandbox, or new run identifier. It resolves
 `ACC-FIND-008` without changing the historical run-02 result or accepting Level
 1B. Run-03 was contaminated by shifted answers and answer assistance. Run-04 had
 no such assistance, but its operator-supplied mission omitted the authorized
-hammer/cheapest-first intent; that scope caveat also cannot reopen the resolved
-finding or provide a clean full-scenario verdict.
+hammer/cheapest-first intent. Run-05 used the correct natural mission and reached
+material-intent confirmation before the separate target-proposal contract stop;
+neither later failure reopens the resolved finding.
 
 ## ACC-FIND-009 deterministic remediation
 
@@ -426,7 +502,7 @@ and supported `QUIT` remains `paused`, while the original exception is re-raised
 
 Five focused and 492 full-suite tests passed. No external target contact, new
 run identifier, live LLM call, framework sandbox, or historical evidence change
-was required. Runs 03 and 04 later live-corroborated `aborted` after distinct
+was required. Runs 03 through 05 later live-corroborated `aborted` after distinct
 unhandled failures; the lifecycle correction still does not accept Level 1B.
 
 ## Operator freedom rule
@@ -641,6 +717,21 @@ contract. This is the first credible signal that the local model may be part of
 the limitation, but the generic product diagnostic and absent bounded recovery
 prevent a fair provider-only verdict. No provider switch is justified by run-04
 alone.
+
+### Run-05 question-quality and proposal result
+
+Run-05 used no prepared answer sheet or answer-content assistance, and its first
+mission correctly included Toolshop, `hammer`, and lowest-to-highest price
+ordering. The nine collection questions were understandable and stayed at
+process level. The unchanged mission remained authoritative beside the structured
+context, and the operator confirmed material-intent coverage.
+
+The third Ollama call again produced a proposal that failed the full local action
+contract. This is relevant model-quality evidence. However, the supplied schema
+did not prevent the action-conditioned mismatch and the safe classifier could
+identify it only as `unsupported_validation_rule`, making bounded recovery
+unreachable. Record both sides of the boundary; run-05 alone still does not
+justify replacing Ollama.
 
 ## Acceptance oracle
 

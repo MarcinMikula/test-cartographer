@@ -178,20 +178,31 @@ LLM call, external target, framework sandbox, historical evidence mutation, or
 run-05 identifier. This resolves the deterministic product finding without
 changing run-04's evidence or verdict and without accepting Level 1B.
 
+## Run-05 live corroboration
+
+Run-05 tested integrated product commit
+`782e11c8d4defea267510467e41377a2c5aef621` with the correctly scoped natural
+mission. The target proposal produced the safe diagnostic category `schema`,
+field path `actions[1]`, and stable fallback rule
+`unsupported_validation_rule`. It was marked `repairable=false`; therefore no
+`RETRY` choice or second provider call occurred. Per-attempt hashes, sizes,
+latency, and validation outcome were retained without raw provider content.
+
+This is the intended Issue #11 behavior for an unallowlisted rule and is a live
+PASS for this finding. The session then ended `aborted` before browser authority.
+The inability of the supplied schema and classifier to cover the complete local
+action-conditioned contract is preserved separately as `ACC-FIND-012`; it does
+not reopen Issue #11.
+
 ## Retest rule
 
-Run-04 is immutable and not reusable. After this acceptance closure is integrated,
-run-05 may be created only through a fresh pre-run gate against the exact
-corrected product commit. This closure does not itself consume or execute run-05.
-
-The later run must use a natural mission that actually expresses the authorized
-hammer/cheapest-first customer outcome, without a prepared answer sheet or
-answer-content assistance. Literal translation may remain allowed if disclosed.
+Runs 04 and 05 are immutable and not reusable. Run-06 requires a new exact
+product commit and fresh pre-run gate after separately authorized disposition of
+`ACC-FIND-012`. It must retain the natural hammer/lowest-price mission and the
+no-answer-assistance boundary.
 
 ## Authorization boundary
 
-The finding, Issue #11 linkage, product correction, regression evidence, and
-acceptance closure are now durable. This record authorizes no further product
-change, provider switch, external execution, or automatic run-05 consumption.
-GitHub Issue #11 remains open until this closure is integrated and its repository
-state is verified.
+The Issue #11 correction, acceptance closure, GitHub closure, and run-05 live
+corroboration are durable. This record authorizes no `ACC-FIND-012` remediation,
+provider switch, external execution, or automatic run-06 consumption.

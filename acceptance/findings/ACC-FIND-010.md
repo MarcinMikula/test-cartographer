@@ -134,9 +134,15 @@ The provider response then failed with `invalid_target_contract` before human
 review. That separate diagnosability/recovery boundary is preserved as
 `ACC-FIND-011`; it does not reopen this finding.
 
+## Run-05 live bridge corroboration
+
+Run-05 again invoked the reviewed-target bridge and persisted the minimized
+proposal artefact before local contract validation. The later safe
+`unsupported_validation_rule` stop therefore does not reopen this finding; it is
+preserved separately as `ACC-FIND-012`.
+
 ## Updated retest rule
 
-Keep runs 01–04 immutable. Run-05 is not authorized until ACC-FIND-011 is durably
-preserved, linked, separately authorized for remediation, corrected, and closed
-deterministically. GOV.UK regression and Expand Testing BookStore remain after
-the Level 1B retest.
+Keep runs 01–05 immutable. Run-06 is unconsumed and unauthorized pending durable
+preservation, linkage, and separate disposition of `ACC-FIND-012`. GOV.UK
+regression and Expand Testing BookStore remain after the Level 1B retest.

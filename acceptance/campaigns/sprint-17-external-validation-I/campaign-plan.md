@@ -28,25 +28,23 @@ only to distinguish it from the planned **Level 1B analyst-rich validation**.
 Historical Level 1 records keep their original naming.
 
 Practice Software Testing / Toolshop remains the authorized Level 1B target.
-Runs 01 and 02 retain their historical results at product commit
-`ac1d7b61033251377b9b49d970c50f6d8cdf91e9`.
+Runs 01 through 05 retain their historical results and immutable evidence.
 
-After deterministic corrections for Issues #7–#10, `ACC-EXT-003-run-04`
-tested product commit `9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`. Guided intake and
-material-intent review completed through two live Ollama calls. The Issue #10
-bridge then invoked a third call and persisted a target-proposal artefact, but
-contract validation rejected it before human review with the generic
-`invalid_target_contract` blocker.
+`ACC-EXT-003-run-05` tested product commit
+`782e11c8d4defea267510467e41377a2c5aef621` after the deterministic Issue #11
+correction. The natural mission correctly named Toolshop, `hammer`, and
+lowest-to-highest price ordering. Two guided-intake calls and one target-proposal
+call completed through local Ollama. The proposal failed deterministic validation
+at the safe diagnostic `schema:actions[1]:unsupported_validation_rule`.
 
 The run remains **NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING**. The
-session ended `aborted`, browser discovery never started, no framework sandbox
-was created, and the target was not contacted. `ACC-FIND-010` remains resolved
-because its bridge executed. The separate `ACC-FIND-011` / Issue #11
-diagnostics-and-recovery boundary is now corrected deterministically by product
-commit `37d5dac73a26c46b68ab2e2515efe7666de5696e`, with 38 focused and
-527 full-suite tests passing. Run-04 retains its historical verdict and
-operator-scope caveat. Run-05 remains unconsumed pending a fresh, separately
-gated retest.
+Issue #11 behavior is a live PASS: an unallowlisted rule remained non-repairable,
+no `RETRY` or second proposal call was offered, and the session ended `aborted`
+without raw provider persistence. Issues #7 through #11 remain resolved. The new
+`ACC-FIND-012` records that the provider-facing schema and safe recovery
+classifier do not cover the complete action-conditioned contract enforced by
+local validators. Browser discovery never started, no framework sandbox was
+created, and Toolshop was not contacted. Run-06 is unconsumed and unauthorized.
 
 No Level 2 target is authorized yet.
 
@@ -273,15 +271,25 @@ ACC-EXT-003-run-04
 -> operator session persisted aborted; browser discovery did not start
 -> framework sandbox not created; target not contacted
 -> result: NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING
+
+ACC-EXT-003-run-05
+-> product commit 782e11c8d4defea267510467e41377a2c5aef621
+-> natural mission included Toolshop, hammer, and lowest-to-highest price ordering
+-> no prepared answers or answer-content assistance; fixture_answers_used=false
+-> three live Ollama calls: 123.879 s collection, 89.939 s review, 53.374 s target proposal
+-> safe diagnostic: schema:actions[1]:unsupported_validation_rule
+-> repairable=false; no RETRY prompt and no second target-proposal call
+-> proposal blocked before human review; raw provider content not persisted
+-> operator session persisted aborted; browser discovery did not start
+-> framework sandbox not created; target not contacted
+-> result: NOT ACCEPTED / ACC-FIND-012
 ```
 
-Findings `ACC-FIND-007` through `ACC-FIND-011` are resolved
-deterministically. Product commit
-`37d5dac73a26c46b68ab2e2515efe7666de5696e` adds safe validation
-diagnostics, an explicit `RETRY`/`QUIT` gate, and at most one repair attempt while
-keeping invalid or unaccepted proposals outside browser authority. Run-04 remains
-immutable and **NOT ACCEPTED**. Run-05 is unconsumed pending integration of this
-closure and a fresh pre-run gate.
+Findings `ACC-FIND-007` through `ACC-FIND-011` remain resolved
+deterministically. Run-05 live-corroborates the bounded Issue #11 behavior for a
+non-repairable unallowlisted rule and exposes the separate open
+`ACC-FIND-012`. Runs 01 through 05 remain immutable and **NOT ACCEPTED** where
+recorded. No run-06 or product remediation is authorized by this preservation.
 
 Primary purpose:
 
@@ -305,10 +313,9 @@ level-1b-target-selection.md
 
 This testware authorization did not itself authorize product code changes.
 Execution evidence separately authorized bounded corrections for Issues #7
-through #11. Those deterministic corrections are complete. The Issue #11
-implementation was separately authorized and verified; no further product change
-is authorized without new evidence. Level 1B still requires a fresh run-05 before
-it can be accepted.
+through #11, and those deterministic corrections remain complete. Run-05 is new
+evidence for `ACC-FIND-012`; preserving it does not authorize a correction,
+provider switch, or run-06. Level 1B remains not accepted.
 
 ## Level 2
 
@@ -325,10 +332,10 @@ authorization, and test design before execution.
 
 Level 1B execution has still not reached the authorized target. The lifecycle,
 rich same-page engine, intent-preservation, reviewed-target bridge, and bounded
-proposal-recovery findings are resolved deterministically, but historical runs 03
-and 04 remain **NOT ACCEPTED**. Level 1B remains open pending a fresh run-05 after
-this closure is integrated and a new pre-run gate passes. Level 2 must not begin
-before that retest is truthfully closed.
+proposal-recovery findings remain resolved, but run-05 exposed the separate open
+`ACC-FIND-012` before browser discovery. Runs 03 through 05 remain **NOT
+ACCEPTED**. Level 2 must not begin before this finding is preserved, linked,
+separately remediated if authorized, and truthfully retested under a new run ID.
 
 No further product correction is authorized merely because the validation is
 planned.

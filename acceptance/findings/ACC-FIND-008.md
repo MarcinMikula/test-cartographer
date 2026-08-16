@@ -132,9 +132,19 @@ material intent. It does mean run-04 cannot be treated as a clean end-to-end
 retest of the original ACC-EXT-003 mission. The finding remains resolved, and the
 scope caveat is preserved rather than rewritten.
 
+## Run-05 live corroboration
+
+Run-05 began from a natural mission that explicitly retained Toolshop, `hammer`,
+and lowest-to-highest price ordering. No prepared answer sheet, fixture answers,
+or answer-content assistance was used. Guided intake and the human
+material-intent confirmation completed before the later target-proposal failure.
+
+This is live corroboration of the Issue #8 correction within the reached scope.
+The separate action-contract/classifier finding does not reopen this finding or
+turn run-05 into a full Level 1B pass.
+
 ## Updated retest rule
 
-Keep runs 02 through 04 immutable. Any later run must begin from a natural
-mission that actually expresses the authorized hammer/cheapest-first customer
-outcome, while still forbidding a prepared answer sheet or answer-content
-assistance. Run-05 is not authorized before ACC-FIND-011 is resolved.
+Keep runs 02 through 05 immutable. Any later run must retain the same natural,
+correctly scoped mission and assistance boundary. Run-06 is unconsumed and is not
+authorized by this corroboration.

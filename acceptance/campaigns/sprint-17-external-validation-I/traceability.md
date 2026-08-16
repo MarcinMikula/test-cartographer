@@ -21,20 +21,20 @@ package fingerprint:
 The original `ACC-EXT-001` four-page scenario remains **BLOCKED** by
 `ACC-FIND-002` / Issue #2 because multi-page discovery is not implemented.
 
-Level 1B has consumed four runs. Historical runs retain their original
-evidence and verdicts. Run-04 tested product commit
-`9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`, completed guided intake, and
-invoked the Issue #10 reviewed-target bridge. A syntactically valid provider
-response failed target-contract validation before human review and was recorded
-only as `invalid_target_contract`. The session truthfully persisted `aborted`;
-no framework change, browser discovery, or target contact occurred.
+Level 1B has consumed five runs. Historical runs retain their original
+evidence and verdicts. Run-05 tested product commit
+`782e11c8d4defea267510467e41377a2c5aef621` from a correctly scoped natural
+mission. Two intake calls and one target-proposal call completed, but the proposal
+failed before human review at the safe diagnostic
+`schema:actions[1]:unsupported_validation_rule`. The session truthfully
+persisted `aborted`; no framework change, browser discovery, or target contact
+occurred.
 
-`ACC-FIND-007` through `ACC-FIND-011` are resolved deterministically. Product
-commit `37d5dac73a26c46b68ab2e2515efe7666de5696e` provides safe
-validation diagnostics, explicit operator recovery choice, and exactly one
-bounded repair attempt for allowlisted contract failures. Historical run-04
-remains **NOT ACCEPTED**. Run-05 is unconsumed, and the external target is not
-implicated.
+`ACC-FIND-007` through `ACC-FIND-011` remain resolved. Run-05 live-proves the
+Issue #11 non-repairable fail-closed behavior and exposes the separate open
+`ACC-FIND-012`: the provider-facing schema and safe recovery classifier do not
+cover the complete locally enforced action-conditioned contract. Run-06 is
+unconsumed and unauthorized, and the external target is not implicated.
 
 ## Level 1 requirement traceability
 
@@ -184,6 +184,40 @@ Thirty-eight focused and 527 full-suite tests passed. The correction invoked no
 live LLM, contacted no external target, changed no framework, consumed no run-05,
 and does not rewrite any run-04 requirement verdict.
 
+## Level 1B run-05 requirement traceability
+
+| Requirement | ACC-EXT-003 run-05 | Execution evidence |
+|---|---|---|
+| ACC-REQ-001 | PASS within reached scope | The unchanged initial mission explicitly retained Toolshop, `hammer`, and lowest-to-highest price ordering. |
+| ACC-REQ-002 | NOT ESTABLISHED | Bootstrap questions were answered; compatible persistent bootstrap reuse was not demonstrated. |
+| ACC-REQ-003 | PASS WITH CAVEAT | The operator confirmed coherent context and the authoritative mission retained its concrete term and ordering; no browser evidence existed to resolve catalogue suitability semantics. |
+| ACC-REQ-004 | PASS | Human, Ollama, product validation, hashes, and lifecycle remain distinguishable; raw provider prompts and responses were not persisted. |
+| ACC-REQ-005 | NOT REACHED | Browser discovery never started and Toolshop was not contacted. |
+| ACC-REQ-006 | NOT ACCEPTED AT PROPOSAL GATE | Material-intent confirmation completed, but the invalid proposal never reached human review. |
+| ACC-REQ-007 | NOT ACCEPTED | Three bounded calls completed, but an unclassified action-contract rule was non-repairable and no bounded retry path was reachable. |
+| ACC-REQ-008 | NOT ACCEPTED | No valid reviewable target proposal was presented to the operator. |
+| ACC-REQ-009 | NOT REACHED | No framework sandbox, generated source, or independent execution existed. |
+| ACC-REQ-010 | PASS TO FINDING-PRESERVATION GATE | The exact six-file run inventory and terminal transcript were hashed before remediation. |
+| ACC-REQ-011 | PENDING | Any retest requires a new run identifier and an exact corrected product commit after separately authorized remediation. Run-06 is unconsumed. |
+| ACC-REQ-012 | PASS WITH LIMITATION | Minimized evidence preserves the safe category, field path, stable fallback rule, attempt count, hashes, sizes, latency, and terminal state; the raw value and exact underlying validator are intentionally unavailable. |
+| ACC-REQ-013 | PARTIAL | Three provider latencies were captured (123.879 s, 89.939 s, 53.374 s; 267.192 s total), but no final operator assessment was reached. |
+| ACC-REQ-014 | PASS | The failure is classified at the TestCartographer/provider contract boundary; no Toolshop defect verdict is made. |
+| ACC-REQ-015 | PASS | The non-repairable rule failed closed before browser authority and the operator session persisted `aborted`. |
+| ACC-REQ-016 | NOT ACCEPTED | The supplied proposal schema and safe classifier do not cover the complete action-conditioned contract enforced by local validators, so bounded recovery is unreachable for this live response. |
+| ACC-REQ-017 | PASS | The fixed framework baseline remained unchanged and no sandbox was created. |
+
+Run-05 is a live PASS for the existing Issue #11 contract: the product exposed a
+safe diagnostic, marked an unallowlisted rule non-repairable, persisted no raw
+provider content, performed no unauthorized retry, and stopped `aborted`. This
+does not make the overall run accepted. It exposes the distinct open
+`ACC-FIND-012` contract-representation/classification boundary.
+
+The evidence does not reveal the raw action value or exact local validator, by
+design. It therefore supports no narrower claim than this: a parsed action-level
+proposal reached a deterministic locally enforced rule that the provider-facing
+schema did not prevent and the safe classifier could identify only as
+`unsupported_validation_rule`. The target and framework are not implicated.
+
 ## Finding / retest chain
 
 ```text
@@ -269,7 +303,16 @@ invalid target proposal cannot reach diagnosable bounded human recovery
 -> explicit RETRY or QUIT; one allowlisted repair attempt at most
 -> invalid JSON / duplicate keys / locator content remain fail-closed
 -> 38 focused / 527 full-suite tests PASS
--> target not contacted; run-05 remains unconsumed
+-> run-05 live PASS: unsupported rule stayed non-repairable and fail-closed
+
+ACC-FIND-012
+provider-facing schema and recovery classifier do not cover full action contract
+-> OPEN / GitHub issue not yet created
+-> run-05 correctly scoped mission and three live provider calls
+-> proposal diagnostic: schema:actions[1]:unsupported_validation_rule
+-> no human review, retry, browser discovery, target contact, or framework change
+-> exact raw value and local validator intentionally unavailable
+-> run-06 unconsumed and unauthorized
 ```
 
 ## Formal evidence package
@@ -326,7 +369,8 @@ ACC-EXT-003
 -> ACC-FIND-007 through ACC-FIND-010 resolved deterministically
 -> run-04 NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING before browser discovery
 -> ACC-FIND-011 resolved deterministically by 37d5dac73a26c46b68ab2e2515efe7666de5696e
--> run-05 unconsumed; fresh separately gated retest required
+-> run-05 NOT ACCEPTED / ACC-FIND-012 before browser discovery
+-> run-06 unconsumed and unauthorized
 ```
 
 ## Level 2

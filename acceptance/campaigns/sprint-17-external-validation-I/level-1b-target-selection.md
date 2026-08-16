@@ -2,14 +2,13 @@
 
 ## Status
 
-**AUTHORIZED / FOUR EXECUTION ATTEMPTS - stopped before target contact.**
+**AUTHORIZED / FIVE EXECUTION ATTEMPTS - stopped before target contact.**
 
 This document records the authorized target boundary and execution attempts. It
-does not itself authorize product changes. Runs 02 through 04 stopped before
+does not itself authorize product changes. Runs 02 through 05 stopped before
 browser discovery, so none makes a defect or correctness claim about Practice
-Software Testing. Run-04 again live-corroborated the resolved Issue #9 lifecycle
-contract and demonstrated that the resolved Issue #10 bridge executed before a
-separate proposal-validation/recovery failure.
+Software Testing. Run-05 live-corroborated the resolved Issues #9 through #11
+before exposing a separate proposal-schema/classifier contract gap.
 
 ## Candidate application
 
@@ -75,7 +74,7 @@ answer. No run identifier had been consumed at preflight time.
 
 ## Execution status
 
-Four acceptance run identifiers were later consumed:
+Five acceptance run identifiers were later consumed:
 
 - `ACC-EXT-003-run-01` ended through an operator terminal interruption during
   guided intake and provides no product verdict;
@@ -85,29 +84,26 @@ Four acceptance run identifiers were later consumed:
   failed before browser discovery because the interactive path supplied no
   reviewed interaction targets for the non-heading outcome;
 - `ACC-EXT-003-run-04` completed guided intake and invoked the reviewed-target
-  bridge, then failed closed before human proposal review with
-  `invalid_target_contract`.
+  bridge, then failed closed before human proposal review with the historical
+  generic `invalid_target_contract` blocker;
+- `ACC-EXT-003-run-05` supplied the correct natural mission, completed guided
+  intake, and invoked the target-proposal bridge, then failed closed before human
+  review at `schema:actions[1]:unsupported_validation_rule`.
 
-Run-04 used product commit `9494ac1d33e4a5f0b76d22eaf7819c2f150c49f6`
-and three live Ollama calls totaling 235.889 seconds. Its operator session ended
-`aborted`; no browser discovery, target contact, framework sandbox, generated
-source, or target test occurred. The proposal artefact persisted hashes and
-sizes but no raw provider payload and no safe field/rule diagnostic, so the exact
-contract violation cannot be reconstructed from evidence. No timeout or hang
-occurred.
+Run-05 used product commit `782e11c8d4defea267510467e41377a2c5aef621`
+and three live Ollama calls totaling 267.192 seconds. The safe diagnostic was
+marked `repairable=false`, so the Issue #11 contract correctly offered no
+`RETRY` and performed no second proposal call. The operator session ended
+`aborted`; raw provider content was not persisted. No browser discovery, target
+contact, framework sandbox, generated source, or target test occurred.
 
-The run used no prepared answers or answer-content assistance, but its natural
-mission omitted the authorized `hammer` and cheapest-first semantics. It is
-therefore not a clean end-to-end retest of the original scenario. This operator
-scope caveat does not reopen Issue #8 and does not explain the later contract
-failure.
-
-The target preflight remains valid suitability evidence. Findings 007–011 are
-resolved deterministically. Product commit
-`37d5dac73a26c46b68ab2e2515efe7666de5696e` adds safe diagnostics and
-one bounded operator-authorized repair attempt without contacting the target.
-Historical run-04 remains **NOT ACCEPTED** and does not implicate Toolshop.
-Run-05 is unconsumed pending closure integration and a fresh pre-run gate.
+The mission explicitly contained Toolshop, `hammer`, and lowest-to-highest price
+ordering. No prepared answers or answer-content assistance were used. Findings
+007–011 remain resolved. The target preflight remains valid suitability evidence,
+and Toolshop is not implicated. Run-05 is **NOT ACCEPTED** because
+`ACC-FIND-012` records a gap between the provider-facing schema, local
+action-conditioned validators, and the safe recovery classifier. Run-06 remains
+unconsumed and unauthorized.
 
 ## Why this target fits Level 1B
 
