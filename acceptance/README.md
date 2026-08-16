@@ -56,12 +56,12 @@ or second proposal call occurred.
 `ACC-FIND-007` through `ACC-FIND-011` remain resolved. Run-05 live-corroborates
 the Issue #9 aborted lifecycle, Issue #10 bridge, and Issue #11 safe diagnostic
 and non-repairable fail-closed behavior. It exposes the separate
-`ACC-FIND-012`: the provider-facing proposal schema and safe recovery classifier
+`ACC-FIND-012` / Issue #12: the provider-facing proposal schema and safe recovery classifier
 do not cover the full action-conditioned contract enforced locally. The session
 ended `aborted`; browser discovery did not start, no framework sandbox was
 created, and Toolshop was not contacted. Level 1B remains **NOT ACCEPTED**.
-Run-06 is unconsumed and unauthorized pending durable finding preservation,
-GitHub linkage, and separate remediation authorization.
+Run-06 is unconsumed and unauthorized pending separate remediation
+authorization and a later fresh pre-run gate.
 
 Level 2 remains reserved for materially more dynamic/script-heavy public
 applications. Pracuj.pl is one candidate, not the only planned Level 2 target.

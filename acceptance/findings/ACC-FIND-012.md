@@ -2,10 +2,12 @@
 
 ## Status
 
-**OPEN — preserved from immutable ACC-EXT-003-run-05 evidence; GitHub issue not yet created.**
+**OPEN — preserved from immutable ACC-EXT-003-run-05 evidence and linked to GitHub Issue #12.**
 
 ```text
 finding id: ACC-FIND-012
+GitHub issue: #12
+GitHub URL: https://github.com/MarcinMikula/test-cartographer/issues/12
 test case: ACC-EXT-003
 evidence-bearing run: ACC-EXT-003-run-05
 observed product commit: 782e11c8d4defea267510467e41377a2c5aef621

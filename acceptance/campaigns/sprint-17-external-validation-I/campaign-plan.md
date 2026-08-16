@@ -41,7 +41,7 @@ The run remains **NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING**. The
 Issue #11 behavior is a live PASS: an unallowlisted rule remained non-repairable,
 no `RETRY` or second proposal call was offered, and the session ended `aborted`
 without raw provider persistence. Issues #7 through #11 remain resolved. The new
-`ACC-FIND-012` records that the provider-facing schema and safe recovery
+`ACC-FIND-012` / Issue #12 records that the provider-facing schema and safe recovery
 classifier do not cover the complete action-conditioned contract enforced by
 local validators. Browser discovery never started, no framework sandbox was
 created, and Toolshop was not contacted. Run-06 is unconsumed and unauthorized.
@@ -288,7 +288,7 @@ ACC-EXT-003-run-05
 Findings `ACC-FIND-007` through `ACC-FIND-011` remain resolved
 deterministically. Run-05 live-corroborates the bounded Issue #11 behavior for a
 non-repairable unallowlisted rule and exposes the separate open
-`ACC-FIND-012`. Runs 01 through 05 remain immutable and **NOT ACCEPTED** where
+`ACC-FIND-012` / Issue #12. Runs 01 through 05 remain immutable and **NOT ACCEPTED** where
 recorded. No run-06 or product remediation is authorized by this preservation.
 
 Primary purpose:
@@ -314,7 +314,7 @@ level-1b-target-selection.md
 This testware authorization did not itself authorize product code changes.
 Execution evidence separately authorized bounded corrections for Issues #7
 through #11, and those deterministic corrections remain complete. Run-05 is new
-evidence for `ACC-FIND-012`; preserving it does not authorize a correction,
+evidence for `ACC-FIND-012` / Issue #12; preserving and linking it does not authorize a correction,
 provider switch, or run-06. Level 1B remains not accepted.
 
 ## Level 2
@@ -333,9 +333,9 @@ authorization, and test design before execution.
 Level 1B execution has still not reached the authorized target. The lifecycle,
 rich same-page engine, intent-preservation, reviewed-target bridge, and bounded
 proposal-recovery findings remain resolved, but run-05 exposed the separate open
-`ACC-FIND-012` before browser discovery. Runs 03 through 05 remain **NOT
-ACCEPTED**. Level 2 must not begin before this finding is preserved, linked,
-separately remediated if authorized, and truthfully retested under a new run ID.
+`ACC-FIND-012` / Issue #12 before browser discovery. Runs 03 through 05 remain
+**NOT ACCEPTED**. Level 2 must not begin before this finding is separately
+remediated if authorized and truthfully retested under a new run ID.
 
 No further product correction is authorized merely because the validation is
 planned.

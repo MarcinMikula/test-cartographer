@@ -2,7 +2,7 @@
 
 ## Status
 
-**NOT ACCEPTED / ACC-FIND-012 OPEN; RUN-06 NOT AUTHORIZED.**
+**NOT ACCEPTED / ACC-FIND-012 / ISSUE #12 OPEN; RUN-06 NOT AUTHORIZED.**
 
 Runs 01 through 05 retain their historical evidence and verdicts. Run-05 tested
 product commit `782e11c8d4defea267510467e41377a2c5aef621` from the correctly
@@ -390,7 +390,7 @@ operator-session.json           C919C003928CFE7C3A7D7A7EC26474C81AAACCB9D7AA3FBA
 terminal transcript             27513CDEAF4F771D4C9931A0CB687F14EC73901E4BF1B9AC1F80EE8CFCE86390
 ```
 
-Run-05 is **NOT ACCEPTED / ACC-FIND-012**, immutable, and not reusable. The
+Run-05 is **NOT ACCEPTED / ACC-FIND-012 / Issue #12**, immutable, and not reusable. The
 evidence does not persist the raw proposal value or identify the exact underlying
 local validator. It establishes the distinct gap between the provider-facing
 schema, local action-conditioned contract, and safe recovery classifier. Run-06
@@ -406,8 +406,9 @@ non-repairable, the bounded Issue #11 recovery path could not be reached.
 This is not an Issue #11 regression: safe diagnostics, no-raw persistence,
 non-repairable fail-closed behavior, and the aborted lifecycle all worked as
 designed. It is also not a Toolshop defect and is not sufficient evidence to
-replace Ollama. `ACC-FIND-012` preserves the narrower product–provider contract
-representation/classification gap. No remediation is authorized by this record.
+replace Ollama. `ACC-FIND-012` / Issue #12 preserves the narrower
+product–provider contract representation/classification gap. No remediation is
+authorized by this record.
 
 ## ACC-FIND-011 deterministic remediation
 

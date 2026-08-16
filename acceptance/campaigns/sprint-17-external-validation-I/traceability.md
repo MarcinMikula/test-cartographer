@@ -32,7 +32,7 @@ occurred.
 
 `ACC-FIND-007` through `ACC-FIND-011` remain resolved. Run-05 live-proves the
 Issue #11 non-repairable fail-closed behavior and exposes the separate open
-`ACC-FIND-012`: the provider-facing schema and safe recovery classifier do not
+`ACC-FIND-012` / Issue #12: the provider-facing schema and safe recovery classifier do not
 cover the complete locally enforced action-conditioned contract. Run-06 is
 unconsumed and unauthorized, and the external target is not implicated.
 
@@ -210,7 +210,7 @@ Run-05 is a live PASS for the existing Issue #11 contract: the product exposed a
 safe diagnostic, marked an unallowlisted rule non-repairable, persisted no raw
 provider content, performed no unauthorized retry, and stopped `aborted`. This
 does not make the overall run accepted. It exposes the distinct open
-`ACC-FIND-012` contract-representation/classification boundary.
+`ACC-FIND-012` / Issue #12 contract-representation/classification boundary.
 
 The evidence does not reveal the raw action value or exact local validator, by
 design. It therefore supports no narrower claim than this: a parsed action-level
@@ -305,9 +305,9 @@ invalid target proposal cannot reach diagnosable bounded human recovery
 -> 38 focused / 527 full-suite tests PASS
 -> run-05 live PASS: unsupported rule stayed non-repairable and fail-closed
 
-ACC-FIND-012
+ACC-FIND-012 / Issue #12
 provider-facing schema and recovery classifier do not cover full action contract
--> OPEN / GitHub issue not yet created
+-> OPEN / linked after durable finding preservation
 -> run-05 correctly scoped mission and three live provider calls
 -> proposal diagnostic: schema:actions[1]:unsupported_validation_rule
 -> no human review, retry, browser discovery, target contact, or framework change
@@ -369,7 +369,7 @@ ACC-EXT-003
 -> ACC-FIND-007 through ACC-FIND-010 resolved deterministically
 -> run-04 NOT ACCEPTED / PRODUCT–PROVIDER INTEGRATION FINDING before browser discovery
 -> ACC-FIND-011 resolved deterministically by 37d5dac73a26c46b68ab2e2515efe7666de5696e
--> run-05 NOT ACCEPTED / ACC-FIND-012 before browser discovery
+-> run-05 NOT ACCEPTED / ACC-FIND-012 / Issue #12 before browser discovery
 -> run-06 unconsumed and unauthorized
 ```
 

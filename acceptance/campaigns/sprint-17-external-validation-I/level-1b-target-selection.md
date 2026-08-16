@@ -101,7 +101,7 @@ The mission explicitly contained Toolshop, `hammer`, and lowest-to-highest price
 ordering. No prepared answers or answer-content assistance were used. Findings
 007–011 remain resolved. The target preflight remains valid suitability evidence,
 and Toolshop is not implicated. Run-05 is **NOT ACCEPTED** because
-`ACC-FIND-012` records a gap between the provider-facing schema, local
+`ACC-FIND-012` / Issue #12 records a gap between the provider-facing schema, local
 action-conditioned validators, and the safe recovery classifier. Run-06 remains
 unconsumed and unauthorized.
 
