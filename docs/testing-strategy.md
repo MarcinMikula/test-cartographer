@@ -1235,3 +1235,22 @@ These tests use replay output and do not claim that a particular Ollama model
 will always identify every semantic omission. A later external acceptance retest
 will assess that question quality separately, while the human coverage gate keeps
 readiness fail-closed when material intent is unresolved.
+
+### Issue #11 — target-proposal diagnostics and bounded repair
+
+Deterministic replay coverage must prove:
+
+- the original initial prompt and schema remain unchanged;
+- missing/extra/type and supported semantic failures produce safe diagnostics;
+- diagnostics persist category, path, and rule code without values;
+- invalid JSON, duplicate keys, and locator-like content cannot retry;
+- an explicit operator `RETRY` permits exactly one same-provider repair call;
+- `QUIT` pauses before the second call;
+- a valid repaired proposal still requires normal human review;
+- a second invalid response blocks with two immutable attempt records;
+- raw initial and repair prompts/responses never enter the artefact;
+- browser discovery is never called for unvalidated or unaccepted proposals.
+
+Focused and full-suite tests use replay providers only. Acceptance closure for
+Issue #11 must not invoke Ollama, contact an external target, create run-05, or
+change the protected framework baseline.

@@ -285,3 +285,21 @@ become reviewed_targets.
 
 There is no silent retry, cloud fallback, or automatic acceptance. Invalid model
 output fails closed and remains evidence about the configured provider.
+
+## Bounded invalid target-proposal recovery
+
+An invalid rich-action proposal does not become browser authority. Contract
+validation records only a safe category, field/rule path, and stable rule code;
+input values and raw provider content remain absent.
+
+Only deterministically repairable schema, action-contract, or semantic-sequence
+failures enter `awaiting_repair`. The operator must explicitly type `RETRY` to
+authorize one additional call to the same configured provider/model, or `QUIT`
+to pause. Invalid JSON, duplicate keys, and locator-like names remain immediately
+blocked and cannot consume the repair budget.
+
+The initial prompt and JSON schema are unchanged. A repair prompt exists only in
+memory and may include the provider's own invalid proposal plus safe validation
+feedback. Both attempts retain separate hashes, character counts, latency, and
+validation outcomes without raw prompts or responses. A second invalid result
+fails closed; a third attempt is impossible.

@@ -304,3 +304,24 @@ retains all material intent.
 The provider cannot invent targets, mutate context, or declare readiness. If a
 required clarification remains unknown or deferred, a plan is invalid, or the
 round budget is exhausted, the flow stops before browser discovery.
+
+## Invalid external target-proposal recovery
+
+For rich same-page external outcomes, the target proposal has a maximum of two
+provider attempts:
+
+```text
+unchanged initial prompt/schema
+-> deterministic validation
+-> valid: explicit human target review
+-> non-repairable invalid: blocked
+-> repairable invalid: safe diagnostic + explicit RETRY/QUIT
+-> RETRY: one in-memory repair prompt to the same provider/model
+-> valid: explicit human target review
+-> invalid: blocked; no third attempt
+```
+
+Every attempt is independently hashed and timed. The persisted artefact contains
+no raw provider content or input values. Browser discovery remains impossible
+until a valid proposal passes the existing operator review and is accepted.
+`QUIT` pauses the operator session before the second provider call.

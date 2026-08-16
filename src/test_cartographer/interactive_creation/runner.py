@@ -118,8 +118,11 @@ from test_cartographer.interactive_creation.target_planning import (
     ExternalTargetProposalState,
     OllamaExternalTargetProposalProvider,
     ReplayExternalTargetProposalProvider,
-    plan_external_target_proposal,
+    begin_external_target_proposal,
+    format_external_target_repair_diagnostic,
+    read_external_target_repair_decision,
     render_replay_external_target_output,
+    repair_external_target_proposal,
     review_external_target_proposal,
     review_target_proposal_interactively,
     save_external_target_proposal_run,
@@ -722,41 +725,29 @@ def run_human_triggered_creation_flow(
         discovery_started = now_fn()
         target_proposal_run = None
         target_proposal_live_calls = 0
+        target_proposal_human_actions = 0
         if external_public_single_page:
             reviewed_targets = None
             if external_outcome_requires_reviewed_targets(session.context):
                 proposal_started = now_fn()
                 if target_proposal_provider is not None:
-                    target_proposal_run = plan_external_target_proposal(
-                        session.context,
-                        seed.initial_request,
-                        guided_profile,
-                        target_proposal_provider,
-                        run_id=f"target_plan_{uuid.uuid4().hex[:12]}",
-                        started_at=proposal_started,
-                        completed_at_fn=now_fn,
-                    )
+                    provider_context = nullcontext(target_proposal_provider)
                 elif provider_mode == "ollama":
-                    target_proposal_live_calls = 1
-                    with OllamaExternalTargetProposalProvider(
+                    provider_context = OllamaExternalTargetProposalProvider(
                         guided_profile
-                    ) as target_provider:
-                        target_proposal_run = plan_external_target_proposal(
-                            session.context,
-                            seed.initial_request,
-                            guided_profile,
-                            target_provider,
-                            run_id=f"target_plan_{uuid.uuid4().hex[:12]}",
-                            started_at=proposal_started,
-                            completed_at_fn=now_fn,
-                        )
-                else:
-                    target_provider = ReplayExternalTargetProposalProvider(
-                        outputs=[
-                            render_replay_external_target_output(session.context)
-                        ]
                     )
-                    target_proposal_run = plan_external_target_proposal(
+                else:
+                    provider_context = nullcontext(
+                        ReplayExternalTargetProposalProvider(
+                            outputs=[
+                                render_replay_external_target_output(session.context)
+                            ]
+                        )
+                    )
+
+                proposal_path = output / "02-interaction-target-proposal.json"
+                with provider_context as target_provider:
+                    planning = begin_external_target_proposal(
                         session.context,
                         seed.initial_request,
                         guided_profile,
@@ -765,19 +756,72 @@ def run_human_triggered_creation_flow(
                         started_at=proposal_started,
                         completed_at_fn=now_fn,
                     )
+                    if provider_mode == "ollama":
+                        target_proposal_live_calls += 1
+                    target_proposal_run = planning.run
+                    save_external_target_proposal_run(
+                        target_proposal_run,
+                        proposal_path,
+                    )
 
-                proposal_path = output / "02-interaction-target-proposal.json"
-                save_external_target_proposal_run(
-                    target_proposal_run,
-                    proposal_path,
-                )
-                if (
-                    target_proposal_run.state
-                    is ExternalTargetProposalState.BLOCKED
-                ):
+                    if (
+                        target_proposal_run.state
+                        is ExternalTargetProposalState.AWAITING_REPAIR
+                    ):
+                        output_fn(
+                            "\n"
+                            + format_external_target_repair_diagnostic(
+                                target_proposal_run.diagnostic
+                            )
+                        )
+                        repair_started = now_fn()
+                        repair_timer = timer_fn()
+                        repair_decision = read_external_target_repair_decision(
+                            input_fn=input_fn,
+                            output_fn=output_fn,
+                        )
+                        repair_completed = now_fn()
+                        repair_seconds = max(0.0, timer_fn() - repair_timer)
+                        ledger.record(
+                            OperatorActionKind.REVIEW_DECISION,
+                            "external_interaction_target_repair",
+                            repair_decision,
+                            started_at=repair_started,
+                            completed_at=repair_completed,
+                            active_seconds=repair_seconds,
+                        )
+                        target_proposal_human_actions += 1
+                        if repair_decision == "quit":
+                            ledger.pause()
+                            raise InteractiveFlowStopped(
+                                "operator paused external interaction-target repair"
+                            )
+
+                        repair_attempt_started = now_fn()
+                        planning = repair_external_target_proposal(
+                            planning,
+                            session.context,
+                            seed.initial_request,
+                            guided_profile,
+                            target_provider,
+                            started_at=repair_attempt_started,
+                            completed_at_fn=now_fn,
+                        )
+                        if provider_mode == "ollama":
+                            target_proposal_live_calls += 1
+                        target_proposal_run = planning.run
+                        save_external_target_proposal_run(
+                            target_proposal_run,
+                            proposal_path,
+                        )
+
+                if target_proposal_run.state is ExternalTargetProposalState.BLOCKED:
+                    diagnostic = target_proposal_run.diagnostic
                     raise RuntimeError(
                         "external interaction-target proposal failed closed: "
-                        f"{target_proposal_run.blocker}"
+                        f"{target_proposal_run.blocker} "
+                        f"({diagnostic.category.value}:{diagnostic.path}:"
+                        f"{diagnostic.rule_code})"
                     )
                 output_fn("\nExternal interaction-target proposal")
                 review_started = now_fn()
@@ -819,6 +863,7 @@ def run_human_triggered_creation_flow(
                     completed_at=review_completed,
                     active_seconds=review_seconds,
                 )
+                target_proposal_human_actions += 1
                 if proposal_state is ExternalTargetProposalState.PAUSED:
                     ledger.pause()
                     raise InteractiveFlowStopped(
@@ -978,7 +1023,7 @@ def run_human_triggered_creation_flow(
                 human=(
                     1
                     + len(discovery_run.ambiguities)
-                    + (1 if target_proposal_run is not None else 0)
+                    + target_proposal_human_actions
                 ),
                 artifacts=(
                     *((target_proposal_run.id,) if target_proposal_run is not None else ()),
